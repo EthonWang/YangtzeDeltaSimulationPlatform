@@ -20,11 +20,15 @@ npm run build
 npm run lint
 ```
 
-### 简介
+## 前端系统
+### 概况
 Vue3.0+js
+
 UI库ElementPlus
+
 样式less/css
 
+### 分区
 页面src/views
 
 功能组件src/components

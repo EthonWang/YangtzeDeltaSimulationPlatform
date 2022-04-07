@@ -2,7 +2,7 @@ import axios from "axios";
 
 const config = {
     baseUrl: {
-        dev: "/back", // 开发环境
+        dev: "/back_backup", // 开发环境
         // fat: 'http://xxx.xx.xx.xx:8080' 
         //uat : "http://production.com" 
     },

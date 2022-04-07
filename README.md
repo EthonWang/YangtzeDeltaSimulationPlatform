@@ -29,9 +29,13 @@ UI库ElementPlus
 样式less/css
 
 ### 分区
-页面src/views
+单个页面src/views
 
 功能组件src/components
+
+```
+views与components同名对应
+```
 
 工具src/utils
 

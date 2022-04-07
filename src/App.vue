@@ -1,7 +1,7 @@
 
 <script setup>
 import { reactive, computed, ref, defineProps } from "vue";
-import Topbar from "./components/Topbar/Topbar.vue"
+import Topbar from "./components/App/Topbar.vue"
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 

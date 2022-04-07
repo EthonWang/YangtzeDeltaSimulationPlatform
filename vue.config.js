@@ -50,27 +50,36 @@ module.exports = {
     devServer: {
         open: true,
         host: "127.0.0.1",
-        port: 3030, //我个人喜好用3000
+        port: 3030, 
         https: false,
         hotOnly: false,
         proxy: {
             // 配置跨域
-            "/api": {
+            "/back": {
                 target: "http://172.21.213.183:8999",
                 ws: true,
                 timeout: 3600000,
                 changOrigin: true,
                 pathRewrite: {
-                    "/api": "",
+                    "/back": "",
                 },
             },
-            "/back": {
+            "/back_backup": {
                 target: "http://localhost:9999",
                 ws: true,
 
                 changOrigin: true,
                 pathRewrite: {
-                    "/back": "",
+                    "/back_backup": "",
+                },
+            },
+            "/back_data": {
+                target: "http://localhost:8999",
+                ws: true,
+
+                changOrigin: true,
+                pathRewrite: {
+                    "/back_data": "",
                 },
             },
         }, // 设置代理

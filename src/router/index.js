@@ -9,43 +9,45 @@ import Functions from "@/views/Function.vue";
 const routes = [
   {
     path: "/",
-    name: "Home",
+    name: "首页",
     component: Home,
+  },
+  
+  {
+    path: "/data",
+    name: "数据",
+    component: Data,
+  },
+  {
+    path: "/model",
+    name: "模型",
+    component: Model,
+  },
+  {
+    path: "/method",
+    name: "方法",
+    component: Method,
+  },
+  {
+    path: "/function",
+    name: "功能",
+    component: Functions,
+  },
+  {
+    path: "/help",
+    name: "帮助",
+    component: Help,
   },
   {
     path: "/about",
-    name: "About",
+    name: "关于",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
-  {
-    path: "/data",
-    name: "Data",
-    component: Data,
-  },
-  {
-    path: "/model",
-    name: "Model",
-    component: Model,
-  },
-  {
-    path: "/method",
-    name: "Method",
-    component: Method,
-  },
-  {
-    path: "/help",
-    name: "Help",
-    component: Help,
-  },
-  {
-    path: "/function",
-    name: "Function",
-    component: Functions,
-  },
+  
 ];
 
 const router = createRouter({

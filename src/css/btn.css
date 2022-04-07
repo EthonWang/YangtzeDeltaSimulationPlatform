@@ -1,0 +1,2016 @@
+/* 1 */
+.set_1_btn {
+    color: #333;
+    cursor: pointer;
+    display: block;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 45px;
+    margin-right: 2em;
+    text-align: center;
+    max-width: 160px;
+    position: relative;
+    text-decoration: none;
+    text-transform: uppercase;
+    vertical-align: middle;
+    width: 100%
+}
+
+.set_1_btn:hover {
+    text-decoration: none
+}
+
+.Vbtn-1 {
+    background: transparent;
+    text-align: center;
+    float: left
+}
+
+.Vbtn-1 svg {
+    height: 45px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%
+}
+
+.Vbtn-1 rect {
+    fill: none;
+    stroke: #e1b700;
+    stroke-width: 3;
+    stroke-dasharray: 422, 0;
+    transition: all 450ms linear 0s
+}
+
+.Vbtn-1:hover {
+    background: rgba(225, 51, 45, 0);
+    font-weight: 900;
+    letter-spacing: 1px;
+    transition: all 150ms linear 0s
+}
+
+.Vbtn-1:hover rect {
+    stroke-width: 5;
+    stroke-dasharray: 15, 310;
+    stroke-dashoffset: 48;
+    -webkit-transition: all 1.35s cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 1.35s cubic-bezier(0.19, 1, 0.22, 1)
+}
+
+.Vbtn-2 {
+    letter-spacing: 0;
+    transition: all 150ms linear 0s;
+    float: left
+}
+
+.Vbtn-2:hover,
+.Vbtn-2:active {
+    letter-spacing: 5px;
+    transition: all 150ms linear 0s
+}
+
+.Vbtn-2:after,
+.Vbtn-2:before {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border: 1px solid rgba(255, 255, 255, 0);
+    bottom: 0;
+    content: " ";
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    -webkit-transition: all 280ms ease-in-out;
+    transition: all 280ms ease-in-out;
+    width: 0
+}
+
+.Vbtn-2:hover:after,
+.Vbtn-2:hover:before {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-color: #56c5ff;
+    -webkit-transition: width 350ms ease-in-out;
+    transition: width 350ms ease-in-out;
+    width: 70%
+}
+
+.Vbtn-2:hover:before {
+    bottom: auto;
+    top: 0;
+    width: 70%
+}
+
+.Vbtn-3 {
+    background: transparent;
+    text-align: center;
+    float: left
+}
+
+.Vbtn-3 svg {
+    height: 45px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%
+}
+
+.Vbtn-3 rect {
+    fill: none;
+    stroke: #f2625a;
+    stroke-width: 3;
+    stroke-dasharray: 422, 0;
+    transition: all 450ms linear 0s
+}
+
+.Vbtn-3:hover {
+    background: rgba(225, 51, 45, 0);
+    font-weight: 900;
+    letter-spacing: 1px;
+    transition: all 150ms linear 0s
+}
+
+.Vbtn-3:hover rect {
+    stroke-width: 5;
+    stroke-dasharray: 15, 310;
+    stroke-dashoffset: 48;
+    -webkit-transition: all 1.35s cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 1.35s cubic-bezier(0.19, 1, 0.22, 1)
+}
+
+.Vbtn-4 {
+    letter-spacing: 0;
+    transition: all 150ms linear 0s;
+    float: left
+}
+
+.Vbtn-4:hover,
+.Vbtn-4:active {
+    letter-spacing: 5px;
+    transition: all 150ms linear 0s
+}
+
+.Vbtn-4:after,
+.Vbtn-4:before {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border: 1px solid rgba(255, 255, 255, 0);
+    bottom: 0;
+    content: " ";
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    -webkit-transition: all 280ms ease-in-out;
+    transition: all 280ms ease-in-out;
+    width: 0
+}
+
+.Vbtn-4:hover:after,
+.Vbtn-4:hover:before {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-color: #666;
+    -webkit-transition: width 350ms ease-in-out;
+    transition: width 350ms ease-in-out;
+    width: 70%
+}
+
+.Vbtn-4:hover:before {
+    bottom: auto;
+    top: 0;
+    width: 70%
+}
+
+/* 3 */
+.set_3_button {
+    color: rgba(255, 255, 255, 1);
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s;
+    -o-transition: all .5s;
+    transition: all .5s;
+    position: relative;
+    background: #666;
+    overflow: hidden;
+    width: auto;
+    padding: 0 25px;
+    margin-right: 2.5em;
+    line-height: 45px;
+    float: left;
+    cursor: pointer;
+    text-align: center
+}
+
+.set_3_button a {
+    color: rgba(51, 51, 51, 1);
+    text-decoration: none;
+    display: block
+}
+
+.set_3_button span {
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s
+}
+
+.set_3_button:hover {
+    background-color: rgba(0, 0, 0, 0.3)
+}
+
+.set_3_button:hover>span {
+    opacity: 0;
+    -webkit-transform: translate(0px, 40px);
+    transform: translate(0px, 40px)
+}
+
+.set_3_button::after {
+    content: attr(data-text);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    -webkit-transform: translate(-30%, 0);
+    transform: translate(-30%, 0);
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s
+}
+
+.set_3_button:hover::after {
+    opacity: 1;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0)
+}
+
+.set_3_button2 {
+    color: #2e2302;
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s;
+    -o-transition: all .5s;
+    transition: all .5s;
+    position: relative;
+    background: #e1b700;
+    overflow: hidden;
+    width: auto;
+    padding: 0 25px;
+    margin-right: 2.5em;
+    line-height: 45px;
+    float: left;
+    cursor: pointer;
+    text-align: center
+}
+
+.set_3_button2 a {
+    color: rgba(51, 51, 51, 1);
+    text-decoration: none;
+    display: block
+}
+
+.set_3_button2 span {
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s
+}
+
+.set_3_button2:hover {
+    background-color: #ffd311
+}
+
+.set_3_button2:hover>span {
+    opacity: 0;
+    -webkit-transform: translate(0px, -40px);
+    transform: translate(0px, -40px)
+}
+
+.set_3_button2::after {
+    content: attr(data-text);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    -webkit-transform: translate(0, 30%);
+    transform: translate(0, 30%);
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s
+}
+
+.set_3_button2:hover::after {
+    opacity: 1;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0)
+}
+
+.set_3_button3 {
+    color: rgba(255, 255, 255, 1);
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s;
+    -o-transition: all .5s;
+    transition: all .5s;
+    position: relative;
+    background: #f2625a;
+    overflow: hidden;
+    width: auto;
+    padding: 0 25px;
+    margin-right: 2.5em;
+    line-height: 45px;
+    float: left;
+    cursor: pointer;
+    text-align: center
+}
+
+.set_3_button3 a {
+    color: rgba(51, 51, 51, 1);
+    text-decoration: none;
+    display: block
+}
+
+.set_3_button3 span {
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s
+}
+
+.set_3_button3:hover {
+    background-color: #dd483f
+}
+
+.set_3_button3:hover>span {
+    opacity: 0;
+    -webkit-transform: translate(0px, 40px);
+    transform: translate(0px, 40px)
+}
+
+.set_3_button3::after {
+    content: attr(data-text);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    -webkit-transform: translate(30%, 0);
+    transform: translate(30%, 0);
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s
+}
+
+.set_3_button3:hover::after {
+    opacity: 1;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0)
+}
+
+.set_3_button4 {
+    color: #252b2d;
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s;
+    -o-transition: all .5s;
+    transition: all .5s;
+    position: relative;
+    background: #b9ccd2;
+    overflow: hidden;
+    width: auto;
+    padding: 0 25px;
+    margin-right: 2.5em;
+    line-height: 45px;
+    float: left;
+    cursor: pointer;
+    text-align: center
+}
+
+.set_3_button4 a {
+    color: #252b2d;
+    text-decoration: none;
+    display: block
+}
+
+.set_3_button4 span {
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s
+}
+
+.set_3_button4:hover {
+    background-color: #cce0e7
+}
+
+.set_3_button4:hover>span {
+    opacity: 0;
+    -webkit-transform: translate(0px, -40px);
+    transform: translate(0px, -40px)
+}
+
+.set_3_button4::after {
+    content: attr(data-text);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    -webkit-transform: translate(0, -30%);
+    transform: translate(0, -30%);
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s
+}
+
+.set_3_button4:hover::after {
+    opacity: 1;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0)
+}
+
+.set_4_button1 {
+    position: relative;
+    font-weight: 400;
+    text-align: center;
+    width: auto;
+    float: left;
+    padding: 0 25px;
+    line-height: 45px;
+    border: 1px solid #fff;
+    overflow: hidden;
+    position: relative;
+    z-index: 0;
+    cursor: pointer;
+    color: #FFF;
+    margin-right: 2.5em
+}
+
+.set_4_button1.raised {
+    -moz-transition: all .1s;
+    -o-transition: all .1s;
+    -webkit-transition: all .1s;
+    transition: all .1s;
+    background: #666
+}
+
+.set_4_button1.raised:active {
+    background: #0c7dd8;
+    box-shadow: 0 1px 1px #063e6b
+}
+
+.anim {
+    -moz-transform: translateY(-50%) translateX(-50%);
+    -ms-transform: translateY(-50%) translateX(-50%);
+    -webkit-transform: translateY(-50%) translateX(-50%);
+    transform: translateY(-50%) translateX(-50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -1
+}
+
+.anim:before {
+    position: relative;
+    content: '';
+    display: block;
+    margin-top: 100%
+}
+
+.anim:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 50%
+}
+
+.clickable .toggle:checked+.anim {
+    -moz-animation: anim-in .75s;
+    -webkit-animation: anim-in .75s;
+    animation: anim-in .75s
+}
+
+.clickable .toggle:checked+.anim:after {
+    -moz-animation: anim-in-pseudo .75s;
+    -webkit-animation: anim-in-pseudo .75s;
+    animation: anim-in-pseudo .75s
+}
+
+.clickable .toggle:not(:checked)+.anim {
+    -moz-animation: anim-out .75s;
+    -webkit-animation: anim-out .75s;
+    animation: anim-out .75s
+}
+
+.clickable .toggle:not(:checked)+.anim:after {
+    -moz-animation: anim-out-pseudo .75s;
+    -webkit-animation: anim-out-pseudo .75s;
+    animation: anim-out-pseudo .75s
+}
+
+.hoverable:hover>.anim {
+    -moz-animation: anim-out .75s;
+    -webkit-animation: anim-out .75s;
+    animation: anim-out .75s
+}
+
+.hoverable:hover>.anim:after {
+    -moz-animation: anim-out-pseudo .75s;
+    -webkit-animation: anim-out-pseudo .75s;
+    animation: anim-out-pseudo .75s
+}
+
+@-webkit-keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-moz-keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-ms-keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-webkit-keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-moz-keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-ms-keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-webkit-keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-moz-keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-ms-keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-webkit-keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-moz-keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-ms-keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+.color1 {
+    background: #666
+}
+
+.color2 {
+    background: #f8c013;
+    color: #2e2302
+}
+
+.color3 {
+    background: #f2625a
+}
+
+.color4 {
+    background: #b9ccd2;
+    color: #252b2d
+}
+
+.color5 {
+    background: #56c5ff;
+    color: #fff
+}
+
+/* 4 */
+.set_4_button1 {
+    position: relative;
+    font-weight: 400;
+    text-align: center;
+    width: auto;
+    float: left;
+    padding: 0 25px;
+    line-height: 45px;
+    border: 1px solid #fff;
+    overflow: hidden;
+    position: relative;
+    z-index: 0;
+    cursor: pointer;
+    color: #FFF;
+    margin-right: 2.5em
+}
+
+.set_4_button1.raised {
+    -moz-transition: all .1s;
+    -o-transition: all .1s;
+    -webkit-transition: all .1s;
+    transition: all .1s;
+    background: #666
+}
+
+.set_4_button1.raised:active {
+    background: #515151;
+    box-shadow: 0 1px 1px #063e6b
+}
+
+.anim {
+    -moz-transform: translateY(-50%) translateX(-50%);
+    -ms-transform: translateY(-50%) translateX(-50%);
+    -webkit-transform: translateY(-50%) translateX(-50%);
+    transform: translateY(-50%) translateX(-50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -1
+}
+
+.anim:before {
+    position: relative;
+    content: '';
+    display: block;
+    margin-top: 100%
+}
+
+.anim:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 50%
+}
+
+.clickable .toggle:checked+.anim {
+    -moz-animation: anim-in .75s;
+    -webkit-animation: anim-in .75s;
+    animation: anim-in .75s
+}
+
+.clickable .toggle:checked+.anim:after {
+    -moz-animation: anim-in-pseudo .75s;
+    -webkit-animation: anim-in-pseudo .75s;
+    animation: anim-in-pseudo .75s
+}
+
+.clickable .toggle:not(:checked)+.anim {
+    -moz-animation: anim-out .75s;
+    -webkit-animation: anim-out .75s;
+    animation: anim-out .75s
+}
+
+.clickable .toggle:not(:checked)+.anim:after {
+    -moz-animation: anim-out-pseudo .75s;
+    -webkit-animation: anim-out-pseudo .75s;
+    animation: anim-out-pseudo .75s
+}
+
+.hoverable:hover>.anim {
+    -moz-animation: anim-out .75s;
+    -webkit-animation: anim-out .75s;
+    animation: anim-out .75s
+}
+
+.hoverable:hover>.anim:after {
+    -moz-animation: anim-out-pseudo .75s;
+    -webkit-animation: anim-out-pseudo .75s;
+    animation: anim-out-pseudo .75s
+}
+
+@-webkit-keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-moz-keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-ms-keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-webkit-keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-moz-keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-ms-keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-webkit-keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-moz-keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-ms-keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-webkit-keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-moz-keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-ms-keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+.set_4_button2 {
+    position: relative;
+    font-weight: 400;
+    text-align: center;
+    width: auto;
+    float: left;
+    padding: 0 25px;
+    line-height: 45px;
+    overflow: hidden;
+    position: relative;
+    z-index: 0;
+    cursor: pointer;
+    color: #2e2302;
+    margin-right: 2.5em
+}
+
+.set_4_button2.raised {
+    -moz-transition: all .1s;
+    -o-transition: all .1s;
+    -webkit-transition: all .1s;
+    transition: all .1s;
+    background: #f8c013
+}
+
+.set_4_button2.raised:active {
+    background: #515151;
+    box-shadow: 0 1px 1px #063e6b
+}
+
+.anim {
+    -moz-transform: translateY(-50%) translateX(-50%);
+    -ms-transform: translateY(-50%) translateX(-50%);
+    -webkit-transform: translateY(-50%) translateX(-50%);
+    transform: translateY(-50%) translateX(-50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -1
+}
+
+.anim:before {
+    position: relative;
+    content: '';
+    display: block;
+    margin-top: 100%
+}
+
+.anim:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 50%
+}
+
+.clickable .toggle:checked+.anim {
+    -moz-animation: anim-in .75s;
+    -webkit-animation: anim-in .75s;
+    animation: anim-in .75s
+}
+
+.clickable .toggle:checked+.anim:after {
+    -moz-animation: anim-in-pseudo .75s;
+    -webkit-animation: anim-in-pseudo .75s;
+    animation: anim-in-pseudo .75s
+}
+
+.clickable .toggle:not(:checked)+.anim {
+    -moz-animation: anim-out .75s;
+    -webkit-animation: anim-out .75s;
+    animation: anim-out .75s
+}
+
+.clickable .toggle:not(:checked)+.anim:after {
+    -moz-animation: anim-out-pseudo .75s;
+    -webkit-animation: anim-out-pseudo .75s;
+    animation: anim-out-pseudo .75s
+}
+
+.hoverable:hover>.anim {
+    -moz-animation: anim-out .75s;
+    -webkit-animation: anim-out .75s;
+    animation: anim-out .75s
+}
+
+.hoverable:hover>.anim:after {
+    -moz-animation: anim-out-pseudo .75s;
+    -webkit-animation: anim-out-pseudo .75s;
+    animation: anim-out-pseudo .75s
+}
+
+@-webkit-keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-moz-keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-ms-keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-webkit-keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-moz-keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-ms-keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-webkit-keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-moz-keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-ms-keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-webkit-keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-moz-keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-ms-keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+.set_4_button3 {
+    position: relative;
+    font-weight: 400;
+    text-align: center;
+    width: auto;
+    float: left;
+    padding: 0 25px;
+    line-height: 45px;
+    overflow: hidden;
+    position: relative;
+    z-index: 0;
+    cursor: pointer;
+    color: #fff;
+    margin-right: 2.5em
+}
+
+.set_4_button3.raised {
+    -moz-transition: all .1s;
+    -o-transition: all .1s;
+    -webkit-transition: all .1s;
+    transition: all .1s;
+    background: #f2625a
+}
+
+.set_4_button3.raised:active {
+    background: #515151;
+    box-shadow: 0 1px 1px #063e6b
+}
+
+.anim {
+    -moz-transform: translateY(-50%) translateX(-50%);
+    -ms-transform: translateY(-50%) translateX(-50%);
+    -webkit-transform: translateY(-50%) translateX(-50%);
+    transform: translateY(-50%) translateX(-50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -1
+}
+
+.anim:before {
+    position: relative;
+    content: '';
+    display: block;
+    margin-top: 100%
+}
+
+.anim:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 50%
+}
+
+.clickable .toggle:checked+.anim {
+    -moz-animation: anim-in .75s;
+    -webkit-animation: anim-in .75s;
+    animation: anim-in .75s
+}
+
+.clickable .toggle:checked+.anim:after {
+    -moz-animation: anim-in-pseudo .75s;
+    -webkit-animation: anim-in-pseudo .75s;
+    animation: anim-in-pseudo .75s
+}
+
+.clickable .toggle:not(:checked)+.anim {
+    -moz-animation: anim-out .75s;
+    -webkit-animation: anim-out .75s;
+    animation: anim-out .75s
+}
+
+.clickable .toggle:not(:checked)+.anim:after {
+    -moz-animation: anim-out-pseudo .75s;
+    -webkit-animation: anim-out-pseudo .75s;
+    animation: anim-out-pseudo .75s
+}
+
+.hoverable:hover>.anim {
+    -moz-animation: anim-out .75s;
+    -webkit-animation: anim-out .75s;
+    animation: anim-out .75s
+}
+
+.hoverable:hover>.anim:after {
+    -moz-animation: anim-out-pseudo .75s;
+    -webkit-animation: anim-out-pseudo .75s;
+    animation: anim-out-pseudo .75s
+}
+
+@-webkit-keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-moz-keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-ms-keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-webkit-keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-moz-keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-ms-keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-webkit-keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-moz-keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-ms-keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-webkit-keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-moz-keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-ms-keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+.set_4_button4 {
+    position: relative;
+    font-weight: 400;
+    text-align: center;
+    width: auto;
+    float: left;
+    padding: 0 25px;
+    line-height: 45px;
+    overflow: hidden;
+    position: relative;
+    z-index: 0;
+    cursor: pointer;
+    color: #252b2d;
+    margin-right: 2.5em
+}
+
+.set_4_button4.raised {
+    -moz-transition: all .1s;
+    -o-transition: all .1s;
+    -webkit-transition: all .1s;
+    transition: all .1s;
+    background: #b9ccd2
+}
+
+.set_4_button4.raised:active {
+    background: #515151;
+    box-shadow: 0 1px 1px #063e6b
+}
+
+.anim {
+    -moz-transform: translateY(-50%) translateX(-50%);
+    -ms-transform: translateY(-50%) translateX(-50%);
+    -webkit-transform: translateY(-50%) translateX(-50%);
+    transform: translateY(-50%) translateX(-50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -1
+}
+
+.anim:before {
+    position: relative;
+    content: '';
+    display: block;
+    margin-top: 100%
+}
+
+.anim:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 50%
+}
+
+.clickable .toggle:checked+.anim {
+    -moz-animation: anim-in .75s;
+    -webkit-animation: anim-in .75s;
+    animation: anim-in .75s
+}
+
+.clickable .toggle:checked+.anim:after {
+    -moz-animation: anim-in-pseudo .75s;
+    -webkit-animation: anim-in-pseudo .75s;
+    animation: anim-in-pseudo .75s
+}
+
+.clickable .toggle:not(:checked)+.anim {
+    -moz-animation: anim-out .75s;
+    -webkit-animation: anim-out .75s;
+    animation: anim-out .75s
+}
+
+.clickable .toggle:not(:checked)+.anim:after {
+    -moz-animation: anim-out-pseudo .75s;
+    -webkit-animation: anim-out-pseudo .75s;
+    animation: anim-out-pseudo .75s
+}
+
+.hoverable:hover>.anim {
+    -moz-animation: anim-out .75s;
+    -webkit-animation: anim-out .75s;
+    animation: anim-out .75s
+}
+
+.hoverable:hover>.anim:after {
+    -moz-animation: anim-out-pseudo .75s;
+    -webkit-animation: anim-out-pseudo .75s;
+    animation: anim-out-pseudo .75s
+}
+
+@-webkit-keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-moz-keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-ms-keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@keyframes anim-in {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-webkit-keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-moz-keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-ms-keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@keyframes anim-in-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-webkit-keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-moz-keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-ms-keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@keyframes anim-out {
+    0% {
+        width: 0
+    }
+
+    100% {
+        width: 100%
+    }
+}
+
+@-webkit-keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-moz-keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@-ms-keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+@keyframes anim-out-pseudo {
+    0% {
+        background: rgba(0, 0, 0, 0.25)
+    }
+
+    100% {
+        background: transparent
+    }
+}
+
+/* 6 */
+.set_6_btn {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    margin-right: 2.5em
+}
+
+.set_6_btn span {
+    display: block;
+    padding: 30px;
+    color: #FFF;
+    -webkit-transition: all .3s ease-out;
+    transition: all .3s ease-out;
+    cursor: pointer;
+    float: left;
+    font-weight: 400;
+    line-height: 20px
+}
+
+.set_6_btn.out .corners {
+    position: absolute;
+    width: 100%;
+    -webkit-transition-duration: .3s;
+    transition-duration: .3s
+}
+
+.set_6_btn.out .corners:before,
+.set_6_btn.out .corners:after {
+    content: '';
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-color: #ffd311;
+    border-style: solid;
+    -webkit-transition-duration: .3s;
+    transition-duration: .3s;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0)
+}
+
+.set_6_btn.out .corners.top:before {
+    border-width: 1px 0 0 1px
+}
+
+.set_6_btn.out .corners.top:after {
+    border-width: 1px 1px 0 0
+}
+
+.set_6_btn.out .corners.bottom:before {
+    border-width: 0 0 1px 1px
+}
+
+.set_6_btn.out .corners.bottom:after {
+    border-width: 0 1px 1px 0
+}
+
+.set_6_btn.out .corners:before {
+    left: 0
+}
+
+.set_6_btn.out .corners:after {
+    right: 0
+}
+
+.set_6_btn.out .corners.top {
+    top: 0
+}
+
+.set_6_btn.out .corners.bottom {
+    bottom: 7px
+}
+
+.set_6_btn.out:hover .corners:before {
+    left: 20px
+}
+
+.set_6_btn.out:hover .corners:after {
+    right: 20px
+}
+
+.set_6_btn.out:hover .corners.top {
+    top: 20px
+}
+
+.set_6_btn.out:hover .corners.bottom {
+    bottom: 27px
+}
+
+.set_6_btn.in .corners {
+    position: absolute;
+    width: 100%;
+    -webkit-transition-duration: .3s;
+    transition-duration: .3s
+}
+
+.set_6_btn.in .corners:before,
+.set_6_btn.in .corners:after {
+    content: '';
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-color: #FFB902;
+    border-style: solid;
+    -webkit-transition-duration: .3s;
+    transition-duration: .3s;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0)
+}
+
+.set_6_btn.in .corners.top:before {
+    border-width: 1px 0 0 1px
+}
+
+.set_6_btn.in .corners.top:after {
+    border-width: 1px 1px 0 0
+}
+
+.set_6_btn.in .corners.bottom:before {
+    border-width: 0 0 1px 1px
+}
+
+.set_6_btn.in .corners.bottom:after {
+    border-width: 0 1px 1px 0
+}
+
+.set_6_btn.in .corners:before {
+    left: 20px
+}
+
+.set_6_btn.in .corners:after {
+    right: 20px
+}
+
+.set_6_btn.in .corners.top {
+    top: 20px
+}
+
+.set_6_btn.in .corners.bottom {
+    bottom: 27px
+}
+
+.set_6_btn.in:hover .corners:before {
+    left: 0
+}
+
+.set_6_btn.in:hover .corners:after {
+    right: 0
+}
+
+.set_6_btn.in:hover .corners.top {
+    top: 0
+}
+
+.set_6_btn.in:hover .corners.bottom {
+    bottom: 7px
+}
+
+.set_6_btn.yellow span {
+    color: #333
+}
+
+.set_6_btn.yellow .corners:after,
+.set_6_btn.yellow .corners:before {
+    border-color: #ffd311
+}
+
+.set_6_btn.grey span {
+    color: #333
+}
+
+.set_6_btn.grey .corners:after,
+.set_6_btn.grey .corners:before {
+    border-color: #838383
+}
+
+.set_6_btn.red span {
+    color: #333
+}
+
+.set_6_btn.red .corners:after,
+.set_6_btn.red .corners:before {
+    border-color: #dd483f
+}
+
+.set_6_btn.blue span {
+    color: #333
+}
+
+.set_6_btn.blue .corners:after,
+.set_6_btn.blue .corners:before {
+    border-color: #56c5ff
+}
+
+/* 7 */
+.set_7_btn-wrapper {
+    float: left;
+    width: auto;
+    line-height: 45px;
+    display: inline-block;
+    margin-right: 2em;
+    text-align: center
+}
+
+#set_7_button1 {
+    stroke-width: 6px;
+    fill: transparent;
+    stroke: rgba(96, 160, 255, 0.678);
+    stroke-dasharray: 85 400;
+    stroke-dashoffset: -205%;
+    transition: 1s all ease
+}
+
+.set_7_btn-wrapper:hover #set_7_button1 {
+    stroke-dasharray: 50 0;
+    stroke-width: 3px;
+    stroke-dashoffset: 0;
+    stroke: rgb(63, 194, 255);
+}
+
+#set_7_text {
+    margin-top: -65px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#set_7_text a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    font-weight: 400
+}
+
+#set_7_button2 {
+    stroke-width: 6px;
+    fill: transparent;
+    stroke: #ffd311;
+    stroke-dasharray: 85 400;
+    stroke-dashoffset: -228;
+    transition: 1s all ease
+}
+
+.set_7_btn-wrapper:hover #set_7_button2 {
+    stroke-dasharray: 50 0;
+    stroke-width: 3px;
+    stroke-dashoffset: 0;
+    stroke: #ffd311
+}
+
+#set_7_button3 {
+    stroke-width: 6px;
+    fill: transparent;
+    stroke: #dd483f;
+    stroke-dasharray: 85 400;
+    stroke-dashoffset: -228;
+    transition: 1s all ease
+}
+
+.set_7_btn-wrapper:hover #set_7_button3 {
+    stroke-dasharray: 50 0;
+    stroke-width: 3px;
+    stroke-dashoffset: 0;
+    stroke: #dd483f
+}
+
+#set_7_button4 {
+    stroke-width: 6px;
+    fill: transparent;
+    stroke: #56c5ff;
+    stroke-dasharray: 85 400;
+    stroke-dashoffset: -228;
+    transition: 1s all ease
+}
+
+.set_7_btn-wrapper:hover #set_7_button4 {
+    stroke-dasharray: 50 0;
+    stroke-width: 3px;
+    stroke-dashoffset: 0;
+    stroke: #56c5ff
+}
+
+/* 8 */
+
+
+/* 9 */
+
+
+/* 10 */
+
+
+/* 11 */

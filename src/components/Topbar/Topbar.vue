@@ -13,55 +13,18 @@
           :router="true"
           style="border: unset"
         >
-          <el-menu-item
-            @click="sendRouter('/home')"
+          <el-menu-item v-for="bar in barList" :key="bar"
+            @click="sendRouter(bar.path)"
             index="2"
-            style="font-size: 20px"
-            class="barItem"
-            >主页</el-menu-item
+            style="font-size: 20px;cursor:pointer"
+            class="set_7_btn-wrapper"
           >
-          <el-menu-item
-            @click="sendRouter('/data')"
-            index="3"
-            style="font-size: 20px"
-            class="barItem"
-            >数据</el-menu-item
-          >
-          <el-menu-item
-            @click="sendRouter('/model')"
-            index="3"
-            style="font-size: 20px"
-            class="barItem"
-            >模型</el-menu-item
-          >
-          <el-menu-item
-            @click="sendRouter('/method')"
-            index="4"
-            style="font-size: 20px"
-            class="barItem"
-            >方法</el-menu-item
-          >
-          <el-menu-item
-            @click="sendRouter('/function')"
-            index="5"
-            style="font-size: 20px"
-            class="barItem"
-            >功能</el-menu-item
-          >
-          <el-menu-item
-            @click="sendRouter('/help')"
-            index="6"
-            style="font-size: 20px"
-            class="barItem"
-            >帮助</el-menu-item
-          >
-          <el-menu-item
-            @click="sendRouter('/about')"
-            index="7"
-            style="font-size: 20px"
-            class="barItem"
-            >关于</el-menu-item
-          >
+            <svg height="55" width="120">
+              <rect id="set_7_button1" height="55" width="120"></rect>
+            </svg>
+            <div id="set_7_text"><a href="">{{bar.name}}</a></div>
+          </el-menu-item>
+          
         </el-menu>
       </div>
     </div>
@@ -70,25 +33,36 @@
 
 <script setup>
 import { reactive, computed, ref, defineEmits } from "vue";
-const emit=defineEmits(['toRouter']);
+import {useRouter} from "vue-router";
+const router=useRouter()
+const barList=ref(router.options.routes)
+console.log(router)
+const emit = defineEmits(["toRouter"]);
 const sendRouter = (route) => {
-  emit('toRouter',route)
+  emit("toRouter", route);
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
-.topbar{
-  margin-left:20px ;
+@import "../../css/btn.css";
+
+.topbar {
+  margin-left: 20px;
+  width: 100%;
 }
 .barItem {
+  letter-spacing: 0;
+  float: left;
   padding: 10px 10px;
   cursor: pointer;
   margin: 0px 10px;
-  &:hover{
-    border: 2px solid;
+  transition: all 280ms ease-in-out;
+  &:hover {
+    border-left: 2px solid;
+    border-right: 2px solid;
     border-color: white;
-    
+    text-decoration: none;
   }
 }
 
@@ -100,7 +74,7 @@ const sendRouter = (route) => {
 }
 .head {
   width: 100%;
-  background: rgb(47, 55, 100);
+  background: rgb(50, 53, 70);
   height: 100%;
   color: white;
   display: flex;

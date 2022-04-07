@@ -14,7 +14,7 @@
           style="border: unset"
         >
           <el-menu-item v-for="bar in barList" :key="bar"
-            @click="sendRouter(bar.path)"
+            @click="sendRouterToFather(bar.path)"
             index="2"
             style="font-size: 20px;cursor:pointer"
             class="set_7_btn-wrapper"
@@ -37,15 +37,15 @@ import {useRouter} from "vue-router";
 const router=useRouter()
 const barList=ref(router.options.routes)
 console.log(router)
-const emit = defineEmits(["toRouter"]);
-const sendRouter = (route) => {
-  emit("toRouter", route);
+const emit = defineEmits(["RouterFromBar"]);
+const sendRouterToFather = (route) => {
+  emit("RouterFromBar", route);
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
-@import "../../css/btn.css";
+@import "../../css/btn/btn7.css";
 
 .topbar {
   margin-left: 20px;

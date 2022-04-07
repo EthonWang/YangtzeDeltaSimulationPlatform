@@ -14,7 +14,7 @@ myRouter.push({path:router})
 </script>
 <template>
   <div id="app">
-    <Topbar @toRouter="routerGo" style="height:60px"></Topbar>
+    <Topbar @RouterFromBar="routerGo" style="height:60px"></Topbar>
   
   <router-view />
   </div>

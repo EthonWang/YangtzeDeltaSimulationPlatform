@@ -1,0 +1,86 @@
+
+/* 7 */
+.set_7_btn-wrapper {
+    float: left;
+    width: auto;
+    line-height: 45px;
+    display: inline-block;
+    margin-right: 2em;
+    text-align: center
+}
+
+#set_7_button1 {
+    stroke-width: 6px;
+    fill: transparent;
+    stroke: rgba(96, 160, 255, 0.678);
+    stroke-dasharray: 85 400;
+    stroke-dashoffset: -205%;
+    transition: 1s all ease
+}
+
+.set_7_btn-wrapper:hover #set_7_button1 {
+    stroke-dasharray: 50 0;
+    stroke-width: 3px;
+    stroke-dashoffset: 0;
+    stroke: rgb(63, 194, 255);
+}
+
+#set_7_text {
+    margin-top: -65px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#set_7_text a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    font-weight: 400
+}
+
+#set_7_button2 {
+    stroke-width: 6px;
+    fill: transparent;
+    stroke: #ffd311;
+    stroke-dasharray: 85 400;
+    stroke-dashoffset: -228;
+    transition: 1s all ease
+}
+
+.set_7_btn-wrapper:hover #set_7_button2 {
+    stroke-dasharray: 50 0;
+    stroke-width: 3px;
+    stroke-dashoffset: 0;
+    stroke: #ffd311
+}
+
+#set_7_button3 {
+    stroke-width: 6px;
+    fill: transparent;
+    stroke: #dd483f;
+    stroke-dasharray: 85 400;
+    stroke-dashoffset: -228;
+    transition: 1s all ease
+}
+
+.set_7_btn-wrapper:hover #set_7_button3 {
+    stroke-dasharray: 50 0;
+    stroke-width: 3px;
+    stroke-dashoffset: 0;
+    stroke: #dd483f
+}
+
+#set_7_button4 {
+    stroke-width: 6px;
+    fill: transparent;
+    stroke: #56c5ff;
+    stroke-dasharray: 85 400;
+    stroke-dashoffset: -228;
+    transition: 1s all ease
+}
+
+.set_7_btn-wrapper:hover #set_7_button4 {
+    stroke-dasharray: 50 0;
+    stroke-width: 3px;
+    stroke-dashoffset: 0;
+    stroke: #56c5ff
+}

@@ -20,18 +20,19 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
+### 简介
 Vue3.0+js
 UI库ElementPlus
+样式less/css
 
-页面在views
+页面src/views
 
-功能组件在components
+功能组件src/components
 
-工具在utils
+工具src/utils
 
-接口在api
+接口src/api
 
-样式可以放在css
+独立样式src/css
+
+axios封装request/request.js

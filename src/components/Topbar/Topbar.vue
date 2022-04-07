@@ -19,8 +19,8 @@
             style="font-size: 20px;cursor:pointer"
             class="set_7_btn-wrapper"
           >
-            <svg height="55" width="120">
-              <rect id="set_7_button1" height="55" width="120"></rect>
+            <svg height="54" width="120">
+              <rect id="set_7_button1" height="54" width="120"></rect>
             </svg>
             <div id="set_7_text"><a href="">{{bar.name}}</a></div>
           </el-menu-item>

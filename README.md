@@ -23,6 +23,9 @@ npm run lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
+Vue3.0+js
+UI库ElementPlus
+
 页面在views
 
 功能组件在components
@@ -31,6 +34,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 接口在api
 
-UI库ElementPlus
-
-Vue3.0+js
+样式可以放在css

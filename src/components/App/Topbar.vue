@@ -2,30 +2,28 @@
   <div class="container">
     <div class="head">
       <div class="main-menucontainer">
-        <el-menu
-          :default-active="activeIndex"
+        <div
+     
           class="el-menu-demo topbar"
-          mode="horizontal"
-          @select="handleSelect"
-          background-color="rgb(20, 133, 209)"
-          text-color="#FFFFFF"
-          active-text-color="#CCCCCC"
-          :router="true"
-          style="border: unset"
+          
+          
+          
+          
         >
-          <el-menu-item v-for="bar in barList" :key="bar"
-            @click="sendRouterToFather(bar.path)"
-            index="2"
-            style="font-size: 20px;cursor:pointer"
-            class="set_7_btn-wrapper"
+          <div v-for="bar in barList" :key="bar"
+            @click="sendRouterToFather(bar.path,bar.index)"
+            
+            style="font-size: 20px;cursor:pointer;"
+            class="set_7_btn-wrapper "
+            :class="{pickup:(pick[bar.index])}"
           >
             <svg height="54" width="120">
               <rect id="set_7_button1" height="54" width="120"></rect>
             </svg>
             <div id="set_7_text"><a href="">{{bar.name}}</a></div>
-          </el-menu-item>
+          </div>
           
-        </el-menu>
+        </div>
       </div>
     </div>
   </div>
@@ -38,9 +36,16 @@ const router=useRouter()
 const barList=ref(router.options.routes)
 console.log(router)
 const emit = defineEmits(["RouterFromBar"]);
-const sendRouterToFather = (route) => {
+const sendRouterToFather = (route,row) => {
+  pickup(row)
   emit("RouterFromBar", route);
+  
 };
+let pick=ref([0,0,0,0,0])
+const pickup=(row)=>{
+  pick.value=[0,0,0,0,0]
+  pick.value[row]=1
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -50,19 +55,23 @@ const sendRouterToFather = (route) => {
 .topbar {
   margin-left: 20px;
   width: 100%;
+  
+}
+.pickup{
+  border: 2px solid;
+  box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
 }
 .barItem {
-  letter-spacing: 0;
-  float: left;
-  padding: 10px 10px;
-  cursor: pointer;
-  margin: 0px 10px;
-  transition: all 280ms ease-in-out;
+  height: 80px;
+  transition: all 1000ms ease-in-out;
   &:hover {
-    border-left: 2px solid;
-    border-right: 2px solid;
-    border-color: white;
-    text-decoration: none;
+    
+    background-color: rgba(255, 255, 255, 0.521);
+   
+    a{
+      color: rgb(77, 77, 77) !important;
+    }
+    
   }
 }
 
@@ -74,7 +83,7 @@ const sendRouterToFather = (route) => {
 }
 .head {
   width: 100%;
-  background: rgb(50, 53, 70);
+  background: rgb(41, 41, 41);
   height: 100%;
   color: white;
   display: flex;

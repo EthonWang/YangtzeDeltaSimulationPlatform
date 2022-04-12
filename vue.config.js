@@ -27,16 +27,16 @@ module.exports = {
     // 生产环境是否生成 sourceMap 文件
     productionSourceMap: true,
     // css相关配置
-    css: {
-        // 是否使用css分离插件 ExtractTextPlugin
-        extract: true,
-        // 开启 CSS source maps?
-        sourceMap: false,
-        // css预设器配置项
-        loaderOptions: {},
-        // 启用 CSS modules for all css / pre-processor files.
-        requireModuleExtension: false,
-    },
+    // css: {
+    //     // 是否使用css分离插件 ExtractTextPlugin
+    //     extract: true,
+    //     // 开启 CSS source maps?
+    //     sourceMap: false,
+    //     // css预设器配置项
+    //     loaderOptions: {},
+    //     // 启用 CSS modules for all css / pre-processor files.
+    //     requireModuleExtension: false,
+    // },
     // use thread-loader for babel & TS in production build
     // enabled by default if the machine has more than 1 cores
     parallel: require("os").cpus().length > 1,
@@ -65,18 +65,18 @@ module.exports = {
                 },
             },
             "/back_backup": {
-                target: "http://localhost:9999",
+                target: "http://172.21.213.222:9999",
                 ws: true,
-
+                timeout: 3600000,
                 changOrigin: true,
                 pathRewrite: {
                     "/back_backup": "",
                 },
             },
             "/back_data": {
-                target: "http://localhost:8999",
+                target: "http://172.21.213.222:8999",
                 ws: true,
-
+                timeout: 3600000,
                 changOrigin: true,
                 pathRewrite: {
                     "/back_data": "",

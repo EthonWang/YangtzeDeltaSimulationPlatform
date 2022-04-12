@@ -1,6 +1,9 @@
 <template>
   <div class="about">
-    <h1>This is a home page</h1>
+    <div style="position:absolute;top:0px;left:0;"><h1>This is a home page</h1></div>
+    <Fire></Fire>
+
+
   </div>
 </template>
 
@@ -9,6 +12,7 @@
 import { reactive, computed, ref } from "vue";
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
+import Fire from "@/components/Home/Fire.vue"
 
 const router=useRouter()//路由直接用router.push(...)
 const store=useStore()//vuex直接用store.commit

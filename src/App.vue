@@ -1,4 +1,12 @@
 
+
+<template>
+  <div id="app" class="">
+    <Topbar @RouterFromBar="routerGo" style="height: 60px"></Topbar>
+
+    <router-view class="main"></router-view>
+  </div>
+</template>
 <script setup>
 import { reactive, computed, ref, defineProps } from "vue";
 import Topbar from "./components/App/Topbar.vue";
@@ -11,13 +19,6 @@ const routerGo = (router) => {
   myRouter.push({ path: router });
 };
 </script>
-<template>
-  <div id="app" class="">
-    <Topbar @RouterFromBar="routerGo" style="height: 60px"></Topbar>
-
-    <router-view class="main"></router-view>
-  </div>
-</template>
 <style lang="less" scoped>
 // @import "./css/mouse/fire.css";
 // @import url(https://fonts.googleapis.com/css?family=Amatic+SC);

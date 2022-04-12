@@ -17,7 +17,7 @@
       
       <div class="segmented-control__color"></div>
     </div>
-    <button>12123</button>
+    <button class="cyberpunk">12123</button>
     <input class="cyberpunk" type="text" placeholder="input 输入框" />
 <textarea class="cyberpunk" placeholder="textarea 文本框"></textarea>
 <label class="cyberpunk"><input class="cyberpunk" name="test" type="radio" />单选框1</label>
@@ -41,6 +41,6 @@ import { useRouter } from "vue-router";
 </script>
 <style lang="less" scoped>
 @import "../css/tab/segmented.css";
-// @import "../css/global/cyberpunk.less";
+@import "../css/global/cyberpunk.less";
 
 </style>

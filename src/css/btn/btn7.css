@@ -1,7 +1,7 @@
 
 /* 7 */
 .set_7_btn-wrapper {
-    float: left;
+    
     width: auto;
     line-height: 45px;
     display: inline-block;
@@ -32,7 +32,7 @@
     vertical-align: middle;
 }
 
-#set_7_text a {
+#set_7_text span {
     color: rgb(255, 255, 255);
     text-decoration: none;
     font-weight: 400

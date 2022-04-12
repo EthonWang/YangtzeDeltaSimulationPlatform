@@ -2,26 +2,21 @@
   <div class="container">
     <div class="head">
       <div class="main-menucontainer">
-        <div
-     
-          class="el-menu-demo topbar"
-          
-          
-          
-          
-        >
-          <div v-for="bar in barList" :key="bar"
-            @click="sendRouterToFather(bar.path,bar.index)"
-            
-            style="font-size: 20px;cursor:pointer;"
-            class="set_7_btn-wrapper "
-            :class="{pickup:(pick[bar.index])}"
+        
+          <div
+            v-for="(bar,index) in barList"
+            :key="bar"
+            @click="sendRouterToFather(bar.path,index)"
+            style="font-size: 20px; cursor: pointer"
+            class="set_7_btn-wrapper"
+            :class="{pickup:pick[index]}"
           >
             <svg height="54" width="120">
               <rect id="set_7_button1" height="54" width="120"></rect>
             </svg>
-            <div id="set_7_text"><a href="">{{bar.name}}</a></div>
-          </div>
+            <div id="set_7_text">
+              <span>{{ bar.name }}</span>
+            </div>
           
         </div>
       </div>
@@ -31,21 +26,19 @@
 
 <script setup>
 import { reactive, computed, ref, defineEmits } from "vue";
-import {useRouter} from "vue-router";
-const router=useRouter()
-const barList=ref(router.options.routes)
-console.log(router)
+import { useRouter } from "vue-router";
+const router = useRouter();
+const barList = reactive(router.options.routes);
 const emit = defineEmits(["RouterFromBar"]);
-const sendRouterToFather = (route,row) => {
-  pickup(row)
+const sendRouterToFather = (route,index) => {
+  pickup(index);
   emit("RouterFromBar", route);
-  
 };
-let pick=ref([0,0,0,0,0])
-const pickup=(row)=>{
-  pick.value=[0,0,0,0,0]
-  pick.value[row]=1
-}
+let pick = ref([0, 0, 0, 0, 0]);
+const pickup = (row) => {
+  pick.value = [0, 0, 0, 0, 0];
+  pick.value[row] = 1;
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -55,23 +48,20 @@ const pickup=(row)=>{
 .topbar {
   margin-left: 20px;
   width: 100%;
-  
 }
-.pickup{
+.pickup {
   border: 2px solid;
-  box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
 }
 .barItem {
   height: 80px;
   transition: all 1000ms ease-in-out;
   &:hover {
-    
     background-color: rgba(255, 255, 255, 0.521);
-   
-    a{
+
+    a {
       color: rgb(77, 77, 77) !important;
     }
-    
   }
 }
 

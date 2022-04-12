@@ -291,12 +291,12 @@ onresize = function () {
 };
 
 let oCanvas;
-let init = function () {
+const init = function () {
   oCanvas = new Fire();
   oCanvas.start();
 };
 
-window.onload = init;
+setTimeout(init,300) 
 </script>
 
 <style lang="less" scoped>

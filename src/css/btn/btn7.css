@@ -5,15 +5,15 @@
     width: auto;
     line-height: 45px;
     display: inline-block;
-    margin-right: 2em;
+    margin-right: 0px;
     text-align: center;
     
 }
 
 #set_7_button1 {
-    stroke-width: 6px;
+    stroke-width: 0px;
     fill: transparent;
-    stroke: rgba(96, 160, 255, 0.678);
+    stroke: rgb(96, 160, 255);
     stroke-dasharray: 85 400;
     stroke-dashoffset: -205%;
     transition: 1s all ease
@@ -21,7 +21,7 @@
 
 .set_7_btn-wrapper:hover #set_7_button1 {
     stroke-dasharray: 50 0;
-    stroke-width: 3px;
+    stroke-width: 1px;
     stroke-dashoffset: 0;
     stroke: rgb(63, 194, 255);
 }

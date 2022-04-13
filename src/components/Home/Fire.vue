@@ -7,7 +7,7 @@ class Fire {
   constructor() {
     this.canvas = document.getElementById("fire");
     this.ctx = this.canvas.getContext("2d");
-    this.canvas.height = window.innerHeight - 80;
+    this.canvas.height = window.innerHeight ;
     this.canvas.width = window.innerWidth;
     this.canvas.position = "fixed";
     // this.canvas.fillStyle="rgba(0,0,0,0)"
@@ -17,7 +17,7 @@ class Fire {
 
     this.mouse = {
       x: this.canvas.width * 0.5,
-      y: this.canvas.height * 0.75 - 80,
+      y: this.canvas.height * 0.75  ,
     };
 
     this.init();
@@ -123,7 +123,7 @@ class Fire {
   }
   updateMouse(e) {
     this.mouse.x = e.clientX;
-    this.mouse.y = e.clientY - 50;
+    this.mouse.y = e.clientY  ;
 
     //this.aFires.push( new Flame( this.mouse ) );
   }
@@ -301,7 +301,9 @@ setTimeout(init,300)
 
 <style lang="less" scoped>
 canvas {
-  background: rgb(112, 112, 112) !important;
+    // position: absolute;
+    // top:0;
+  background: rgba(112, 112, 112,0) !important;
   // pointer-events: none;
 }
 </style>

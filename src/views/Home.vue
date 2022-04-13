@@ -1,7 +1,7 @@
 <template>
   <div class="about">
-    <div style="position:absolute;top:0px;left:0;"><h1>This is a home page</h1></div>
-    <Fire></Fire>
+    <div style="position:relative;top:0px;left:0;z-index:1"><h1>This is a home page</h1></div>
+    <Fire style="position:absolute;top:0px;left:0;z-index:0"></Fire>
 
 
   </div>

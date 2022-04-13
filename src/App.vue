@@ -2,9 +2,14 @@
 
 <template>
   <div id="app" class="">
-    <Topbar @RouterFromBar="routerGo" style="height: 60px"></Topbar>
-
-    <router-view class="main"></router-view>
+    <Topbar
+      @RouterFromBar="routerGo"
+      style="height: 60px; position: absolute; z-index: 500"
+    ></Topbar>
+    <!-- <el-scrollbar height="400px" -->
+      ><router-view class="main"></router-view
+    >
+    <!-- </el-scrollbar> -->
   </div>
 </template>
 <script setup>
@@ -29,13 +34,20 @@ const routerGo = (router) => {
   -moz-osx-font-smoothing: grayscale;
   // text-align: center;
   // color: #fafafa;
-  background-color: #646464;
+  // background-color: #646464;
   // cursor: ;
 }
 .main {
-  position: relative;
+  position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
   height: 857px;
+  padding-top: 60px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar{
+  width: 1px !important;
 }
 </style>

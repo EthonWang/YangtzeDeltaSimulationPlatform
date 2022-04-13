@@ -8,7 +8,7 @@ import Help from "@/views/Help.vue";
 
 const routes = [
   {
-    isBar:true,//如果不想加入TopBar，就设定为false，或者写在children里面
+    isBar:true,//如果不想加入TopBar，就设定为false，或者写在对应children里面
     path: "/",
     name: "首页",
     component: Home,

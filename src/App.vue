@@ -24,7 +24,7 @@ const routerGo = (router) => {
   myRouter.push({ path: router });
 };
 </script>
-<style lang="less" scoped>
+<style lang="less">
 // @import "./css/mouse/fire.css";
 // @import url(https://fonts.googleapis.com/css?family=Amatic+SC);
 

@@ -21,9 +21,10 @@
 
 .set_7_btn-wrapper:hover #set_7_button1 {
     stroke-dasharray: 50 0;
-    stroke-width: 1px;
+    stroke-width: 2px;
     stroke-dashoffset: 0;
-    stroke: rgb(63, 194, 255);
+    /* stroke: rgb(63, 194, 255); */
+    stroke: hsl(56, 100%, 50%);
 }
 
 #set_7_text {

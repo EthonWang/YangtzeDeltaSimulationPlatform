@@ -23,7 +23,7 @@ class Fire {
     this.init();
   }
   init() {
-    this.canvas.addEventListener(
+    document.addEventListener(
       "mousemove",
       this.updateMouse.bind(this),
       false

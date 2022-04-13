@@ -68,7 +68,7 @@ class Fire {
   }
   draw() {
     // this.ctx.globalCompositeOperation = "source-over";
-    this.ctx.fillStyle = "rgb(11, 28, 36)";
+    this.ctx.fillStyle = "hsl(251, 55%, 3%)";
     this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
 
     this.grd = this.ctx.createRadialGradient(

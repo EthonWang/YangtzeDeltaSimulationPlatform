@@ -8,36 +8,41 @@ import Help from "@/views/Help.vue";
 
 const routes = [
   {
-    index:0,
+    isBar:true,//如果不想加入TopBar，就设定为false，或者写在children里面
     path: "/",
     name: "首页",
     component: Home,
+    children:[]
   },
   {
-    index:1,
+    isBar:true,
     path: "/model",
     name: "模型",
     component: Model,
+    children:[]
   },
   {
-    index:2,
+    isBar:true,
     path: "/case",
     name: "案例",
     component: Method,
+    children:[]
   },
   
   {
-    index:3,
+    isBar:true,
     path: "/about",
     name: "关于",
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
+      children:[]
   },
   {
-    index:4,
+    isBar:true,
     path: "/test",
     name: "测试",
     component: Help,
+    children:[]
   },
   
 ];

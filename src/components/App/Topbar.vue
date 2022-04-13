@@ -5,7 +5,9 @@
         
           <div
             v-for="(bar,index) in barList"
+            
             :key="bar"
+            
             @click="sendRouterToFather(bar.path,index)"
             style="font-size: 20px; cursor: pointer"
             class="set_7_btn-wrapper"
@@ -28,15 +30,16 @@
 import { reactive, computed, ref, defineEmits } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
-const barList = reactive(router.options.routes);
+
+const barList = reactive(router.options.routes.filter(item=>item.isBar==true));
 const emit = defineEmits(["RouterFromBar"]);
 const sendRouterToFather = (route,index) => {
   pickup(index);
   emit("RouterFromBar", route);
 };
-let pick = ref([0, 0, 0, 0, 0]);
+let pick = ref([0, 0, 0, 0, 0,0]);
 const pickup = (row) => {
-  pick.value = [0, 0, 0, 0, 0];
+  pick.value = [0, 0, 0, 0, 0,0];
   pick.value[row] = 1;
 };
 </script>

@@ -5,6 +5,7 @@ import Model from "@/views/Model.vue";
 import Method from "@/views/Method.vue";
 import Help from "@/views/Help.vue";
 import Functions from "@/views/Function.vue";
+import Cesium from "@/components/cesium/cesium.vue";
 
 const routes = [
   {
@@ -47,6 +48,11 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
+  // {
+  //   path: "/Cesium",
+  //   name: "Cesium",
+  //   component: Cesium,
+  // },
   
 ];
 

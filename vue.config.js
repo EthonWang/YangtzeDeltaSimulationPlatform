@@ -1,3 +1,12 @@
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const webpack = require('webpack')
+const path = require('path')
+let cesiumSource = './node_modules/cesium/Source'
+
+function resolve(dir) {
+    return path.join(__dirname, dir);
+}
+
 module.exports = {
     /** 区分打包环境与开发环境
      * process.env.NODE_ENV==='production'  (打包环境)
@@ -15,8 +24,35 @@ module.exports = {
     // compiler: false,
     // webpack配置
     // see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
-    chainWebpack: () => { },
-    configureWebpack: () => { },
+    chainWebpack: (config) => {
+        // 配置路径别名
+        config.resolve.alias
+            .set("@", resolve("./src"))
+            .set("components", resolve("./src/components"))
+            .set("views", resolve("./src/views"))
+            .set("assets", resolve("./src/assets"))
+            .set("common", resolve("./src/common"))
+            .set("cesium", resolve(cesiumSource))
+    },
+    configureWebpack: {
+        plugins: [
+            new CopyWebpackPlugin({
+                patterns: [
+                    { from: path.join(cesiumSource, 'Workers'), to: 'Workers' },
+                    { from: path.join(cesiumSource, 'Assets'), to: 'Assets' },
+                    { from: path.join(cesiumSource, 'Widgets'), to: 'Widgets' },
+                    { from: path.join(cesiumSource, 'ThirdParty/Workers'), to: 'ThirdParty/Workers' },
+                ],
+            }),
+            // new CopyWebpackPlugin([ { from: path.join(cesiumSource, 'Workers'), to: 'Workers'}]),
+            // new CopyWebpackPlugin([ { from: path.join(cesiumSource, 'Assets'), to: 'Assets'}]),
+            // new CopyWebpackPlugin([ { from: path.join(cesiumSource, 'Widgets'), to: 'Widgets'}]),
+            // new CopyWebpackPlugin([ { from: path.join(cesiumSource, 'ThirdParty/Workers'), to: 'ThirdParty/Workers'}]),
+            new webpack.DefinePlugin({
+                CESIUM_BASE_URL: JSON.stringify('./')
+            })
+        ],
+    },
     //如果想要引入babel-polyfill可以这样写
     // configureWebpack: (config) => {
     //   config.entry = ["babel-polyfill", "./src/main.js"]
@@ -50,7 +86,7 @@ module.exports = {
     devServer: {
         open: true,
         host: "127.0.0.1",
-        port: 3030, 
+        port: 3030,
         https: false,
         hotOnly: false,
         proxy: {
@@ -86,7 +122,8 @@ module.exports = {
         before: (app) => { },
     },
     // 第三方插件配置
-    pluginOptions: {
-        // ...
-    },
+    // pluginOptions: {
+    //     // ...
+    // },
+
 };

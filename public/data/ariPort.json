@@ -1,0 +1,56 @@
+{
+    "type": "FeatureCollection",
+    "crs": {
+        "type": "name",
+        "properties": {
+            "name": "EPSG:4326"
+        }
+    },
+    "features": [
+        {
+            "type": "Feature",
+            "id": 1,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    121.7992,
+                    31.15046
+                ]
+            },
+            "properties": {
+                "OBJECTID": 1,
+                "ID": 1,
+                "地名": "上海浦东国际机场",
+                "IATA": "PVG",
+                "ICAO": "ZSPD",
+                "飞行区等级": "4F级",
+                "航站楼面积": "145.6万平方米",
+                "机位数量": "340",
+                "所属地区": "中国上海市浦东新区"
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 2,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    119.78432,
+                    31.91299
+                ]
+            },
+            "properties": {
+                "OBJECTID": 2,
+                "ID": 2,
+                "地名": "常州奔牛国际机场",
+                "IATA": "CZX",
+                "ICAO": "ZSCG",
+                "飞行区等级": "4E级",
+                "航站楼面积": "3.8万平方米",
+                "机位数量": "20",
+                "所属地区": "中国江苏省常州市、镇江市"
+            }
+        }
+    
+    ]
+}

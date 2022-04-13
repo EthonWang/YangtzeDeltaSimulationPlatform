@@ -49,23 +49,23 @@ const pickup = (row) => {
 @keyframes glitched {
   0% {
     left: -4px;
-    transform: skew(-20deg);
+    transform: skew(-20deg) scale(1.1);
   }
   11% {
     left: 2px;
-    transform: skew(0deg);
+    transform: skew(0deg) scale(1.1);
   }
   50% {
-    transform: skew(0deg);
+    transform: skew(0deg) scale(1.1);
   }
   51% {
-    transform: skew(10deg);
+    transform: skew(10deg) scale(1.1);
   }
   60% {
-    transform: skew(0deg);
+    transform: skew(0deg) scale(1.1);
   }
   100% {
-    transform: skew(0deg);
+    transform: skew(0deg) scale(1.1);
   }
 }
 @keyframes beforeglitched {

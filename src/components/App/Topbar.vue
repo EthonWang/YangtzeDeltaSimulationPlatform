@@ -1,31 +1,22 @@
 <template>
   <div class="container">
     <div class="head">
-      <div class="main-menucontainer">
-        <el-menu
-          :default-active="activeIndex"
-          class="el-menu-demo topbar"
-          mode="horizontal"
-          @select="handleSelect"
-          background-color="rgb(20, 133, 209)"
-          text-color="#FFFFFF"
-          active-text-color="#CCCCCC"
-          :router="true"
-          style="border: unset"
+      LOGOLOGOLOGOLOGOLOGOLOGOLOGOLOGO
+      <div class="main-menucontainer topbar">
+        <div
+          v-for="(bar, index) in barList"
+          :key="bar"
+          @click="sendRouterToFather(bar.path, index)"
+          style="font-size: 16px; cursor: pointer"
+          class="set_7_btn-wrapper"
         >
-          <el-menu-item v-for="bar in barList" :key="bar"
-            @click="sendRouterToFather(bar.path)"
-            index="2"
-            style="font-size: 20px;cursor:pointer"
-            class="set_7_btn-wrapper"
-          >
-            <svg height="54" width="120">
-              <rect id="set_7_button1" height="54" width="120"></rect>
-            </svg>
-            <div id="set_7_text"><a href="">{{bar.name}}</a></div>
-          </el-menu-item>
-          
-        </el-menu>
+          <svg height="54" width="120">
+            <rect id="set_7_button1" height="54" width="120"></rect>
+          </svg>
+          <div id="set_7_text" :class="{ pickup: pick[index] }">
+            <span>{{ bar.name }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -33,48 +24,178 @@
 
 <script setup>
 import { reactive, computed, ref, defineEmits } from "vue";
-import {useRouter} from "vue-router";
-const router=useRouter()
-const barList=ref(router.options.routes)
-console.log(router)
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+const barList = reactive(
+  router.options.routes.filter((item) => item.isBar == true)
+);
 const emit = defineEmits(["RouterFromBar"]);
-const sendRouterToFather = (route) => {
+const sendRouterToFather = (route, index) => {
+  pickup(index);
   emit("RouterFromBar", route);
+};
+let pick = ref(new Array(barList.length).fill(0));
+pick.value[0]=1;
+const pickup = (row) => {
+  pick.value = new Array(barList.length).fill(0);
+  pick.value[row] = 1;
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
 @import "../../css/btn/btn7.css";
-
-.topbar {
-  margin-left: 20px;
-  width: 100%;
-}
-.barItem {
-  letter-spacing: 0;
-  float: left;
-  padding: 10px 10px;
-  cursor: pointer;
-  margin: 0px 10px;
-  transition: all 280ms ease-in-out;
-  &:hover {
-    border-left: 2px solid;
-    border-right: 2px solid;
-    border-color: white;
-    text-decoration: none;
+@keyframes glitched {
+  0% {
+    left: -4px;
+    transform: skew(-20deg) scale(1.1);
+  }
+  11% {
+    left: 2px;
+    transform: skew(0deg) scale(1.1);
+  }
+  50% {
+    transform: skew(0deg) scale(1.1);
+  }
+  51% {
+    transform: skew(10deg) scale(1.1);
+  }
+  60% {
+    transform: skew(0deg) scale(1.1);
+  }
+  100% {
+    transform: skew(0deg) scale(1.1);
   }
 }
-
+@keyframes beforeglitched {
+  0% {
+    left: -4px;
+    transform: skew(-20deg);
+    clip-path: polygon(
+      0px 0px,
+      85px 0px,
+      90px 5px,
+      100% 5px,
+      100% 6px,
+      85px 6px,
+      80px 10px,
+      0px 10px
+    );
+  }
+  11% {
+    left: 2px;
+    transform: skew(0deg);
+    clip-path: polygon(
+      0px 0px,
+      85px 0px,
+      90px 5px,
+      100% 5px,
+      100% 6px,
+      85px 6px,
+      80px 10px,
+      0px 10px
+    );
+  }
+  50% {
+    transform: skew(0deg);
+    clip-path: polygon(
+      0px 0px,
+      85px 0px,
+      90px 5px,
+      100% 5px,
+      100% 6px,
+      85px 6px,
+      80px 10px,
+      0px 10px
+    );
+  }
+  51% {
+    transform: skew(0deg);
+    clip-path: polygon(
+      0px 0px,
+      85px 0px,
+      90px 5px,
+      100% 5px,
+      40% 5px,
+      calc(40% - 30px) 0px,
+      calc(40% + 30px) 0px,
+      calc(45% - 15px) 5px,
+      100% 5px,
+      100% 6px,
+      calc(45% - 14px) 6px,
+      calc(40% + 29px) 1px,
+      calc(40% - 29px) 1px,
+      calc(40% + 1px) 6px,
+      85px 6px,
+      80px 10px,
+      0px 10px
+    );
+  }
+  60% {
+    transform: skew(0deg);
+    clip-path: polygon(
+      0px 0px,
+      85px 0px,
+      90px 5px,
+      100% 5px,
+      100% 6px,
+      85px 6px,
+      80px 10px,
+      0px 10px
+    );
+  }
+  100% {
+    transform: skew(0deg);
+    clip-path: polygon(
+      0px 0px,
+      85px 0px,
+      90px 5px,
+      100% 5px,
+      100% 6px,
+      85px 6px,
+      80px 10px,
+      0px 10px
+    );
+  }
+}
+.topbar {
+  // margin-left: 20px;
+  width: 100%;
+  position: relative;
+  right: 50px;
+}
+.pickup {
+  border: hsl(54, 94%, 65%) 1px solid;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  text-align: center;
+  animation-name: glitched;
+  margin-left: 26%;
+  width: 50%;
+  animation-duration: calc(0.9s * 1.4);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  &:before {
+    animation-name: beforeglitched;
+    animation-duration: calc(0.9s * 2);
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    
+  }
+  // box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
+}
 .container {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
+  backdrop-filter: blur(10px);
 }
 .head {
   width: 100%;
-  background: rgb(50, 53, 70);
+  background: rgba(41, 41, 41, 0);
   height: 100%;
   color: white;
   display: flex;

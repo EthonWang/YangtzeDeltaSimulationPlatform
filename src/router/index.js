@@ -28,7 +28,7 @@ const routes = [
     component: Method,
     children:[]
   },
-  
+
   {
     isBar:true,
     path: "/about",

@@ -584,7 +584,7 @@ export default {
     },
     addShpfile() {},
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.destroyMap();
   },
 };

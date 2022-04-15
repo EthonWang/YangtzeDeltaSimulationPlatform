@@ -1,8 +1,10 @@
 <template>
   <div class="about">
+    <ModelTree></ModelTree>
     <button class="mapSwitchButton" @click="switchMap">2D/3D</button>
     <mapbox-view :shpShowList="shpList" v-if="mapType == 'mapBox'"></mapbox-view>
     <cesium v-if="mapType == 'cesium'"/>
+
   </div>
 </template>
 
@@ -14,8 +16,9 @@ import {useRouter} from "vue-router";
 import {useStore} from "vuex";
 import MapboxView from "../components/Mapbox/MapboxView";
 import Cesium from "../components/cesium/cesium.vue";
+import ModelTree from "components/App/ModelTree";
 export default {
-  components: {MapboxView, Cesium},
+  components: {ModelTree, MapboxView, Cesium},
   data() {
     return {
       mapType: "mapBox",

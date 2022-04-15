@@ -4,10 +4,10 @@
       Zoom:{{ zoom }} &nbsp; LngLat:{{ showCenter }}
     </el-tag>
 
-    <div style="  position: absolute;  top: 60px;  right: 60px;  z-index: 99;">
-      <el-button v-if="!editBoardShow" size="small" icon="el-icon-arrow-down" @click="handleEditBoardShow(1)">打开编辑框
+    <div style="  position: absolute;  top: 110px;  right: 60px;  z-index: 99;">
+      <el-button v-if="!editBoardShow" size="small"  @click="handleEditBoardShow(1)">打开编辑框
       </el-button>
-      <el-button v-if="editBoardShow" size="small" icon="el-icon-arrow-up" @click="handleEditBoardShow(0)">收起编辑框
+      <el-button v-if="editBoardShow" size="small"  @click="handleEditBoardShow(0)">收起编辑框
       </el-button>
     </div>
 
@@ -220,14 +220,14 @@ export default {
         maxWidth: 120,
         unit: "imperial",
       });
-      map.addControl(scale);
+      map.addControl(scale,"bottom-right");
       scale.setUnit("metric");
 
       // 添加控件缩放按钮和一个指南针.
       var nav = new mapboxgl.NavigationControl();
-      map.addControl(nav, "top-right");
+      map.addControl(nav, "bottom-right");
       // 全局缩放
-      map.addControl(new mapboxgl.FullscreenControl());
+      map.addControl(new mapboxgl.FullscreenControl(),"bottom-right");
 
       //添加定位控件
       map.addControl(
@@ -236,7 +236,7 @@ export default {
               enableHighAccuracy: true,
             },
             trackUserLocation: true,
-          }))
+          }),"bottom-right")
 
       //zoom
       map.on("zoom", () => {
@@ -296,7 +296,7 @@ export default {
 .mapbox-page {
   position: absolute;
   width: 100%;
-  top: 60px;
+  top: 0px;
   bottom: 0px;
 }
 
@@ -309,8 +309,8 @@ export default {
 
 .map-zoom-lnglat {
   position: absolute;
-  top: 10px;
-  right: 60px;
+  bottom: 60px;
+  right: 50px;
   z-index: 99;
   /*background-color: #ffffff !important;*/
   font-size: 13px;
@@ -318,7 +318,7 @@ export default {
 
 .edit-board {
   position: absolute;
-  top: 90px;
+  top: 150px;
   right: 60px;
   z-index: 99;
   background-color: white;

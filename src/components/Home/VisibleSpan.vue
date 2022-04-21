@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, defineProps, defineExpose } from "@vue/reactivity";
+import { reactive, ref, defineProps, defineExpose } from "vue";
 
 const props = defineProps({
   data: ref(Object),

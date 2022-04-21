@@ -12,7 +12,7 @@
 import { reactive, computed, ref } from "vue";
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
-import MapboxView from "../components/Model/MapboxView";
+import MapboxView from "../components/Mapbox/MapboxView";
 import Cesium from "../components/cesium/cesium.vue";
 export default {
   components: {MapboxView, Cesium},
@@ -46,8 +46,8 @@ const store=useStore()//vuex直接用store.commit
 }
 .mapSwitchButton{
   position: absolute;
-  top: 75px;
-  left: 10px;
+  bottom: 250px;
+  right: 10px;
   z-index: 1000;
 }
 

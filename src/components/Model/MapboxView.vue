@@ -296,7 +296,7 @@ export default {
 .mapbox-page {
   position: absolute;
   width: 100%;
-  top: 60px;
+  top: 0px;
   bottom: 0px;
 }
 

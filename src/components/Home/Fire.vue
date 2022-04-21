@@ -10,6 +10,7 @@ class Fire {
     this.canvas.height = window.innerHeight ;
     this.canvas.width = window.innerWidth;
     this.canvas.position = "fixed";
+    this.ctx.position="fixed";
     // this.canvas.fillStyle="rgba(0,0,0,0)"
     this.aFires = [];
     this.aSpark = [];
@@ -68,7 +69,7 @@ class Fire {
   }
   draw() {
     // this.ctx.globalCompositeOperation = "source-over";
-    this.ctx.fillStyle = "hsl(251, 55%, 3%)";
+    this.ctx.fillStyle = "hsl(238, 100%, 12%)";
     this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
 
     this.grd = this.ctx.createRadialGradient(
@@ -301,7 +302,7 @@ setTimeout(init,300)
 
 <style lang="less" scoped>
 canvas {
-    // position: absolute;
+    position: fixed;
     // top:0;
   background: rgba(112, 112, 112,0) !important;
   // pointer-events: none;

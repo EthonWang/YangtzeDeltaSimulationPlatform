@@ -55,6 +55,7 @@ const visibility = ref();
   width: 1100px;
   height: 800px;
   z-index: 1;
+  opacity: 0;
 }
 .home2 {
   background: url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbkimg.cdn.bcebos.com%2Fpic%2Ffc1f4134970a304e30930d83d8c8a786c9175c11&refer=http%3A%2F%2Fbkimg.cdn.bcebos.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1652859702&t=af97a9f3e0d302cee16f67133e5c1ed4");

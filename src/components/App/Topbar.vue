@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="head">
-      LOGOLOGOLOGOLOGOLOGOLOGOLOGOLOGO
+      <img src="../../assets/app/logo1.png" style="height:80px;margin-top:20px">
       <div class="main-menucontainer topbar">
         <div
           v-for="(bar, index) in barList"
@@ -24,23 +24,34 @@
 
 <script setup>
 import { reactive, computed, ref, defineEmits } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute,useRouter } from "vue-router";
 const router = useRouter();
-
+const route=useRoute();
 const barList = reactive(
   router.options.routes.filter((item) => item.isBar == true)
 );
+const searchIndexInRoutes=()=>{
+  let i=0
+  for(;i<barList.length;i++){
+    if(barList[i].path==route.path)
+    {
+      pick.value[i]=1;
+      return
+    }
+  }
+}
 const emit = defineEmits(["RouterFromBar"]);
 const sendRouterToFather = (route, index) => {
   pickup(index);
   emit("RouterFromBar", route);
 };
 let pick = ref(new Array(barList.length).fill(0));
-pick.value[0]=1;
+
 const pickup = (row) => {
   pick.value = new Array(barList.length).fill(0);
   pick.value[row] = 1;
 };
+window.onload=searchIndexInRoutes;
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -159,6 +170,12 @@ const pickup = (row) => {
     );
   }
 }
+.set_7_btn-wrapper:hover{
+  animation-name: glitched;
+  animation-duration: calc(0.9s * 2.4);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
 .topbar {
   // margin-left: 20px;
   width: 100%;
@@ -166,24 +183,26 @@ const pickup = (row) => {
   right: 50px;
 }
 .pickup {
-  border: hsl(54, 94%, 65%) 1px solid;
+  border: hsl(54, 94%, 75%) 1px solid;
   border-top: 0;
   border-left: 0;
   border-right: 0;
   text-align: center;
-  animation-name: glitched;
+  transform: scale(1.1);
+  // animation-name: glitched;
+  
   margin-left: 26%;
   width: 50%;
   animation-duration: calc(0.9s * 1.4);
   animation-iteration-count: infinite;
   animation-timing-function: linear;
-  &:before {
-    animation-name: beforeglitched;
-    animation-duration: calc(0.9s * 2);
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
+  // &:before {
+  //   animation-name: beforeglitched;
+  //   animation-duration: calc(0.9s * 2);
+  //   animation-iteration-count: infinite;
+  //   animation-timing-function: linear;
     
-  }
+  // }
   // box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
 }
 .container {
@@ -191,11 +210,12 @@ const pickup = (row) => {
   flex-direction: column;
   width: 100%;
   height: 100%;
+  padding-top: 10px;
   backdrop-filter: blur(10px);
 }
 .head {
   width: 100%;
-  background: rgba(41, 41, 41, 0);
+  background: hsla(200, 100%, 46%, 0.3);
   height: 100%;
   color: white;
   display: flex;

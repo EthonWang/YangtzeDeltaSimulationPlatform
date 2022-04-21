@@ -590,8 +590,9 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="css" scoped>
 @import "../../../node_modules/cesium/Source/Widgets/widgets.css";
+
 #cesiumContainer {
   width: 100%;
   height: 100%;
@@ -605,7 +606,7 @@ export default {
 }
 #toolbar {
   position: absolute;
-  // top: 0px;
+  
   right:0px;
   bottom:30px;
   background-color: rgb(55, 55, 55);
@@ -635,5 +636,15 @@ export default {
 }
 .startbarItem:hover {
   background-color: rgb(62, 61, 61);
+}
+::v-deep .cesium-performanceDisplay-defaultContainer{
+  position: absolute;
+  top:102px !important;
+}
+::v-deep .cesium-viewer .cesium-viewer-toolbar {/*镶嵌带空格*/
+    display: block;
+    position: absolute;
+    top: 62px !important;
+    right: 5px;
 }
 </style>

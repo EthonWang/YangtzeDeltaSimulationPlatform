@@ -1,8 +1,10 @@
 <template>
   <div class="about">
+    <ModelTree  @getCheckData="getCheckData"></ModelTree>
     <button class="mapSwitchButton" @click="switchMap">2D/3D</button>
     <mapbox-view :shpShowList="shpList" v-if="mapType == 'mapBox'"></mapbox-view>
     <cesium v-if="mapType == 'cesium'"/>
+
   </div>
 </template>
 
@@ -12,17 +14,24 @@
 import { reactive, computed, ref } from "vue";
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
+import { toRaw } from '@vue/reactivity'
 import MapboxView from "../components/Mapbox/MapboxView";
 import Cesium from "../components/cesium/cesium.vue";
+import ModelTree from "components/App/ModelTree";
 export default {
-  components: {MapboxView, Cesium},
+  components: {ModelTree, MapboxView, Cesium},
   data() {
     return {
       mapType: "mapBox",
       //使用mapbox-view组件需要传递的参数
       shpList: [], //格式参考[{name: "111", type: "circle", nameId: "111_123"}]
+      checkedData:[],
     }
   },
+  mounted() {
+
+  },
+
   methods: {
     switchMap(){
       if(this.mapType == 'mapBox'){
@@ -30,6 +39,11 @@ export default {
       } else {
         this.mapType = 'mapBox';
       }
+    },
+    getCheckData(data){
+      //将选中的目录树的data值覆给shpList
+      this.shpList = data;
+      console.log('this.shpList: ', toRaw(this.shpList))
     }
   }
 }

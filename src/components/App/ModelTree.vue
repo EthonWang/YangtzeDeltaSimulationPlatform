@@ -1,37 +1,40 @@
 <template>
   <div class="modelTree-config">
     <el-tree
-        :data="data"
+        ref="treeRef"
+        :data="modelTreeData"
         :props="defaultProps"
         @node-click="handleNodeClick"
         :default-expand-all='true'
         :expand-on-click-node="false"
         style="width: 380px">
-      <template class="custom-tree-node" v-slot="{ node, data }">
-                <span v-if="data.type == 'data'">
-                  <el-checkbox>{{ node.label }}</el-checkbox>
-                </span>
-        <span v-else-if="data.type == 'problem'">
-                  <Document style="width:18px"/>
-                  {{ node.label }}
-                </span>
-        <span v-else>
-                  {{ node.label }}
-                </span>
-        <span style="margin-left: 50px" v-show="data.type == 'model'">
-                <el-button
-                    type="primary"
-                    size="mini"
-                    @click="modelConfigDialog = true" plain>
-                  Config
-                </el-button>
-                <el-button
-                    type="info"
-                    size="mini"
-                    @click="() => remove(node, data)" plain>
-                  Info
-                </el-button>
-              </span>
+      <template class="custom-tree-node" v-slot="{ node, data }" >
+            <span v-if="data.type == 'dataSet'">
+<!--              <el-checkbox></el-checkbox>-->
+              {{ node.label }}
+            </span>
+            <span v-else-if="data.type == 'problem'">
+                      <Document style="width:18px"/>
+                      {{ node.label }}
+            </span>
+            <span v-else-if="data.type == 'data'">
+              <el-checkbox :key="data.dataSourceId" @change="checked=>getCheckedNodes(checked,data)">{{ node.label }}</el-checkbox>
+            </span>
+            <span v-else>{{ node.label }}</span>
+            <span style="margin-left: 50px" v-show="data.type == 'model'">
+                    <el-button
+                        type="primary"
+                        size="mini"
+                        @click="modelConfigDialog = true" plain>
+                      Config
+                    </el-button>
+                    <el-button
+                        type="info"
+                        size="mini"
+                        @click="() => remove(node, data)" plain>
+                      Info
+                    </el-button>
+            </span>
       </template>
     </el-tree>
     <el-dialog
@@ -120,95 +123,50 @@
 
 <script setup>
 //采用vue2写法的话把setup去掉，
-import {reactive, computed, ref} from "vue";
+import {reactive, computed, ref, defineEmits, defineProps} from "vue";
+import { toRaw } from '@vue/reactivity'
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
 import {Upload, Download,Setting,Document} from '@element-plus/icons-vue'
-
+import axios from 'axios';
+const emit = defineEmits(['getCheckData'])
+const props = defineProps({
+  checkedData: {}
+})
 
 const router = useRouter()//路由直接用router.push(...)
 const store = useStore()//vuex直接用store.commit
 
+const modelTreeData = ref([]);
 
-const data = [
-  {
-    type: 'problem',
-    label: '问题1 ',
-    children: [{
-      type: "model",
-      label: 'GCAM-CA',
-      children: [{
-        type: 'data',
-        label: '数据1'
-      }, {
-        type: 'data',
-        label: '数据2'
-      }]
-    }, {
-      type: "model",
-      label: 'TaiHu_Fvcom',
-      children: [{
-        type: 'data',
-        label: '数据1'
-      }, {
-        type: 'data',
-        label: '数据2'
-      }]
-    }]
-  }, {
-    type: 'problem',
-    label: '问题2',
-    children: [{
-      type: "model",
-      label: 'SEIMS',
-      children: [{
-        type: 'data',
-        label: '数据1'
-      }, {
-        type: 'data',
-        label: '数据2'
-      }]
-    }, {
-      type: "model",
-      label: 'DCBAH',
-      children: [{
-        type: 'data',
-        label: '数据1'
-      }, {
-        type: 'data',
-        label: '数据2'
-      }]
-    }]
-  }, {
-    label: '问题3',
-    children: [{
-      type: "model",
-      label: 'SWMM',
-      children: [{
-        type: 'data',
-        label: '数据1'
-      }, {
-        type: 'data',
-        label: '数据2'
-      }]
-    }, {
-      type: "model",
-      label: 'SWAT',
-      children: [{
-        type: 'data',
-        label: '数据1'
-      }, {
-        type: 'data',
-        label: '数据2'
-      }]
-    }]
-  }];
+const getTreeData = () => {
+  axios.get("http://172.21.212.63:8999/model/getModelTree").then(res=>{
+    console.log("模型目录树",res.data.data)
+    modelTreeData.value = res.data.data
+  })
+}
+getTreeData();
+
+let dataList = [];
+const getCheckedNodes = (checked,data) => {
+  if(checked == true){
+       dataList.push(toRaw(data))
+  }else {
+    for(let i = 0; i < dataList.length;i++){
+      if(dataList[i].dataSourceId == data.dataSourceId){
+         dataList.splice(i,1)
+      }
+    }
+  }
+  emit('getCheckData', dataList)
+}
+
 const defaultProps = {
   children: 'children',
   label: 'label'
 };
 const handleNodeClick = (data) => {
-  console.log(data);
+
 }
 const remove = (node, data) => {
   console.log(node, data)

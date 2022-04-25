@@ -44,7 +44,7 @@ const visibility = ref();
   height: 1050px;
   top: 0px;
   backdrop-filter: blur(3px);
-  background-color: hsla(230, 100%, 70%, 0.08);
+//   background-color: hsla(230, 100%, 70%, 0.08);
   opacity: 0;
   z-index: 2;
 }

@@ -27,19 +27,19 @@ const props = defineProps({
   data: ref(Object),
 });
 
-let new_data = ref({
+const new_data = ref({
   name: "4444",
   pic: "https://img2.baidu.com/it/u=4014285563,2591904440&fm=253&fmt=auto&app=138&f=PNG?w=500&h=208",
 });
-let main_data = ref({
+const main_data = ref({
   name: "1111",
   pic: "https://img2.baidu.com/it/u=3033267735,1729056335&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500",
 });
-let left_data = ref({
+const left_data = ref({
   name: "2222",
   pic: "https://img0.baidu.com/it/u=1663500791,839323706&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500",
 });
-let right_data = ref({
+const right_data = ref({
   name: "3333",
   pic: "https://img2.baidu.com/it/u=3271466876,3945229185&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500",
 });
@@ -52,15 +52,16 @@ const scrollingSpan = () => {
     right_data.value = main_data.value;
     main_data.value = left_data.value;
     left_data.value = new_data.value;
-  }, 500);
+  }, 750);
 };
 defineExpose({ scrollingSpan });
 //变换逻辑：接受新值，覆盖left，动画完成后，main→right left→main
 </script>
 
 <style lang="less" scoped>
-@side_scale: 0.85;
-@scroll_time: 0.5s;
+@side_scale: 1;
+@scroll_time: 0.75s;
+@tilt: scale(@side_scale) perspective(1200px) rotateY(-30deg) translateX(-50px);
 .img {
   width: 100%;
   height: 97%;
@@ -78,11 +79,11 @@ defineExpose({ scrollingSpan });
   height: 100%;
   margin-right: 10px;
   backdrop-filter: blur(10px);
-
-  background: hsla(220, 97%, 47%, 0.467);
+    border: 1px solid white;
+  background: hsla(220, 97%, 47%, 0);
 }
 .side_span {
-  transform: scale(@side_scale);
+  transform:@tilt;
 }
 .left_span {
   width: 100%;
@@ -100,10 +101,10 @@ defineExpose({ scrollingSpan });
   background: hsla(180, 97%, 47%, 0.467);
 }
 .scrolling {
-  animation: scroll1 @scroll_time linear 1;
+  animation: scroll1 @scroll_time ease-out 1;
 }
 .smallize {
-  animation: smallize @scroll_time linear 1;
+  animation: smallize @scroll_time ease-out 1;
 }
 @keyframes scroll1 {
   0% {
@@ -115,7 +116,7 @@ defineExpose({ scrollingSpan });
 }
 @keyframes smallize {
   100% {
-    transform: scale(@side_scale);
+    transform:@tilt;
   }
 }
 @keyframes scroll2 {

@@ -42,8 +42,9 @@ export default {
     },
     getCheckData(data){
       //将选中的目录树的data值覆给shpList
-      this.shpList = data;
+      this.shpList =JSON.parse(JSON.stringify(data))
       console.log('this.shpList: ', toRaw(this.shpList))
+
     }
   }
 }

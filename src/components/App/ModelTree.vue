@@ -1,20 +1,18 @@
 <template>
-  <div class="modelTree-config">
-    <el-tree
+   <el-tree
         ref="treeRef"
         :data="modelTreeData"
         :props="defaultProps"
         @node-click="handleNodeClick"
         :default-expand-all='true'
         :expand-on-click-node="false"
-        style="width: 380px">
+        style="">
       <template class="custom-tree-node" v-slot="{ node, data }" >
             <span v-if="data.type == 'dataSet'">
 <!--              <el-checkbox></el-checkbox>-->
               {{ node.label }}
             </span>
             <span v-else-if="data.type == 'problem'">
-                      <Document style="width:18px"/>
                       {{ node.label }}
             </span>
             <span v-else-if="data.type == 'data'">
@@ -118,7 +116,6 @@
       </span>
       </template>
     </el-dialog>
-  </div>
 </template>
 
 <script setup>
@@ -148,6 +145,7 @@ const getTreeData = () => {
 getTreeData();
 
 let dataList = [];
+
 const getCheckedNodes = (checked,data) => {
   if(checked == true){
        dataList.push(toRaw(data))
@@ -158,6 +156,8 @@ const getCheckedNodes = (checked,data) => {
       }
     }
   }
+
+
   emit('getCheckData', dataList)
 }
 
@@ -178,17 +178,17 @@ testModelInput.value = {
   inputData: [
     {
       dataIa: '11',
-      dataName: 'class2000/2010.tif',
+      dataName: 'DEM',
       description: '土地利用'
     }, {
       dataIa: '22',
-      dataName: 'CLAY.tif',
+      dataName: 'LandUse',
       description: '含粘土比例'
     }
   ],
   parameter: [
     {
-      paraId: 'Landuse',
+      paraId: '',
       description: 'Input Landuse'
     }, {
       paraId: 'Soil',
@@ -276,15 +276,17 @@ const options = [
   margin-right: 5px;
   color: #56BBF1
 }
-.modelTree-config{
+
+.el-tree{
   position: absolute;
   z-index: 88;
   top: 100px;
   left: 60px;
-}
-.el-tree{
-  border-radius: 10px !important;
-  background-color: rgba(255,255,255,0.9);
+  background-color: rgba(255,255,255,1);
+  border-radius: 5px !important;
+  padding: 8px 13px 8px 8px;
+  height: 80vh;
+  overflow: scroll;
 }
 </style>
 

@@ -59,6 +59,7 @@ export default {
     this.cesiumInit();
     // this.add3DTiles();
     // this.addPlane();
+    // this.addKMZ();
   },
   methods: {
     cesiumInit() {
@@ -116,6 +117,14 @@ export default {
       //     roll: 6.282948442939382,
       //   },
       // });
+      // this.viewer.imageryLayers.get(0).show = false; //不显示底图
+      // this.viewer.scene.globe.baseColor = Cesium.Color.WHITE; //设置地球颜色
+      // 暂时添加本地瓦片
+      // let zanshi = new Cesium.TileMapServiceImageryProvider({
+      //   url: "dem_tiles5",
+      //   fileExtension: "png",
+      // });
+      // this.viewer.imageryLayers.addImageryProvider(zanshi);
     },
     destroyMap() {
       this.viewer.destroy();
@@ -138,6 +147,7 @@ export default {
     firstPerspective() {
       if (!this.firstPerspectiveButton) {
         //第一视角
+        console.log(this.viewer.trackedEntit);
         this.viewer.trackedEntity = this.airplane;
         this.viewer.scene.preUpdate.addEventListener(this.setRoamView);
         this.firstPerspectiveButton = true;
@@ -148,14 +158,73 @@ export default {
         this.firstPerspectiveButton = false;
       }
     },
+    addKMZ() {
+      var options = {
+        camera: this.viewer.scene.camera,
+        canvas: this.viewer.scene.canvas,
+        clampToGround: true, //开启贴地
+      };
+      this.viewer.dataSources
+        .add(Cesium.KmlDataSource.load("data/dem_LayerToKML3.kmz", options))
+        .then(function (dataSource) {
+          var geocacheEntities = dataSource.entities.values;
+          console.log(geocacheEntities);
+        });
+    },
     setRoamView() {
       if (this.airplane) {
         let center = this.airplane.position.getValue(
           this.viewer.clock.currentTime
         );
+        // console.log(center);
+
         if (center) {
-          let vector = new Cesium.Cartesian3(5, -2.2, 0.5);
-          this.viewer.camera.lookAt(center, vector);
+          // this.viewer.camera.setView({
+          //   // Cesium的坐标是以地心为原点，一向指向南美洲，一向指向亚洲，一向指向北极州
+          //   // fromDegrees()方法，将经纬度和高程转换为世界坐标
+          //   destination: center,
+          //   orientation: {
+          //     // 指向
+          //     heading: Cesium.Math.toRadians(90, 0),
+          //     // 视角
+          //     pitch: Cesium.Math.toRadians(-90),
+          //     roll: 0.0,
+          //   },
+          // });
+          let target = new Cesium.Cartesian3.fromDegrees(
+            119.78432,
+            31.91299,
+            0
+          );
+          //   let vector = new Cesium.Cartesian3(
+          //     0.5,
+          //     -0.22,
+          //     -0.01
+          //   );
+          // let nextPos = this.airplane.position.getValue(
+          //   this.viewer.clock.currentTime + 1
+          // );
+
+          // let front = new Cesium.Cartesian3(
+          //   nextPos.x - center.x,
+          //   nextPos.y - center.y,
+          //   nextPos.z - center.z,
+          // );
+
+          // front = Cesium.Cartesian3.normalize(front, new Cesium.Cartesian3());
+
+          let pos = new Cesium.Cartesian3(
+            target.x - center.x,
+            target.y - center.y,
+            target.z - center.z
+          );
+          let front = Cesium.Cartesian3.normalize(pos, new Cesium.Cartesian3());
+          // let hpr = new Cesium.HeadingPitchRange(
+          //   Cesium.Math.toRadians(150, 0),
+          //   Cesium.Math.toRadians(0),
+          //   100
+          // );
+          this.viewer.camera.lookAt(center, front);
         }
       }
     },
@@ -421,7 +490,6 @@ export default {
       });
     },
     showLevel2() {
-      console.log(this.viewer.camera);
       if (this.level2 == null) {
         this.addGeoJSON_level2();
       } else if (!this.showLevel2Button) {
@@ -606,8 +674,8 @@ export default {
 #toolbar {
   position: absolute;
   // top: 0px;
-  right:0px;
-  bottom:30px;
+  right: 0px;
+  bottom: 300px;
   background-color: rgb(55, 55, 55);
   padding: 20px 20px;
   border-radius: 10%;

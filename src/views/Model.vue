@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <ModelTree  @getCheckData="getCheckData"></ModelTree>
+    <ModelTree @getCheckData="getCheckData" @getCheckChart="getCheckChart"></ModelTree>
     <button class="mapSwitchButton" @click="switchMap">2D/3D</button>
     <mapbox-view
       :shpShowList="shpList"
@@ -9,11 +9,11 @@
     <cesium v-if="mapType == 'cesium'" />
 
     <!-- echarts图表 -->
-    <div v-for="item in chartList" :key="item.id">
+    <div v-for="item in chartList" :key="item.dataSourceId">
       <chart-template
         style="z-index: 1000"
-        v-if="item.type == 'chart' && item.isShow"
-        :date="item.chartDate"
+        v-if="item.mapDataType == 'chart'"
+        :data="item"
         @closeChart="closeChart"
       />
     </div>
@@ -46,33 +46,7 @@ export default {
       checkedData:[],
       //使用chart组件需要传递的参数
       fileDate: "null",
-      chartList: [
-        {
-          rid: "111",
-          type: "chart",
-          isShow: true,
-          chartDate: {
-            id: '111',
-            chartType: "stackedLine2",
-            chartName: "Tmp",
-            time: [],
-            date: [],
-          },
-        },
-        {
-          rid: "222",
-          type: "chart",
-          isShow: true,
-          chartDate: {
-            id: '222',
-            chartType: "stackedLine1",
-            chartName: "Pcp",
-            time: [],
-            date1: [],
-            date2: [],
-          },
-        },
-      ],
+      chartList: [],
     }
   },
   mounted() {
@@ -89,8 +63,9 @@ export default {
     },
     closeChart(value) {
       for(let i = 0 ; i < this.chartList.length ; i++){
-        if(this.chartList[i].rid == value){
-          this.chartList[i].isShow = this.chartList[i].isShow ? false : true;
+        if(this.chartList[i].dataSourceId == value){
+          this.chartList.splice(i, 1);
+          // 与modelTree组件通讯，修改check
         }
       }
     },
@@ -98,6 +73,10 @@ export default {
       //将选中的目录树的data值覆给shpList
       this.shpList =JSON.parse(JSON.stringify(data))
       console.log('this.shpList: ', toRaw(this.shpList))
+    },
+    getCheckChart(data){
+      this.chartList =JSON.parse(JSON.stringify(data))
+      console.log('this.chartList: ', toRaw(this.chartList))
     }
   },
 };

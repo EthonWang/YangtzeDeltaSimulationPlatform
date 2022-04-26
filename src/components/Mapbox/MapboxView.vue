@@ -407,11 +407,22 @@ export default {
 
     addLayerToMap(newShpInfo) {
       //添加数据源
-      map.addSource(newShpInfo.dataSourceId, {
-        type: "vector",
-        tiles: ["http://172.21.212.63:8995/mvt/"+newShpInfo.dataSourceId+"/{z}/{x}/{y}.pbf?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMTEifQ.Ne6qdHY2XgpBNQ74MeO-23ZyF0OahH-AHMbrXqhKlwU"],
-      })
+      // map.addSource(newShpInfo.dataSourceId, {
+      //   type: "vector",
+      //   tiles: ["http://172.21.212.63:8995/mvt/"+newShpInfo.dataSourceId+"/{z}/{x}/{y}.pbf?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMTEifQ.Ne6qdHY2XgpBNQ74MeO-23ZyF0OahH-AHMbrXqhKlwU"],
+      // })
 
+      if(newShpInfo.isBigShp!==undefined){
+        map.addSource(newShpInfo.dataSourceId, {
+          type: "vector",
+          tiles: ["http://172.21.212.63:8995/mvt/"+newShpInfo.dataSourceId+"/{z}/{x}/{y}.pbf?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMTEifQ.Ne6qdHY2XgpBNQ74MeO-23ZyF0OahH-AHMbrXqhKlwU"],
+        })
+      }else{
+        map.addSource(newShpInfo.dataSourceId, {
+          type: "geojson",
+          data: "http://localhost:8999/model/getShpJsonData?shpJsonPath="+newShpInfo.path,
+        })
+      }
 
       //添加layer
       let newLayer = {
@@ -426,9 +437,10 @@ export default {
         minzoom: 0,
         paint: this.layerStyle[newShpInfo.geoType].paint,
         source: newShpInfo.dataSourceId,
-        "source-layer": "default"
+        // "source-layer": "default"
       }
 
+      newLayer.paint[newShpInfo.geoType+"-color"]="#"+Math.random().toString(16).substr(2, 6)
       this.showLayerTableList.push(newLayer)
       map.addLayer(newLayer)
     },

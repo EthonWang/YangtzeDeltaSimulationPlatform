@@ -662,7 +662,6 @@ export default {
 }
 #toolbar {
   position: absolute;
-  // top: 0px;
   right: 0px;
   bottom: 300px;
   background-color: rgb(55, 55, 55);

@@ -420,7 +420,7 @@ export default {
       }else{
         map.addSource(newShpInfo.dataSourceId, {
           type: "geojson",
-          data: "http://localhost:8999/model/getShpJsonData?shpJsonPath="+newShpInfo.path,
+          data: "http://172.21.212.63:8999/model/getShpJsonData?shpJsonPath="+newShpInfo.path,
         })
       }
 

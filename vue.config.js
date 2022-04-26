@@ -95,13 +95,13 @@ module.exports = {
         hotOnly: false,
         proxy: {
             // 配置跨域
-            "/back": {
+            '/back': {
                 target: "http://172.21.213.183:8999",
                 ws: true,
                 timeout: 3600000,
                 changOrigin: true,
                 pathRewrite: {
-                    "/back": "",
+                    '^/back':'',
                 },
             },
             "/back_backup": {

@@ -59,7 +59,6 @@ export default {
     this.cesiumInit();
     // this.add3DTiles();
     // this.addPlane();
-    // this.addKMZ();
   },
   methods: {
     cesiumInit() {
@@ -117,14 +116,6 @@ export default {
       //     roll: 6.282948442939382,
       //   },
       // });
-      // this.viewer.imageryLayers.get(0).show = false; //不显示底图
-      // this.viewer.scene.globe.baseColor = Cesium.Color.WHITE; //设置地球颜色
-      // 暂时添加本地瓦片
-      // let zanshi = new Cesium.TileMapServiceImageryProvider({
-      //   url: "dem_tiles5",
-      //   fileExtension: "png",
-      // });
-      // this.viewer.imageryLayers.addImageryProvider(zanshi);
     },
     destroyMap() {
       this.viewer.destroy();
@@ -147,7 +138,6 @@ export default {
     firstPerspective() {
       if (!this.firstPerspectiveButton) {
         //第一视角
-        console.log(this.viewer.trackedEntit);
         this.viewer.trackedEntity = this.airplane;
         this.viewer.scene.preUpdate.addEventListener(this.setRoamView);
         this.firstPerspectiveButton = true;
@@ -176,8 +166,6 @@ export default {
         let center = this.airplane.position.getValue(
           this.viewer.clock.currentTime
         );
-        // console.log(center);
-
         if (center) {
           // this.viewer.camera.setView({
           //   // Cesium的坐标是以地心为原点，一向指向南美洲，一向指向亚洲，一向指向北极州
@@ -658,8 +646,9 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="css" scoped>
 @import "../../../node_modules/cesium/Source/Widgets/widgets.css";
+
 #cesiumContainer {
   width: 100%;
   height: 100%;
@@ -703,5 +692,15 @@ export default {
 }
 .startbarItem:hover {
   background-color: rgb(62, 61, 61);
+}
+::v-deep .cesium-performanceDisplay-defaultContainer{
+  position: absolute;
+  top:102px !important;
+}
+::v-deep .cesium-viewer .cesium-viewer-toolbar {/*镶嵌带空格*/
+    display: block;
+    position: absolute;
+    top: 62px !important;
+    right: 5px;
 }
 </style>

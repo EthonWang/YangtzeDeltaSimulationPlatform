@@ -182,6 +182,7 @@ const getTreeData = () => {
 getTreeData();
 
 let dataList = [];
+let tifList = [];
 let chartList = []; 
 
 const getCheckedNodes = (checked, data) => {
@@ -200,6 +201,16 @@ const getCheckedNodes = (checked, data) => {
     emit("getCheckData", dataList);
   } else if (data.mapDataType == "tif"){
     // tif数据的处理
+    if (checked == true) {
+      tifList.push(toRaw(data));
+    } else {
+      for (let i = 0; i < tifList.length; i++) {
+        if (tifList[i].dataSourceId == data.dataSourceId) {
+          tifList.splice(i, 1);
+        }
+      }
+    }
+    emit("getCheckTif", tifList);
   } else if (data.mapDataType == "chart") {
     // 图表数据
     if (checked == true) {

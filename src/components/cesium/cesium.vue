@@ -1,7 +1,7 @@
 <template>
   <div id="container" class="box">
     <div id="cesiumContainer"></div>
-    <div id="toolbar" v-if="!startButton">
+    <!-- <div id="toolbar" v-if="!startButton">
       <button @click="showProvince" class="toolbarItem">中国行政区划</button>
       <button @click="showProvince2" class="toolbarItem">
         中国行政区划(界线)
@@ -18,7 +18,7 @@
       >
         第一视角飞行
       </button>
-    </div>
+    </div> -->
     <!-- <div id="startbar" v-if="startButton">
       <button @click="startCesium" class="startbarItem">开始</button>
     </div> -->
@@ -27,9 +27,11 @@
 
 <script>
 import * as Cesium from "cesium/Cesium";
+import axios from "axios";
 
 export default {
   name: "Cesium",
+  props: ["tifList"],
   data() {
     return {
       viewer: null,
@@ -53,12 +55,20 @@ export default {
       showDockButton: false,
       showPlaneButton: false,
       firstPerspectiveButton: false,
+      loadedTifList: [],
+      loadedTifIdList: [],
     };
+  },
+  watch: {
+    tifList(value) {
+      this.updateTifShow(value);
+    },
   },
   mounted() {
     this.cesiumInit();
     // this.add3DTiles();
     // this.addPlane();
+    // this.addKMZ();
   },
   methods: {
     cesiumInit() {
@@ -96,14 +106,14 @@ export default {
       // 视角大小
       Cesium.Camera.DEFAULT_VIEW_FACTOR = 0;
       // 设置home在中国(左下角，右上角)
-      const ChinaRectangle = Cesium.Rectangle.fromDegrees(
-        119.080032,
-        30.959241,
-        122.789387,
-        32.389027
-      );
-      Cesium.Camera.DEFAULT_VIEW_RECTANGLE = ChinaRectangle;
-      this.viewer.camera.flyHome(8);
+      // const ChinaRectangle = Cesium.Rectangle.fromDegrees(
+      //   119.080032,
+      //   30.959241,
+      //   122.789387,
+      //   32.389027
+      // );
+      // Cesium.Camera.DEFAULT_VIEW_RECTANGLE = ChinaRectangle;
+      // this.viewer.camera.flyHome(8);
       // this.viewer.camera.setView({
       //   destination: {
       //     x: -3837625.3684990564,
@@ -120,6 +130,63 @@ export default {
     destroyMap() {
       this.viewer.destroy();
       this.viewer = null;
+    },
+    updateTifShow(list) {
+      // 添加增加的tif，隐藏减少的tif
+      // 检查是否已经被加载过
+      for (let i = 0; i < list.length; i++) {
+        let exist = false;
+        for (let j = 0; j < this.loadedTifIdList.length; j++) {
+          if (list[i].dataSourceId == this.loadedTifIdList[j]) {
+            exist = true;
+          }
+        }
+        if (!exist) {
+          // 判断是否已经添加
+          this.loadedTifIdList.push(list[i].dataSourceId);
+          list[i].loaded = false;
+          this.loadedTifList.push(list[i]);
+          this.addKMZ(this.loadedTifList.length - 1);
+        }
+      }
+      // 隐藏已经加载过，但本次不在list中的tif
+      // 显示已经加载过，仍在本次list中的tif
+      for (let i = 0; i < this.loadedTifIdList.length; i++) {
+        let exist = false;
+        for (let j = 0; j < list.length; j++) {
+          if (list[j].dataSourceId == this.loadedTifIdList[i]) {
+            exist = true;
+          }
+        }
+        if (!exist && this.loadedTifList[i].loaded) {
+          // 需要隐藏
+          this.loadedTifList[i].geocacheEntities[0].show = false;
+        } else if (exist && this.loadedTifList[i].loaded) {
+          this.loadedTifList[i].geocacheEntities[0].show = true;
+        }
+      }
+    },
+    addKMZ(index) {
+      this.loadedTifList[index].geocacheEntities = [];
+      var options = {
+        camera: this.viewer.scene.camera,
+        canvas: this.viewer.scene.canvas,
+        clampToGround: true, //开启贴地
+      };
+      let that = this;
+      this.viewer.dataSources
+        .add(
+          Cesium.KmlDataSource.load(
+            "http://172.21.212.63:8999/model/getKmzData?kmzDataPath=" +
+              this.loadedTifList[index].path,
+            options
+          )
+        )
+        .then(function (dataSource) {
+          let geocacheEntities = dataSource.entities.values;
+          that.loadedTifList[index].geocacheEntities = geocacheEntities;
+          that.loadedTifList[index].loaded = true;
+        });
     },
     startCesium() {
       this.startButton = false;
@@ -147,19 +214,6 @@ export default {
         this.viewer.scene.preUpdate.removeEventListener(this.setRoamView);
         this.firstPerspectiveButton = false;
       }
-    },
-    addKMZ() {
-      var options = {
-        camera: this.viewer.scene.camera,
-        canvas: this.viewer.scene.canvas,
-        clampToGround: true, //开启贴地
-      };
-      this.viewer.dataSources
-        .add(Cesium.KmlDataSource.load("data/dem_LayerToKML3.kmz", options))
-        .then(function (dataSource) {
-          var geocacheEntities = dataSource.entities.values;
-          console.log(geocacheEntities);
-        });
     },
     setRoamView() {
       if (this.airplane) {
@@ -692,14 +746,15 @@ export default {
 .startbarItem:hover {
   background-color: rgb(62, 61, 61);
 }
-::v-deep .cesium-performanceDisplay-defaultContainer{
+::v-deep .cesium-performanceDisplay-defaultContainer {
   position: absolute;
-  top:102px !important;
+  top: 102px !important;
 }
-::v-deep .cesium-viewer .cesium-viewer-toolbar {/*镶嵌带空格*/
-    display: block;
-    position: absolute;
-    top: 62px !important;
-    right: 5px;
+::v-deep .cesium-viewer .cesium-viewer-toolbar {
+  /*镶嵌带空格*/
+  display: block;
+  position: absolute;
+  top: 62px !important;
+  right: 5px;
 }
 </style>

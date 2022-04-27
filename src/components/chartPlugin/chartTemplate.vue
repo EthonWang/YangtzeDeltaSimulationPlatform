@@ -10,9 +10,9 @@
     <div class="window">
       <div class="window-header">
         {{ data.label }}
-        <button class="window-header-close" @click="closeWindow" title="close">
+        <!-- <button class="window-header-close" @click="closeWindow" title="close">
           X
-        </button>
+        </button> -->
       </div>
       <div class="window-body">
         <chart-without-options
@@ -54,7 +54,6 @@ export default {
   emits: ["closeChart"],
   setup(props, ctx) {
     let chartOptions = ref({});
-    let getFinished = false;
     const getChartData = () => {
       axios
         .get(
@@ -64,7 +63,6 @@ export default {
         .then((res) => {
           chartOptions.value = res.data.data;
         //   console.log("chartOptions", chartOptions.value);
-          getFinished = true;
         });
     };
     getChartData();
@@ -76,7 +74,6 @@ export default {
     return {
       closeWindow,
       chartOptions,
-      getFinished
     };
   },
 };

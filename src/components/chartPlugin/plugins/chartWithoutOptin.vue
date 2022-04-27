@@ -23,7 +23,7 @@ export default {
       // 绘制图表
       setTimeout(function () {
         myChart.setOption(props.chartOptions);
-      }, 1000);
+      }, 500);
 
       window.onresize = function () {
         // 自适应大小

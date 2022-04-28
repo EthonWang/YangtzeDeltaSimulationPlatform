@@ -1,7 +1,9 @@
 <template>
   <div class="container">
+    <span :class="{ background_show: background_show,background_hide:!background_show }"></span>
     <div class="head">
-      <img src="../../assets/app/logo1.png" style="height:80px;margin-top:20px">
+      <span class="logo">长 三 角 模 拟 器</span>
+      <!-- <img src="../../assets/app/logo1.png" style="height:80px;margin-top:20px"> -->
       <div class="main-menucontainer topbar">
         <div
           v-for="(bar, index) in barList"
@@ -23,23 +25,26 @@
 </template>
 
 <script setup>
-import { reactive, computed, ref, defineEmits } from "vue";
-import { useRoute,useRouter } from "vue-router";
+import { reactive, computed, ref, defineEmits, defineProps } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+const props = defineProps({
+  background_show: ref(Boolean),
+});
 const router = useRouter();
-const route=useRoute();
+const route = useRoute();
 const barList = reactive(
   router.options.routes.filter((item) => item.isBar == true)
 );
-const searchIndexInRoutes=()=>{
-  let i=0
-  for(;i<barList.length;i++){
-    if(barList[i].path==route.path)
-    {
-      pick.value[i]=1;
-      return
+const searchIndexInRoutes = () => {
+  let i = 0;
+  for (; i < barList.length; i++) {
+    if (barList[i].path == route.path) {
+      pick.value[i] = 1;
+      return;
     }
   }
-}
+};
 const emit = defineEmits(["RouterFromBar"]);
 const sendRouterToFather = (route, index) => {
   pickup(index);
@@ -51,7 +56,7 @@ const pickup = (row) => {
   pick.value = new Array(barList.length).fill(0);
   pick.value[row] = 1;
 };
-window.onload=searchIndexInRoutes;
+window.onload = searchIndexInRoutes;
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -170,7 +175,7 @@ window.onload=searchIndexInRoutes;
     );
   }
 }
-.set_7_btn-wrapper:hover{
+.set_7_btn-wrapper:hover {
   animation-name: glitched;
   animation-duration: calc(0.9s * 2.4);
   animation-iteration-count: infinite;
@@ -190,7 +195,7 @@ window.onload=searchIndexInRoutes;
   text-align: center;
   transform: scale(1.1);
   // animation-name: glitched;
-  
+
   margin-left: 26%;
   width: 50%;
   animation-duration: calc(0.9s * 1.4);
@@ -201,9 +206,16 @@ window.onload=searchIndexInRoutes;
   //   animation-duration: calc(0.9s * 2);
   //   animation-iteration-count: infinite;
   //   animation-timing-function: linear;
-    
+
   // }
   // box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
+}
+.logo {
+  font-size: 35px;
+  font-weight: 600;
+  margin-left: 30px;
+  position: relative;
+  z-index: 100;
 }
 .container {
   display: flex;
@@ -211,16 +223,51 @@ window.onload=searchIndexInRoutes;
   width: 100%;
   height: 100%;
   padding-top: 10px;
+}
+.background_show {
+  position: absolute;
+  height: 100%;
+  width: 105vw;
   backdrop-filter: blur(10px);
+  animation: background_show 1.2s linear forwards;
+  @keyframes background_show {
+    0% {
+      background-color: hsla(200, 100%, 46%, 1);
+      transform: translateX(-100vw);
+    }
+    100% {      
+      background-color: hsla(200, 100%, 46%, 0.2);
+      transform: translateX(0px);
+
+    }
+  }
+}
+.background_hide {
+  position: absolute;
+  height: 100%;
+  width: 100vw;
+  backdrop-filter: blur(10px);
+  animation: background_hide 1.2s linear forwards;
+  @keyframes background_hide {
+    0% {
+      background-color: hsla(200, 100%, 46%, 0.2);
+      transform: translateX(0px);
+    }
+    100% {      
+      background-color: hsla(200, 100%, 46%, 1);
+      transform: translateX(105vw);
+
+    }
+  }
 }
 .head {
   width: 100%;
-  background: hsla(200, 100%, 46%, 0.3);
   height: 100%;
   color: white;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  // transition: all 2s;
 }
 
 ::v-deep.head .el-menu--horizontal .el-menu-item {

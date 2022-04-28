@@ -7,7 +7,7 @@
     ></ProblemCharts>
     <VisibalSpan
       ref="visibility"
-      :data="new_data"
+      :new_data="new_data"
       :class="{ hide_ani: !props.show, show_ani: props.show }"
       class="visible"
     ></VisibalSpan>
@@ -21,13 +21,17 @@ import { ElMessage } from "element-plus";
 import { defineProps, ref } from "vue";
 const new_data = ref({
   name: "4444",
-  pic: "https://img2.baidu.com/it/u=4014285563,2591904440&fm=253&fmt=auto&app=138&f=PNG?w=500&h=208",
+  pic: null,
 });
 const props = defineProps({
   show: Boolean,
 });
-const recieveProblem = (name) => {
+const recieveProblem = (name, path) => {
+  new_data.value.pic = require("@/" + path);
+
   visibility.value.scrollingSpan();
+  console.log(path);
+
   ElMessage({
     message: name,
     type: "success",
@@ -39,34 +43,52 @@ const visibility = ref();
 <style lang="less" scoped>
 .sunburst {
   position: absolute;
-  right: 5px;
+  right: -105px;
   width: 900px;
-  height: 1050px;
-  top: 0px;
-  backdrop-filter: blur(3px);
-//   background-color: hsla(230, 100%, 70%, 0.08);
-  opacity: 0;
+  height: 900px;
+  top: 30px;
+  //   backdrop-filter: blur(3px);
+  //   background-color: hsla(230, 100%, 70%, 0.08);
+  opacity: 1;
   z-index: 2;
+  transform: perspective(1000px) rotateY(-20deg) scale(0.9) !important;
+  transition: all 1s;
+}
+.sunburst:hover {
+  right: 95px;
+  transform: perspective(1000px) rotateY(-5deg) scale(1.1) !important;
 }
 .visible {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 1100px;
-  height: 800px;
+  top: 10%;
+  left: 20px;
+  width: 800px;
+  height: 700px;
   z-index: 1;
-  opacity: 0;
+  opacity: 1;
+  transition: all 1s;
+  transform: translateX(30px) perspective(1500px) rotateY(15deg) !important;
+  &:hover {
+    
+    left: 120px;
+    height: 800px;
+    width: 1100px;
+    background-color: hsla(207,93%,62%,0.5);
+    backdrop-filter: blur(10px);
+    transform: translateX(0px) perspective(1500px) rotateY(5deg) !important;
+  }
 }
 .home2 {
-  background: url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbkimg.cdn.bcebos.com%2Fpic%2Ffc1f4134970a304e30930d83d8c8a786c9175c11&refer=http%3A%2F%2Fbkimg.cdn.bcebos.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1652859702&t=af97a9f3e0d302cee16f67133e5c1ed4");
+  background: url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fcmszfb.oss-cn-beijing.aliyuncs.com%2Fu%2Fcms%2Fwww%2F202101%2F29210836quh0.jpg&refer=http%3A%2F%2Fcmszfb.oss-cn-beijing.aliyuncs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653737379&t=adb2eb53d075b2c1b2f472341ee5a1eb");
   background-size: 100% 100%;
+  background-color: hsl(196, 87%, 94%);
   background-repeat: no-repeat;
 }
 .hide_ani {
-  animation: hide1 1s linear forwards 0.1s;
+  animation: hide1 1s linear forwards;
 }
 .show_ani {
-  animation: show1 1s linear forwards 0.1s;
+  animation: show1 1s linear 1;
 }
 @keyframes hide1 {
   0% {
@@ -76,7 +98,7 @@ const visibility = ref();
 
   100% {
     opacity: 0;
-    transform: translateX(-300px) scale(0.1);
+    transform: translateX(300px) scale(0.1);
   }
 }
 @keyframes show1 {

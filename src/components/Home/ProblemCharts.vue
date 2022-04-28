@@ -1,13 +1,6 @@
 <template>
   <div>
-    <div
-      ref="earthchart"
-      style="
-        width: 100%;
-        height: 100%;
-        transform: perspective(1200px) rotateY(-30deg);
-      "
-    ></div>
+    <div ref="earthchart" style="width: 100%; height: 100%"></div>
   </div>
 </template>
 
@@ -20,8 +13,8 @@ import { sciencePro } from "@/assets/data/home/sciencePro.js";
 const emit = defineEmits(["sendProblem"]);
 const earthchart = ref();
 
-const sendProblemToFather = (name) => {
-  emit("sendProblem", name);
+const sendProblemToFather = (name, path) => {
+  emit("sendProblem", name, path);
 };
 
 onMounted(() => {
@@ -33,11 +26,11 @@ function init() {
   const myChart = echarts.init(earthchart.value);
   // 指定图表的配置项和数据
   const colors = [
-    "hsl(0,100%,55%)",
-    "hsl(10,80%,55%)",
-    "hsl(50,100%,55%)",
-    "hsl(30,100%,60%)",
-    "hsl(40,80%,55%)",
+    "hsl(221, 60%, 67%)",
+    "hsl(191, 60%, 67%)",
+    "hsl(201, 60%, 67%)",
+    "hsl(211, 60%, 67%)",
+    "hsl(181, 60%, 67%)",
   ];
   const bgColor = "hsla(238,65%,8%,0)";
   const itemStyle = {
@@ -96,8 +89,11 @@ function init() {
             book.itemStyle = style;
             book.label = {
               color: style.color,
-              fontSize: "23px",
-              fontWeight: 500,
+              // color: "#fafafa",
+              textShadow:
+                "-1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000,-1px -1px 0 #000",
+              fontSize: "25px",
+              fontWeight: 700,
             };
             let value = 1;
             if (bookScoreId === 0 || bookScoreId === 3) {
@@ -145,7 +141,7 @@ function init() {
           // }
         },
         itemStyle: {
-          borderColor: bgColor,
+          borderColor: "hsla(14,100%,80%,0.5)",
           borderWidth: 2,
         },
         levels: [
@@ -159,33 +155,35 @@ function init() {
           },
           {
             r0: 43,
-            r: 230,
+            r: 220,
           },
           {
-            r0: 230,
-            r: 255,
+            r0: 180,
+            r: 181,
             itemStyle: {
-              shadowBlur: 2,
+              shadowBlur: 10,
               shadowColor: colors[2],
               color: "transparent",
+              opacity:0
             },
             label: {
               rotate: "tangential",
-              fontSize: "14px",
+              fontSize: "0px",
               color: colors[0],
+              opacity:0
             },
           },
           {
-            r0: 255,
-            r: 280,
+            r0: 235,
+            r: 250,
             itemStyle: {
-              shadowBlur: 80,
-              shadowColor: colors[0],
+              shadowBlur: 10,
+              shadowColor: "hsla(215,100%,95%,0.2)",
             },
             label: {
               position: "outside",
-              textShadowBlur: 5,
-              textShadowColor: "#333",
+              textShadowBlur: 15,
+              textShadowColor: "hsla(215,100%,95%,0.8)",
             },
             downplay: {
               label: {
@@ -200,11 +198,10 @@ function init() {
 
   option && myChart.setOption(option);
   myChart.on("click", (params) => {
-    console.log(params);
     if (params.name == "" || params.value != 1) {
       return;
     }
-    sendProblemToFather(params.name);
+    sendProblemToFather(params.name,params.data.path);
   });
   // earthchart.value.addEventListener('click', (params)=> {
   // 	console.log(params);
@@ -213,4 +210,14 @@ function init() {
 </script>
 
 <style lang="less" scoped>
+.click {
+}
+.cancel-click {
+}
+@keyframes click1 {
+  0% {
+  }
+  100% {
+  }
+}
 </style>

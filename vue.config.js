@@ -52,6 +52,10 @@ module.exports = {
                 CESIUM_BASE_URL: JSON.stringify('./')
             })
         ],
+        module: {
+            unknownContextCritical : false,
+            rules: [],
+        },
     },
     //如果想要引入babel-polyfill可以这样写
     // configureWebpack: (config) => {
@@ -125,5 +129,6 @@ module.exports = {
     // pluginOptions: {
     //     // ...
     // },
+    
 
 };

@@ -171,7 +171,7 @@ getTreeData();
 
 let dataList = [];
 let tifList = [];
-let chartList = []; 
+let chartList = [];
 
 const getCheckedNodes = (checked, data) => {
   // 要区分tif、shp、chart数据，利用mapDataType
@@ -216,12 +216,13 @@ const getCheckedNodes = (checked, data) => {
 
 
 const invokeModel = (modelId) => {
-  router.push({
+  let pageInvokeTool = router.resolve({
     path:'/modelConfig',
     query:{
       modelId:modelId
     }
-  })
+  });
+  window.open(pageInvokeTool.href,'_blank');
 }
 
 const defaultProps = {

@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <span
+    style="position:absolute"
       :class="{
         background_show: background_show,
         background_hide: !background_show,
@@ -67,6 +68,162 @@ window.onload = searchIndexInRoutes;
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
 @import "../../css/btn/btn7.css";
+
+.set_7_btn-wrapper:hover {
+  animation-name: glitched;
+  animation-duration: calc(0.9s * 2.4);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+.topbar {
+  // margin-left: 20px;
+  width: 100%;
+  position: relative;
+  right: 50px;
+}
+.pickup {
+  border: hsl(54, 94%, 75%) 1px solid;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  text-align: center;
+  transform: scale(1.1);
+  // animation-name: glitched;
+
+  margin-left: 26%;
+  width: 50%;
+  animation-duration: calc(0.9s * 1.4);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  // &:before {
+  //   animation-name: beforeglitched;
+  //   animation-duration: calc(0.9s * 2);
+  //   animation-iteration-count: infinite;
+  //   animation-timing-function: linear;
+
+  // }
+  // box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
+}
+.logo {
+  font-size: 35px;
+  font-weight: 600;
+  margin-left: 30px;
+  position: relative;
+  z-index: 100;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding-top: 10px;
+}
+.background_show {
+  position: absolute;
+  height: 100%;
+  backdrop-filter: blur(10px);
+  animation: background_show 1.2s linear forwards;
+  @keyframes background_show {
+    0% {
+        width: 0vw;
+      background-color: hsla(200, 100%, 36%, 1);
+    }
+    100% {
+        width: 100.1vw;
+      background-color: hsla(200, 100%, 36%, 0.2);
+    }
+  }
+}
+.background_hide {
+  position: absolute;
+  height: 100%;
+  width: 100vw;
+  backdrop-filter: blur(10px);
+  animation: background_hide 1.2s linear forwards;
+  @keyframes background_hide {
+    0% {
+        width: 100vw;
+      background-color: hsla(200, 100%, 36%, 0.2);
+      transform: translateX(0px);
+      opacity: 1;
+    }
+    99% {
+        width: 0vw;
+      background-color: hsla(200, 100%, 36%, 1);
+      transform: translateX(100vw);
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+}
+.head {
+  width: 100%;
+  height: 100%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  // transition: all 2s;
+}
+
+::v-deep.head .el-menu--horizontal .el-menu-item {
+  height: 70px;
+  line-height: 70px;
+}
+
+.main {
+  width: 100%;
+  height: 100%;
+}
+.contact-info {
+  width: fit-content;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-right: 12px;
+}
+.head .main-iconbox {
+  display: flex;
+  align-items: center;
+  margin-left: 40px;
+  margin-right: 10px;
+}
+.head .main-iconbox .main-icon {
+  width: 38px;
+  height: 38px;
+  margin-right: 5px;
+}
+.head .main-iconbox .main-iconname {
+  width: 80px;
+  height: 40px;
+}
+.head .main-menucontainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+  width: fit-content;
+}
+.head .main-user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+
+  margin-right: 40px;
+}
+.head .main-user i {
+  font-size: 30px;
+  color: white;
+  font-size: 28px;
+}
+.head .main-user p {
+  margin-left: 10px;
+  font-size: 20px;
+  color: white;
+}
 @keyframes glitched {
   0% {
     left: -4px;
@@ -179,159 +336,5 @@ window.onload = searchIndexInRoutes;
       0px 10px
     );
   }
-}
-.set_7_btn-wrapper:hover {
-  animation-name: glitched;
-  animation-duration: calc(0.9s * 2.4);
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-}
-.topbar {
-  // margin-left: 20px;
-  width: 100%;
-  position: relative;
-  right: 50px;
-}
-.pickup {
-  border: hsl(54, 94%, 75%) 1px solid;
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
-  text-align: center;
-  transform: scale(1.1);
-  // animation-name: glitched;
-
-  margin-left: 26%;
-  width: 50%;
-  animation-duration: calc(0.9s * 1.4);
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-  // &:before {
-  //   animation-name: beforeglitched;
-  //   animation-duration: calc(0.9s * 2);
-  //   animation-iteration-count: infinite;
-  //   animation-timing-function: linear;
-
-  // }
-  // box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
-}
-.logo {
-  font-size: 35px;
-  font-weight: 600;
-  margin-left: 30px;
-  position: relative;
-  z-index: 100;
-}
-.container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  padding-top: 10px;
-}
-.background_show {
-  position: absolute;
-  height: 100%;
-  width: 105vw;
-  backdrop-filter: blur(10px);
-  animation: background_show 1.2s linear forwards;
-  @keyframes background_show {
-    0% {
-      background-color: hsla(200, 100%, 46%, 1);
-      transform: translateX(-100vw);
-    }
-    100% {
-      background-color: hsla(200, 100%, 46%, 0.2);
-      transform: translateX(0px);
-    }
-  }
-}
-.background_hide {
-  position: absolute;
-  height: 100%;
-  width: 100vw;
-  backdrop-filter: blur(10px);
-  animation: background_hide 1.2s linear forwards;
-  @keyframes background_hide {
-    0% {
-      background-color: hsla(200, 100%, 46%, 0.2);
-      transform: translateX(0px);
-      opacity: 1;
-    }
-    99% {
-      background-color: hsla(200, 100%, 46%, 1);
-      transform: translateX(105vw);
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
-  }
-}
-.head {
-  width: 100%;
-  height: 100%;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  // transition: all 2s;
-}
-
-::v-deep.head .el-menu--horizontal .el-menu-item {
-  height: 70px;
-  line-height: 70px;
-}
-
-.main {
-  width: 100%;
-  height: 100%;
-}
-.contact-info {
-  width: fit-content;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-right: 12px;
-}
-.head .main-iconbox {
-  display: flex;
-  align-items: center;
-  margin-left: 40px;
-  margin-right: 10px;
-}
-.head .main-iconbox .main-icon {
-  width: 38px;
-  height: 38px;
-  margin-right: 5px;
-}
-.head .main-iconbox .main-iconname {
-  width: 80px;
-  height: 40px;
-}
-.head .main-menucontainer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 100%;
-  width: fit-content;
-}
-.head .main-user {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 100%;
-
-  margin-right: 40px;
-}
-.head .main-user i {
-  font-size: 30px;
-  color: white;
-  font-size: 28px;
-}
-.head .main-user p {
-  margin-left: 10px;
-  font-size: 20px;
-  color: white;
 }
 </style>

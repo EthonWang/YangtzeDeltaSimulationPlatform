@@ -1,6 +1,11 @@
 <template>
   <div class="container">
-    <span :class="{ background_show: background_show,background_hide:!background_show }"></span>
+    <span
+      :class="{
+        background_show: background_show,
+        background_hide: !background_show,
+      }"
+    ></span>
     <div class="head">
       <span class="logo">长 三 角 模 拟 器</span>
       <!-- <img src="../../assets/app/logo1.png" style="height:80px;margin-top:20px"> -->
@@ -235,10 +240,9 @@ window.onload = searchIndexInRoutes;
       background-color: hsla(200, 100%, 46%, 1);
       transform: translateX(-100vw);
     }
-    100% {      
+    100% {
       background-color: hsla(200, 100%, 46%, 0.2);
       transform: translateX(0px);
-
     }
   }
 }
@@ -252,11 +256,15 @@ window.onload = searchIndexInRoutes;
     0% {
       background-color: hsla(200, 100%, 46%, 0.2);
       transform: translateX(0px);
+      opacity: 1;
     }
-    100% {      
+    99% {
       background-color: hsla(200, 100%, 46%, 1);
       transform: translateX(105vw);
-
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
     }
   }
 }

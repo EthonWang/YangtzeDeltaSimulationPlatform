@@ -60,7 +60,7 @@ const visibility = ref();
 }
 .visible {
   position: absolute;
-  top: 10%;
+  top: 8%;
   left: 20px;
   width: 800px;
   height: 700px;
@@ -69,7 +69,7 @@ const visibility = ref();
   transition: all 1s;
   transform: translateX(30px) perspective(1500px) rotateY(15deg) !important;
   &:hover {
-    
+    top: 10%;
     left: 120px;
     height: 800px;
     width: 1100px;

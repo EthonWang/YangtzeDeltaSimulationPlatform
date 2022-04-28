@@ -4,9 +4,9 @@
     <button class="mapSwitchButton" @click="switchMap">2D/3D</button>
     <mapbox-view
       :shpShowList="shpList"
-      v-if="mapType == 'mapBox'"
+      v-show="mapType == 'mapBox'"
     ></mapbox-view>
-    <cesium :tifList="tifList" v-if="mapType == 'cesium'" />
+    <cesium :tifList="tifList" v-show="mapType == 'cesium'" />
 
     <!-- echarts图表 -->
     <div v-for="item in chartList" :key="item.dataSourceId">
@@ -72,11 +72,13 @@ export default {
     },
     getCheckData(data){
       //将选中的目录树的data值覆给shpList
+      this.mapType = 'mapBox';
       this.shpList =JSON.parse(JSON.stringify(data))
       console.log('this.shpList: ', toRaw(this.shpList))
     },
     getCheckTif(data){
       //tifList
+      this.mapType = 'cesium';
       this.tifList =JSON.parse(JSON.stringify(data))
       console.log('this.tifList: ', toRaw(this.tifList))
     },

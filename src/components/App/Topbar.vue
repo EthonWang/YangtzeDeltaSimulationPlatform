@@ -126,7 +126,7 @@ window.onload = searchIndexInRoutes;
   @keyframes background_show {
     0% {
         width: 0vw;
-      background-color: hsla(200, 100%, 36%, 1);
+      background-color: hsla(200, 100%, 22%, 1);
     }
     100% {
         width: 100.1vw;
@@ -149,7 +149,7 @@ window.onload = searchIndexInRoutes;
     }
     99% {
         width: 0vw;
-      background-color: hsla(200, 100%, 36%, 1);
+      background-color: hsla(200, 100%, 22%, 1);
       transform: translateX(100vw);
       opacity: 1;
     }

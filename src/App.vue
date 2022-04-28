@@ -43,7 +43,7 @@ const routerGo = (router) => {
   // margin-top: -8px;
   // margin-left: -8px;
   // margin-right: -8px;
-  background: #63c4fd00;
+  background: #63c4fd86;
   
 }
 .main {

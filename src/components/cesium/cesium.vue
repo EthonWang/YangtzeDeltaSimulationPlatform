@@ -1,7 +1,7 @@
 <template>
   <div id="container" class="box">
     <div id="cesiumContainer"></div>
-    <div id="toolbar" v-if="!startButton">
+    <!-- <div id="toolbar" v-if="!startButton">
       <button @click="showProvince" class="toolbarItem">中国行政区划</button>
       <button @click="showProvince2" class="toolbarItem">
         中国行政区划(界线)
@@ -18,7 +18,7 @@
       >
         第一视角飞行
       </button>
-    </div>
+    </div> -->
     <!-- <div id="startbar" v-if="startButton">
       <button @click="startCesium" class="startbarItem">开始</button>
     </div> -->
@@ -27,9 +27,11 @@
 
 <script>
 import * as Cesium from "cesium/Cesium";
+import axios from "axios";
 
 export default {
   name: "Cesium",
+  props: ["tifList"],
   data() {
     return {
       viewer: null,
@@ -53,12 +55,20 @@ export default {
       showDockButton: false,
       showPlaneButton: false,
       firstPerspectiveButton: false,
+      loadedTifList: [],
+      loadedTifIdList: [],
     };
+  },
+  watch: {
+    tifList(value) {
+      this.updateTifShow(value);
+    },
   },
   mounted() {
     this.cesiumInit();
     // this.add3DTiles();
     // this.addPlane();
+    // this.addKMZ();
   },
   methods: {
     cesiumInit() {
@@ -96,14 +106,14 @@ export default {
       // 视角大小
       Cesium.Camera.DEFAULT_VIEW_FACTOR = 0;
       // 设置home在中国(左下角，右上角)
-      const ChinaRectangle = Cesium.Rectangle.fromDegrees(
-        119.080032,
-        30.959241,
-        122.789387,
-        32.389027
-      );
-      Cesium.Camera.DEFAULT_VIEW_RECTANGLE = ChinaRectangle;
-      this.viewer.camera.flyHome(8);
+      // const ChinaRectangle = Cesium.Rectangle.fromDegrees(
+      //   119.080032,
+      //   30.959241,
+      //   122.789387,
+      //   32.389027
+      // );
+      // Cesium.Camera.DEFAULT_VIEW_RECTANGLE = ChinaRectangle;
+      // this.viewer.camera.flyHome(8);
       // this.viewer.camera.setView({
       //   destination: {
       //     x: -3837625.3684990564,
@@ -120,6 +130,63 @@ export default {
     destroyMap() {
       this.viewer.destroy();
       this.viewer = null;
+    },
+    updateTifShow(list) {
+      // 添加增加的tif，隐藏减少的tif
+      // 检查是否已经被加载过
+      for (let i = 0; i < list.length; i++) {
+        let exist = false;
+        for (let j = 0; j < this.loadedTifIdList.length; j++) {
+          if (list[i].dataSourceId == this.loadedTifIdList[j]) {
+            exist = true;
+          }
+        }
+        if (!exist) {
+          // 判断是否已经添加
+          this.loadedTifIdList.push(list[i].dataSourceId);
+          list[i].loaded = false;
+          this.loadedTifList.push(list[i]);
+          this.addKMZ(this.loadedTifList.length - 1);
+        }
+      }
+      // 隐藏已经加载过，但本次不在list中的tif
+      // 显示已经加载过，仍在本次list中的tif
+      for (let i = 0; i < this.loadedTifIdList.length; i++) {
+        let exist = false;
+        for (let j = 0; j < list.length; j++) {
+          if (list[j].dataSourceId == this.loadedTifIdList[i]) {
+            exist = true;
+          }
+        }
+        if (!exist && this.loadedTifList[i].loaded) {
+          // 需要隐藏
+          this.loadedTifList[i].geocacheEntities[0].show = false;
+        } else if (exist && this.loadedTifList[i].loaded) {
+          this.loadedTifList[i].geocacheEntities[0].show = true;
+        }
+      }
+    },
+    addKMZ(index) {
+      this.loadedTifList[index].geocacheEntities = [];
+      var options = {
+        camera: this.viewer.scene.camera,
+        canvas: this.viewer.scene.canvas,
+        clampToGround: true, //开启贴地
+      };
+      let that = this;
+      this.viewer.dataSources
+        .add(
+          Cesium.KmlDataSource.load(
+            "http://172.21.212.63:8999/model/getKmzData?kmzDataPath=" +
+              this.loadedTifList[index].path,
+            options
+          )
+        )
+        .then(function (dataSource) {
+          let geocacheEntities = dataSource.entities.values;
+          that.loadedTifList[index].geocacheEntities = geocacheEntities;
+          that.loadedTifList[index].loaded = true;
+        });
     },
     startCesium() {
       this.startButton = false;
@@ -154,8 +221,52 @@ export default {
           this.viewer.clock.currentTime
         );
         if (center) {
-          let vector = new Cesium.Cartesian3(5, -2.2, 0.5);
-          this.viewer.camera.lookAt(center, vector);
+          // this.viewer.camera.setView({
+          //   // Cesium的坐标是以地心为原点，一向指向南美洲，一向指向亚洲，一向指向北极州
+          //   // fromDegrees()方法，将经纬度和高程转换为世界坐标
+          //   destination: center,
+          //   orientation: {
+          //     // 指向
+          //     heading: Cesium.Math.toRadians(90, 0),
+          //     // 视角
+          //     pitch: Cesium.Math.toRadians(-90),
+          //     roll: 0.0,
+          //   },
+          // });
+          let target = new Cesium.Cartesian3.fromDegrees(
+            119.78432,
+            31.91299,
+            0
+          );
+          //   let vector = new Cesium.Cartesian3(
+          //     0.5,
+          //     -0.22,
+          //     -0.01
+          //   );
+          // let nextPos = this.airplane.position.getValue(
+          //   this.viewer.clock.currentTime + 1
+          // );
+
+          // let front = new Cesium.Cartesian3(
+          //   nextPos.x - center.x,
+          //   nextPos.y - center.y,
+          //   nextPos.z - center.z,
+          // );
+
+          // front = Cesium.Cartesian3.normalize(front, new Cesium.Cartesian3());
+
+          let pos = new Cesium.Cartesian3(
+            target.x - center.x,
+            target.y - center.y,
+            target.z - center.z
+          );
+          let front = Cesium.Cartesian3.normalize(pos, new Cesium.Cartesian3());
+          // let hpr = new Cesium.HeadingPitchRange(
+          //   Cesium.Math.toRadians(150, 0),
+          //   Cesium.Math.toRadians(0),
+          //   100
+          // );
+          this.viewer.camera.lookAt(center, front);
         }
       }
     },
@@ -421,7 +532,6 @@ export default {
       });
     },
     showLevel2() {
-      console.log(this.viewer.camera);
       if (this.level2 == null) {
         this.addGeoJSON_level2();
       } else if (!this.showLevel2Button) {
@@ -606,9 +716,8 @@ export default {
 }
 #toolbar {
   position: absolute;
-  
-  right:0px;
-  bottom:30px;
+  right: 0px;
+  bottom: 300px;
   background-color: rgb(55, 55, 55);
   padding: 20px 20px;
   border-radius: 10%;
@@ -637,14 +746,15 @@ export default {
 .startbarItem:hover {
   background-color: rgb(62, 61, 61);
 }
-::v-deep .cesium-performanceDisplay-defaultContainer{
+::v-deep .cesium-performanceDisplay-defaultContainer {
   position: absolute;
-  top:102px !important;
+  top: 102px !important;
 }
-::v-deep .cesium-viewer .cesium-viewer-toolbar {/*镶嵌带空格*/
-    display: block;
-    position: absolute;
-    top: 62px !important;
-    right: 5px;
+::v-deep .cesium-viewer .cesium-viewer-toolbar {
+  /*镶嵌带空格*/
+  display: block;
+  position: absolute;
+  top: 62px !important;
+  right: 5px;
 }
 </style>

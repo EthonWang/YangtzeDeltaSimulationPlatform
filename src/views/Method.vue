@@ -12,11 +12,9 @@ import {useStore} from "vuex";
 
 const router=useRouter()//路由直接用router.push(...)
 const store=useStore()//vuex直接用store.commit
-
 </script>
 
 <style lang="less" scoped>
 // 兼容css
-
 </style>
 

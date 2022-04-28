@@ -23,13 +23,13 @@
                     <el-button
                         type="primary"
                         size="mini"
-                        @click="modelConfigDialog = true" plain>
+                        @click="invokeModel(data.modelId)" plain>
                       Config
                     </el-button>
                     <el-button
                         type="info"
                         size="mini"
-                        @click="() => remove(node, data)" plain>
+                        @click="modelConfigDialog = true" plain>
                       Info
                     </el-button>
             </span>
@@ -161,6 +161,16 @@ const getCheckedNodes = (checked,data) => {
   emit('getCheckData', dataList)
 }
 
+
+const invokeModel = (modelId) => {
+  router.push({
+    path:'/modelConfig',
+    query:{
+      modelId:modelId
+    }
+  })
+}
+
 const defaultProps = {
   children: 'children',
   label: 'label'
@@ -168,9 +178,7 @@ const defaultProps = {
 const handleNodeClick = (data) => {
 
 }
-const remove = (node, data) => {
-  console.log(node, data)
-}
+
 const modelConfigDialog = ref(false);
 
 const testModelInput = reactive({});
@@ -288,6 +296,8 @@ const options = [
   height: 80vh;
   overflow: scroll;
 }
+
+
 </style>
 
 

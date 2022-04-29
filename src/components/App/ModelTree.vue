@@ -1,58 +1,46 @@
 <template>
-  <el-tree
-    ref="treeRef"
-    :data="modelTreeData"
-    :props="defaultProps"
-    @node-click="handleNodeClick"
-    :default-expand-all="true"
-    :expand-on-click-node="false"
-    style=""
-  >
-    <template class="custom-tree-node" v-slot="{ node, data }">
-      <span v-if="data.type == 'dataSet'">
-        <!--              <el-checkbox></el-checkbox>-->
-        {{ node.label }}
-      </span>
-      <span v-else-if="data.type == 'problem'">
-        {{ node.label }}
-      </span>
-      <span v-else-if="data.type == 'data'">
-        <el-checkbox
-          :key="data.dataSourceId"
-          @change="(checked) => getCheckedNodes(checked, data)"
-          >{{ node.label }}</el-checkbox
-        >
-      </span>
-      <span v-else>{{ node.label }}</span>
-      <span style="margin-left: 50px" v-show="data.type == 'model'">
-        <el-button
-          type="primary"
-          size="mini"
-          @click="modelConfigDialog = true"
-          plain
-        >
-          Config
-        </el-button>
-        <el-button
-          type="info"
-          size="mini"
-          @click="() => remove(node, data)"
-          plain
-        >
-          Info
-        </el-button>
-      </span>
-    </template>
-  </el-tree>
-  <el-dialog
-    custom-class="dialog_config"
-    v-model="modelConfigDialog"
-    title="模型配置"
-    width="32%"
-    draggable
-  >
-    <el-row class="config-title"
-      ><Setting class="config-icon" />数据配置</el-row
+   <el-tree
+        ref="treeRef"
+        :data="modelTreeData"
+        :props="defaultProps"
+        @node-click="handleNodeClick"
+        :default-expand-all='true'
+        :expand-on-click-node="false"
+        style="">
+      <template class="custom-tree-node" v-slot="{ node, data }" >
+            <span v-if="data.type == 'dataSet'">
+<!--              <el-checkbox></el-checkbox>-->
+              {{ node.label }}
+            </span>
+            <span v-else-if="data.type == 'problem'">
+                      {{ node.label }}
+            </span>
+            <span v-else-if="data.type == 'data'">
+              <el-checkbox :key="data.dataSourceId" @change="checked=>getCheckedNodes(checked,data)">{{ node.label }}</el-checkbox>
+            </span>
+            <span v-else>{{ node.label }}</span>
+            <span style="margin-left: 50px" v-show="data.type == 'model'">
+                    <el-button
+                        type="primary"
+                        size="mini"
+                        @click="invokeModel(data.modelId)" plain>
+                      Config
+                    </el-button>
+                    <el-button
+                        type="info"
+                        size="mini"
+                        @click="modelConfigDialog = true" plain>
+                      Info
+                    </el-button>
+            </span>
+      </template>
+    </el-tree>
+    <el-dialog
+        custom-class="dialog_config"
+        v-model="modelConfigDialog"
+        title="模型配置"
+        width="32%"
+        draggable
     >
     <el-card class="config-card" shadow="hover">
       <el-row>
@@ -183,7 +171,7 @@ getTreeData();
 
 let dataList = [];
 let tifList = [];
-let chartList = []; 
+let chartList = [];
 
 const getCheckedNodes = (checked, data) => {
   // 要区分tif、shp、chart数据，利用mapDataType
@@ -226,14 +214,23 @@ const getCheckedNodes = (checked, data) => {
   }
 };
 
+
+const invokeModel = (modelId) => {
+  let pageInvokeTool = router.resolve({
+    path:'/modelConfig',
+    query:{
+      modelId:modelId
+    }
+  });
+  window.open(pageInvokeTool.href,'_blank');
+}
+
 const defaultProps = {
   children: "children",
   label: "label",
 };
 const handleNodeClick = (data) => {};
-const remove = (node, data) => {
-  console.log(node, data);
-};
+
 const modelConfigDialog = ref(false);
 
 const testModelInput = reactive({});
@@ -350,6 +347,8 @@ const options = [
   height: 80vh;
   overflow: scroll;
 }
+
+
 </style>
 
 

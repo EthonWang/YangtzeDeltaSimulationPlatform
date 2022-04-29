@@ -5,6 +5,7 @@ import Model from "@/views/Model.vue";
 import Method from "@/views/Method.vue";
 import Help from "@/views/Help.vue";
 // import Functions from "@/views/Function.vue";
+import ModelConfig from "@/components/App/ModelConfig"
 
 const routes = [
   {
@@ -23,7 +24,7 @@ const routes = [
   },
   {
     isBar:true,
-    path: "/case",
+    path: "/case/",
     name: "案例",
     component: Method,
     children:[]
@@ -44,7 +45,14 @@ const routes = [
     component: Help,
     children:[]
   },
-  
+  {
+    isBar:false,
+    path: "/modelConfig",
+    name: "ModelConfig",
+    component: ModelConfig,
+    children:[]
+  },
+
 ];
 
 const router = createRouter({

@@ -3,11 +3,12 @@
 <template>
   <div id="app" class="">
     <Topbar
+    :background_show="background_show"
       @RouterFromBar="routerGo"
       style="height: 60px; position: absolute; z-index: 500"
     ></Topbar>
 
-    <router-view class="main"></router-view>
+    <router-view @showTopbarBackground="showTopbarBackground" class="main"></router-view>
     <!-- </el-scrollbar> -->
   </div>
 </template>
@@ -17,6 +18,10 @@ import Topbar from "./components/App/Topbar.vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
+const background_show=ref(false)
+const showTopbarBackground=(bool)=>{
+  background_show.value=bool
+}
 const myRouter = useRouter();
 const routerGo = (router) => {
   myRouter.push({ path: router });
@@ -24,8 +29,7 @@ const routerGo = (router) => {
 // window.onload=function(){document.getElementsByClassName("main")[0].height=window.innerHeight}
 </script>
 <style lang="less">
-// @import "./css/mouse/fire.css";
-// @import url(https://fonts.googleapis.com/css?family=Amatic+SC);
+
 @import "./css/global/cyberpunk.less";
 
 #app {
@@ -34,26 +38,25 @@ const routerGo = (router) => {
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
   overflow: hidden;
-  width: 1920px;
   color: #000000;
-  margin-left: -3.8px;
-  margin-top: -8px;
-  padding-left: 0px;
+  margin: -8px;
+  // margin-top: -8px;
+  // margin-left: -8px;
   // margin-right: -8px;
-  background: #63c4fd;
+  background: #63c4fd86;
   
 }
 .main {
   position: relative;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 930px;
+  height: 105vh;
+  // height: 950px;
   padding-top: 0px;
   overflow-y: scroll;
   overflow-x: hidden;
 }
 ::-webkit-scrollbar {
-  width: 1px !important;
+  width: 0px !important;
 }
 </style>

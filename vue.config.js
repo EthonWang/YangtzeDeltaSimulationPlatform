@@ -122,6 +122,15 @@ module.exports = {
                     "/back_data": "",
                 },
             },
+            "/echarts": {
+                target: "https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples",
+                ws: true,
+                timeout: 3600000,
+                changOrigin: true,
+                pathRewrite: {
+                    "/echarts": "",
+                },
+            },
         }, // 设置代理
         // before: (app) => { },
     },

@@ -70,10 +70,10 @@ window.onload = searchIndexInRoutes;
 @import "../../css/btn/btn7.css";
 
 .set_7_btn-wrapper:hover {
-  animation-name: glitched;
-  animation-duration: calc(0.9s * 2.4);
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
+  // animation-name: glitched;
+  // animation-duration: calc(0.9s * 2.4);
+  // animation-iteration-count: infinite;
+  // animation-timing-function: linear;
 }
 .topbar {
   // margin-left: 20px;

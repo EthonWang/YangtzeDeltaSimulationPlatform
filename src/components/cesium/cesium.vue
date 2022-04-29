@@ -177,7 +177,7 @@ export default {
       this.viewer.dataSources
         .add(
           Cesium.KmlDataSource.load(
-            "http://172.21.212.63:8999/model/getKmzData?kmzDataPath=" +
+            "http://172.21.212.63:8999/store" +
               this.loadedTifList[index].path,
             options
           )

@@ -49,33 +49,35 @@ const visibility = ref();
   top: 30px;
   //   backdrop-filter: blur(3px);
   //   background-color: hsla(230, 100%, 70%, 0.08);
-  opacity: 1;
+  opacity: 0.75;
   z-index: 2;
   transform: perspective(1000px) rotateY(-20deg) scale(0.9) !important;
   transition: all 1s;
 }
 .sunburst:hover {
+    opacity: 0.95;
   right: 95px;
-  transform: perspective(1000px) rotateY(-5deg) scale(1.1) !important;
+  transform: perspective(1000px) rotateY(-2deg) scale(1.1) !important;
 }
 .visible {
   position: absolute;
   top: 8%;
   left: 20px;
-  width: 800px;
+  width: 900px;
   height: 700px;
   z-index: 1;
   opacity: 1;
   transition: all 1s;
+      background-color: hsla(207,93%,62%,0.1);
   transform: translateX(30px) perspective(1500px) rotateY(15deg) !important;
   &:hover {
     top: 10%;
     left: 120px;
     height: 800px;
     width: 1100px;
-    background-color: hsla(207,93%,62%,0.5);
+    background-color: hsla(207,93%,62%,0.6);
     backdrop-filter: blur(10px);
-    transform: translateX(0px) perspective(1500px) rotateY(5deg) !important;
+    transform: translateX(0px) perspective(1500px) rotateY(2deg) !important;
   }
 }
 .home2 {

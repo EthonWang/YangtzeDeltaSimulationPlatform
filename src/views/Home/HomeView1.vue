@@ -73,26 +73,27 @@ const home1 = ref();
 
 .map {
   position: absolute;
-  right: 50px;
+  right: 120px;
   top: 100px;
   height: 700px;
   width: 700px;
   z-index: 5;
   box-shadow: 0 2px 24px 0 hsla(220, 50%, 10%, 0.8);
   transition: all 1s;
-  transform: perspective(1500px) rotateY(-25deg);
-  opacity: 0.2;
+  transform: perspective(1500px) rotateY(-15deg);
+  opacity: 0.85;
   &:hover {
     height: 800px;
     opacity: 0.95;
     width: 800px;
     right: 240px;
-    transform: perspective(1000px) rotateY(-5deg) scale(1.05);
+    transform: perspective(1000px) rotateY(-2deg) scale(1.05);
   }
 }
 .introduce {
+  position: relative;
   margin-top: 13%;
-  left: 60px;
+  left: 120px;
   font-size: 29px !important;
   box-shadow: 0 2px 24px 0 hsla(220, 50%, 10%, 0.8);
   opacity: 1;
@@ -102,13 +103,13 @@ const home1 = ref();
   padding: 20px;
   background-color: hsla(210, 80%, 50%, 0.05);
   transition: all 1s;
-  transform: translateX(80px) scale(1) perspective(1500px) rotateY(25deg);
+  transform:  scale(1) perspective(1500px) rotateY(15deg);
 }
 .introduce:hover {
     backdrop-filter: blur(10px);
     background-color: hsla(210, 80%, 50%, 0.65);
   color: hsla(210, 80%, 95%, 1);
-  transform: translateX(260px) scale(1.2) perspective(1200px) rotateY(5deg);
+  transform: translateX(260px) scale(1.2) perspective(1200px) rotateY(2deg);
 }
 .show_ani {
   animation: show1 1s linear 1;

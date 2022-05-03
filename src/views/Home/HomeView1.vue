@@ -1,8 +1,26 @@
 <template>
   <div ref="home1" class="home1">
-    <div>
-      <br /><br />
-      <!-- <h1 class="cyberpunk">首页DEMO/待排版</h1> -->
+    <div class="container">
+      <div class="desContainer" :class="{ show_ani: props.show, hide_ani: !props.show }">
+        <h1>长三角综合模拟</h1>
+        <p>
+          长三角模拟器汇聚了大量长江三角洲区域的地理模型和数据资源，用以揭示区域水循环及其内部驱动机理的水循环，阐明全球气候变化条件下区域环境演化规律，以及长三角城市化与人地关系相互作用的互动互馈机制的综合集成模型，实现区域灾害的快速响应与治理，服务于长三角高质量一体化发展国家战略
+        </p>
+        <div class="login">
+          <el-input
+            v-model="input"
+            type="password"
+            placeholder="邮件地址"
+            show-password
+          />
+          <el-button type="success">登录</el-button>
+        </div>
+      </div>
+      
+        <MapCharts class="earth" :class="{ show_ani: props.show, hide_ani: !props.show }"></MapCharts>
+      
+    </div>
+    <!-- <div>
       <p
         class="introduce"
         :class="{ show_ani: props.show, hide_ani: !props.show }"
@@ -17,13 +35,13 @@
         class="map"
         src="http://i-1.33app.net/2021/3/12/87e04633-4304-4cc0-a5eb-9450a3e4d1d3.jpg"
         alt=""
-      />
-      <!-- <MapCharts class="map"></MapCharts> -->
-      <!-- <p class="cyberpunk inverse dotted introduce" v-if="show">
+      /> -->
+    <!-- <MapCharts class="map"></MapCharts> -->
+    <!-- <p class="cyberpunk inverse dotted introduce" v-if="show">
         长江三角洲区域自然资源丰富、经济发展活跃，是人地活动最频繁的地区之一，在沉积学意义上，地处东部沿海，受季风气候与海面升降影响，是全球变化敏感区；在自然地理学意义上，地处长江下游平原地区，地势低洼，易洪易涝，是洪涝灾害易发区；在区域经济发展意义上，地处江海交汇，上海为龙头，长江黄金水道为纽带，是长江经济带发展引擎区；在行政区划上，地处世界经济最活跃区域，城市群、都市圈体系完备，区域内、区际间差异显著，是新型城镇化先行区。
       </p> -->
-      <!-- <Fire style="position: fixed; top: 0px; left: 0; z-index: -1"></Fire> -->
-    </div>
+    <!-- <Fire style="position: fixed; top: 0px; left: 0; z-index: -1"></Fire> -->
+    <!-- </div> -->
   </div>
 </template>
 
@@ -32,16 +50,12 @@
 import { reactive, computed, ref, onMounted, defineProps } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-// import MapCharts from "components/Home/MapCharts.vue";
+import MapCharts from "components/Home/MapCharts.vue";
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const props = defineProps({
-  show: {
-    type: Boolean,
-    default: true,
-    required: false,
-  },
+  show: Boolean,
 });
 const toModel = () => {
   router.push("/model");
@@ -55,6 +69,60 @@ const home1 = ref();
 </script>
 
 <style lang="less" scoped>
+.container {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: url("../../assets/starfield.jpg");
+  background-size: 100% 100%;
+}
+.container .desContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: 10%;
+  top: 15%;
+  width: 600px;
+  height: 400px;
+  transition: all 1s;
+  padding: 20px 20px;
+  h1 {
+    color: white;
+    font-size: 72px;
+  }
+  p {
+    font-size: 24px;
+    color: white;
+  }
+  /deep/ .login {
+  display: flex;
+  align-items: center;
+  .el-button--success {
+    width: 120px;
+  }
+  .el-input__inner {
+    width: 460px !important;
+  }
+}
+  &:hover {
+    transform:  translateX(50px) scale(1.05);
+  }
+}
+
+.container .earth {
+  position: absolute;
+  right: 15%;
+  top: 18%;
+  // bottom: 50px;
+  width: 550px;
+  height: 550px;
+  // background-color: red;
+  transition: all 1s;
+  &:hover {
+    transform: translate(-50px,50px) scale(1.35);
+  }
+}
 // 兼容css
 @right-color: hsla(351, 73%, 22%, 0);
 @base-color: hsl(238, 100%, 95%);
@@ -65,7 +133,8 @@ const home1 = ref();
   width: 100%;
   height: 100%;
   // animation: gradients 6s linear infinite alternate;
-  background: url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg1.jiemian.com%2F101%2Foriginal%2F20200925%2F160101930086874400.jpg&refer=http%3A%2F%2Fimg1.jiemian.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653721526&t=987f7aabf97094519e7403f41e361028");
+  // https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg1.jiemian.com%2F101%2Foriginal%2F20200925%2F160101930086874400.jpg&refer=http%3A%2F%2Fimg1.jiemian.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653721526&t=987f7aabf97094519e7403f41e361028
+  // background: url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.xhby.net%2Findex%2F202110%2FW020211014807713025533.jpg&refer=http%3A%2F%2Fwww.xhby.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653806992&t=cfa997108f4a23626f2251cf239cc2cd");
   padding-left: 0px;
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -80,7 +149,7 @@ const home1 = ref();
   z-index: 5;
   box-shadow: 0 2px 24px 0 hsla(220, 50%, 10%, 0.8);
   transition: all 1s;
-  transform: perspective(1500px) rotateY(-15deg);
+  transform: perspective(1500px) rotateY(0deg);
   opacity: 0.85;
   &:hover {
     height: 800px;
@@ -99,17 +168,17 @@ const home1 = ref();
   opacity: 1;
   width: 32.5%;
   backdrop-filter: blur(0px);
-  color: hsla(210, 80%, 50%, 1);
+  color: hsla(210, 80%, 100%, 1);
   padding: 20px;
-  background-color: hsla(210, 80%, 50%, 0.05);
+  background-color: hsla(210, 80%, 50%, 0.65);
   transition: all 1s;
-  transform:  scale(1) perspective(1500px) rotateY(15deg);
+  transform: scale(1) perspective(1500px) rotateY(0deg);
 }
 .introduce:hover {
-    backdrop-filter: blur(10px);
-    background-color: hsla(210, 80%, 50%, 0.65);
+  backdrop-filter: blur(10px);
+  background-color: hsla(210, 80%, 50%, 0.65);
   color: hsla(210, 80%, 95%, 1);
-  transform: translateX(260px) scale(1.2) perspective(1200px) rotateY(2deg);
+  transform: translateX(200px) scale(1.15) perspective(1200px) rotateY(2deg);
 }
 .show_ani {
   animation: show1 1s linear 1;
@@ -128,25 +197,22 @@ const home1 = ref();
 @keyframes show1 {
   0% {
     opacity: 0;
-    transform: translateX(-500px) scale(0.1) perspective(1200px) rotateY(0deg);
+    transform: scale(0.1);
     // transform: skew(30deg);
   }
   100% {
-    
-
     // -webkit-transform: scale3d(1, 1, 1);
     // transform: skew(0deg);
   }
 }
 @keyframes hide1 {
   0% {
-    transform: translateX(60px) scale(1) perspective(1200px) rotateY(30deg);
-
+    transform: scale(1);
   }
 
   100% {
     opacity: 0;
-    transform: translateX(500px) scale(0.1) perspective(1200px) rotateY(0deg);
+    transform: scale(0.1);
   }
 }
 </style>

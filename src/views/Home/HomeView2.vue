@@ -41,6 +41,7 @@ const visibility = ref();
 </script>
 
 <style lang="less" scoped>
+@hover-time:0.5s;
 .sunburst {
   position: absolute;
   right: -105px;
@@ -52,7 +53,7 @@ const visibility = ref();
   opacity: 0.75;
   z-index: 2;
   transform: perspective(1000px) rotateY(-20deg) scale(0.9) !important;
-  transition: all 1s;
+  transition: all @hover-time;
 }
 .sunburst:hover {
     opacity: 0.95;
@@ -67,9 +68,9 @@ const visibility = ref();
   height: 700px;
   z-index: 1;
   opacity: 1;
-  transition: all 1s;
-      background-color: hsla(207,93%,62%,0.1);
-  transform: translateX(30px) perspective(1500px) rotateY(15deg) !important;
+  transition: all @hover-time;
+      background-color: hsla(207,93%,62%,0);
+  transform: translateX(30px) perspective(1500px) rotateY(0deg) !important;
   &:hover {
     top: 10%;
     left: 120px;
@@ -81,9 +82,9 @@ const visibility = ref();
   }
 }
 .home2 {
-  background: url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fcmszfb.oss-cn-beijing.aliyuncs.com%2Fu%2Fcms%2Fwww%2F202101%2F29210836quh0.jpg&refer=http%3A%2F%2Fcmszfb.oss-cn-beijing.aliyuncs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653737379&t=adb2eb53d075b2c1b2f472341ee5a1eb");
+  // background: url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fcmszfb.oss-cn-beijing.aliyuncs.com%2Fu%2Fcms%2Fwww%2F202101%2F29210836quh0.jpg&refer=http%3A%2F%2Fcmszfb.oss-cn-beijing.aliyuncs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653737379&t=adb2eb53d075b2c1b2f472341ee5a1eb");
   background-size: 100% 100%;
-  background-color: hsl(196, 87%, 94%);
+  background-color: hsl(196, 87%, 100%);
   background-repeat: no-repeat;
 }
 .hide_ani {
@@ -94,24 +95,24 @@ const visibility = ref();
 }
 @keyframes hide1 {
   0% {
-    transform: translateX(0px) scale(1);
+    transform: scale(1);
     opacity: 1;
   }
 
   100% {
     opacity: 0;
-    transform: translateX(300px) scale(0.1);
+    transform: scale(0.1);
   }
 }
 @keyframes show1 {
   0% {
     opacity: 0;
-    transform: translateX(-300px) scale(0.1);
+    transform: scale(0.1);
     // transform: skew(30deg);
   }
 
   100% {
-    transform: translateX(0px) scale(1);
+    transform:scale(1);
     opacity: 1;
     // -webkit-transform: scale3d(1, 1, 1);
     // transform: skew(0deg);

@@ -53,7 +53,7 @@ const scrollingSpan = () => {
   isScroll.value = true;
   left_data.value.pic = props.new_data.pic;
 
-  let animation_time = 2000;
+  let animation_time = 1000;
   setTimeout(() => {
     temp_data.value.pic = right_data.value.pic; //不加.pic则变成object指针变动，而非值的变动
     right_data.value.pic = main_data.value.pic;
@@ -62,7 +62,7 @@ const scrollingSpan = () => {
   setTimeout(() => {
     isScroll.value = false;
     // left_data.value = props.new_data;
-  }, animation_time * 2 + 100);
+  }, animation_time * 1.5 + 50);
 };
 defineExpose({ scrollingSpan });
 //变换逻辑：接受新值，覆盖left，动画完成后，main→right left→main
@@ -70,8 +70,8 @@ defineExpose({ scrollingSpan });
 
 <style lang="less" scoped>
 @side_scale: 0.3;
-@scroll_time: 2s;
-@tilt: scale(@side_scale) perspective(1500px) rotateY(390deg);
+@scroll_time: 1s;
+@tilt: scale(@side_scale) perspective(1500px) rotateY(210deg);
 @tilt_main_50: scale(1.15) perspective(1500px) rotateY(30deg);
 @side_left: 23%;
 @side_bottom: -25%;
@@ -148,7 +148,7 @@ defineExpose({ scrollingSpan });
   animation: scroll2 @scroll_time linear 1;
 }
 .scroll3 {
-  animation: scroll3 @scroll_time linear 1 @scroll_time;
+  animation: scroll3 @scroll_time linear 1 @scroll_time/2;
 }
 .smallize {
   animation: smallize @scroll_time linear 1;
@@ -187,26 +187,27 @@ defineExpose({ scrollingSpan });
   }
   100% {
     left: 0%;
+    opacity: 0;
   }
 }
 @keyframes scroll3 {
   0% {
     position: absolute;
-    left: 0;
+    left: 10%;
     opacity: 0;
-    transform: scale(0.5) perspective(1500px) rotateY(0deg);
+    transform: scale(0.2) perspective(1500px) rotateY(-180deg);
   }
-  25% {
-    position: absolute;
-    opacity: 1;
-    left: 49%;
-    transform: scale(0.7) perspective(1500px) rotateY(-30deg);
-  }
+  // 25% {
+  //   position: absolute;
+  //   opacity: 1;
+  //   left: 49%;
+  //   transform: scale(0.7) perspective(1500px) rotateY(-30deg);
+  // }
   100% {
     position: absolute;
     opacity: 1;
     left: 33.2%;
-    transform: scale(1);
+    transform: scale(1) perspective(1500px) rotateY(0deg);
   }
 }
 </style>

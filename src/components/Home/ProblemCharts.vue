@@ -210,14 +210,6 @@ function init() {
 </script>
 
 <style lang="less" scoped>
-.click {
-}
-.cancel-click {
-}
-@keyframes click1 {
-  0% {
-  }
-  100% {
-  }
-}
+
+
 </style>

@@ -38,7 +38,7 @@
       v-model="drawer"
       :title="drawerTitle"
       direction="ltr"
-      size="36%"
+      size="35%"
       @open="handleOpenDraw"
   >
     <ModelConfig :modelId = "modelId"></ModelConfig>

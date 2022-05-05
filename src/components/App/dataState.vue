@@ -66,7 +66,7 @@
                         </el-tag>
                       </template>
                     </el-table-column>
-                    <el-table-column label="Value">
+                    <el-table-column label="Value" width="120px">
                       <template v-slot="scope">
                         <el-input class="model-input" size="small" v-model="scope.row.value" />
                       </template>

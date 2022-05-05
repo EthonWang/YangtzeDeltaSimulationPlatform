@@ -5,6 +5,7 @@ import store from "./store";
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import { dragMove, dragResize } from "./components/directives";
+import '@/css/font/font.css'
 
 const app=createApp(App);
 app.use(ElementPlus);

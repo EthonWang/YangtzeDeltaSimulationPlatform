@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div ref="earthchart" style="width: 100%; height: 100%"></div>
+    <div ref="earthchart" class="img1" style="width: 100%; height: 100%"></div>
   </div>
 </template>
 
@@ -198,6 +198,8 @@ function init() {
 
   option && myChart.setOption(option);
   myChart.on("click", (params) => {
+        console.log(params.value)
+
     if (params.name == "" || params.value != 1) {
       return;
     }
@@ -210,6 +212,31 @@ function init() {
 </script>
 
 <style lang="less" scoped>
-
+// @randomNum: `Math.ceil(Math.random() * 30) -15`;
+@randomNum:0;
+.randMove() {
+  animation: floating calc((abs(@randomNum / 2) + 20) * 1s) ease-in-out infinite
+    alternate;
+  @keyframes floating {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    25% {
+      transform: translate(-@randomNum*1px, @randomNum*1px);
+    }
+    50% {
+      transform: translate(-@randomNum*1px, -@randomNum*1px);
+    }
+    75% {
+      transform: translate(@randomNum*1px, @randomNum*1px);
+    }
+    100% {
+      transform: translate(@randomNum*1px, -@randomNum*1px);
+    }
+  }
+}
+.img1 {
+  .randMove();
+}
 
 </style>

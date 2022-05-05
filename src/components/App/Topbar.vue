@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <span
-    style="position:absolute"
+      style="position: absolute"
       :class="{
         background_show: background_show,
         background_hide: !background_show,
@@ -9,7 +9,10 @@
     ></span>
     <div class="head">
       <!-- <span class="logo">长 三 角 模 拟 器</span> -->
-      <img src="../../assets/earth_global.svg" style="height:40px;margin-left:30px;margin-top:0px">
+      <img
+        src="../../assets/globle.svg"
+        style="height: 40px; margin-left: 17%; margin-top: 0px; color: white"
+      />
       <div class="main-menucontainer topbar">
         <div
           v-for="(bar, index) in barList"
@@ -69,12 +72,11 @@ window.onload = searchIndexInRoutes;
 <style scoped lang="less">
 @import "../../css/btn/btn7.css";
 
-
 .topbar {
   // margin-left: 20px;
   width: 100%;
-  position: relative;
-  right: 50px;
+  position: absolute;
+  left: calc(17% + 50px);
 }
 .pickup {
   border: hsl(54, 94%, 75%) 1px solid;
@@ -112,8 +114,8 @@ window.onload = searchIndexInRoutes;
   width: 100%;
   height: 100%;
   padding-top: 10px;
-     background-color: hsla(200, 100%, 36%, 0);
-          backdrop-filter: blur(10px);
+  background-color: hsla(200, 100%, 36%, 0);
+  backdrop-filter: blur(10px);
 }
 .background_show {
   position: absolute;
@@ -121,15 +123,15 @@ window.onload = searchIndexInRoutes;
   top: 0;
   left: 0;
   // backdrop-filter: blur(10px);
-  animation: background_show 1.2s linear forwards;
+  animation: background_show 0.8s linear forwards;
   @keyframes background_show {
     0% {
-        width: 0vw;
-      background-color: hsla(200, 100%, 52%, 1);
+      width: 0vw;
+      background-color: hsla(200, 100%, 100%, 1);
     }
     100% {
-        width: 100.1vw;
-      background-color: hsla(200, 100%, 36%, 0.4);
+      width: 100.1vw;
+      background-color: hsla(200, 100%, 52%, 0.5);
     }
   }
 }
@@ -137,20 +139,20 @@ window.onload = searchIndexInRoutes;
   position: absolute;
   height: 100%;
   width: 100vw;
-    top: 0;
+  top: 0;
   left: 0;
   // backdrop-filter: blur(10px);
-  animation: background_hide 1.2s linear 1;
+  animation: background_hide 0.8s linear 1;
   @keyframes background_hide {
     0% {
-        width: 100vw;
-      background-color: hsla(200, 100%, 36%, 0.4);
+      width: 100.1vw;
+      background-color: hsla(200, 100%, 52%, 0.5);
       transform: translateX(0px);
       opacity: 1;
     }
     99% {
-        width: 0vw;
-      background-color: hsla(200, 100%, 2%, 1);
+      width: 0vw;
+      background-color: hsla(200, 0%, 52%, 0.7);
       transform: translateX(100vw);
       opacity: 1;
     }
@@ -167,7 +169,6 @@ window.onload = searchIndexInRoutes;
   align-items: center;
   justify-content: space-between;
   // transition: all 2s;
-
 }
 
 ::v-deep.head .el-menu--horizontal .el-menu-item {

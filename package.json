@@ -16,7 +16,9 @@
     "echarts-gl": "^2.0.9",
     "element-plus": "^2.1.9",
     "mapbox-gl": "^2.8.0",
+    "style-resources-loader": "^1.5.0",
     "vue": "^3.0.0",
+    "vue-cli-plugin-style-resources-loader": "^0.1.5",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
   },

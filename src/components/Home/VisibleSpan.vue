@@ -3,23 +3,34 @@
     <div class="whole_span">
       <div
         class="default_span"
-        style="opacity: 0; left: -20px"
+        style="opacity: 0; font-size: 24px"
         :class="{ scroll3: isScroll }"
       >
         <!-- {{ left_data.name }} -->
-        <img :src="left_data.pic" class="img" />
+          <img :src="left_data.pic" class="img intro" />
         <!-- <div class="left_span"></div> -->
       </div>
-      <div class="default_span" :class="{ smallize: isScroll }">
+      <div class="default_span main_span" :class="{ smallize: isScroll }">
         <!-- {{ main_data.name }} -->
-        <div class="blur"></div>
-        <img :src="main_data.pic" class="img main-img" />
+        <img :src="main_data.pic" class="img img1 intro" />
+        <!-- <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长三角模拟器汇聚了大量长江三角洲区域的地理模型和数据资源，用以揭示区域水循环及其内部驱动机理的水循环，阐明全球气候变化条件下区域环境演化规律，以及长三角城市化与人地关系相互作用的互动互馈机制的综合集成模型，实现区域灾害的快速响应与治理，服务于长三角高质量一体化发展国家战略。
+          </p> -->
+
         <!-- <div class="main_span"></div> -->
       </div>
-      <div class="default_span side_span" :class="{ scroll2: isScroll }">
+      <div class="default_span side_span1" :class="{ scroll2: isScroll }">
         <!-- {{ right_data.name }} -->
-        <img :src="right_data.pic" class="img" />
-        <!-- <div class="right_span"></div> -->
+        <img :src="right_data.pic" class="img img2 intro" />
+      </div>
+      <div class="default_span side_span2" :class="{ scroll21: isScroll }">
+        <!-- {{ right_data.name }} -->
+        <img :src="right_data1.pic" class="img img3 intro" />
+      </div>
+      <div class="word" :class="{ scroll_word: isScroll }">
+        <p>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长三角模拟器汇聚了大量长江三角洲区域的地理模型和数据资源，用以揭示区域水循环及其内部驱动机理的水循环，阐明全球气候变化条件下区域环境演化规律，以及长三角城市化与人地关系相互作用的互动互馈机制的综合集成模型，实现区域灾害的快速响应与治理，服务于长三角高质量一体化发展国家战略。
+        </p>
       </div>
     </div>
   </div>
@@ -48,55 +59,124 @@ const right_data = ref({
   name: "3333",
   pic: require("assets/problem/地表地下水耦合.png"),
 });
+const right_data1 = ref({
+  name: "3333",
+  pic: require("assets/problem/城市扩张.png"),
+});
 const isScroll = ref(false);
 const scrollingSpan = () => {
   isScroll.value = true;
   left_data.value.pic = props.new_data.pic;
 
-  let animation_time = 1000;
+  let animation_time = 800;
   setTimeout(() => {
     temp_data.value.pic = right_data.value.pic; //不加.pic则变成object指针变动，而非值的变动
     right_data.value.pic = main_data.value.pic;
+    right_data1.value.pic = temp_data.value.pic;
     main_data.value.pic = left_data.value.pic;
-  }, animation_time);
-  setTimeout(() => {
     isScroll.value = false;
-    // left_data.value = props.new_data;
-  }, animation_time * 1.5 + 50);
+  }, animation_time*2+10);
+  // setTimeout(() => {
+  //   isScroll.value = false;
+  //   // left_data.value = props.new_data;
+  // }, animation_time * 2 + 10);
 };
 defineExpose({ scrollingSpan });
 //变换逻辑：接受新值，覆盖left，动画完成后，main→right left→main
 </script>
 
 <style lang="less" scoped>
-@side_scale: 0.3;
-@scroll_time: 1s;
-@tilt: scale(@side_scale) perspective(1500px) rotateY(210deg);
-@tilt_main_50: scale(1.15) perspective(1500px) rotateY(30deg);
-@side_left: 23%;
-@side_bottom: -25%;
-
-.img {
+.word {
+  width: 30%;
   position: absolute;
+  left: calc(37% + 50px);
+  font-size: 24px;
+  background-color: rgba(129, 192, 243, 0);
+  z-index: 5;
+  bottom: -10%;
+  box-shadow: 0 2px 24px 0 hsla(220, 50%, 8%, 0.8);
+  transition: box-shadow 1s;
+  p {
+    padding: 0px;
+    padding-left: 35px;
+    padding-right: 25px;
+  }
+  &:hover{
+      box-shadow: 0 2px 24px 0 hsla(220, 100%, 58%, 1);
+  }
+}
+
+@scroll_time: .8s;
+@tilt: scale(0.6) perspective(1500px) rotateY(160deg);
+@tilt_main_50: scale(0.9) perspective(1500px) rotateY(80deg);
+@side1-left: 50%;
+@side1-top: -5%;
+@tilt2: scale(0.5) perspective(1500px) rotateY(200deg);
+@side2-left: 25%;
+@side2-top: -5%;
+// @randomNum: `Math.ceil(Math.random() * 80) -40`;
+@randomNum: 0;
+.intro-ani{
+  @keyframes identifier {
+    0%{}
+    100%{}
+  }
+}
+.intro {
+  box-shadow: 0 2px 24px 0 hsla(220, 50%, 8%, 0.8);
+
+}
+.randMove() {
+  animation: floating calc((abs(@randomNum / 4) + 15) * 1s) ease-in-out infinite
+    alternate;
+  @keyframes floating {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    25% {
+      transform: translate(-@randomNum*1px, @randomNum*1px);
+    }
+    50% {
+      transform: translate(-@randomNum*1px, -@randomNum*1px);
+    }
+    75% {
+      transform: translate(@randomNum*1px, @randomNum*1px);
+    }
+    100% {
+      transform: translate(@randomNum*1px, -@randomNum*1px);
+    }
+  }
+}
+.img {
+  position: relative;
   left: 0;
   top: 0;
   width: auto;
-  min-width: 70%;
+  min-width: 98%;
   max-width: 100%;
-  min-height: 65%;
-  max-height: 100%;
+  min-height: 70%;
+  max-height: 72%;
   height: auto;
   vertical-align: middle;
-  clip: rect(0 auto 50% 0);//暂时没用
-  // backdrop-filter: blur(10px);
-  
+  clip: rect(0 auto 50% 0);
 }
-.blur {
-  position: absolute;
-  width: 900px;
-  height: 900px;
-  top: 0;
-  left: 0;
+.img1 {
+  .randMove();
+}
+.img2 {
+  .randMove();
+}
+.img3 {
+  .randMove();
+}
+.larger-font {
+  font-size: 24px;
+  transition: font-size 1s;
+  &:hover {
+    p {
+      font-size: 28px;
+    }
+  }
 }
 .whole_span {
   position: relative;
@@ -115,43 +195,98 @@ defineExpose({ scrollingSpan });
   margin-right: 10px;
   backdrop-filter: blur(0px);
   // border: 1px solid white;
-  background: hsla(218, 94%, 57%, 0.05);
-  box-shadow: 0 2px 24px 0 hsla(220, 50%, 8%, 0.8);
-  
+  background: hsla(218, 94%, 57%, 0);
 }
-.side_span {
-  transform: @tilt;
+.side_span1 {
   position: absolute;
-  left: @side_left;
-  bottom: @side_bottom;
+  transform: @tilt;
+  left: @side1-left;
+  top: @side1-top;
+  opacity: 0.6;
+  margin-left: 0;
+  z-index: 2;
+  font-size: 24px;
+  transition: all 1s;
+  &:hover {
+    z-index: 1;
+    font-size: 28px;
+    transform: scale(0.7) perspective(1500px) rotateY(180deg);
+  }
+}
+
+.side_span2 {
+  position: absolute;
+  transform: @tilt2;
+  left: @side2-left;
+  top: @side2-top;
   opacity: 0.5;
+  margin-left: 0;
+  z-index: 1;
+  font-size: 24px;
+  transition: all 1s;
+  &:hover {
+    z-index: 1;
+    font-size: 28px;
+    transform: scale(0.6) perspective(1500px) rotateY(180deg);
+  }
 }
-.left_span {
-  width: 100%;
-  height: 100%;
-  background: hsla(220, 97%, 47%, 0.467);
-}
+
 .main_span {
-  width: 100%;
-  height: 100%;
-  background: hsla(200, 97%, 47%, 0.467);
+  margin-left: 100px;
+  z-index: 3;
+  margin-top: -2%;
+  font-size: 24px;
+  line-height: 150%;
+  transition: all 1s;
+  &:hover {
+    transform: scale(1.05);
+  }
 }
-.right_span {
-  width: 100%;
-  height: 100%;
-  background: hsla(180, 97%, 47%, 0.467);
-}
+
 .scroll1 {
   animation: scroll1 @scroll_time linear 1 @scroll_time;
 }
 .scroll2 {
-  animation: scroll2 @scroll_time linear 1;
+  animation: scroll2 @scroll_time linear forwards ;
+}
+.scroll21 {
+  animation: scroll21 @scroll_time/2 linear forwards @scroll_time;
+  @keyframes scroll21 {
+    0% {
+    }
+    100% {
+      left: 0%;
+      top: 5%;
+      opacity: 0;
+      transform: scale(1.2) perspective(1500px) rotateY(240deg);
+    }
+  }
+}
+.scroll_word {
+  animation: scroll_w @scroll_time*2 linear forwards;
+  @keyframes scroll_w {
+    0% {
+      transform: scale(1);
+    }
+    50%{
+      opacity: 0.5;
+      transform: scale(1) translateX(-1000px) perspective(1000px) rotateY(100deg);
+    }
+    55%{
+      opacity: 0.5;
+      transform: scale(1) translateX(-1000px) perspective(1000px) rotateY(-100deg);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) perspective(1000px) rotateY(0deg);
+    }
+  }
 }
 .scroll3 {
-  animation: scroll3 @scroll_time linear 1 @scroll_time/2;
+  animation: scroll3 @scroll_time linear 1 @scroll_time;
 }
 .smallize {
-  animation: smallize @scroll_time linear 1;
+  animation: smallize @scroll_time linear forwards;
 }
 @keyframes scroll1 {
   0% {
@@ -165,37 +300,44 @@ defineExpose({ scrollingSpan });
   0% {
     position: absolute;
     left: 30%;
-    bottom: 0%;
+    top: 0%;
   }
-  25% {
+  50% {
     position: absolute;
-    left: 50%;
-    bottom: 0%;
+    left: 58%;
+    top: 0%;
     transform: @tilt_main_50;
   }
   100% {
     position: absolute;
     transform: @tilt;
-    left: @side_left;
-    bottom: @side_bottom;
-    opacity: 0.5;
+    left: @side1-left;
+    top: @side1-top;
+    margin-left: 0;
+    opacity: 0.6;
+    margin-top: 0%;
   }
+  // 100% {
+  //   opacity: 0;
+  // }
 }
 @keyframes scroll2 {
   0% {
-    left: @side_left;
   }
   100% {
-    left: 0%;
-    opacity: 0;
+    left: @side2-left;
+    top: @side2-top;
+    opacity: 0.5;
+    transform: @tilt2;
   }
 }
 @keyframes scroll3 {
   0% {
     position: absolute;
-    left: 10%;
-    opacity: 0;
-    transform: scale(0.2) perspective(1500px) rotateY(-180deg);
+    left: 0%;
+    top: -30%;
+    opacity: 0.5;
+    transform: scale(1.8) perspective(1500px) rotateY(-120deg);
   }
   // 25% {
   //   position: absolute;
@@ -206,7 +348,9 @@ defineExpose({ scrollingSpan });
   100% {
     position: absolute;
     opacity: 1;
-    left: 33.2%;
+    top: 0%;
+    margin-top: -2%;
+    left: calc(33.2% + 100px);
     transform: scale(1) perspective(1500px) rotateY(0deg);
   }
 }

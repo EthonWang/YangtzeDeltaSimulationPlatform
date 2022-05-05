@@ -33,7 +33,7 @@ const routerGo = (router) => {
 @import "./css/global/cyberpunk.less";
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
@@ -50,11 +50,12 @@ const routerGo = (router) => {
   position: relative;
   top: 0;
   left: 0;
-  height: 105vh;
+  height: 100vh;
   // height: 950px;
   padding-top: 0px;
   overflow-y: scroll;
   overflow-x: hidden;
+  // font-family: pingfangh;
 }
 ::-webkit-scrollbar {
   width: 0px !important;

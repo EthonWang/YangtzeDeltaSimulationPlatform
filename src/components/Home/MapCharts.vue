@@ -53,7 +53,7 @@ function init() {
         animation:true,
         animationDurationUpdate:1000,
         // animationEasingUpdate: cubicInOut,
-        targetCoord: [116.46, 39.92],
+        targetCoord: [120.46, 30.92],
       },
       light: {
         ambient: {

@@ -1,5 +1,6 @@
 <template>
   <div style="position: relative; display: flex" class="home2">
+    <img src="../../assets/problem_small.png" alt="" class="img-pro">
     <ProblemCharts
       :class="{ hide_ani: !props.show, show_ani: props.show }"
       class="sunburst"
@@ -41,78 +42,108 @@ const visibility = ref();
 </script>
 
 <style lang="less" scoped>
-@hover-time:0.5s;
+@hover-time:2s;
+@randomNum: `Math.ceil(Math.random() * 30) -15`;
+.randMove() {
+  animation: floating calc((abs(@randomNum / 2) + 20) * 1s) ease-in-out infinite
+    alternate;
+  @keyframes floating {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    25% {
+      transform: translate(-@randomNum*1px, @randomNum*1px);
+    }
+    50% {
+      transform: translate(-@randomNum*1px, -@randomNum*1px);
+    }
+    75% {
+      transform: translate(@randomNum*1px, @randomNum*1px);
+    }
+    100% {
+      transform: translate(@randomNum*1px, -@randomNum*1px);
+    }
+  }
+}
+.img-pro{
+  position: absolute;
+  right: calc(50vw - 70px);
+  top: 32px;
+  width: 70px;
+  height: 105px;
+  .randMove();
+  z-index: 5;
+}
 .sunburst {
   position: absolute;
-  right: -105px;
+  right: 0px;
   width: 900px;
   height: 900px;
-  top: 30px;
+  top: 1%;
   //   backdrop-filter: blur(3px);
   //   background-color: hsla(230, 100%, 70%, 0.08);
-  opacity: 0.75;
+  opacity: 0.9;
   z-index: 2;
-  transform: perspective(1000px) rotateY(-20deg) scale(0.9) !important;
+  transform: perspective(1000px) rotateY(-8deg) scale(1) !important;
   transition: all @hover-time;
 }
 .sunburst:hover {
     opacity: 0.95;
-  right: 95px;
-  transform: perspective(1000px) rotateY(-2deg) scale(1.1) !important;
+  transform: perspective(1000px) rotateY(0deg) scale(1) !important;
 }
 .visible {
   position: absolute;
-  top: 8%;
+  top: 15%;
   left: 20px;
-  width: 900px;
-  height: 700px;
+  width: 750px;
+  height: 600px;
   z-index: 1;
   opacity: 1;
   transition: all @hover-time;
       background-color: hsla(207,93%,62%,0);
   transform: translateX(30px) perspective(1500px) rotateY(0deg) !important;
-  &:hover {
-    top: 10%;
-    left: 120px;
-    height: 800px;
-    width: 1100px;
-    background-color: hsla(207,93%,62%,0.6);
-    backdrop-filter: blur(10px);
-    transform: translateX(0px) perspective(1500px) rotateY(2deg) !important;
-  }
+  // &:hover {
+  //   top: 20%;
+  //   left: 120px;
+
+  //   background-color: hsla(207,93%,62%,0);
+  //   // backdrop-filter: blur(10px);
+  //   transform: scale(1.2) translateX(0px) perspective(1500px) rotateY(2deg) !important;
+  // }
 }
 .home2 {
-  // background: url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fcmszfb.oss-cn-beijing.aliyuncs.com%2Fu%2Fcms%2Fwww%2F202101%2F29210836quh0.jpg&refer=http%3A%2F%2Fcmszfb.oss-cn-beijing.aliyuncs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653737379&t=adb2eb53d075b2c1b2f472341ee5a1eb");
-  background-size: 100% 100%;
+  // background: url("../../assets/problem.jpg");
+  background-size: 25% 30%;
   background-color: hsl(196, 87%, 100%);
   background-repeat: no-repeat;
+  background-position:110% -5%;
 }
 .hide_ani {
-  animation: hide1 1s linear forwards;
+  animation: hide1 .8s linear forwards;
 }
 .show_ani {
-  animation: show1 1s linear 1;
+  animation: show1 .8s linear 1;
 }
 @keyframes hide1 {
   0% {
-    transform: scale(1);
+   
     opacity: 1;
   }
 
   100% {
     opacity: 0;
-    transform: scale(0.1);
+    transform: scale(0.9);
   }
 }
 @keyframes show1 {
   0% {
     opacity: 0;
-    transform: scale(0.1);
+    transform: scale(0.9);
     // transform: skew(30deg);
   }
 
   100% {
-    transform:scale(1);
+   
     opacity: 1;
     // -webkit-transform: scale3d(1, 1, 1);
     // transform: skew(0deg);

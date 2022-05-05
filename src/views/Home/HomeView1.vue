@@ -1,10 +1,13 @@
 <template>
   <div ref="home1" class="home1">
     <div class="container">
-      <div class="desContainer" :class="{ show_ani: props.show, hide_ani: !props.show }">
-        <h1>长三角综合模拟</h1>
+      <div
+        class="desContainer"
+        :class="{ show_ani: props.show, hide_ani: !props.show }"
+      >
+        <h1>长三角综合模拟器</h1>
         <p>
-          长三角模拟器汇聚了大量长江三角洲区域的地理模型和数据资源，用以揭示区域水循环及其内部驱动机理的水循环，阐明全球气候变化条件下区域环境演化规律，以及长三角城市化与人地关系相互作用的互动互馈机制的综合集成模型，实现区域灾害的快速响应与治理，服务于长三角高质量一体化发展国家战略
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长三角模拟器汇聚了大量长江三角洲区域的地理模型和数据资源，用以揭示区域水循环及其内部驱动机理的水循环，阐明全球气候变化条件下区域环境演化规律，以及长三角城市化与人地关系相互作用的互动互馈机制的综合集成模型，实现区域灾害的快速响应与治理，服务于长三角高质量一体化发展国家战略。
         </p>
         <div class="login">
           <el-input
@@ -16,9 +19,21 @@
           <el-button type="success">登录</el-button>
         </div>
       </div>
-      
-        <MapCharts class="earth" :class="{ show_ani: props.show, hide_ani: !props.show }"></MapCharts>
-      
+      <div class="merge-earth"></div>
+      <MapCharts
+        class="earth"
+        :class="{ show_ani: props.show, hide_ani: !props.show }"
+      ></MapCharts>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 1680 40"
+        class="position-absolute width-full z-1"
+        style="bottom: -1px"
+      >
+        <path d="M0 40h1680V30S1340 0 840 0 0 30 0 30z" fill="#fff"></path>
+      </svg>
     </div>
     <!-- <div>
       <p
@@ -75,14 +90,26 @@ const home1 = ref();
   width: 100%;
   background: url("../../assets/starfield.jpg");
   background-size: 100% 100%;
+  .position-absolute {
+    position: absolute !important;
+  }
+  .width-full {
+    width: 100% !important;
+  }
+  .z-1 {
+    z-index: 1 !important;
+  }
+  svg:not(:root) {
+    overflow: hidden;
+  }
 }
 .container .desContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   position: absolute;
-  left: 10%;
-  top: 15%;
+  left: 15%;
+  top: 18%;
   width: 600px;
   height: 400px;
   transition: all 1s;
@@ -90,38 +117,52 @@ const home1 = ref();
   h1 {
     color: white;
     font-size: 72px;
+    margin-top: -10px;
   }
   p {
-    font-size: 24px;
+    margin-top:-10px ;
+    font-size: 28px;
     color: white;
+    line-height: 170%;
   }
   /deep/ .login {
-  display: flex;
-  align-items: center;
-  .el-button--success {
-    width: 120px;
+    display: flex;
+    align-items: center;
+    .el-button--success {
+      font-size: 18px;
+      width: 120px;
+      height: 40px;
+    }
+    .el-input__inner {
+      width: 460px !important;
+      height: 40px;
+    }
   }
-  .el-input__inner {
-    width: 460px !important;
-  }
+  // &:hover {
+  //   transform:  translateX(50px) scale(1.05);
+  // }
 }
-  &:hover {
-    transform:  translateX(50px) scale(1.05);
-  }
+.container .merge-earth{
+  position: absolute;
+  right: 12%;
+  top: 8%;
+  // bottom: 50px;
+  width: 750px;
+  height: 750px;
+  z-index: 1;
 }
-
 .container .earth {
   position: absolute;
-  right: 15%;
-  top: 18%;
+  right: 12%;
+  top: 8%;
   // bottom: 50px;
-  width: 550px;
-  height: 550px;
+  width: 750px;
+  height: 750px;
   // background-color: red;
   transition: all 1s;
-  &:hover {
-    transform: translate(-50px,50px) scale(1.35);
-  }
+  // &:hover {
+  //   transform: translate(-50px,50px) scale(1.35);
+  // }
 }
 // 兼容css
 @right-color: hsla(351, 73%, 22%, 0);
@@ -181,10 +222,10 @@ const home1 = ref();
   transform: translateX(200px) scale(1.15) perspective(1200px) rotateY(2deg);
 }
 .show_ani {
-  animation: show1 1s linear 1;
+  animation: show1 0.8s linear 1;
 }
 .hide_ani {
-  animation: hide1 1s linear forwards 0.1s;
+  animation: hide1 0.8s linear forwards;
 }
 .earth {
   position: absolute;
@@ -197,7 +238,7 @@ const home1 = ref();
 @keyframes show1 {
   0% {
     opacity: 0;
-    transform: scale(0.1);
+    transform: scale(0.9);
     // transform: skew(30deg);
   }
   100% {
@@ -212,7 +253,7 @@ const home1 = ref();
 
   100% {
     opacity: 0;
-    transform: scale(0.1);
+    transform: scale(0.9);
   }
 }
 </style>

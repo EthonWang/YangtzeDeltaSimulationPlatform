@@ -11,14 +11,14 @@
       <!-- <span class="logo">长 三 角 模 拟 器</span> -->
       <img
         src="../../assets/globle.svg"
-        style="height: 40px; margin-left: 17%; margin-top: 0px; color: white;position:relative;z-index:5"
+        style="height: 70%; margin-left: 17%; margin-top: 0px; color: white;position:relative;z-index:5"
       />
       <div class="main-menucontainer topbar">
         <div
           v-for="(bar, index) in barList"
           :key="bar"
           @click="sendRouterToFather(bar.path, index)"
-          style="font-size: 16px; cursor: pointer"
+          style="font-size: 0.83vw; cursor: pointer"
           class="set_7_btn-wrapper"
         >
           <svg height="54" width="120">
@@ -116,7 +116,7 @@ setTimeout(searchIndexInRoutes,100);
   flex-direction: column;
   width: 100%;
   height: 100%;
-  padding-top: 10px;
+  padding-top: 1.06vh;
   background-color: hsla(200, 100%, 36%, 0);
   backdrop-filter: blur(10px);
 }
@@ -189,7 +189,7 @@ setTimeout(searchIndexInRoutes,100);
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-right: 12px;
+  margin-right: 0.625vw;
 }
 .head .main-iconbox {
   display: flex;

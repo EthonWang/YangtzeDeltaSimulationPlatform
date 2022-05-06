@@ -24,11 +24,11 @@ const props = defineProps({
 .card {
   width: 100%;
   height: 100%;
-  box-shadow: 0 2px 12px 0 hsla(220, 50%, 8%, 0.8);
+  box-shadow: 0 2px 12px 0 hsla(220, 50%, 8%, 0.4);
   transition: box-shadow 1s;
   text-align: center;
   &:hover {
-    box-shadow: 0 2px 24px 0 hsla(220, 100%, 58%, 1);
+    box-shadow: 0 2px 24px 0 hsla(220, 100%, 58%, .6);
   }
   .img{
       height: 65%;

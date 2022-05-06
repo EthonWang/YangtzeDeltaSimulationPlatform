@@ -92,7 +92,7 @@ function init() {
               // color: "#fafafa",
               textShadow:
                 "-1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000,-1px -1px 0 #000",
-              fontSize: "25px",
+              fontSize: "1.56rem",
               fontWeight: 700,
             };
             let value = 1;
@@ -133,7 +133,7 @@ function init() {
         label: {
           rotate: "radial",
           color: "white",
-          fontSize: "23px",
+          fontSize: "1.437rem",
           // formatter:(val)=>{
           //   while(val.length>5){
 

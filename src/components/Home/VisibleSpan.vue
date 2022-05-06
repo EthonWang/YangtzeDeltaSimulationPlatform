@@ -99,8 +99,8 @@ defineExpose({ scrollingSpan });
     text-align: left;
     padding-left: 20px;
     margin: 15px;
-    margin-bottom: -18px;
-    font-size: 24px;
+    margin-bottom: -2%;
+    font-size: 1.25vw;
   }
   p {
     text-align: left;
@@ -108,7 +108,7 @@ defineExpose({ scrollingSpan });
     padding-left: 35px;
     padding-right: 25px;
     line-height: 160%;
-      font-size: 22px;
+    font-size: 1.15vw;
   }
   &:hover{
       box-shadow: 0 2px 24px 0 hsla(220, 100%, 58%, 1);

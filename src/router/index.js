@@ -8,7 +8,7 @@ import Help from "@/views/Help.vue";
 import ModelConfig from "@/components/App/ModelConfig"
 import { cases_config } from "@/assets/config/cases.config";
 
-const routes = [
+let routes = [
   {
     isBar:true,//如果不想加入TopBar，就设定为false，或者写在对应children里面
     path: "/",
@@ -34,11 +34,6 @@ const routes = [
         name:"案例的家",
         component:() => import( "../views/CasesView/CasesHome.vue")
       },
-      {//大概按照这个格式部署一下，path对应到config的route_path
-        path:"saga",//不要斜杠
-        name:"SAGA",
-        component:() => import( "../views/CasesView/SAGA.vue")
-      }
     ]
   },
 
@@ -66,6 +61,8 @@ const routes = [
   },
 
 ];
+
+routes[2].children=routes[2].children.concat(cases_config)
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),

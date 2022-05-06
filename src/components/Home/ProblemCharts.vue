@@ -13,8 +13,8 @@ import { sciencePro } from "@/assets/data/home/sciencePro.js";
 const emit = defineEmits(["sendProblem"]);
 const earthchart = ref();
 
-const sendProblemToFather = (name, path) => {
-  emit("sendProblem", name, path);
+const sendProblemToFather = (name, path, des) => {
+  emit("sendProblem", name, path, des);
 };
 
 onMounted(() => {
@@ -198,12 +198,12 @@ function init() {
 
   option && myChart.setOption(option);
   myChart.on("click", (params) => {
-        console.log(params.value)
+        console.log(params)
 
     if (params.name == "" || params.value != 1) {
       return;
     }
-    sendProblemToFather(params.name,params.data.path);
+    sendProblemToFather(params.name, params.data.path, params.data.description);
   });
   // earthchart.value.addEventListener('click', (params)=> {
   // 	console.log(params);

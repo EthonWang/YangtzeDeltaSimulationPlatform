@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 // import Data from "@/views/Data.vue";
 import Model from "@/views/Model.vue";
-import Method from "@/views/Method.vue";
+import Cases from "@/views/Cases.vue";
 import Help from "@/views/Help.vue";
 // import Functions from "@/views/Function.vue";
 import ModelConfig from "@/components/App/ModelConfig"
@@ -24,10 +24,21 @@ const routes = [
   },
   {
     isBar:true,
-    path: "/case/",
+    path: "/case",
     name: "案例",
-    component: Method,
-    children:[]
+    component: Cases,
+    children:[
+      {
+        path:"",
+        name:"案例的家",
+        component:() => import( "../views/CasesView/CasesHome.vue")
+      },
+      {//大概按照这个格式部署一下，path对应到config的route_path
+        path:"saga",//不要斜杠
+        name:"SAGA",
+        component:() => import( "../views/CasesView/SAGA.vue")
+      }
+    ]
   },
 
   {

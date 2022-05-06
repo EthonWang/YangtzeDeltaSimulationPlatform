@@ -13,10 +13,6 @@
       <div class="default_span main_span" :class="{ smallize: isScroll }">
         <!-- {{ main_data.name }} -->
         <img :src="main_data.pic" class="img img1 intro" />
-        <!-- <p>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长三角模拟器汇聚了大量长江三角洲区域的地理模型和数据资源，用以揭示区域水循环及其内部驱动机理的水循环，阐明全球气候变化条件下区域环境演化规律，以及长三角城市化与人地关系相互作用的互动互馈机制的综合集成模型，实现区域灾害的快速响应与治理，服务于长三角高质量一体化发展国家战略。
-          </p> -->
-
         <!-- <div class="main_span"></div> -->
       </div>
       <div class="default_span side_span1" :class="{ scroll2: isScroll }">
@@ -28,8 +24,9 @@
         <img :src="right_data1.pic" class="img img3 intro" />
       </div>
       <div class="word" :class="{ scroll_word: isScroll }">
+        <h4>{{tittle}}</h4>
         <p>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长三角模拟器汇聚了大量长江三角洲区域的地理模型和数据资源，用以揭示区域水循环及其内部驱动机理的水循环，阐明全球气候变化条件下区域环境演化规律，以及长三角城市化与人地关系相互作用的互动互馈机制的综合集成模型，实现区域灾害的快速响应与治理，服务于长三角高质量一体化发展国家战略。
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{des}}
         </p>
       </div>
     </div>
@@ -42,7 +39,8 @@ import { reactive, ref, defineProps, defineExpose } from "vue";
 const props = defineProps({
   new_data: ref(Object),
 });
-
+const tittle=ref("流域生态环境演变")
+const des=ref("随着生态环境问题的日益突出,流域生态环境演变研究成为生态环境研究领域的热点。流域生态环境由流域生物群落及非生物自然因素组成的各种生态系统所构成的整体，是“对人类生存和发展有影响的流域中自然因子的综合”。在自然因素与人为因素的共同作用下，生态环境以不同的时间尺度在发展演变。")
 const temp_data = ref({
   name: "4444",
   pic: require("../../assets/problem/流域生态环境演变.png"),
@@ -74,12 +72,14 @@ const scrollingSpan = () => {
     right_data.value.pic = main_data.value.pic;
     right_data1.value.pic = temp_data.value.pic;
     main_data.value.pic = left_data.value.pic;
+    
     isScroll.value = false;
   }, animation_time*2+10);
-  // setTimeout(() => {
-  //   isScroll.value = false;
-  //   // left_data.value = props.new_data;
-  // }, animation_time * 2 + 10);
+  setTimeout(() => {
+    des.value=props.new_data.des;
+    tittle.value=props.new_data.name
+    // left_data.value = props.new_data;
+  }, animation_time  + 10);
 };
 defineExpose({ scrollingSpan });
 //变换逻辑：接受新值，覆盖left，动画完成后，main→right left→main
@@ -90,16 +90,25 @@ defineExpose({ scrollingSpan });
   width: 30%;
   position: absolute;
   left: calc(37% + 50px);
-  font-size: 24px;
   background-color: rgba(129, 192, 243, 0);
   z-index: 5;
-  bottom: -10%;
+  top:calc(70% + 15px);
   box-shadow: 0 2px 24px 0 hsla(220, 50%, 8%, 0.8);
   transition: box-shadow 1s;
+  h4{
+    text-align: left;
+    padding-left: 20px;
+    margin: 15px;
+    margin-bottom: -18px;
+    font-size: 24px;
+  }
   p {
+    text-align: left;
     padding: 0px;
     padding-left: 35px;
     padding-right: 25px;
+    line-height: 160%;
+      font-size: 22px;
   }
   &:hover{
       box-shadow: 0 2px 24px 0 hsla(220, 100%, 58%, 1);
@@ -124,7 +133,10 @@ defineExpose({ scrollingSpan });
 }
 .intro {
   box-shadow: 0 2px 24px 0 hsla(220, 50%, 8%, 0.8);
-
+  transition: box-shadow 1s;
+  &:hover{
+      box-shadow: 0 2px 24px 0 hsla(220, 100%, 58%, 1);
+  }
 }
 .randMove() {
   animation: floating calc((abs(@randomNum / 4) + 15) * 1s) ease-in-out infinite
@@ -239,7 +251,7 @@ defineExpose({ scrollingSpan });
   line-height: 150%;
   transition: all 1s;
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.02);
   }
 }
 

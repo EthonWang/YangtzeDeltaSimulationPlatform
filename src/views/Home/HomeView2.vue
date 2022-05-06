@@ -23,13 +23,16 @@ import { defineProps, ref } from "vue";
 const new_data = ref({
   name: "4444",
   pic: null,
+  des:"",
 });
 const props = defineProps({
   show: Boolean,
 });
-const recieveProblem = (name, path) => {
+const recieveProblem = (name, path ,des) => {
   new_data.value.pic = require("@/" + path);
-
+  new_data.value.des = des;
+  new_data.value.name = name;
+  console.log(des)
   visibility.value.scrollingSpan();
   console.log(path);
 
@@ -43,13 +46,13 @@ const visibility = ref();
 
 <style lang="less" scoped>
 @hover-time:2s;
-@randomNum: `Math.ceil(Math.random() * 30) -15`;
+@randomNum: `Math.ceil(Math.random() * 60) -30`;
 .randMove() {
   animation: floating calc((abs(@randomNum / 2) + 20) * 1s) ease-in-out infinite
     alternate;
   @keyframes floating {
     0% {
-      transform: translate(0px, 0px);
+      transform: translate(-@randomNum*1px, -@randomNum*1px);
     }
     25% {
       transform: translate(-@randomNum*1px, @randomNum*1px);
@@ -72,7 +75,7 @@ const visibility = ref();
   width: 70px;
   height: 105px;
   .randMove();
-  z-index: 5;
+  z-index: 0;
 }
 .sunburst {
   position: absolute;

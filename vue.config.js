@@ -62,7 +62,7 @@ module.exports = {
     },
     devServer: {
         open: true,
-        host: "127.0.0.1",
+        host: "http://172.21.213.222/",
         port: 3030,
         https: false,
         hotOnly: false,

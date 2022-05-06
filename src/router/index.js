@@ -8,7 +8,7 @@ import Help from "@/views/Help.vue";
 import ModelConfig from "@/components/App/ModelConfig"
 import { cases_config } from "@/assets/config/cases.config";
 
-let routes = [
+const routes = [
   {
     isBar:true,//如果不想加入TopBar，就设定为false，或者写在对应children里面
     path: "/",
@@ -61,7 +61,13 @@ let routes = [
   },
 
 ];
-
+class base_route{
+  isBar=false
+  path='';
+  name='';
+  component=null;
+  children=[];
+}
 routes[2].children=routes[2].children.concat(cases_config)
 
 const router = createRouter({

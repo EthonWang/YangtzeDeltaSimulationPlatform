@@ -3,7 +3,7 @@
     <div class="case-contain">
       <h1>案例中心</h1>
       <el-divider style="width: 100%"></el-divider>
-      <el-scrollbar>
+      <el-scrollbar class="scrollbar">
         <OneCase
           v-for="case_config in cases"
           :key="case_config"
@@ -13,7 +13,7 @@
           class="onecase"
         ></OneCase>
         <div
-          style="float: left; position: relative; height: 50px; width: 100%"
+          style="float: left; position: relative; height: 20px; width: 100%"
         ></div>
       </el-scrollbar>
     </div>
@@ -40,13 +40,17 @@ const toCase=(path)=>{
 .case-contain {
   position: relative;
   left: 16.5%;
-  top: 2%;
+  top: 4%;
   height: 85%;
   width: 65%;
   padding-bottom: 50px;
+  .scrollbar{
+      height: 86%;
+  }
   .onecase {
-    height: 240px;
+    height: 29.2vh;
     margin: 20px;
+    margin-right: 0px;
     float: left;
     width: 30%;
     position: relative;

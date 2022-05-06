@@ -32,7 +32,7 @@ const cases = reactive(cases_config);
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const toCase=(path)=>{
-    router.push('/case/'+path)
+    router.push('/case/'+path+'/')
 }
 </script>
 

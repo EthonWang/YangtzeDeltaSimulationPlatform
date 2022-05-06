@@ -6,6 +6,7 @@ import Cases from "@/views/Cases.vue";
 import Help from "@/views/Help.vue";
 // import Functions from "@/views/Function.vue";
 import ModelConfig from "@/components/App/ModelConfig"
+import { cases_config } from "@/assets/config/cases.config";
 
 const routes = [
   {

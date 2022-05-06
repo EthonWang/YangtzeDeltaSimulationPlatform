@@ -9,7 +9,7 @@
           :key="case_config"
           :img_url=case_config.img_path
           :tittle=case_config.name
-          @click="toCase(case_config.route_path)"
+          @click="toCase(case_config.path)"
           class="onecase"
         ></OneCase>
         <div

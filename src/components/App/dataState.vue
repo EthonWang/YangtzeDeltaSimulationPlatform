@@ -1,17 +1,16 @@
 <template>
+ <el-divider>
+   <div class="modelState">
+     <div class="state-name"> {{state.name}}</div>
+     <div class="state-desc"> {{state.desc}}</div>
+   </div>
+ </el-divider>
     <el-row type="flex" class="state-container"
             justify="start" style="flex-wrap:wrap" >
-
-        <el-col :span="4">
-          <div class="modelState">
-            <p class="state-name"> {{state.name}}</p>
-            <p class="state-desc"> {{state.desc}}</p>
-          </div>
-        </el-col>
-        <el-col :span="19" :offset="1">
+        <el-col :span="24">
           <!-- 输入event -->
           <div class="_params-group">
-            <!-- <el-row v-if="inEventList(state).length!==0" class="_title">Input</el-row> -->
+             <el-row v-if="inEventList(state).length!==0" class="_title">Input</el-row>
             <div class="_items">
               <div v-for="modelInEvent in inEventList(state)"
                       :key="modelInEvent.eventId" class="_item">
@@ -25,7 +24,7 @@
                   </el-col>
                   <!-- 输入框 -->
                   <template v-if="modelInEvent.data[0].nodes==undefined">
-                    <el-col :span="6" :offset="1">
+                    <el-col :span="8" :offset="1">
                       <el-input class="model-input" size="small"
                                 :value="modelInEvent.tag==undefined?'':(modelInEvent.tag+'.'+modelInEvent.suffix)"
                                 :disabled="true">
@@ -33,7 +32,7 @@
                       </el-input>
                     </el-col>
                     <!-- 按钮 -->
-                    <el-col :span="6">
+                    <el-col :span="4">
                       <div class="_btn-group">
                         <el-upload class="upload-demo"
                                   action=""
@@ -51,6 +50,7 @@
                       </div>
                     </el-col>
                   </template>
+
                 </el-row>
 
                 <!-- 输入数值 -->
@@ -59,14 +59,14 @@
                             :data="modelInEvent.children" border style="width: 100%">
                     <el-table-column prop="eventName" label="Parameter" />
                     <el-table-column prop="eventDesc" label="Description" />
-                    <el-table-column label="Data Type">
+                    <el-table-column label="Data Type" width="100px">
                       <template v-slot="scope">
                         <el-tag type="info" :disable-transitions="true">
                           {{scope.row.eventType}}
                         </el-tag>
                       </template>
                     </el-table-column>
-                    <el-table-column label="Value">
+                    <el-table-column label="Value" width="120px">
                       <template v-slot="scope">
                         <el-input class="model-input" size="small" v-model="scope.row.value" />
                       </template>
@@ -76,17 +76,16 @@
 
                 <!-- Event的描述信息 -->
                 <el-row>
-                    <p class="event-desc">
-                      {{modelInEvent.eventDesc}}
-                    </p>
+                  <p class="event-desc">
+                    {{modelInEvent.eventDesc}}
+                  </p>
                 </el-row>
-
               </div>
             </div>
           </div>
           <!-- 输出event -->
           <div class="_params-group">
-            <!-- <el-row v-if="outEventList(state).length!==0" class="_title">Output</el-row> -->
+             <el-row v-if="outEventList(state).length!==0" class="_title">Output</el-row>
             <div class="_items">
               <div v-for="(modelOutEvent,outEventIndex) in outEventList(state)"
                       :key="outEventIndex" class="_item">
@@ -99,14 +98,14 @@
                   </el-col>
 
                   <!-- 输入框 -->
-                  <el-col :span="6" :offset="1">
+                  <el-col :span="8" :offset="1">
                     <el-input v-if="!modelOutEvent.multiple" class="model-input" size="small"
                               :value="modelOutEvent.tag==undefined?'':(modelOutEvent.tag+'.'+modelOutEvent.suffix)"
                               :disabled="true">
                     </el-input>
                   </el-col>
                   <!-- 按钮 -->
-                  <el-col :span="6">
+                  <el-col :span="4">
                     <div class="_btn-group">
                       <el-button round type="warning" size="mini" :icon="Download"
                                 @click="download(modelOutEvent)">
@@ -225,8 +224,8 @@ export default {
 
 <style scoped>
   .state-container{
-    border-top: solid 1px #ebeef5;
-    padding: 2rem 0;
+    /*border-top: solid 1px #ebeef5;*/
+    padding: 1.5rem 0;
   }
   .leftContainer{
     min-width: 215px;
@@ -236,16 +235,19 @@ export default {
   .modelState{
     width: 100%;
     min-width: 210px;
-    border: 1px solid #cdf2bb;
+    /*border: 1px solid #cdf2bb;*/
     background-color:#f0f9eb;
     border-radius: 4px;
     word-wrap: break-word;
-    padding-left: 4px;
-    padding-right: 4px;
+    /*padding-left: 4px;*/
+    /*padding-right: 4px;*/
+    padding:12px 5px;
     height: auto;
+    text-align: center;
   }
   .state-name{
-    font-size: 17px;
+    font-size: 19px;
+    font-weight: bold;
   }
   .state-desc{
     /* font-style: italic; */
@@ -261,6 +263,7 @@ export default {
     font-style: italic;
     font-size: 16px;
     padding-bottom: 10px;
+    padding-top: 10px;
     border-bottom: solid 2px #999;
   }
   ._params-group > ._items > ._item {
@@ -269,15 +272,16 @@ export default {
   }
   .event-name{
     display: inline-block;
-    font-size: 17px;
+    font-size: 1.1rem;
     white-space: nowrap;
     line-height: 32px;
   }
   .event-desc{
-    /* font-style: italic; */
+    font-style: italic;
     padding-left: 10px;
     margin: 10px 0;
     font-family: Helvetica;
+    font-size: 14px;
   }
   ._btn-group {
     margin: 2px 10px;

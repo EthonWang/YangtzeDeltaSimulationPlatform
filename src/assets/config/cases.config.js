@@ -2,7 +2,7 @@ export const cases_config = [
     {
         name:"SAGA",
         img_path:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
-        route_path:"saga"
+        route_path:"saga"//和配置的路由对应一下
     },
     {
         name:"SAGA",

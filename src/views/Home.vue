@@ -19,12 +19,17 @@ const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const scrollTop = ref(0);
 const emit = defineEmits(["showTopbarBackground"]);
+
+const standardizeHeight=(top)=>{
+  let clientH=window.innerHeight;
+  return top*clientH/937
+}
 const show1 = computed(() => {
   //计算属性只能监听ref而非reactive，因为ref有包装便于script属性之间响应式交互
-  return scrollTop.value < 260;
+  return scrollTop.value < standardizeHeight(260);
 });
 const show2 = computed(() => {
-  return scrollTop.value > 330 && scrollTop.value < 1360;
+  return scrollTop.value > standardizeHeight(330) && scrollTop.value < standardizeHeight(1360);
 });
 
 const home_scroll_listen = ref();
@@ -34,11 +39,10 @@ setTimeout(() => {
 
 const mousedown = () => {
   scrollTop.value = home_scroll_listen.value.scrollTop;
-  //有时间可优化为watch
-  if (scrollTop.value > 10 && scrollTop.value < 100) {
+  if (scrollTop.value > standardizeHeight(10) && scrollTop.value < standardizeHeight(100)) {
     emit("showTopbarBackground", true);
   }
-  if (scrollTop.value < 10) {
+  if (scrollTop.value < standardizeHeight(10)) {
     emit("showTopbarBackground", false);
   }
 };

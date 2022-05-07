@@ -20,7 +20,7 @@ const store = useStore(); //vuex直接用store.commit
 <style lang="less" scoped>
 .cases-page {
   position: absolute;
-  top: 70px;
+  top: 7.46vh;
   left: 8px;
   height: calc(100% - $top);
   width: calc(100% - $left);

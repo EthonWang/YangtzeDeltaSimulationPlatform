@@ -29,7 +29,10 @@
             <el-tab-pane label="72mm" name="quo_5">
               <div class="spart">
                 <div class="select">
-                  <div><h3>选择点属性</h3></div>
+                  <div>
+                    <h3 style="display: flex;justify-content: center;
+                    align-items: center;">选择点属性</h3>
+                  </div>
                   <el-radio-group
                     style="margin: 5px"
                     v-model="NT_showInPop"
@@ -54,7 +57,10 @@
                   </el-radio-group>
                 </div>
                 <div class="select">
-                  <div><h3>选择线属性</h3></div>
+                  <div>
+                    <h3 style="display: flex;justify-content: center;
+                    align-items: center;">选择线属性</h3>
+                  </div>
                   <el-radio-group
                     v-model="LT_showInPop"
                     size="large"
@@ -442,7 +448,7 @@ let LinkPopType = [
 ];
 onMounted(() => {
   initmap();
-  openFileDialog(`${activeName1.value}.disp`, "quo.geojson")
+  openFileDialog(`/swmm/${activeName1.value}.disp`, "/swmm/quo.geojson")
   loading.value=false
 });
 const initmap = () => {
@@ -465,7 +471,7 @@ const selectChange = (value) => {
   SetPop(layerNumber.value - 1);
 };
 const handleClick = (tab, event) => {
-  openFileDialog(`${tab.props.name}.disp`, "quo.geojson");
+  openFileDialog(`/swmm/${tab.props.name}.disp`, "/swmm/quo.geojson");
 };
 const getrptResult = (url) => {
   return new Promise((resolve, reject) => {

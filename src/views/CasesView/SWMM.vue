@@ -471,7 +471,7 @@ const selectChange = (value) => {
   SetPop(layerNumber.value - 1);
 };
 const handleClick = (tab, event) => {
-  openFileDialog(`/swmm/${tab.props.name}.disp`, "/swmm/quo.geojson");
+  openFileDialog(`/case/swmm/${tab.props.name}.disp`, "/case/swmm/quo.geojson");
 };
 const getrptResult = (url) => {
   return new Promise((resolve, reject) => {

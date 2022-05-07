@@ -448,7 +448,7 @@ let LinkPopType = [
 ];
 onMounted(() => {
   initmap();
-  openFileDialog(`/swmm/${activeName1.value}.disp`, "/swmm/quo.geojson")
+  openFileDialog(`/case/swmm/${activeName1.value}.disp`, "/case/swmm/quo.geojson")
   loading.value=false
 });
 const initmap = () => {

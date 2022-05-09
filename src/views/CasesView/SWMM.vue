@@ -29,10 +29,7 @@
             <el-tab-pane label="72mm" name="quo_5">
               <div class="spart">
                 <div class="select">
-                  <div>
-                    <h3 style="display: flex;justify-content: center;
-                    align-items: center;">选择点属性</h3>
-                  </div>
+                  <div><h3>选择点属性</h3></div>
                   <el-radio-group
                     style="margin: 5px"
                     v-model="NT_showInPop"
@@ -57,10 +54,7 @@
                   </el-radio-group>
                 </div>
                 <div class="select">
-                  <div>
-                    <h3 style="display: flex;justify-content: center;
-                    align-items: center;">选择线属性</h3>
-                  </div>
+                  <div><h3>选择线属性</h3></div>
                   <el-radio-group
                     v-model="LT_showInPop"
                     size="large"
@@ -330,7 +324,7 @@
           :max="maxSlider"
           :marks="marks"
           :format-tooltip="formatTooltip"
-          style="width: 80%; margin: auto;left: 15px;"
+          style="width: 80%; margin: auto; left: 15px"
         >
         </el-slider>
         <el-button
@@ -446,10 +440,10 @@ let LinkPopType = [
   { value: "Depth" },
   { value: "Capacity" },
 ];
+
 onMounted(() => {
-  initmap();
-  openFileDialog(`/case/swmm/${activeName1.value}.disp`, "/case/swmm/quo.geojson")
-  loading.value=false
+  initstate(`${activeName1.value}.disp`, "quo.geojson");
+  loading.value = false;
 });
 const initmap = () => {
   mapboxgl.accessToken =
@@ -471,7 +465,7 @@ const selectChange = (value) => {
   SetPop(layerNumber.value - 1);
 };
 const handleClick = (tab, event) => {
-  openFileDialog(`/case/swmm/${tab.props.name}.disp`, "/case/swmm/quo.geojson");
+  openFileDialog(`${tab.props.name}.disp`, "quo.geojson");
 };
 const getrptResult = (url) => {
   return new Promise((resolve, reject) => {
@@ -539,6 +533,101 @@ const initEchart = (x, y, id, chart_name) => {
   };
   echar.value.clear();
   echar.value.setOption(option1);
+};
+const initstate = (disp_url, geo_url) => {
+  pauseAnimation();
+  loading.value = true;
+  let f = getrptResult(disp_url);
+  let ff = getGeojson(geo_url);
+
+  Promise.all([f, ff]).then((array) => {
+    rptResult.value = array[0];
+    geojsonObject.value = array[1];
+    options.value = [
+      {
+        value: "node",
+        label: "Node Results",
+        children: [],
+      },
+      {
+        value: "link",
+        label: "Link Results",
+        children: [],
+      },
+    ];
+    // chart Tab
+    for (let i = 0; i < rptResult.value.Node.length; i++) {
+      let node = rptResult.value.Node[i];
+      let nodeResult = rptResult.value.NodeResults[i];
+      let child = {
+        value: node.toLowerCase(),
+        label: node,
+        children: [
+          {
+            value: "Inflow",
+            label: "入流量(m³/s)",
+            data: nodeResult.Inflow,
+          },
+          {
+            value: "Flooding",
+            label: "管点溢流(m³/s)",
+            data: nodeResult.Flooding,
+          },
+          {
+            value: "Depth",
+            label: "管点深度(m)",
+            data: nodeResult.Depth,
+          },
+          {
+            value: "Head",
+            label: "管点水头(m)",
+            data: nodeResult.Head,
+          },
+        ],
+      };
+      options.value[0].children.push(child);
+    }
+    for (let j = 0; j < rptResult.value.Link.length; j++) {
+      let link = rptResult.value.Link[j];
+      let linkResult = rptResult.value.LinkResults[j];
+      let child = {
+        value: link.toLowerCase(),
+        label: link,
+        children: [
+          {
+            value: "Flow",
+            label: "管道流量(m³/s)",
+            data: linkResult.Flow,
+          },
+          {
+            value: "Velocity",
+            label: "水流速度(m/s)",
+            data: linkResult.Velocity,
+          },
+          {
+            value: "Depth",
+            label: "管道水深(m)",
+            data: linkResult.Depth,
+          },
+          {
+            value: "Capacity",
+            label: "管道容量",
+            data: linkResult.Capacity,
+          },
+        ],
+      };
+      options.value[1].children.push(child);
+    }
+    updateData();
+    sliderChange(1);
+    initmap();
+    map.value.setZoom(14);
+    map.value.setCenter({ lng: 120.845, lat: 31.037 });
+
+    map.value.on("load", () => {
+      readlayer();
+    });
+  });
 };
 const openFileDialog = (disp_url, geo_url) => {
   pauseAnimation();
@@ -625,124 +714,127 @@ const openFileDialog = (disp_url, geo_url) => {
       options.value[1].children.push(child);
     }
     changeChooseMap();
-    if (layerNumber.value > 0) {
-      map.value.removeLayer(`vectorLayer${layerNumber.value - 1}line`);
-      map.value.removeLayer(`vectorLayer${layerNumber.value - 1}point`);
-      map.value.removeSource(`source-id${layerNumber.value - 1}`);
-
-      layerNumber.value--;
-    }
-    map.value.addSource(`source-id${layerNumber.value}`, {
-      type: "geojson",
-      data: geojsonObject.value,
-    });
-    let ll = 1;
-    map.value.addLayer({
-      id: `vectorLayer${layerNumber.value}line`,
-      type: "line",
-      source: `source-id${layerNumber.value}`,
-      paint: {
-        "line-width": 3,
-        "line-color": [
-          "case",
-          ["<", ["get", "value"], nodeLinkInit.linkmin],
-          "#ffffff", //<10.8
-          [
-            "<",
-            ["get", "value"],
-            nodeLinkInit.linkmin + ll * nodeLinkInit.linkstep,
-          ],
-          "#51e1e6", //>=10.8 & <17.2
-          [
-            "<",
-            ["get", "value"],
-            nodeLinkInit.linkmin + (ll + 1) * nodeLinkInit.linkstep,
-          ],
-          "#40a9d9",
-          [
-            "<",
-            ["get", "value"],
-            nodeLinkInit.linkmin + (ll + 2) * nodeLinkInit.linkstep,
-          ],
-          "#3175ce",
-          [
-            "<=",
-            ["get", "value"],
-            nodeLinkInit.linkmin + (ll + 3) * nodeLinkInit.linkstep,
-          ],
-          "#2549c4",
-          [
-            "<=",
-            ["get", "value"],
-            nodeLinkInit.linkmin + (ll + 4) * nodeLinkInit.linkstep,
-          ],
-          "#140fb8", //>=41.5 & <50.1
-          "#140fb8", // 默认值, >=50.1
-        ],
-      },
-      filter: ["in", "$type", "LineString"],
-    });
-
-    map.value.addLayer({
-      id: `vectorLayer${layerNumber.value}point`,
-      type: "circle",
-      source: `source-id${layerNumber.value}`,
-      paint: {
-        "circle-color": [
-          "case",
-          ["<", ["get", "value"], nodeLinkInit.nodemin],
-          "#ffffff", //<10.8
-          [
-            "<",
-            ["get", "value"],
-            nodeLinkInit.nodemin + ll * nodeLinkInit.nodestep,
-          ],
-          "#fdd519", //>=10.8 & <17.2
-          [
-            "<",
-            ["get", "value"],
-            nodeLinkInit.nodemin + (ll + 1) * nodeLinkInit.nodestep,
-          ],
-          "#f8a114",
-          [
-            "<",
-            ["get", "value"],
-            nodeLinkInit.nodemin + (ll + 2) * nodeLinkInit.nodestep,
-          ],
-          "#f36f0f",
-          [
-            "<=",
-            ["get", "value"],
-            nodeLinkInit.nodemin + (ll + 3) * nodeLinkInit.nodestep,
-          ],
-          "#ee430b",
-          [
-            "<=",
-            ["get", "value"],
-            nodeLinkInit.nodemin + (ll + 4) * nodeLinkInit.nodestep,
-          ],
-          "#e90806", //>=41.5 & <50.1
-          "#e90806", // 默认值, >=50.1
-        ],
-      },
-      filter: ["in", "$type", "Point"],
-    });
-    SetPop(layerNumber.value);
-    layerNumber.value++;
-
-    // slider
-    timeSliderMap.value = false;
-    maxSlider.value = rptResult.value.Date.length;
-    marks.value = {
-      1: formatTooltip(1),
-    };
-    // btn
-    btn.startBtn = false;
-    btn.conduitStartBtn = false;
-    setTimeout(function () {
-      loading.value = false;
-    }, 300);
+    readlayer();
   });
+};
+const readlayer = () => {
+  if (layerNumber.value > 0) {
+    map.value.removeLayer(`vectorLayer${layerNumber.value - 1}line`);
+    map.value.removeLayer(`vectorLayer${layerNumber.value - 1}point`);
+    map.value.removeSource(`source-id${layerNumber.value - 1}`);
+
+    layerNumber.value--;
+  }
+  map.value.addSource(`source-id${layerNumber.value}`, {
+    type: "geojson",
+    data: geojsonObject.value,
+  });
+  let ll = 1;
+  map.value.addLayer({
+    id: `vectorLayer${layerNumber.value}line`,
+    type: "line",
+    source: `source-id${layerNumber.value}`,
+    paint: {
+      "line-width": 3,
+      "line-color": [
+        "case",
+        ["<", ["get", "value"], nodeLinkInit.linkmin],
+        "#ffffff", //<10.8
+        [
+          "<",
+          ["get", "value"],
+          nodeLinkInit.linkmin + ll * nodeLinkInit.linkstep,
+        ],
+        "#51e1e6", //>=10.8 & <17.2
+        [
+          "<",
+          ["get", "value"],
+          nodeLinkInit.linkmin + (ll + 1) * nodeLinkInit.linkstep,
+        ],
+        "#40a9d9",
+        [
+          "<",
+          ["get", "value"],
+          nodeLinkInit.linkmin + (ll + 2) * nodeLinkInit.linkstep,
+        ],
+        "#3175ce",
+        [
+          "<=",
+          ["get", "value"],
+          nodeLinkInit.linkmin + (ll + 3) * nodeLinkInit.linkstep,
+        ],
+        "#2549c4",
+        [
+          "<=",
+          ["get", "value"],
+          nodeLinkInit.linkmin + (ll + 4) * nodeLinkInit.linkstep,
+        ],
+        "#140fb8", //>=41.5 & <50.1
+        "#140fb8", // 默认值, >=50.1
+      ],
+    },
+    filter: ["in", "$type", "LineString"],
+  });
+
+  map.value.addLayer({
+    id: `vectorLayer${layerNumber.value}point`,
+    type: "circle",
+    source: `source-id${layerNumber.value}`,
+    paint: {
+      "circle-color": [
+        "case",
+        ["<", ["get", "value"], nodeLinkInit.nodemin],
+        "#ffffff", //<10.8
+        [
+          "<",
+          ["get", "value"],
+          nodeLinkInit.nodemin + ll * nodeLinkInit.nodestep,
+        ],
+        "#fdd519", //>=10.8 & <17.2
+        [
+          "<",
+          ["get", "value"],
+          nodeLinkInit.nodemin + (ll + 1) * nodeLinkInit.nodestep,
+        ],
+        "#f8a114",
+        [
+          "<",
+          ["get", "value"],
+          nodeLinkInit.nodemin + (ll + 2) * nodeLinkInit.nodestep,
+        ],
+        "#f36f0f",
+        [
+          "<=",
+          ["get", "value"],
+          nodeLinkInit.nodemin + (ll + 3) * nodeLinkInit.nodestep,
+        ],
+        "#ee430b",
+        [
+          "<=",
+          ["get", "value"],
+          nodeLinkInit.nodemin + (ll + 4) * nodeLinkInit.nodestep,
+        ],
+        "#e90806", //>=41.5 & <50.1
+        "#e90806", // 默认值, >=50.1
+      ],
+    },
+    filter: ["in", "$type", "Point"],
+  });
+  SetPop(layerNumber.value);
+  layerNumber.value++;
+
+  // slider
+  timeSliderMap.value = false;
+  maxSlider.value = rptResult.value.Date.length;
+  marks.value = {
+    1: formatTooltip(1),
+  };
+  // btn
+  btn.startBtn = false;
+  btn.conduitStartBtn = false;
+  setTimeout(function () {
+    loading.value = false;
+  }, 300);
 };
 const Npopclick = (e) => {
   e.preventDefault();
@@ -823,8 +915,7 @@ const SetPop = (layerN) => {
   map.value.on("click", `vectorLayer${layerN}point`, Npopclick);
   map.value.on("click", `vectorLayer${layerN}line`, LPopclick);
 };
-const changeChooseMap = () => {
-  // 还原slider
+const updateData = () => {
   numberAnima.value = 0;
   timeSlider.value = 1;
 
@@ -899,6 +990,10 @@ const changeChooseMap = () => {
     nodeLinkInit.linkmax = rptResult.value.MaxMin.link.maxCapacity;
     nodeLinkInit.linkstep = (nodeLinkInit.linkmax - nodeLinkInit.linkmin) / 5;
   }
+};
+const changeChooseMap = () => {
+  // 还原slider
+  updateData();
   map.value.setZoom(14);
   map.value.setCenter({ lng: 120.845, lat: 31.037 });
   sliderChange(1);
@@ -1086,7 +1181,7 @@ const pauseAnimation = () => {
   transition: width 2s;
   transition: height 2s;
 }
-.el-slider__marks-text{
+.el-slider__marks-text {
   left: 5% !important;
 }
 #time-slider {

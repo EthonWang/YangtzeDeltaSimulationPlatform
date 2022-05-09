@@ -38,12 +38,6 @@ const routes = [
   },
   {
     isBar:true,
-    name:"SWMM89",
-    path:"/swmm8",
-    component:() => import( "views/CasesView/SWMM.vue")
-},
-  {
-    isBar:true,
     path: "/about",
     name: "关于",
     component: () =>

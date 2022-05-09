@@ -361,7 +361,7 @@ import "mapbox-gl";
 import * as echarts from "echarts";
 import $ from "jquery";
 import axios from "axios";
-import { reactive, ref, toRefs, onMounted } from "vue";
+import { reactive, ref, toRefs, onMounted, readonly } from "vue";
 //定义变量使用
 const mapboxgl = require("mapbox-gl");
 let echar = ref("");
@@ -378,17 +378,17 @@ let dialog = reactive({
 });
 let { fileDialog, propertySelectVisible, swmmVisualDialog, echartsDialog } =
   toRefs(dialog);
-let rptResult = ref({});
+let rptResult = reactive({});
 let isCollapse = true;
 let loading = ref(false);
-let uploadFiles = ref([]);
+let uploadFiles = reactive([]);
 let selData = [];
 let selTitle = "";
 let geojson = ref("");
-let geojsonObject = ref({});
+let geojsonObject = reactive({});
 let geojsonLayer = Object;
 let viewer = Object;
-let fileList = ref([]);
+let fileList = reactive([]);
 let flag = ref(-1);
 let activeName = ref("first");
 let activeName1 = ref("quo_5");
@@ -408,11 +408,11 @@ let nodeLinkInit = reactive({
 let { nodemin, nodemax, nodestep, linkmin, linkmax, linkstep } =
   toRefs(nodeLinkInit);
 let maxSlider = ref(10);
-let marks = ref({});
+let marks = reactive({});
 let map = ref({});
 let numberAnima = ref(0);
-let nodeResultArr = ref([]);
-let options = ref([
+let nodeResultArr = reactive([]);
+let options = reactive([
   {
     value: "node",
     label: "Node Results",
@@ -424,7 +424,7 @@ let options = ref([
     children: [],
   },
 ]);
-let linkResultArr = ref([]);
+let linkResultArr = reactive([]);
 let btn = reactive({
   startBtn: true,
   pauseBtn: true,
@@ -547,9 +547,9 @@ const openFileDialog = (disp_url, geo_url) => {
   let ff = getGeojson(geo_url);
 
   Promise.all([f, ff]).then((array) => {
-    rptResult.value = array[0];
-    geojsonObject.value = array[1];
-    options.value = [
+    rptResult = array[0];
+    geojsonObject = array[1];
+    options = [
       {
         value: "node",
         label: "Node Results",
@@ -562,9 +562,9 @@ const openFileDialog = (disp_url, geo_url) => {
       },
     ];
     // chart Tab
-    for (let i = 0; i < rptResult.value.Node.length; i++) {
-      let node = rptResult.value.Node[i];
-      let nodeResult = rptResult.value.NodeResults[i];
+    for (let i = 0; i < rptResult.Node.length; i++) {
+      let node = rptResult.Node[i];
+      let nodeResult = rptResult.NodeResults[i];
       let child = {
         value: node.toLowerCase(),
         label: node,
@@ -591,11 +591,11 @@ const openFileDialog = (disp_url, geo_url) => {
           },
         ],
       };
-      options.value[0].children.push(child);
+      options[0].children.push(child);
     }
-    for (let j = 0; j < rptResult.value.Link.length; j++) {
-      let link = rptResult.value.Link[j];
-      let linkResult = rptResult.value.LinkResults[j];
+    for (let j = 0; j < rptResult.Link.length; j++) {
+      let link = rptResult.Link[j];
+      let linkResult = rptResult.LinkResults[j];
       let child = {
         value: link.toLowerCase(),
         label: link,
@@ -622,7 +622,7 @@ const openFileDialog = (disp_url, geo_url) => {
           },
         ],
       };
-      options.value[1].children.push(child);
+      options[1].children.push(child);
     }
     changeChooseMap();
     if (layerNumber.value > 0) {
@@ -634,7 +634,7 @@ const openFileDialog = (disp_url, geo_url) => {
     }
     map.value.addSource(`source-id${layerNumber.value}`, {
       type: "geojson",
-      data: geojsonObject.value,
+      data: geojsonObject,
     });
     let ll = 1;
     map.value.addLayer({
@@ -732,8 +732,8 @@ const openFileDialog = (disp_url, geo_url) => {
 
     // slider
     timeSliderMap.value = false;
-    maxSlider.value = rptResult.value.Date.length;
-    marks.value = {
+    maxSlider.value = rptResult.Date.length;
+    marks = {
       1: formatTooltip(1),
     };
     // btn
@@ -754,10 +754,10 @@ const Npopclick = (e) => {
   while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
   }
-  let y = options.value[0].children
+  let y = options[0].children
     .find((child) => child.label == e.features[0].properties.name)
     .children.find((Flooding) => Flooding.value == showInPop.NT_showInPop).data;
-  let x = rptResult.value.Date;
+  let x = rptResult.Date;
   new mapboxgl.Popup({
     className: "Point_pop",
     maxWidth: "800px",
@@ -784,12 +784,12 @@ const LPopclick = (e) => {
       coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
     }
 
-    let y = options.value[1].children
+    let y = options[1].children
       .find((child) => child.label == e.features[0].properties.name)
       .children.find(
         (Flooding) => Flooding.value == showInPop.LT_showInPop
       ).data;
-    let x = rptResult.value.Date;
+    let x = rptResult.Date;
     new mapboxgl.Popup({ maxWidth: "800px" })
       .setLngLat(e.lngLat)
       .setHTML("<div id='e_chart_L' style='height:400px;width:600px;'></div>")
@@ -831,72 +831,72 @@ const changeChooseMap = () => {
   loading.value = true;
   propertySelectVisible = false;
   // 获取所有要素的选中属性
-  nodeResultArr.value = [];
-  linkResultArr.value = [];
-  for (let i = 0; i < options.value[0].children.length; i++) {
+  nodeResultArr = [];
+  linkResultArr = [];
+  for (let i = 0; i < options[0].children.length; i++) {
     // node
-    let node = options.value[0].children[i];
+    let node = options[0].children[i];
     let element = node.children.find(
       (Flooding) => Flooding.value == showInPop.NT_showInPop
     );
-    nodeResultArr.value.push(element.data); // 汇总该属性的所有模拟值
+    nodeResultArr.push(element.data); // 汇总该属性的所有模拟值
   }
-  for (let k = 0; k < rptResult.value.Node.length; k++) {
+  for (let k = 0; k < rptResult.Node.length; k++) {
     // 更新geojsonObject
-    let feat = geojsonObject.value.features[k];
-    feat.properties.value = nodeResultArr.value[k][0];
+    let feat = geojsonObject.features[k];
+    feat.properties.value = nodeResultArr[k][0];
   }
-  for (let i = 0; i < options.value[1].children.length; i++) {
+  for (let i = 0; i < options[1].children.length; i++) {
     // link
-    let link = options.value[1].children[i];
+    let link = options[1].children[i];
     let element = link.children.find(
       (Flooding) => Flooding.value == showInPop.LT_showInPop
     );
-    linkResultArr.value.push(element.data);
+    linkResultArr.push(element.data);
   }
-  for (let linkItem = 0; linkItem < rptResult.value.Link.length; linkItem++) {
+  for (let linkItem = 0; linkItem < rptResult.Link.length; linkItem++) {
     // 更新geojsonObject
     let feat =
-      geojsonObject.value.features[rptResult.value.Node.length + linkItem];
-    feat.properties.value = linkResultArr.value[linkItem][0];
+      geojsonObject.features[rptResult.Node.length + linkItem];
+    feat.properties.value = linkResultArr[linkItem][0];
   }
   // 获取最大最小值
   if (showInPop.NT_showInPop == "Inflow") {
     // node
-    nodeLinkInit.nodemin = rptResult.value.MaxMin.node.minInflow;
-    nodeLinkInit.nodemax = rptResult.value.MaxMin.node.maxInflow;
+    nodeLinkInit.nodemin = rptResult.MaxMin.node.minInflow;
+    nodeLinkInit.nodemax = rptResult.MaxMin.node.maxInflow;
 
-    let max = rptResult.value.MaxMin.node.maxInflow;
+    let max = rptResult.MaxMin.node.maxInflow;
     nodeLinkInit.nodestep = (nodeLinkInit.nodemax - nodeLinkInit.nodemin) / 5;
   } else if (showInPop.NT_showInPop == "Flooding") {
-    nodeLinkInit.nodemin = rptResult.value.MaxMin.node.minFlooding;
-    nodeLinkInit.nodemax = rptResult.value.MaxMin.node.maxFlooding;
+    nodeLinkInit.nodemin = rptResult.MaxMin.node.minFlooding;
+    nodeLinkInit.nodemax = rptResult.MaxMin.node.maxFlooding;
     nodeLinkInit.nodestep = (nodeLinkInit.nodemax - nodeLinkInit.nodemin) / 5;
   } else if (showInPop.NT_showInPop == "Depth") {
-    nodeLinkInit.nodemin = rptResult.value.MaxMin.node.minDepth;
-    nodeLinkInit.nodemax = rptResult.value.MaxMin.node.maxDepth;
+    nodeLinkInit.nodemin = rptResult.MaxMin.node.minDepth;
+    nodeLinkInit.nodemax = rptResult.MaxMin.node.maxDepth;
     nodeLinkInit.nodestep = (nodeLinkInit.nodemax - nodeLinkInit.nodemin) / 5;
   } else if (showInPop.NT_showInPop == "Head") {
-    nodeLinkInit.nodemin = rptResult.value.MaxMin.node.minHead;
-    nodeLinkInit.nodemax = rptResult.value.MaxMin.node.maxHead;
+    nodeLinkInit.nodemin = rptResult.MaxMin.node.minHead;
+    nodeLinkInit.nodemax = rptResult.MaxMin.node.maxHead;
     nodeLinkInit.nodestep = (nodeLinkInit.nodemax - nodeLinkInit.nodemin) / 5;
   }
   if (showInPop.LT_showInPop == "Flow") {
     // link
-    nodeLinkInit.linkmin = rptResult.value.MaxMin.link.minFlow;
-    nodeLinkInit.linkmax = rptResult.value.MaxMin.link.maxFlow;
+    nodeLinkInit.linkmin = rptResult.MaxMin.link.minFlow;
+    nodeLinkInit.linkmax = rptResult.MaxMin.link.maxFlow;
     nodeLinkInit.linkstep = (nodeLinkInit.linkmax - nodeLinkInit.linkmin) / 5;
   } else if (showInPop.LT_showInPop == "Velocity") {
-    nodeLinkInit.linkmin = rptResult.value.MaxMin.link.minVelocity;
-    nodeLinkInit.linkmax = rptResult.value.MaxMin.link.maxVelocity;
+    nodeLinkInit.linkmin = rptResult.MaxMin.link.minVelocity;
+    nodeLinkInit.linkmax = rptResult.MaxMin.link.maxVelocity;
     nodeLinkInit.linkstep = (nodeLinkInit.linkmax - nodeLinkInit.linkmin) / 5;
   } else if (showInPop.LT_showInPop == "Depth") {
-    nodeLinkInit.linkmin = rptResult.value.MaxMin.link.minDepth;
-    nodeLinkInit.linkmax = rptResult.value.MaxMin.link.maxDepth;
+    nodeLinkInit.linkmin = rptResult.MaxMin.link.minDepth;
+    nodeLinkInit.linkmax = rptResult.MaxMin.link.maxDepth;
     nodeLinkInit.linkstep = (nodeLinkInit.linkmax - nodeLinkInit.linkmin) / 5;
   } else if (showInPop.LT_showInPop == "Capacity") {
-    nodeLinkInit.linkmin = rptResult.value.MaxMin.link.minCapacity;
-    nodeLinkInit.linkmax = rptResult.value.MaxMin.link.maxCapacity;
+    nodeLinkInit.linkmin = rptResult.MaxMin.link.minCapacity;
+    nodeLinkInit.linkmax = rptResult.MaxMin.link.maxCapacity;
     nodeLinkInit.linkstep = (nodeLinkInit.linkmax - nodeLinkInit.linkmin) / 5;
   }
   map.value.setZoom(14);
@@ -908,7 +908,7 @@ const selectFile = () => {
   $("#uploadFile").click();
 };
 const uploadChange = (file, fileList) => {
-  uploadFiles.value = fileList;
+  uploadFiles = fileList;
 };
 //将展示的geojson加载入cesium
 const addGeoJson = (json) => {};
@@ -919,15 +919,15 @@ const loadFenhuLayer = (flag, year, reload) => {};
 //时间线变动函数
 const sliderChange = (val) => {
   numberAnima.value = val - 1;
-  for (let i = 0; i < rptResult.value.Node.length; i++) {
+  for (let i = 0; i < rptResult.Node.length; i++) {
     // 更新geojsonObject
-    let feat = geojsonObject.value.features[i];
-    feat.properties.value = nodeResultArr.value[i][numberAnima.value];
+    let feat = geojsonObject.features[i];
+    feat.properties.value = nodeResultArr[i][numberAnima.value];
   }
-  for (let k = 0; k < rptResult.value.Link.length; k++) {
+  for (let k = 0; k < rptResult.Link.length; k++) {
     // 更新geojsonObject
-    let feat = geojsonObject.value.features[rptResult.value.Node.length + k];
-    feat.properties.value = linkResultArr.value[k][numberAnima.value];
+    let feat = geojsonObject.features[rptResult.Node.length + k];
+    feat.properties.value = linkResultArr[k][numberAnima.value];
   }
   // 更新openlayer
   // refreshOpenlayer();
@@ -935,10 +935,10 @@ const sliderChange = (val) => {
 const refreshOpenlayer = () => {
   map.value
     .getSource(`source-id${layerNumber.value - 1}`)
-    .setData(geojsonObject.value);
+    .setData(geojsonObject);
 };
 const formatTooltip = (val) => {
-  if (rptResult.value.Date != undefined) {
+  if (rptResult.Date != undefined) {
     let month = [
       "January",
       "February",
@@ -953,8 +953,8 @@ const formatTooltip = (val) => {
       "November",
       "December",
     ];
-    let dateDay = rptResult.value.Date[val - 1].split(/ +/)[0];
-    let dateSec = rptResult.value.Date[val - 1].split(/ +/)[1];
+    let dateDay = rptResult.Date[val - 1].split(/ +/)[0];
+    let dateSec = rptResult.Date[val - 1].split(/ +/)[1];
     let nyr = dateDay.split("-");
     let hms = dateSec.split(":");
     let dateStr = `${nyr[2]}/${nyr[1]}/`;
@@ -970,22 +970,22 @@ const startAnimation = () => {
   btn.startBtn = true;
   btn.pauseBtn = false;
   intevalAnima = setInterval(() => {
-    if (numberAnima.value == rptResult.value.Date.length) {
+    if (numberAnima.value == rptResult.Date.length) {
       numberAnima.value = 0;
       timeSlider.value = 1;
     }
-    for (let i = 0; i < rptResult.value.Node.length; i++) {
+    for (let i = 0; i < rptResult.Node.length; i++) {
       // 更新geojsonObject
-      let feat = geojsonObject.value.features[i];
-      geojsonObject.value.features[i].properties.value =
-        nodeResultArr.value[i][numberAnima.value];
+      let feat = geojsonObject.features[i];
+      geojsonObject.features[i].properties.value =
+        nodeResultArr[i][numberAnima.value];
     }
-    for (let k = 0; k < rptResult.value.Link.length; k++) {
+    for (let k = 0; k < rptResult.Link.length; k++) {
       // 更新geojsonObject
-      let feat = geojsonObject.value.features[rptResult.value.Node.length + k];
-      geojsonObject.value.features[
-        rptResult.value.Node.length + k
-      ].properties.value = linkResultArr.value[k][numberAnima.value];
+      let feat = geojsonObject.features[rptResult.Node.length + k];
+      geojsonObject.features[
+        rptResult.Node.length + k
+      ].properties.value = linkResultArr[k][numberAnima.value];
     }
     // 更新openlayer
     refreshOpenlayer();

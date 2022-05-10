@@ -209,6 +209,7 @@ getTreeData();
 let dataList = [];
 let tifList = [];
 let chartList = [];
+let jsonList = [];
 
 const getCheckedNodes = (checked, data) => {
   // 要区分tif、shp、chart数据，利用mapDataType
@@ -248,6 +249,18 @@ const getCheckedNodes = (checked, data) => {
       }
     }
     emit("getCheckChart", chartList);
+  } else if (data.mapDataType == "json") {
+    // 图表数据
+    if (checked == true) {
+      jsonList.push(toRaw(data));
+    } else {
+      for (let i = 0; i < jsonList.length; i++) {
+        if (jsonList[i].dataSourceId == data.dataSourceId) {
+          jsonList.splice(i, 1);
+        }
+      }
+    }
+    emit("getCheckJson", jsonList);
   }
 };
 

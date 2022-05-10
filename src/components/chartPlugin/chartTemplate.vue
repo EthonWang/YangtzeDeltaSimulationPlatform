@@ -57,12 +57,12 @@ export default {
     const getChartData = () => {
       axios
         .get(
-          "http://172.21.212.63:8999/model/getVisualData?visualDataPath=" +
+          "http://172.21.212.63:8999/store" +
             props.data.path
         )
         .then((res) => {
-          chartOptions.value = res.data.data;
-        //   console.log("chartOptions", chartOptions.value);
+          chartOptions.value = res.data;
+          // console.log(res);
         });
     };
     getChartData();

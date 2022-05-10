@@ -37,14 +37,15 @@
   <el-drawer
       v-model="drawer"
       :title="drawerTitle"
-      direction="ltr"
+      direction="rtl"
       size="35%"
       @open="handleOpenDraw"
+
   >
-    <ModelConfig :modelId = "modelId"></ModelConfig>
+    <ModelConfig :modelId = "modelId" ref="refModelConfig"></ModelConfig>
     <template #footer>
       <div style="flex: auto">
-        <el-button type="primary" @click="LoadTestData">Load TestData</el-button>
+        <el-button type="primary" @click="btnLoadTestData">Load TestData</el-button>
         <el-button type="primary" @click="InvokeModel">Invoke</el-button>
       </div>
     </template>
@@ -179,6 +180,7 @@ const drawer = ref(false)
 const drawerTitle = ref("");
 const modelId = ref("");
 let tempModelId = ""
+const refModelConfig = ref()
 const openModelConfig = (modelName,dataModelId) => {
   drawer.value = true;
   drawerTitle.value = modelName + " Configure Execution";
@@ -189,12 +191,13 @@ const handleOpenDraw = () => {
 }
 
 // 加载测试数据函数
-const LoadTestData = () => {
-
+const btnLoadTestData = () => {
+  refModelConfig.value.handleLoadTestData();
 }
+
 //调用模型代码
 const InvokeModel = () => {
-
+  refModelConfig.value.handleInvoke();
 }
 const modelTreeData = ref([]);
 

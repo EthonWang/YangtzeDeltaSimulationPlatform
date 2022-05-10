@@ -63,6 +63,8 @@ export default {
         .then((res) => {
           chartOptions.value = res.data;
           // console.log(res);
+          chartOptions.value = res.data;
+        //   console.log("chartOptions", chartOptions.value);
         });
     };
     getChartData();

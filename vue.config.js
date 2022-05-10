@@ -8,23 +8,19 @@ function resolve(dir) {
 }
 
 module.exports = {
-    /** 区分打包环境与开发环境
-     * process.env.NODE_ENV==='production'  (打包环境)
-     * process.env.NODE_ENV==='development' (开发环境)
-     * baseUrl: process.env.NODE_ENV==='production'?"https://cdn.didabisai.com/front/":'front/',
-     */
-    // 基本路径
-    // baseUrl: "/",
-    // 输出文件目录
-    // outputDir: "dist",
-    // eslint-loader 是否在保存的时候检查
-    // lintOnSave: false,
-    // use the full build with in-browser compiler?
-    // https://vuejs.org/v2/guide/installation.html#Runtime-Compiler-vs-Runtime-only
-    // compiler: false,
-    // webpack配置
-    // see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
+
     chainWebpack: (config) => {
+        const oneOfsMap = config.module.rule("less").oneOfs.store;
+        oneOfsMap.forEach(item => {
+          item
+            .use("style-resources-loader")
+            .loader("style-resources-loader")
+            .options({
+              // or an array : ["./path/to/vars.less", "./path/to/mixins.less"] 这里的路径不能使用@，否则会报错
+              patterns: "./src/assets/css/common.less"
+            })
+            .end()
+        })
         // 配置路径别名
         config.resolve.alias
             .set("@", resolve("./src"))
@@ -57,39 +53,16 @@ module.exports = {
             rules: [],
         },
     },
-    //如果想要引入babel-polyfill可以这样写
-    // configureWebpack: (config) => {
-    //   config.entry = ["babel-polyfill", "./src/main.js"]
-    // },
-    // vue-loader 配置项
-    // https://vue-loader.vuejs.org/en/options.html
-    // vueLoader: {},
-    // 生产环境是否生成 sourceMap 文件
-    // productionSourceMap: true,
-    // css相关配置
-    // css: {
-    //     // 是否使用css分离插件 ExtractTextPlugin
-    //     extract: true,
-    //     // 开启 CSS source maps?
-    //     sourceMap: false,
-    //     // css预设器配置项
-    //     loaderOptions: {},
-    //     // 启用 CSS modules for all css / pre-processor files.
-    //     requireModuleExtension: false,
-    // },
-    // use thread-loader for babel & TS in production build
-    // enabled by default if the machine has more than 1 cores
-    // parallel: require("os").cpus().length > 1,
-    // 是否启用dll
-    // See https://github.com/vuejs/vue-cli/blob/dev/docs/cli-service.md#dll-mode
-    // dll: false,
-    // PWA 插件相关配置
-    // see https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-pwa
-    // pwa: {},
-    // webpack-dev-server 相关配置
+    css:{
+        loaderOptions:{
+            less:{
+                javascriptEnabled:true,//允许链式调用的换行
+            }
+       }
+    },
     devServer: {
         open: true,
-        host: "127.0.0.1",
+        host: "http://172.21.213.222/",
         port: 3030,
         https: false,
         hotOnly: false,
@@ -122,13 +95,25 @@ module.exports = {
                     "/back_data": "",
                 },
             },
+            "/echarts": {
+                target: "https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples",
+                ws: true,
+                timeout: 3600000,
+                changOrigin: true,
+                pathRewrite: {
+                    "/echarts": "",
+                },
+            },
         }, // 设置代理
         // before: (app) => { },
     },
-    // 第三方插件配置
-    // pluginOptions: {
-    //     // ...
-    // },
+    
+pluginOptions: {
+    'style-resources-loader': {
+      preProcessor: 'less',
+              patterns: []
+    }
+  }
     
 
 };

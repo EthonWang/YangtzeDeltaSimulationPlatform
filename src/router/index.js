@@ -2,9 +2,11 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 // import Data from "@/views/Data.vue";
 import Model from "@/views/Model.vue";
-import Method from "@/views/Method.vue";
+import Cases from "@/views/Cases.vue";
 import Help from "@/views/Help.vue";
 // import Functions from "@/views/Function.vue";
+import ModelConfig from "@/components/App/ModelConfig"
+import { cases_config } from "@/assets/config/cases.config";
 
 const routes = [
   {
@@ -25,10 +27,15 @@ const routes = [
     isBar:true,
     path: "/case",
     name: "案例",
-    component: Method,
-    children:[]
+    component: Cases,
+    children:[
+      {
+        path:"",
+        name:"案例的家",
+        component:() => import( "../views/CasesView/CasesHome.vue")
+      },
+    ]
   },
-
   {
     isBar:true,
     path: "/about",
@@ -44,8 +51,23 @@ const routes = [
     component: Help,
     children:[]
   },
-  
+  {
+    isBar:false,
+    path: "/modelConfig",
+    name: "ModelConfig",
+    component: ModelConfig,
+    children:[]
+  },
+
 ];
+class base_route{
+  isBar=false
+  path='';
+  name='';
+  component=null;
+  children=[];
+}
+routes[2].children=routes[2].children.concat(cases_config)
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),

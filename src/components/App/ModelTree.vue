@@ -1,58 +1,60 @@
 <template>
-  <el-tree
-    ref="treeRef"
-    :data="modelTreeData"
-    :props="defaultProps"
-    @node-click="handleNodeClick"
-    :default-expand-all="true"
-    :expand-on-click-node="false"
-    style=""
+   <el-tree
+        ref="treeRef"
+        :data="modelTreeData"
+        :props="defaultProps"
+        @node-click="handleNodeClick"
+        :default-expand-all='true'
+        :expand-on-click-node="false"
+        style="">
+      <template class="custom-tree-node" v-slot="{ node, data }" >
+            <span v-if="data.type == 'dataSet'">
+              {{ node.label }}
+            </span>
+            <span v-else-if="data.type == 'problem'">
+                      {{ node.label }}
+            </span>
+            <span v-else-if="data.type == 'data'">
+              <el-checkbox :key="data.dataSourceId" @change="checked=>getCheckedNodes(checked,data)">{{ node.label }}</el-checkbox>
+            </span>
+            <span v-else>{{ node.label }}</span>
+            <span style="margin-left: 50px" v-show="data.type == 'model'">
+                    <el-button
+                        type="primary"
+                        size="mini"
+                        @click="openModelConfig(data.label,data.modelId)" plain>
+                      Config
+                    </el-button>
+                    <el-button
+                        type="info"
+                        size="mini"
+                        @click="drawer = true" plain>
+                      Info
+                    </el-button>
+            </span>
+      </template>
+    </el-tree>
+  <el-drawer
+      v-model="drawer"
+      :title="drawerTitle"
+      direction="ltr"
+      size="35%"
+      @open="handleOpenDraw"
   >
-    <template class="custom-tree-node" v-slot="{ node, data }">
-      <span v-if="data.type == 'dataSet'">
-        <!--              <el-checkbox></el-checkbox>-->
-        {{ node.label }}
-      </span>
-      <span v-else-if="data.type == 'problem'">
-        {{ node.label }}
-      </span>
-      <span v-else-if="data.type == 'data'">
-        <el-checkbox
-          :key="data.dataSourceId"
-          @change="(checked) => getCheckedNodes(checked, data)"
-          >{{ node.label }}</el-checkbox
-        >
-      </span>
-      <span v-else>{{ node.label }}</span>
-      <span style="margin-left: 50px" v-show="data.type == 'model'">
-        <el-button
-          type="primary"
-          size="mini"
-          @click="modelConfigDialog = true"
-          plain
-        >
-          Config
-        </el-button>
-        <el-button
-          type="info"
-          size="mini"
-          @click="() => remove(node, data)"
-          plain
-        >
-          Info
-        </el-button>
-      </span>
+    <ModelConfig :modelId = "modelId"></ModelConfig>
+    <template #footer>
+      <div style="flex: auto">
+        <el-button type="primary" @click="LoadTestData">Load TestData</el-button>
+        <el-button type="primary" @click="InvokeModel">Invoke</el-button>
+      </div>
     </template>
-  </el-tree>
-  <el-dialog
-    custom-class="dialog_config"
-    v-model="modelConfigDialog"
-    title="模型配置"
-    width="32%"
-    draggable
-  >
-    <el-row class="config-title"
-      ><Setting class="config-icon" />数据配置</el-row
+  </el-drawer>
+    <el-dialog
+        custom-class="dialog_config"
+        v-model="modelConfigDialog"
+        title="模型配置"
+        width="32%"
+        draggable
     >
     <el-card class="config-card" shadow="hover">
       <el-row>
@@ -162,6 +164,8 @@ import { toRaw } from "@vue/reactivity";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { Upload, Download, Setting, Document } from "@element-plus/icons-vue";
+import ModelConfig from "components/App/ModelConfig"
+
 import axios from "axios";
 const emit = defineEmits(["getCheckData","getCheckChart"]);
 const props = defineProps({
@@ -171,6 +175,27 @@ const props = defineProps({
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 
+const drawer = ref(false)
+const drawerTitle = ref("");
+const modelId = ref("");
+let tempModelId = ""
+const openModelConfig = (modelName,dataModelId) => {
+  drawer.value = true;
+  drawerTitle.value = modelName + " Configure Execution";
+  tempModelId = dataModelId;
+}
+const handleOpenDraw = () => {
+  modelId.value = tempModelId;
+}
+
+// 加载测试数据函数
+const LoadTestData = () => {
+
+}
+//调用模型代码
+const InvokeModel = () => {
+
+}
 const modelTreeData = ref([]);
 
 const getTreeData = () => {
@@ -183,7 +208,7 @@ getTreeData();
 
 let dataList = [];
 let tifList = [];
-let chartList = []; 
+let chartList = [];
 let jsonList = [];
 
 const getCheckedNodes = (checked, data) => {
@@ -244,9 +269,7 @@ const defaultProps = {
   label: "label",
 };
 const handleNodeClick = (data) => {};
-const remove = (node, data) => {
-  console.log(node, data);
-};
+
 const modelConfigDialog = ref(false);
 
 const testModelInput = reactive({});
@@ -363,6 +386,8 @@ const options = [
   height: 80vh;
   overflow: scroll;
 }
+
+
 </style>
 
 

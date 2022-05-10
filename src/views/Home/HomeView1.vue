@@ -110,18 +110,18 @@ const home1 = ref();
   position: absolute;
   left: 15%;
   top: 18%;
-  width: 600px;
-  height: 400px;
+  width: 31.25vw;
+  height: 42.64vh;
   transition: all 1s;
   padding: 20px 20px;
   h1 {
     color: white;
-    font-size: 72px;
+    font-size: 3.75vw;
     margin-top: -10px;
   }
   p {
     margin-top:-10px ;
-    font-size: 28px;
+    font-size: 1.458vw;
     color: white;
     line-height: 170%;
   }
@@ -129,13 +129,14 @@ const home1 = ref();
     display: flex;
     align-items: center;
     .el-button--success {
-      font-size: 18px;
-      width: 120px;
-      height: 40px;
+      font-size: 0.94vw;
+      width: 6.25vw;
+      height: 4.26vh;
     }
     .el-input__inner {
-      width: 460px !important;
-      height: 40px;
+      font-size: 0.94vw;
+      width: 23.95vw !important;
+      height: 4.26vh;
     }
   }
   // &:hover {
@@ -147,8 +148,8 @@ const home1 = ref();
   right: 12%;
   top: 8%;
   // bottom: 50px;
-  width: 750px;
-  height: 750px;
+  width: 39.06vw;
+  height: $width;
   z-index: 1;
 }
 .container .earth {
@@ -156,8 +157,8 @@ const home1 = ref();
   right: 12%;
   top: 8%;
   // bottom: 50px;
-  width: 750px;
-  height: 750px;
+  width: 39.06vw;
+  height: $width;
   // background-color: red;
   transition: all 1s;
   // &:hover {

@@ -137,9 +137,9 @@ setTimeout(searchIndexInRoutes,100);
       background-color: hsla(200, 100%, 100%, 1);
     }
     100% {
-      width: 100.1vw;
+      width: 100.4vw;
       z-index:2;
-      background-color: hsla(200, 100%, 52%, .9);
+      background-color: hsla(200, 100%, 2%, .9);
     }
   }
 }
@@ -154,8 +154,8 @@ setTimeout(searchIndexInRoutes,100);
   animation: background_hide 0.8s linear forwards;
   @keyframes background_hide {
     0% {
-      width: 100.1vw;
-      background-color: hsla(200, 100%, 52%, .9);
+      width: 100.4vw;
+      background-color: hsla(200, 100%, 2%, .9);
       transform: translateX(0px);
       opacity: 1;
     }

@@ -18,6 +18,20 @@ const routes = [
   },
   {
     isBar:true,
+    path: "/themetic",
+    name: "专题",
+    component:() => import( "../views/Themetic.vue"),
+    children:[]
+  },
+  {
+    isBar:true,
+    path: "/model",
+    name: "资源",
+    component:() => import( "../views/Resourse.vue"),
+    children:[]
+  },
+  {
+    isBar:true,
     path: "/model",
     name: "模型",
     component: Model,
@@ -41,7 +55,7 @@ const routes = [
     path: "/about",
     name: "关于",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+      import("../views/About.vue"),
       children:[]
   },
   {
@@ -58,6 +72,14 @@ const routes = [
     component: ModelConfig,
     children:[]
   },
+  {
+    isBar:false,
+    path: "/user",
+    name: "用户",
+    component: () =>
+    import("../views/User.vue"),
+    children:[]
+  },
 
 ];
 class base_route{
@@ -67,7 +89,7 @@ class base_route{
   component=null;
   children=[];
 }
-routes[2].children=routes[2].children.concat(cases_config)
+routes[4].children=routes[4].children.concat(cases_config)
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),

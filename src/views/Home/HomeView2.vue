@@ -1,6 +1,6 @@
 <template>
   <div style="position: relative; display: flex" class="home2">
-    <img src="../../assets/problem_small.png" alt="" class="img-pro">
+    <img src="../../assets/problem_small.png" alt="" class="img-pro" />
     <ProblemCharts
       :class="{ hide_ani: !props.show, show_ani: props.show }"
       class="sunburst"
@@ -23,16 +23,16 @@ import { defineProps, ref } from "vue";
 const new_data = ref({
   name: "4444",
   pic: null,
-  des:"",
+  des: "",
 });
 const props = defineProps({
   show: Boolean,
 });
-const recieveProblem = (name, path ,des) => {
+const recieveProblem = (name, path, des) => {
   new_data.value.pic = require("@/" + path);
   new_data.value.des = des;
   new_data.value.name = name;
-  console.log(des)
+  console.log(des);
   visibility.value.scrollingSpan();
   console.log(path);
 
@@ -42,10 +42,11 @@ const recieveProblem = (name, path ,des) => {
   });
 };
 const visibility = ref();
+
 </script>
 
 <style lang="less" scoped>
-@hover-time:2s;
+@hover-time: 2s;
 @randomNum: `Math.ceil(Math.random() * 60) -30`;
 .randMove() {
   animation: floating calc((abs(@randomNum / 2) + 20) * 1s) ease-in-out infinite
@@ -68,42 +69,43 @@ const visibility = ref();
     }
   }
 }
-.img-pro{
+.img-pro {
   position: absolute;
-  right: calc(50vw - 70px);
+  right: calc(4vw - 1px);
   top: 32px;
-  width: 3.64vw;
-  height: $width*1.5;
+  width: 2.8vw;
+  height: $width * 1.5;
   .randMove();
   z-index: 0;
 }
 .sunburst {
   position: absolute;
   right: 0px;
-  width: 46.87vw;
+  width: 900px;
   height: $width;
   top: 1%;
   //   backdrop-filter: blur(3px);
   //   background-color: hsla(230, 100%, 70%, 0.08);
   opacity: 0.9;
   z-index: 2;
-  transform: perspective(1000px) rotateY(-8deg) scale(1) !important;
+  transform-origin: 100% 0;
+  transform: perspective(1500px) rotateY(-2deg) scale(1);
   transition: all @hover-time;
 }
 .sunburst:hover {
-    opacity: 0.95;
-  transform: perspective(1000px) rotateY(0deg) scale(1) !important;
+  opacity: 0.95;
+  transform: rotateY(0deg);
 }
 .visible {
   position: absolute;
   top: 15%;
   left: 20px;
   width: 39.06vw;
-  height: $width*0.8;
+  height: $width * 0.8;
   z-index: 1;
   opacity: 1;
   transition: all @hover-time;
-      background-color: hsla(207,93%,62%,0);
+  background-color: hsla(207, 93%, 62%, 0);
   transform: translateX(30px) perspective(1500px) rotateY(0deg) !important;
   // &:hover {
   //   top: 20%;
@@ -119,17 +121,16 @@ const visibility = ref();
   background-size: 25% 30%;
   background-color: hsl(196, 87%, 100%);
   background-repeat: no-repeat;
-  background-position:110% -5%;
+  background-position: 110% -5%;
 }
 .hide_ani {
-  animation: hide1 .8s linear forwards;
+  animation: hide1 0.8s linear forwards;
 }
 .show_ani {
-  animation: show1 .8s linear 1;
+  animation: show1 0.8s linear 1;
 }
 @keyframes hide1 {
   0% {
-   
     opacity: 1;
   }
 
@@ -146,7 +147,6 @@ const visibility = ref();
   }
 
   100% {
-   
     opacity: 1;
     // -webkit-transform: scale3d(1, 1, 1);
     // transform: skew(0deg);

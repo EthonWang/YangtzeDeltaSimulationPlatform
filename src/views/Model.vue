@@ -1,12 +1,21 @@
 <template>
   <div class="about">
-    <ModelTree @getCheckData="getCheckData" @getCheckChart="getCheckChart" @getCheckTif="getCheckTif"></ModelTree>
+    <ModelTree
+      @getCheckData="getCheckData"
+      @getCheckChart="getCheckChart"
+      @getCheckTif="getCheckTif"
+      @getCheckJson="getCheckJson"
+    ></ModelTree>
     <button class="mapSwitchButton" @click="switchMap">2D/3D</button>
     <mapbox-view
       :shpShowList="shpList"
       v-show="mapType == 'mapBox'"
     ></mapbox-view>
-    <cesium :tifList="tifList" v-show="mapType == 'cesium'" />
+    <cesium
+      :tifList="tifList"
+      :jsonList="jsonList"
+      v-show="mapType == 'cesium'"
+    />
 
     <!-- echarts图表 -->
     <div v-for="item in chartList" :key="item.dataSourceId">
@@ -24,7 +33,7 @@
 <script>
 //采用vue2写法的话把setup去掉，
 import { reactive, computed, ref } from "vue";
-import { toRaw } from '@vue/reactivity'
+import { toRaw } from "@vue/reactivity";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import MapboxView from "../components/Mapbox/MapboxView";
@@ -43,49 +52,78 @@ export default {
       mapType: "mapBox",
       //使用mapbox-view组件需要传递的参数
       shpList: [], //格式参考[{name: "111", type: "circle", nameId: "111_123"}]
-      checkedData:[],
+      checkedData: [],
       //使用chart组件需要传递的参数
       fileDate: "null",
       tifList: [],
       chartList: [],
-    }
+      jsonList: [],
+    };
   },
   mounted() {
-
+    let mapType = this.getURLParameter("mapType");
+    if (mapType != null) {
+      if (mapType == "cesium") {
+        this.mapType = "cesium";
+      } else if (mapType == "mapBox") {
+        this.mapType = "mapBox";
+      }
+    }
   },
 
   methods: {
-    switchMap(){
-      if(this.mapType == 'mapBox'){
-        this.mapType = 'cesium';
+    switchMap() {
+      if (this.mapType == "mapBox") {
+        this.mapType = "cesium";
+        this.changeURLParameter("cesium");
       } else {
-        this.mapType = 'mapBox';
+        this.mapType = "mapBox";
+        this.changeURLParameter("mapBox");
       }
     },
     closeChart(value) {
-      for(let i = 0 ; i < this.chartList.length ; i++){
-        if(this.chartList[i].dataSourceId == value){
+      for (let i = 0; i < this.chartList.length; i++) {
+        if (this.chartList[i].dataSourceId == value) {
           this.chartList.splice(i, 1);
           // 与modelTree组件通讯，修改check
         }
       }
     },
-    getCheckData(data){
+    getCheckData(data) {
       //将选中的目录树的data值覆给shpList
-      this.mapType = 'mapBox';
-      this.shpList =JSON.parse(JSON.stringify(data))
-      console.log('this.shpList: ', toRaw(this.shpList))
+      this.mapType = "mapBox";
+      this.changeURLParameter("mapBox");
+      this.shpList = JSON.parse(JSON.stringify(data));
+      console.log("this.shpList: ", toRaw(this.shpList));
     },
-    getCheckTif(data){
+    getCheckTif(data) {
       //tifList
-      this.mapType = 'cesium';
-      this.tifList =JSON.parse(JSON.stringify(data))
-      console.log('this.tifList: ', toRaw(this.tifList))
+      this.mapType = "cesium";
+      this.changeURLParameter("cesium");
+      this.tifList = JSON.parse(JSON.stringify(data));
+      console.log("this.tifList: ", toRaw(this.tifList));
     },
-    getCheckChart(data){
-      this.chartList =JSON.parse(JSON.stringify(data))
-      console.log('this.chartList: ', toRaw(this.chartList))
-    }
+    getCheckChart(data) {
+      this.chartList = JSON.parse(JSON.stringify(data));
+      console.log("this.chartList: ", toRaw(this.chartList));
+    },
+    getCheckJson(data) {
+      this.mapType = "cesium";
+      this.changeURLParameter("cesium");
+      this.jsonList = JSON.parse(JSON.stringify(data));
+      console.log("this.jsonList: ", toRaw(this.jsonList));
+    },
+    getURLParameter(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+      var r = window.location.search.substr(1).match(reg);
+      if (r != null) {
+        return unescape(r[2]);
+      }
+      return null;
+    },
+    changeURLParameter(name) {
+      window.history.replaceState(null, null, "/model?mapType=" + name);
+    },
   },
 };
 const router = useRouter(); //路由直接用router.push(...)
@@ -99,8 +137,8 @@ const store = useStore(); //vuex直接用store.commit
 }
 .mapSwitchButton {
   position: absolute;
-  bottom: 250px;
-  right: 10px;
+  top: 75px;
+  right: 60px;
   z-index: 1000;
 }
 </style>

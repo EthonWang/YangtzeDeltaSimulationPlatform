@@ -28,10 +28,11 @@
 <script>
 import * as Cesium from "cesium/Cesium";
 import axios from "axios";
+import proj4 from "proj4";
 
 export default {
   name: "Cesium",
-  props: ["tifList"],
+  props: ["tifList", "jsonList"],
   data() {
     return {
       viewer: null,
@@ -57,11 +58,20 @@ export default {
       firstPerspectiveButton: false,
       loadedTifList: [],
       loadedTifIdList: [],
+      projection: "+proj=utm +zone=50 +datum=WGS84 +units=m +no_defs ",
+      fromProjection:
+        "+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs",
+      newProjection: `+proj=longlat +datum=WGS84 +no_defs`,
+      stopJsonShow: false,
+      jsonFileData: [],
     };
   },
   watch: {
     tifList(value) {
       this.updateTifShow(value);
+    },
+    jsonList(value) {
+      this.updateJsonListShow(value);
     },
   },
   mounted() {
@@ -69,6 +79,8 @@ export default {
     // this.add3DTiles();
     // this.addPlane();
     // this.addKMZ();
+    // this.addJsonList();
+    // this.addGltf();
   },
   methods: {
     cesiumInit() {
@@ -82,10 +94,11 @@ export default {
         // infobox: false,
         baseLayerPicker: false,
         navigationHelpButton: false,
-        // animation: false,
-        // timeline: false,
+        animation: false,
+        timeline: false,
         fullscreenButton: false,
         vrButton: false,
+        // globe: false,
       });
       // 提示错误Blocked script execution in ‘about:blank’ because the document’s frame is sandboxed and the ‘allow-scripts’ permission is not set.的解决方法
       let iframe = document.getElementsByClassName("cesium-infoBox-iframe")[0];
@@ -106,14 +119,14 @@ export default {
       // 视角大小
       Cesium.Camera.DEFAULT_VIEW_FACTOR = 0;
       // 设置home在中国(左下角，右上角)
-      // const ChinaRectangle = Cesium.Rectangle.fromDegrees(
-      //   119.080032,
-      //   30.959241,
-      //   122.789387,
-      //   32.389027
-      // );
-      // Cesium.Camera.DEFAULT_VIEW_RECTANGLE = ChinaRectangle;
-      // this.viewer.camera.flyHome(8);
+      const ChinaRectangle = Cesium.Rectangle.fromDegrees(
+        119.080032,
+        30.959241,
+        122.789387,
+        32.389027
+      );
+      Cesium.Camera.DEFAULT_VIEW_RECTANGLE = ChinaRectangle;
+      // this.viewer.camera.flyHome(6);
       // this.viewer.camera.setView({
       //   destination: {
       //     x: -3837625.3684990564,
@@ -188,6 +201,125 @@ export default {
           that.loadedTifList[index].loaded = true;
         });
     },
+    updateJsonListShow(list) {
+      if (list.length == 0) {
+        this.viewer.entities.removeAll();
+        this.stopJsonShow = false;
+      } else {
+        this.getJsonList(list[0]);
+        this.stopJsonShow = true;
+      }
+    },
+    getJsonList(item) {
+      let fileNameList = ["speed_start.json", "speed_end.json"];
+      let tempDataList = [];
+      for (let i = 0; i < fileNameList.length; i++) {
+        let path = item.path.replace("color.json", fileNameList[i]);
+        axios.get("http://172.21.212.63:8999/store" + path).then((res) => {
+          tempDataList[i] = res.data;
+        });
+        if (i == 1) {
+          let that = this;
+          setTimeout(function () {
+            that.addJsonList(tempDataList);
+          }, 1000);
+        }
+      }
+    },
+    addJsonList(tempDataList) {
+      // console.log(tempDataList);
+      let starts = tempDataList[0];
+      let ends = tempDataList[1];
+      let all_time_positions = [];
+      for (let j = 0; j < ends.length; j++) {
+        //72个时刻
+        var one_time_positions = new Array();
+        for (let i = 0; i < starts.length; i++) {
+          let one_time_end = ends[j];
+
+          // 投影坐标
+          // debugger;
+          var p1 = proj4(this.projection, this.newProjection, [
+            starts[i][0],
+            starts[i][1] + 3432500,
+          ]);
+          var p2 = proj4(this.projection, this.newProjection, [
+            one_time_end[i][0],
+            one_time_end[i][1] + 3432500,
+          ]);
+          // var p1 = proj4(this.projection).inverse([starts[i][0], starts[i][1]]);
+          // var p2 = proj4(this.projection).inverse([one_time_end[i][0], one_time_end[i][1]]);
+          // one_time_positions.push([p1[0]+7.4, p1[1]+30.92, p2[0]+7.4, p2[1]+30.92]);
+          one_time_positions.push([p1[0] + 8.15, p1[1], p2[0] + 8.15, p2[1]]);
+
+          // 经纬度
+          // let ps = [
+          //   starts[i][0],
+          //   starts[i][1],
+          //   one_time_end[i][0],
+          //   one_time_end[i][1],
+          // ];
+          // one_time_positions.push(ps);
+        }
+        all_time_positions.push(one_time_positions);
+      }
+
+      // 显示第一帧
+      for (let k = 0; k < starts.length; k++) {
+        let ps = all_time_positions[0][k];
+        this.viewer.entities.add({
+          name: "speed",
+          polyline: {
+            positions: Cesium.Cartesian3.fromDegreesArray(ps),
+            width: 5,
+            followSurface: true,
+            material: new Cesium.PolylineArrowMaterialProperty(
+              Cesium.Color.BLUE
+            ),
+          },
+        });
+      }
+      // 移动相机位置-太湖
+      this.viewer.camera.setView({
+        destination: {
+          x: -2843768.98286548,
+          y: 4884734.956298597,
+          z: 3401327.578186401,
+        },
+        orientation: {
+          heading: 6.283185307179581,
+          pitch: -1.5706820857483068,
+          roll: 0,
+        },
+      });
+
+      // this.viewer.zoomTo(this.viewer.entities);
+
+      let loop_flag = 0;
+      let times = all_time_positions.length; // 总的时刻数
+      // 定时改变箭头的数据
+      let entities = this.viewer.entities.values;
+
+      // 切换不同帧
+      let that = this;
+      setInterval(function () {
+        for (let i = 0; i < entities.length; i++) {
+          var ps = all_time_positions[loop_flag][i];
+          if (that.stopJsonShow) {
+            entities[i].polyline.positions =
+              Cesium.Cartesian3.fromDegreesArray(ps);
+            //entities[i].polyline.material = m;
+          } else {
+            break;
+          }
+        }
+
+        loop_flag++;
+        if (loop_flag >= times && that.stopJsonShow) {
+          loop_flag = 0;
+        }
+      }, 3000);
+    },
     startCesium() {
       this.startButton = false;
       this.viewer.camera.flyHome(4);
@@ -202,282 +334,318 @@ export default {
         "cesium-viewer-timelineContainer"
       )[0].style.display = "";
     },
-    firstPerspective() {
-      if (!this.firstPerspectiveButton) {
-        //第一视角
-        this.viewer.trackedEntity = this.airplane;
-        this.viewer.scene.preUpdate.addEventListener(this.setRoamView);
-        this.firstPerspectiveButton = true;
-      } else {
-        //退出第一视角
-        this.viewer.trackedEntity = null;
-        this.viewer.scene.preUpdate.removeEventListener(this.setRoamView);
-        this.firstPerspectiveButton = false;
-      }
-    },
-    setRoamView() {
-      if (this.airplane) {
-        let center = this.airplane.position.getValue(
-          this.viewer.clock.currentTime
-        );
-        if (center) {
-          // this.viewer.camera.setView({
-          //   // Cesium的坐标是以地心为原点，一向指向南美洲，一向指向亚洲，一向指向北极州
-          //   // fromDegrees()方法，将经纬度和高程转换为世界坐标
-          //   destination: center,
-          //   orientation: {
-          //     // 指向
-          //     heading: Cesium.Math.toRadians(90, 0),
-          //     // 视角
-          //     pitch: Cesium.Math.toRadians(-90),
-          //     roll: 0.0,
-          //   },
-          // });
-          let target = new Cesium.Cartesian3.fromDegrees(
-            119.78432,
-            31.91299,
-            0
-          );
-          //   let vector = new Cesium.Cartesian3(
-          //     0.5,
-          //     -0.22,
-          //     -0.01
-          //   );
-          // let nextPos = this.airplane.position.getValue(
-          //   this.viewer.clock.currentTime + 1
-          // );
+    // firstPerspective() {
+    //   if (!this.firstPerspectiveButton) {
+    //     //第一视角
+    //     this.viewer.trackedEntity = this.airplane;
+    //     this.viewer.scene.preUpdate.addEventListener(this.setRoamView);
+    //     this.firstPerspectiveButton = true;
+    //   } else {
+    //     //退出第一视角
+    //     this.viewer.trackedEntity = null;
+    //     this.viewer.scene.preUpdate.removeEventListener(this.setRoamView);
+    //     this.firstPerspectiveButton = false;
+    //   }
+    // },
+    // setRoamView() {
+    //   if (this.airplane) {
+    //     let center = this.airplane.position.getValue(
+    //       this.viewer.clock.currentTime
+    //     );
+    //     if (center) {
+    //       // this.viewer.camera.setView({
+    //       //   // Cesium的坐标是以地心为原点，一向指向南美洲，一向指向亚洲，一向指向北极州
+    //       //   // fromDegrees()方法，将经纬度和高程转换为世界坐标
+    //       //   destination: center,
+    //       //   orientation: {
+    //       //     // 指向
+    //       //     heading: Cesium.Math.toRadians(90, 0),
+    //       //     // 视角
+    //       //     pitch: Cesium.Math.toRadians(-90),
+    //       //     roll: 0.0,
+    //       //   },
+    //       // });
+    //       let target = new Cesium.Cartesian3.fromDegrees(
+    //         119.78432,
+    //         31.91299,
+    //         0
+    //       );
+    //       //   let vector = new Cesium.Cartesian3(
+    //       //     0.5,
+    //       //     -0.22,
+    //       //     -0.01
+    //       //   );
+    //       // let nextPos = this.airplane.position.getValue(
+    //       //   this.viewer.clock.currentTime + 1
+    //       // );
 
-          // let front = new Cesium.Cartesian3(
-          //   nextPos.x - center.x,
-          //   nextPos.y - center.y,
-          //   nextPos.z - center.z,
-          // );
+    //       // let front = new Cesium.Cartesian3(
+    //       //   nextPos.x - center.x,
+    //       //   nextPos.y - center.y,
+    //       //   nextPos.z - center.z,
+    //       // );
 
-          // front = Cesium.Cartesian3.normalize(front, new Cesium.Cartesian3());
+    //       // front = Cesium.Cartesian3.normalize(front, new Cesium.Cartesian3());
 
-          let pos = new Cesium.Cartesian3(
-            target.x - center.x,
-            target.y - center.y,
-            target.z - center.z
-          );
-          let front = Cesium.Cartesian3.normalize(pos, new Cesium.Cartesian3());
-          // let hpr = new Cesium.HeadingPitchRange(
-          //   Cesium.Math.toRadians(150, 0),
-          //   Cesium.Math.toRadians(0),
-          //   100
-          // );
-          this.viewer.camera.lookAt(center, front);
-        }
-      }
-    },
-    addPlane() {
-      Cesium.Math.setRandomNumberSeed(3);
-      var start = Cesium.JulianDate.fromDate(new Date(2022, 3, 13, 16));
-      var stop = Cesium.JulianDate.addSeconds(
-        start,
-        180,
-        new Cesium.JulianDate()
-      );
-      this.viewer.clock.startTime = start.clone();
-      this.viewer.clock.stopTime = stop.clone();
-      this.viewer.clock.currentTime = start.clone();
-      this.viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP;
-      this.viewer.clock.multiplier = 10;
-      this.viewer.timeline.zoomTo(start, stop);
-      let flightPosition = this.computeCirclularFlight(start);
-      // 机场信息
-      let promise = Cesium.GeoJsonDataSource.load("data/ariPort.json", {
-        stroke: Cesium.Color.HOTPINK,
-        fill: Cesium.Color.PINK.withAlpha(0.5),
-        // strokeWidth: 3,
-        markerSymbol: "airport",
-      });
-      let that = this;
-      promise.then(function (dataSource) {
-        that.viewer.dataSources.add(dataSource);
-        that.airPort = dataSource;
-        // // that.level1.show = false;
-        that.airPort.show = true;
-        that.showPlaneButton = true;
-      });
-      // 航线轨迹
-      this.addAirline();
-
-      // 航线信息
-      this.airplane = this.viewer.entities.add({
-        name: "上海浦东——常州奔牛",
-        availability: new Cesium.TimeIntervalCollection([
-          new Cesium.TimeInterval({
-            start: start,
-            stop: stop,
-          }),
-        ]),
-        position: flightPosition,
-        orientation: new Cesium.VelocityOrientationProperty(flightPosition),
+    //       let pos = new Cesium.Cartesian3(
+    //         target.x - center.x,
+    //         target.y - center.y,
+    //         target.z - center.z
+    //       );
+    //       let front = Cesium.Cartesian3.normalize(pos, new Cesium.Cartesian3());
+    //       // let hpr = new Cesium.HeadingPitchRange(
+    //       //   Cesium.Math.toRadians(150, 0),
+    //       //   Cesium.Math.toRadians(0),
+    //       //   100
+    //       // );
+    //       this.viewer.camera.lookAt(center, front);
+    //     }
+    //   }
+    // },
+    addGltf() {
+      let box = this.viewer.entities.add({
+        name: "gltf",
+        position: Cesium.Cartesian3.fromDegrees(121.79, 31.15046, 0),
         model: {
-          uri: "data/model/airPlane/fbx.gltf",
+          uri: "data/model/gltf/box.gltf",
           minimumPixelSize: 128,
           maximumScale: 9000,
         },
       });
-      this.airplane.position.setInterpolationOptions({
-        interpolationDegree: 5,
-        interpolationAlgorithm: Cesium.LinearApproximation, //采用线性插值方法生成整体航线
+      // this.viewer.camera.lookAt(box.position);
+      console.log(box.position._value);
+      this.viewer.camera.setView({
+        // Cesium的坐标是以地心为原点，一向指向南美洲，一向指向亚洲，一向指向北极州
+        // fromDegrees()方法，将经纬度和高程转换为世界坐标
+        destination: Cesium.Cartesian3.fromDegrees(121.79, 31.15046, 1000),
+        orientation: {
+          // 指向
+          heading: Cesium.Math.toRadians(90, 0),
+          // 视角
+          pitch: Cesium.Math.toRadians(-90),
+          roll: 0.0,
+        },
       });
-      // this.viewer.trackedEntity = airplane;
     },
-    computeCirclularFlight(start) {
-      var property = new Cesium.SampledPositionProperty();
-      var time = Cesium.JulianDate.addSeconds(
-        start,
-        0,
-        new Cesium.JulianDate()
-      );
-      var time2 = Cesium.JulianDate.addSeconds(
-        start,
-        60,
-        new Cesium.JulianDate()
-      );
-      var time3 = Cesium.JulianDate.addSeconds(
-        start,
-        120,
-        new Cesium.JulianDate()
-      );
-      var time4 = Cesium.JulianDate.addSeconds(
-        start,
-        180,
-        new Cesium.JulianDate()
-      );
-      var position = Cesium.Cartesian3.fromDegrees(121.79, 31.15046, 0);
-      var position2 = Cesium.Cartesian3.fromDegrees(121.12144, 31.40477, 8500);
-      var position3 = Cesium.Cartesian3.fromDegrees(120.45288, 31.6599, 8500);
-      var position4 = Cesium.Cartesian3.fromDegrees(119.78432, 31.91299, 0);
-      property.addSample(time, position);
-      property.addSample(time2, position2);
-      property.addSample(time3, position3);
-      property.addSample(time4, position4);
-      return property;
-    },
-    addAirline() {
-      var origin = [121.79, 31.15046]; //起始机场坐标
-      var destination = [119.78432, 31.91299]; //目的机场坐标
-      var dis = this.getGreatCircleDistance(
-        origin[1],
-        origin[0],
-        destination[1],
-        destination[0]
-      ); //得到圆弧对应高度
-      var pntArray = this.addBezier(origin, destination, 8500, 30); //生成贝塞尔曲线路线
-      var color = new Cesium.Color(0.2, 0.9, 0.8, 0.8);
-      var entity = new Cesium.Entity();
-      entity.dep = "PVG";
-      entity.arr = "CZX";
-      entity.bezier = new Cesium.ConstantProperty(true);
-      entity.bezier = true;
-      entity.polyline = {
-        name: "航线",
-        positions: pntArray,
-        width: 0.1,
-        material: color,
-      };
-      entity.name = "航线信息";
-      entity.description =
-        "上海浦东-常州奔牛" + "<br/>" + "距离:   " + dis / 1000 + " KM";
-      this.viewer.entities.add(entity);
-      this.airLine = entity;
-    },
-    getGreatCircleDistance(lat1, lng1, lat2, lng2) {
-      var EARTH_RADIUS = 6378137.0;
-      var radLat1 = this.getRad(lat1);
-      var radLat2 = this.getRad(lat2);
-      var a = radLat1 - radLat2; //纬度差
-      var b = this.getRad(lng1) - this.getRad(lng2); //经度差
-      var s =
-        2 *
-        Math.asin(
-          Math.sqrt(
-            Math.pow(Math.sin(a / 2), 2) +
-              Math.cos(radLat1) *
-                Math.cos(radLat2) *
-                Math.pow(Math.sin(b / 2), 2)
-          )
-        ); //asin()相当于arcsin()
-      s = s * EARTH_RADIUS;
-      s = Math.round(s * 10000) / 10000.0; //按千分位精确
-      return s;
-    },
-    getRad(d) {
-      let PI = Math.PI;
-      return (d * PI) / 180.0;
-    },
-    addBezier(pointA, pointB, height, num) {
-      var earth = Cesium.Ellipsoid.WGS84;
-      var startPoint = earth.cartographicToCartesian(
-        Cesium.Cartographic.fromDegrees(
-          parseFloat(pointA[0]),
-          parseFloat(pointA[1]),
-          0.0
-        )
-      );
-      var endPoint = earth.cartographicToCartesian(
-        Cesium.Cartographic.fromDegrees(
-          parseFloat(pointB[0]),
-          parseFloat(pointB[1]),
-          0.0
-        )
-      );
-      // determine the midpoint (point will be inside the earth)
-      var addCartesian = startPoint.clone();
-      Cesium.Cartesian3.add(startPoint, endPoint, addCartesian);
-      var midpointCartesian = addCartesian.clone();
-      Cesium.Cartesian3.divideByScalar(addCartesian, 2, midpointCartesian);
-      // move the midpoint to the surface of the earth
-      earth.scaleToGeodeticSurface(midpointCartesian);
-      // add some altitude if you want (1000 km in this case)
-      var midpointCartographic =
-        earth.cartesianToCartographic(midpointCartesian);
-      midpointCartographic.height = height;
-      midpointCartesian = earth.cartographicToCartesian(midpointCartographic);
-      var spline = new Cesium.CatmullRomSpline({
-        times: [0.0, 0.5, 1.0],
-        points: [startPoint, midpointCartesian, endPoint],
-      });
-      var polylinePoints = [];
-      for (var ii = 0; ii < num; ++ii) {
-        polylinePoints.push(spline.evaluate(ii / num));
-      }
-      return polylinePoints;
-    },
-    showPlane() {
-      if (this.airplane == null) {
-        this.addPlane();
-      } else if (!this.showPlaneButton) {
-        this.airplane.show = true;
-        this.airLine.show = true;
-        this.airPort.show = true;
-        this.showPlaneButton = true;
-      } else {
-        this.airplane.show = false;
-        this.airLine.show = false;
-        this.airPort.show = false;
-        this.showPlaneButton = false;
-        //退出第一视角
-        this.viewer.trackedEntity = null;
-        this.viewer.scene.preUpdate.removeEventListener(this.setRoamView);
-        this.firstPerspectiveButton = false;
-      }
-    },
+    // addPlane() {
+    //   Cesium.Math.setRandomNumberSeed(3);
+    //   var start = Cesium.JulianDate.fromDate(new Date(2022, 3, 13, 16));
+    //   var stop = Cesium.JulianDate.addSeconds(
+    //     start,
+    //     180,
+    //     new Cesium.JulianDate()
+    //   );
+    //   this.viewer.clock.startTime = start.clone();
+    //   this.viewer.clock.stopTime = stop.clone();
+    //   this.viewer.clock.currentTime = start.clone();
+    //   this.viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP;
+    //   this.viewer.clock.multiplier = 10;
+    //   this.viewer.timeline.zoomTo(start, stop);
+    //   let flightPosition = this.computeCirclularFlight(start);
+    //   // 机场信息
+    //   let promise = Cesium.GeoJsonDataSource.load("data/ariPort.json", {
+    //     stroke: Cesium.Color.HOTPINK,
+    //     fill: Cesium.Color.PINK.withAlpha(0.5),
+    //     // strokeWidth: 3,
+    //     markerSymbol: "airport",
+    //   });
+    //   let that = this;
+    //   promise.then(function (dataSource) {
+    //     that.viewer.dataSources.add(dataSource);
+    //     that.airPort = dataSource;
+    //     // // that.level1.show = false;
+    //     that.airPort.show = true;
+    //     that.showPlaneButton = true;
+    //   });
+    //   // 航线轨迹
+    //   this.addAirline();
+
+    //   // 航线信息
+    //   this.airplane = this.viewer.entities.add({
+    //     name: "上海浦东——常州奔牛",
+    //     availability: new Cesium.TimeIntervalCollection([
+    //       new Cesium.TimeInterval({
+    //         start: start,
+    //         stop: stop,
+    //       }),
+    //     ]),
+    //     position: flightPosition,
+    //     orientation: new Cesium.VelocityOrientationProperty(flightPosition),
+    //     model: {
+    //       uri: "data/model/airPlane/fbx.gltf",
+    //       minimumPixelSize: 128,
+    //       maximumScale: 9000,
+    //     },
+    //   });
+    //   this.airplane.position.setInterpolationOptions({
+    //     interpolationDegree: 5,
+    //     interpolationAlgorithm: Cesium.LinearApproximation, //采用线性插值方法生成整体航线
+    //   });
+    //   // this.viewer.trackedEntity = airplane;
+    // },
+    // computeCirclularFlight(start) {
+    //   var property = new Cesium.SampledPositionProperty();
+    //   var time = Cesium.JulianDate.addSeconds(
+    //     start,
+    //     0,
+    //     new Cesium.JulianDate()
+    //   );
+    //   var time2 = Cesium.JulianDate.addSeconds(
+    //     start,
+    //     60,
+    //     new Cesium.JulianDate()
+    //   );
+    //   var time3 = Cesium.JulianDate.addSeconds(
+    //     start,
+    //     120,
+    //     new Cesium.JulianDate()
+    //   );
+    //   var time4 = Cesium.JulianDate.addSeconds(
+    //     start,
+    //     180,
+    //     new Cesium.JulianDate()
+    //   );
+    //   var position = Cesium.Cartesian3.fromDegrees(121.79, 31.15046, 0);
+    //   var position2 = Cesium.Cartesian3.fromDegrees(121.12144, 31.40477, 8500);
+    //   var position3 = Cesium.Cartesian3.fromDegrees(120.45288, 31.6599, 8500);
+    //   var position4 = Cesium.Cartesian3.fromDegrees(119.78432, 31.91299, 0);
+    //   property.addSample(time, position);
+    //   property.addSample(time2, position2);
+    //   property.addSample(time3, position3);
+    //   property.addSample(time4, position4);
+    //   return property;
+    // },
+    // addAirline() {
+    //   var origin = [121.79, 31.15046]; //起始机场坐标
+    //   var destination = [119.78432, 31.91299]; //目的机场坐标
+    //   var dis = this.getGreatCircleDistance(
+    //     origin[1],
+    //     origin[0],
+    //     destination[1],
+    //     destination[0]
+    //   ); //得到圆弧对应高度
+    //   var pntArray = this.addBezier(origin, destination, 8500, 30); //生成贝塞尔曲线路线
+    //   var color = new Cesium.Color(0.2, 0.9, 0.8, 0.8);
+    //   var entity = new Cesium.Entity();
+    //   entity.dep = "PVG";
+    //   entity.arr = "CZX";
+    //   entity.bezier = new Cesium.ConstantProperty(true);
+    //   entity.bezier = true;
+    //   entity.polyline = {
+    //     name: "航线",
+    //     positions: pntArray,
+    //     width: 0.1,
+    //     material: color,
+    //   };
+    //   entity.name = "航线信息";
+    //   entity.description =
+    //     "上海浦东-常州奔牛" + "<br/>" + "距离:   " + dis / 1000 + " KM";
+    //   this.viewer.entities.add(entity);
+    //   this.airLine = entity;
+    // },
+    // getGreatCircleDistance(lat1, lng1, lat2, lng2) {
+    //   var EARTH_RADIUS = 6378137.0;
+    //   var radLat1 = this.getRad(lat1);
+    //   var radLat2 = this.getRad(lat2);
+    //   var a = radLat1 - radLat2; //纬度差
+    //   var b = this.getRad(lng1) - this.getRad(lng2); //经度差
+    //   var s =
+    //     2 *
+    //     Math.asin(
+    //       Math.sqrt(
+    //         Math.pow(Math.sin(a / 2), 2) +
+    //           Math.cos(radLat1) *
+    //             Math.cos(radLat2) *
+    //             Math.pow(Math.sin(b / 2), 2)
+    //       )
+    //     ); //asin()相当于arcsin()
+    //   s = s * EARTH_RADIUS;
+    //   s = Math.round(s * 10000) / 10000.0; //按千分位精确
+    //   return s;
+    // },
+    // getRad(d) {
+    //   let PI = Math.PI;
+    //   return (d * PI) / 180.0;
+    // },
+    // addBezier(pointA, pointB, height, num) {
+    //   var earth = Cesium.Ellipsoid.WGS84;
+    //   var startPoint = earth.cartographicToCartesian(
+    //     Cesium.Cartographic.fromDegrees(
+    //       parseFloat(pointA[0]),
+    //       parseFloat(pointA[1]),
+    //       0.0
+    //     )
+    //   );
+    //   var endPoint = earth.cartographicToCartesian(
+    //     Cesium.Cartographic.fromDegrees(
+    //       parseFloat(pointB[0]),
+    //       parseFloat(pointB[1]),
+    //       0.0
+    //     )
+    //   );
+    //   // determine the midpoint (point will be inside the earth)
+    //   var addCartesian = startPoint.clone();
+    //   Cesium.Cartesian3.add(startPoint, endPoint, addCartesian);
+    //   var midpointCartesian = addCartesian.clone();
+    //   Cesium.Cartesian3.divideByScalar(addCartesian, 2, midpointCartesian);
+    //   // move the midpoint to the surface of the earth
+    //   earth.scaleToGeodeticSurface(midpointCartesian);
+    //   // add some altitude if you want (1000 km in this case)
+    //   var midpointCartographic =
+    //     earth.cartesianToCartographic(midpointCartesian);
+    //   midpointCartographic.height = height;
+    //   midpointCartesian = earth.cartographicToCartesian(midpointCartographic);
+    //   var spline = new Cesium.CatmullRomSpline({
+    //     times: [0.0, 0.5, 1.0],
+    //     points: [startPoint, midpointCartesian, endPoint],
+    //   });
+    //   var polylinePoints = [];
+    //   for (var ii = 0; ii < num; ++ii) {
+    //     polylinePoints.push(spline.evaluate(ii / num));
+    //   }
+    //   return polylinePoints;
+    // },
+    // showPlane() {
+    //   if (this.airplane == null) {
+    //     this.addPlane();
+    //   } else if (!this.showPlaneButton) {
+    //     this.airplane.show = true;
+    //     this.airLine.show = true;
+    //     this.airPort.show = true;
+    //     this.showPlaneButton = true;
+    //   } else {
+    //     this.airplane.show = false;
+    //     this.airLine.show = false;
+    //     this.airPort.show = false;
+    //     this.showPlaneButton = false;
+    //     //退出第一视角
+    //     this.viewer.trackedEntity = null;
+    //     this.viewer.scene.preUpdate.removeEventListener(this.setRoamView);
+    //     this.firstPerspectiveButton = false;
+    //   }
+    // },
     add3DTiles() {
       // 加载3DTiles数据
-      this.viewer.scene.primitives.add(
+      let box = this.viewer.scene.primitives.add(
         new Cesium.Cesium3DTileset({
-          url: "data/tileset.json",
+          url: "data/model/3dtilesFromGltf/tileset.json",
           // url: "data/level_3dtiles_clt/tileset.json",
-          maximumScreenSpaceError: 2, //最大的屏幕空间误差
-          maximumNumberOfLoadedTiles: 1000, //最大加载瓦片个数
-          material: Cesium.Color.PINK.withAlpha(0.5),
+          // maximumScreenSpaceError: 2, //最大的屏幕空间误差
+          // maximumNumberOfLoadedTiles: 1000, //最大加载瓦片个数
+          // material: Cesium.Color.RED.withAlpha(0.5),
         })
       );
+      // this.viewer.zoomTo(box);
+      let m = Cesium.Matrix4.fromArray([
+        100000000.0, 0.0, 0.0, 0.0, 0.0, 100000000.0, 0.0, 0.0, 0.0, 0.0,
+        100000000.0, 0.0, 0.0, 0.0, 0.0, 100000000.0,
+      ]);
+      box._modelMatrix = m;
+      let defaultStyle = new Cesium.Cesium3DTileStyle({
+        color: "color('red', 0.7)", // 让建筑变透明
+        show: true,
+      });
+      box.style = defaultStyle;
     },
 
     addGeoJSON_level1() {
@@ -748,13 +916,14 @@ export default {
 }
 ::v-deep .cesium-performanceDisplay-defaultContainer {
   position: absolute;
-  top: 102px !important;
+  top: 142px !important;
+  right: 30px;
 }
 ::v-deep .cesium-viewer .cesium-viewer-toolbar {
   /*镶嵌带空格*/
   display: block;
   position: absolute;
-  top: 62px !important;
-  right: 5px;
+  top: 102px !important;
+  right: 25px;
 }
 </style>

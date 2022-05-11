@@ -85,17 +85,21 @@ export default {
 .window {
   width: 600px;
   height: 400px;
-  border: 1px solid #cccccc;
+  border: 1px solid #747474;
+  border-radius: 1%;
   position: absolute;
-  background: #e8eef9;
-  opacity: 0.9;
+  background: white;
+  z-index: 1002;
+  /* opacity: 0.9; */
 }
 .window-header {
   height: 30px;
   line-height: 30px;
   padding-left: 10px;
+  border-bottom: 1px solid black;
+  border-radius: 1%;
   text-align: left;
-  background: #beceeb;
+  /* background: white; */
   user-select: none;
 }
 .window-header-close {

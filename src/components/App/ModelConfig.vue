@@ -24,7 +24,7 @@ import DataState from "components/App/dataState"
 const router=useRouter()//路由直接用router.push(...)
 const store=useStore()//vuex直接用store.commit
 
-const loading  = ref(true)
+const loading  = ref(false)
 
 const MDLStatesInfo = ref([])
 

@@ -137,8 +137,8 @@ const store = useStore(); //vuex直接用store.commit
 }
 .mapSwitchButton {
   position: absolute;
-  bottom: 250px;
-  right: 10px;
+  top: 75px;
+  right: 60px;
   z-index: 1000;
 }
 </style>

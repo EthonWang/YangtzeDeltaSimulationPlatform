@@ -735,7 +735,12 @@ const readlayer = () => {
     type: "line",
     source: `source-id${layerNumber.value}`,
     paint: {
-      "line-width": 3,
+      "line-width": [
+          "interpolate",
+          ['linear'], ['get', 'value'],
+          nodeLinkInit.linkmin, 1.5,
+          nodeLinkInit.linkmax, 6
+        ],
       "line-color": [
         "case",
         ["<", ["get", "value"], nodeLinkInit.linkmin],
@@ -781,6 +786,15 @@ const readlayer = () => {
     type: "circle",
     source: `source-id${layerNumber.value}`,
     paint: {
+      "circle-radius": [
+        "interpolate",
+        ["linear"],
+        ["get", "value"],
+        nodeLinkInit.nodemin,
+        2.5,
+        nodeLinkInit.nodemax,
+        10,
+      ],
       "circle-color": [
         "case",
         ["<", ["get", "value"], nodeLinkInit.nodemin],
@@ -976,6 +990,7 @@ const updateData = () => {
     // link
     nodeLinkInit.linkmin = rptResult.value.MaxMin.link.minFlow;
     nodeLinkInit.linkmax = rptResult.value.MaxMin.link.maxFlow;
+    console.log(nodeLinkInit.linkmin+','+nodeLinkInit.linkmax)
     nodeLinkInit.linkstep = (nodeLinkInit.linkmax - nodeLinkInit.linkmin) / 5;
   } else if (showInPop.LT_showInPop == "Velocity") {
     nodeLinkInit.linkmin = rptResult.value.MaxMin.link.minVelocity;
@@ -1086,7 +1101,7 @@ const startAnimation = () => {
     refreshOpenlayer();
     numberAnima.value++;
     timeSlider.value++;
-  }, 1000);
+  }, 500);
 };
 const pauseAnimation = () => {
   btn.startBtn = false;

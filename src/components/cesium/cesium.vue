@@ -87,15 +87,15 @@ export default {
       Cesium.Ion.defaultAccessToken =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI5N2RjODQxYy0xNDI0LTRmNmYtOTJjNy02Njk3NGFmNGZlMzMiLCJpZCI6ODg1MTgsImlhdCI6MTY0OTI1MzIzNn0._0nz9pC6RF2dXjkzTilweCdZOP6jE-9Efc1QqjMOR_Q";
       this.viewer = new Cesium.Viewer("cesiumContainer", {
-        // terrainProvider: Cesium.createWorldTerrain(),
+        terrainProvider: Cesium.createWorldTerrain(),
         //   geocoder: false,
         //   homeButton: false,
         // sceneModePicker: false,
         // infobox: false,
         baseLayerPicker: false,
         navigationHelpButton: false,
-        // animation: false,
-        // timeline: false,
+        animation: false,
+        timeline: false,
         fullscreenButton: false,
         vrButton: false,
         // globe: false,
@@ -274,7 +274,7 @@ export default {
             width: 5,
             followSurface: true,
             material: new Cesium.PolylineArrowMaterialProperty(
-              Cesium.Color.RED
+              Cesium.Color.BLUE
             ),
           },
         });
@@ -916,13 +916,14 @@ export default {
 }
 ::v-deep .cesium-performanceDisplay-defaultContainer {
   position: absolute;
-  top: 102px !important;
+  top: 142px !important;
+  right: 30px;
 }
 ::v-deep .cesium-viewer .cesium-viewer-toolbar {
   /*镶嵌带空格*/
   display: block;
   position: absolute;
-  top: 62px !important;
-  right: 5px;
+  top: 102px !important;
+  right: 25px;
 }
 </style>

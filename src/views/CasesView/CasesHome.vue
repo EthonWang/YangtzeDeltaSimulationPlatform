@@ -1,21 +1,18 @@
 <template>
   <div>
     <div class="case-contain">
-      <h1>案例中心</h1>
-      <el-divider style="width: 100%"></el-divider>
-      <el-scrollbar class="scrollbar">
-        <OneCase
-          v-for="case_config in cases"
-          :key="case_config"
-          :img_url=case_config.img_path
-          :tittle=case_config.name
-          @click="toCase(case_config.path)"
-          class="onecase"
-        ></OneCase>
-        <div
-          style="float: left; position: relative; height: 20px; width: 100%"
-        ></div>
-      </el-scrollbar>
+      <OneCase
+        v-for="case_config in cases"
+        :key="case_config"
+        :img_url="case_config.img_path"
+        :tittle="case_config.name"
+        :description="case_config.description"
+        @click="toCase(case_config.path)"
+        class="onecase"
+      ></OneCase>
+      <div
+        style="float: left; position: relative; height: 20px; width: 100%"
+      ></div>
     </div>
   </div>
 </template>
@@ -31,29 +28,38 @@ import { cases_config } from "assets/config/cases.config.js";
 const cases = reactive(cases_config);
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
-const toCase=(path)=>{
-    router.push('/case/'+path+'/')
-}
+const toCase = (path) => {
+  router.push("/case/" + path + "/");
+};
 </script>
 
 <style lang="less" scoped>
 .case-contain {
   position: relative;
-  left: 16.5%;
+  left: 5%;
   top: 4%;
   height: 85%;
-  width: 65%;
+  width: 100% - 2*$left;
   padding-bottom: 50px;
-  .scrollbar{
-      height: 86%;
+  display: flex;
+//   flex-direction: column;
+      flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  .scrollbar {
+    height: 86%;
   }
   .onecase {
-    height: 29.2vh;
-    margin: 20px;
-    margin-right: 0px;
-    float: left;
-    width: 30%;
-    position: relative;
+    height: 515px;
+    margin: 1%;
+    // margin-right: 0px;
+    // float: left;
+    // flex: 5;
+    width: 22.5%;
+    min-width: 350px;
+    display: flex;
+    flex-direction: column;
+    // position: relative;
   }
 }
 </style>

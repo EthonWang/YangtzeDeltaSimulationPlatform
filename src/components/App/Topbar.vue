@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <span
-      style="position: absolute;"
+      style="position: absolute;z-index:2;"
       :class="{
         background_show: background_show,
         background_hide: !background_show,
@@ -18,7 +18,7 @@
           v-for="(bar, index) in barList"
           :key="bar"
           @click="sendRouterToFather(bar.path, index)"
-          style="font-size: 0.83vw; cursor: pointer"
+          style="font-size: 1.2vw; cursor: pointer"
           class="set_7_btn-wrapper"
         >
           <svg height="54" width="120">
@@ -46,10 +46,13 @@ const barList = reactive(
   router.options.routes.filter((item) => item.isBar == true)
 );
 const notHome=ref(true)
+const getRootPath=(whole)=>{
+  return whole.split('/')[1]
+}
 const searchIndexInRoutes = () => {
   let i = 0;
   for (; i < barList.length; i++) {
-    if (barList[i].path == route.path) {
+    if (getRootPath(barList[i].path) == getRootPath(route.path)) {
       pick.value[i] = 1;
       return;
     }
@@ -125,6 +128,7 @@ setTimeout(searchIndexInRoutes,100);
   height: 100%;
   top: 0;
   left: 0;
+  z-index:2;
   // backdrop-filter: blur(10px);
   animation: background_show 0.8s linear forwards;
   @keyframes background_show {
@@ -133,8 +137,9 @@ setTimeout(searchIndexInRoutes,100);
       background-color: hsla(200, 100%, 100%, 1);
     }
     100% {
-      width: 100.1vw;
-      background-color: hsla(200, 100%, 52%, .9);
+      width: 100.4vw;
+      z-index:2;
+      background-color: hsla(200, 100%, 2%, .9);
     }
   }
 }
@@ -149,8 +154,8 @@ setTimeout(searchIndexInRoutes,100);
   animation: background_hide 0.8s linear forwards;
   @keyframes background_hide {
     0% {
-      width: 100.1vw;
-      background-color: hsla(200, 100%, 52%, .9);
+      width: 100.4vw;
+      background-color: hsla(200, 100%, 2%, .9);
       transform: translateX(0px);
       opacity: 1;
     }
@@ -172,6 +177,8 @@ setTimeout(searchIndexInRoutes,100);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+  z-index: 10;
   // transition: all 2s;
 }
 

@@ -75,7 +75,7 @@ const props = defineProps({
 const toModel = () => {
   router.push("/model");
 };
-console.log(props.show);
+
 const home1 = ref();
 
 // setTimeout(() => {
@@ -120,7 +120,7 @@ const home1 = ref();
     margin-top: -10px;
   }
   p {
-    margin-top:-10px ;
+    margin-top: -10px;
     font-size: 1.458vw;
     color: white;
     line-height: 170%;
@@ -143,7 +143,7 @@ const home1 = ref();
   //   transform:  translateX(50px) scale(1.05);
   // }
 }
-.container .merge-earth{
+.container .merge-earth {
   position: absolute;
   right: 12%;
   top: 8%;
@@ -152,17 +152,22 @@ const home1 = ref();
   height: $width;
   z-index: 1;
 }
+@value:100vw / 100px;
 .container .earth {
   position: absolute;
   right: 12%;
-  top: 8%;
+  top: 5%;
   // bottom: 50px;
-  width: 39.06vw;
+  // width: 39.06vw;
+  width: 800px;
   height: $width;
+  z-index: 0;
   // background-color: red;
   transition: all 1s;
+  transform-origin: 100% 0;
+  // transform: scale(e(replace("@{value}", vw, '')));
   // &:hover {
-  //   transform: translate(-50px,50px) scale(1.35);
+  // transform: translate(-50px,50px) scale(1.35);
   // }
 }
 // 兼容css

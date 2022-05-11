@@ -28,7 +28,7 @@
                       <el-input class="model-input" size="small"
                                 :value="modelInEvent.tag==undefined?'':(modelInEvent.tag+'.'+modelInEvent.suffix)"
                                 :disabled="true">
-                                <!-- :id="'datainput'+modelInEvent.eventId" -->
+                                 :id="'datainput'+modelInEvent.eventId"
                       </el-input>
                     </el-col>
                     <!-- 按钮 -->
@@ -98,14 +98,14 @@
                   </el-col>
 
                   <!-- 输入框 -->
-                  <el-col :span="8" :offset="1">
+                  <el-col :span="10" :offset="1">
                     <el-input v-if="!modelOutEvent.multiple" class="model-input" size="small"
                               :value="modelOutEvent.tag==undefined?'':(modelOutEvent.tag+'.'+modelOutEvent.suffix)"
                               :disabled="true">
                     </el-input>
                   </el-col>
                   <!-- 按钮 -->
-                  <el-col :span="4">
+                  <el-col :span="2">
                     <div class="_btn-group">
                       <el-button round type="warning" size="mini" :icon="Download"
                                 @click="download(modelOutEvent)">

@@ -262,7 +262,7 @@ const handleInvoke = () =>{
                 type: 'success',
                 duration: 10000,
               })
-              loading.value = false;
+
 
               let outputs = data.outputdata;
 
@@ -288,6 +288,7 @@ const handleInvoke = () =>{
           })
         },5000)
       }else {
+        loading.value = false
         ElNotification({
           title: 'Error',
           message: 'Inner error happened !',

@@ -260,6 +260,7 @@ const handleInvoke = () =>{
                 title: 'Success',
                 message: 'The model has run successfully!',
                 type: 'success',
+                duration: 10000,
               })
               loading.value = false;
 
@@ -314,8 +315,21 @@ defineExpose({ handleLoadTestData,handleInvoke});
   width: 100%;
 }
 /deep/.el-loading-spinner{
-  top:40vh;
+  position: fixed;
+  z-index: 1001;
+  top:48%;
+  left:35%;
+  //.circular{
+  //  top:45vh;
+  //  position: fixed;
+  //}
+  //.el-loading-text{
+  //  top:50vh;
+  //  position: fixed;
+  //  right: 12%;
+  //}
 }
+
 </style>
 
 

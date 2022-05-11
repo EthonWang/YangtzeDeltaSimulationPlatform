@@ -24,7 +24,7 @@ import DataState from "components/App/dataState"
 const router=useRouter()//路由直接用router.push(...)
 const store=useStore()//vuex直接用store.commit
 
-const loading  = ref(false)
+const loading  = ref(true)
 
 const MDLStatesInfo = ref([])
 
@@ -260,6 +260,7 @@ const handleInvoke = () =>{
                 title: 'Success',
                 message: 'The model has run successfully!',
                 type: 'success',
+                duration: 10000,
               })
               loading.value = false;
 
@@ -314,8 +315,21 @@ defineExpose({ handleLoadTestData,handleInvoke});
   width: 100%;
 }
 /deep/.el-loading-spinner{
-  top:40vh;
+  position: fixed;
+  z-index: 1001;
+  top:48%;
+  left:35%;
+  //.circular{
+  //  top:45vh;
+  //  position: fixed;
+  //}
+  //.el-loading-text{
+  //  top:50vh;
+  //  position: fixed;
+  //  right: 12%;
+  //}
 }
+
 </style>
 
 

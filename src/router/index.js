@@ -25,7 +25,7 @@ const routes = [
   },
   {
     isBar:true,
-    path: "/model",
+    path: "/resourse",
     name: "资源",
     component:() => import( "../views/Resourse.vue"),
     children:[]

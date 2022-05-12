@@ -1,8 +1,8 @@
 <template>
   <div class="about">
-          <span class="color-change"></span>
+    <!-- <span class="color-change"></span> -->
     <div class="cases-page">
-      <router-view style="width:100%;height:97.5%"></router-view>
+      <router-view style="width: 100%; height: 97.5%"></router-view>
     </div>
   </div>
 </template>
@@ -19,23 +19,23 @@ const store = useStore(); //vuex直接用store.commit
 </script>
 
 <style lang="less" scoped>
-.color-change{
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: calc(6.39vh + 10px);
-    background: black;
-    animation: hiding .5s linear forwards 0s;
-    z-index: 5;
-    @keyframes hiding {
-      0%{
-      }
-      100%{
-            height: 0;
-            background: rgb(126, 126, 126);
-      }
+.color-change {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6.5vh;
+  background: black;
+  animation: hiding 0.5s linear forwards 0s;
+  z-index: 15;
+  @keyframes hiding {
+    0% {
     }
+    100% {
+      height: 0;
+      background: rgb(0, 0, 0);
+    }
+  }
 }
 .cases-page {
   position: absolute;

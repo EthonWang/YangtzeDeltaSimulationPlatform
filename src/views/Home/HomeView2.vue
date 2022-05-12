@@ -72,7 +72,7 @@ const visibility = ref();
 .img-pro {
   position: absolute;
   right: calc(4vw - 1px);
-  top: 32px;
+  top:15%;
   width: 2.8vw;
   height: $width * 1.5;
   .randMove();

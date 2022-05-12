@@ -15,21 +15,27 @@ const data = echarts_data;
 onMounted(() => {
   init();
 });
-const city = [3291, 3307, 3289, 3292, 3263];
-const randNum = () => {
-  return Math.ceil(Math.random() * echarts_data.airports.length);
-};
-const new_data = [];
-const creatData = () => {
-  for (let i = 0; i < 4; i++) {
-    for (let j = 0; j < 20; j++) {
-      let rd = randNum();
-      let data_item = [Math.ceil(Math.random() * 5) - 1, city[i], rd];
-      new_data.push(data_item);
-    }
-  }
-};
+
 function init() {
+  const city = [3291, 3307, 3289, 3292, 3263];
+  const randNum = () => {
+    return Math.ceil(Math.random() * echarts_data.airports.length);
+  };
+  const new_data = [];
+  const creatData = () => {
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 1; j++) {
+        let rd = randNum();
+        let data_item = [Math.ceil(Math.random() * 5) - 1, city[i], rd];
+        new_data.push(data_item);
+      }
+      for (let j = 0; j < 2; j++) {
+        let rd = randNum();
+        let data_item = [Math.ceil(Math.random() * 5) - 1, rd, city[i]];
+        new_data.push(data_item);
+      }
+    }
+  };
   const myChart = echarts.init(earthchart.value);
   function getAirportCoord(idx) {
     // console.log(idx+':'+data.airports[idx][1])
@@ -55,9 +61,9 @@ function init() {
       displacementScale: 0.1,
       shading: "realistic",
       postEffect: {
-        enable: true,
+        enable: false,
         bloom: {
-          enable: true,
+          enable: false,
           bloomIntensity: 0.1,
           focalDistance: 50,
           focalRange: 20,
@@ -66,7 +72,7 @@ function init() {
         },
 
         SSAO: {
-          enable: true,
+          enable: false,
           quality: "medium",
           radius: 2,
           intensity: 1,
@@ -78,7 +84,7 @@ function init() {
         animation: true,
         animationDurationUpdate: 1000,
         // animationEasingUpdate: cubicInOut,
-        targetCoord: [134.46, 45.92],
+        targetCoord: [130.46, 42.92],
       },
       light: {
         ambient: {
@@ -108,15 +114,17 @@ function init() {
       blendMode: "lighter",
       effect: {
         show: true,
-        trailWidth: 6,
-        trailOpacity: 0.5,
-        trailLength: 0.3,
-        constantSpeed: 10,
+        trailWidth: 5,
+        trailOpacity: 1,
+        trailLength: 1,
+        period : 4,
+        // constantSpeed: 40,
       },
       lineStyle: {
-        width: 1,
-        color: "hsl(220,100%,50%)",
-        opacity: 0.1,
+        width: 2,
+        // color:"",
+        color: "#67c23a",
+        opacity: 0.2,
       },
       data: routes,
     },

@@ -1,0 +1,61 @@
+{
+	"Visualization":{
+		"TestData": [
+			{
+				"label":"DEM",
+				"type":"data",
+				"path":"./Data/Visualization/TestData/DEM/dem.tif",
+				"mapDataType":"tif",
+				"dataSourceId": "dem_cca26e9e_129e_40eb_a6bd_130feeb33dad"
+			},
+			{
+				"label":"Landuse",
+				"type":"data",
+				"path": "./Data/Visualization/TestData/Landuse/landuse.tif",
+				"mapDataType":"tif",
+				"dataSourceId": "landuse_904d12d0_944b_447f_bfe4_e885ff90728b"
+			},
+			{
+				"label":"Soil",
+				"type":"data",
+				"path": "./Data/Visualization/TestData/Soil/soil.tif",
+				"mapDataType":"tif",
+				"dataSourceId": "soil_37edeb19_26ea_4085_a7ac_1f6d32fef571"
+			},
+			{
+				"label":"Mask",
+				"type":"data",
+				"path": "./Data/Visualization/TestData/MaskShape/mask.shp",
+				"mapDataType":"shp",
+				"dataSourceId": "mask_e40dd61b_ed2e_4cb6_b9df_9d30eed9bcb7"
+			},
+			{
+				"label":"Outlet",
+				"type":"data",
+				"path": "./Data/Visualization/TestData/OriginalOutletShape/outlet.shp",
+				"mapDataType":"shp",
+				"dataSourceId": "outlet_955a104f_e489_4f38_a449_a750d8d052e3"
+			},
+			{
+				"label":"PCP",
+				"type":"data",
+				"path": "./Data/Visualization/TestData/Pcp/PCP.json",
+				"visualId":"",
+				"dataSourceId": "pcp_abf3b9a0_b0ac_4126_87f8_ce01051a72ff"
+			},
+			{
+				"label":"TMP",
+				"type":"data",
+				"path": "./Data/Visualization/TestData/Tmp/TMP.json",
+				"visualId":"",
+				"dataSourceId": "tmp_a14085d1_96d1_4d18_a8ed_b8b28848d968"
+			}
+		]
+	},
+	"Input":{
+		"TestData":{
+			
+		}
+	}
+  
+}

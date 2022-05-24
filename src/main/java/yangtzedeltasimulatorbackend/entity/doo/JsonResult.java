@@ -1,4 +1,4 @@
-package yangtzedeltasimulatorbackend.entity;
+package yangtzedeltasimulatorbackend.entity.doo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

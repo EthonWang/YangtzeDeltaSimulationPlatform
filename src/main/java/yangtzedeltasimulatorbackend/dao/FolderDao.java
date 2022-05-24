@@ -13,10 +13,10 @@ import java.util.List;
  * @Date 2022/4/6
  **/
 @Repository
-public interface DataItemDao extends MongoRepository<DataItem, String> {
-    List<DataItem> findAllByUserEmailAndParentId(String userEmail, String parentId);
+public interface FolderDao extends MongoRepository<Folder, String> {
 
-    void deleteAllByParentId(String folderId);
 
-    List<Folder> findAllByParentId(String parentId);
+    List<Folder> findAllByUserEmailAndParentId(String userEmail, String parentId);
+
+    List<Folder> findAllByParentId(String folderId);
 }

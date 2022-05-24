@@ -1,8 +1,11 @@
 package yangtzedeltasimulatorbackend.config;
 
 import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import yangtzedeltasimulatorbackend.component.CustomInterceptor;
 
 /**
  * @Description
@@ -29,4 +32,25 @@ public class WebConfig implements WebMvcConfigurer {
                 //暴露哪些原始请求头部信息
                 .exposedHeaders("*");
     }
+
+    @Bean
+    public CustomInterceptor customInterceptor() {
+        return new CustomInterceptor();
+    }
+
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        String[]  swaggerPatterns =  {
+                "/swagger-resources/**",
+                "/webjars/**",
+                "/v2/**",
+                "/swagger-ui.html/**",
+                "/doc.html/**" };
+        registry.addInterceptor(customInterceptor())
+                .excludePathPatterns(swaggerPatterns)
+                .addPathPatterns("/**");
+    }
+
+
 }

@@ -1,7 +1,7 @@
 package yangtzedeltasimulatorbackend.utils;
 
 
-import yangtzedeltasimulatorbackend.entity.JsonResult;
+import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
 import yangtzedeltasimulatorbackend.enums.ResultEnum;
 
 /**

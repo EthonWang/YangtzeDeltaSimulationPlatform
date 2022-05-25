@@ -7,6 +7,11 @@ import 'element-plus/dist/index.css'
 import { dragMove, dragResize } from "./components/directives";
 import '@/css/font/font.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import dataV from '@jiaminghi/data-view'
+
+
+
+
 
 const app=createApp(App);
 app.use(ElementPlus);
@@ -18,3 +23,5 @@ app.use(router);
 app.mount("#app");
 app.use(dragMove); // 窗口拖动
 // app.use(dragResize); // 窗口缩放
+
+app.use(dataV)

@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.log.Log;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +13,7 @@ import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description
@@ -36,4 +38,16 @@ public class MyFileUtils {
             log.error(e.getMessage());
         }
     }
+
+
+    public static Map readJson(File file) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(file, Map.class);
+        } catch (Exception e){
+            log.error("read json error.", e);
+            return null;
+        }
+    }
+
 }

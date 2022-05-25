@@ -9,13 +9,14 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import yangtzedeltasimulatorbackend.entity.doo.support.DistrictRainfall;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
-import java.util.UUID;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * @Description 通用工具类
@@ -371,6 +372,31 @@ public class Utils {
             return null;
         }
 
+    }
+
+    //对treeMap排序(1:升序; -1:降序)
+    public static List<Map.Entry<String, Double>> sortTreeMap(Map<String, Double> map, int sort){
+        Map<String, Double> sortedMap = new LinkedHashMap<>();
+        List<Map.Entry<String, Double>> entryList = new ArrayList<Map.Entry<String, Double>>(
+            map.entrySet());
+
+        Collections.sort(entryList, new Comparator<Map.Entry<String, Double>>() {
+            @Override
+            public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) {
+                if (sort == 1)
+                    return o1.getValue().compareTo(o2.getValue());
+                else
+                    return -o1.getValue().compareTo(o2.getValue());
+            }
+        });
+
+        return entryList;
+    }
+
+    //保留两位小数
+    public static double twoDecimalPlaces(double num){
+        DecimalFormat df = new DecimalFormat("#.00");
+        return Double.valueOf(df.format(num));
     }
 
 }

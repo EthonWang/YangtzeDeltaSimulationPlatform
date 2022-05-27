@@ -128,7 +128,7 @@ export default {
         32.389027
       );
       Cesium.Camera.DEFAULT_VIEW_RECTANGLE = ChinaRectangle;
-      // this.viewer.camera.flyHome(6);
+      this.viewer.camera.flyHome(4);
       // this.viewer.camera.setView({
       //   destination: {
       //     x: -3837625.3684990564,

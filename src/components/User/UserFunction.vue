@@ -100,10 +100,10 @@ const toRouter = (route) => {
 }
 .science {
   position: fixed;
-  top: 10%;
+  top: 14%;
   z-index: 500;
   // padding-top: 1vh;
-  left: 6vw;
+  left: 5vw;
   width: 290px;
   height: 80%;
   border: 0.5px solid rgba(197, 197, 197, 0.219);

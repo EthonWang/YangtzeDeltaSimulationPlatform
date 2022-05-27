@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@jiaminghi/data-view": "^2.10.0",
     "axios": "^0.26.1",
     "cesium": "^1.92.0",
     "copy-webpack-plugin": "^6.0.3",

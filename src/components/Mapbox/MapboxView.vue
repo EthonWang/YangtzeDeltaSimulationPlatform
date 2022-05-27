@@ -355,7 +355,6 @@ export default {
 
   methods: {
     //数据部分后台未完成，暂时删掉了部分代码，不然报错
-
     initMap() {
       mapboxgl.accessToken =
           "pk.eyJ1Ijoid3lqcSIsImEiOiJjbDBnZDdwajUxMXRzM2htdWxubDh1MzJrIn0.2e2_rdU2nOUvtwltBIZtZg";
@@ -363,8 +362,8 @@ export default {
       map = new mapboxgl.Map({
         container: "map",
         style: "mapbox://styles/mapbox/dark-v10",
-        center: [-90, 17],
-        zoom: 2,
+        center: [120, 32],
+        zoom: 7,
       });
 
       var scale = new mapboxgl.ScaleControl({

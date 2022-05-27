@@ -48,6 +48,7 @@
 </template>
 
 <script setup>
+import { userInfo } from "os";
 import { reactive, computed, ref, defineEmits, defineProps } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -88,16 +89,22 @@ const searchIndexInRoutes = () => {
 const emit = defineEmits(["RouterFromBar"]);
 const sendRouterToFather = (route, index) => {
   if (index == -1 || getRootPath(route) == "case") {
+    let user_info = localStorage.getItem("userInfo");
+    console.log(user_info);
+    if (user_info == null) {
+      router.push("/login");
+      return;
+    }
     router.push(route);
     setTimeout(() => {
       pick.value = new Array(barList.length).fill(0);
+      document.getElementsByClassName("user-topbar")[0].style.right = "1vw";
+      document.getElementById("logo").style.marginLeft = "2vw";
+      document.getElementsByClassName("topbar")[0].style.left = "5vw";
+      document.getElementsByClassName("user-info")[0].style.opacity = 1;
+      document.getElementsByClassName("science")[0].style.opacity = 0;
     }, 601);
 
-    document.getElementsByClassName("user-topbar")[0].style.right = "1vw";
-    document.getElementById("logo").style.marginLeft = "2vw";
-    document.getElementsByClassName("topbar")[0].style.left = "5vw";
-    document.getElementsByClassName("user-info")[0].style.opacity = 1;
-    document.getElementsByClassName("science")[0].style.opacity = 0;
     // document.getElementsByClassName('user')[0].style.color=""
     return;
   }

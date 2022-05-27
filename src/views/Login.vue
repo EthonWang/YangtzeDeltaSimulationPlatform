@@ -65,6 +65,13 @@ const login = () => {
     api.getUserInfo(formLabelAlign.email).then((res) => {
       localStorage.setItem("userInfo", JSON.stringify(res.data.data));
       router.push("/user");
+      setTimeout(() => {
+      document.getElementsByClassName("user-topbar")[0].style.right = "1vw";
+      document.getElementById("logo").style.marginLeft = "2vw";
+      document.getElementsByClassName("topbar")[0].style.left = "5vw";
+      document.getElementsByClassName("user-info")[0].style.opacity = 1;
+      document.getElementsByClassName("science")[0].style.opacity = 0;
+    }, 601);
     });
   });
 };

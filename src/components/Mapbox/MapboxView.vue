@@ -225,6 +225,8 @@
 
 <script>
 import mapboxgl from "mapbox-gl";
+// import MapboxLanguage  from '@mapbox/mapbox-gl-language'
+
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { toRaw } from '@vue/reactivity';
 var map = null
@@ -358,6 +360,12 @@ export default {
     initMap() {
       mapboxgl.accessToken =
           "pk.eyJ1Ijoid3lqcSIsImEiOiJjbDBnZDdwajUxMXRzM2htdWxubDh1MzJrIn0.2e2_rdU2nOUvtwltBIZtZg";
+      // //中文设置
+      // mapboxgl.setRTLTextPlugin(
+      //     "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.1.0/mapbox-gl-rtl-text.js"
+      // );
+      // map.addControl(new MapboxLanguage({ defaultLanguage: "zh-Hans" }));
+
 
       map = new mapboxgl.Map({
         container: "map",

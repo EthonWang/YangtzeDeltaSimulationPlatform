@@ -1,16 +1,35 @@
 <template>
   <div class="container">
-    <span style="position: absolute;z-index:2;" :class="{
-      background_show: background_show,
-      background_hide: !background_show,
-    }"></span>
+    <span
+      style="position: absolute; z-index: 2"
+      :class="{
+        background_show: background_show,
+        background_hide: !background_show,
+      }"
+    ></span>
     <div class="head">
       <!-- <span class="logo">长 三 角 模 拟 器</span> -->
-      <img src="../../assets/globle.svg"
-        style="height: 70%; margin-left: 17%; margin-top: 0px; color: white;position:relative;z-index:5" />
+      <img
+        src="../../assets/globle.svg"
+        id="logo"
+        style="
+          transition: all 1s;
+          height: 70%;
+          margin-left: 17%;
+          margin-top: 0px;
+          color: white;
+          position: relative;
+          z-index: 5;
+        "
+      />
       <div class="main-menucontainer topbar">
-        <div v-for="(bar, index) in barList" :key="bar" @click="sendRouterToFather(bar.path, index)"
-          style="font-size: 1.2vw; cursor: pointer" class="set_7_btn-wrapper">
+        <div
+          v-for="(bar, index) in barList"
+          :key="bar"
+          @click="sendRouterToFather(bar.path, index)"
+          style="font-size: 1.2vw; cursor: pointer"
+          class="set_7_btn-wrapper"
+        >
           <svg height="54" width="120">
             <rect id="set_7_button1" height="54" width="120"></rect>
           </svg>
@@ -19,7 +38,11 @@
           </div>
         </div>
       </div>
-        <avatar @click="sendRouterToFather('', -1)" class="user" ref="user"/>
+      <avatar
+        @click="sendRouterToFather('/user', -1)"
+        class="user-topbar"
+        ref="user"
+      />
     </div>
   </div>
 </template>
@@ -36,19 +59,24 @@ const route = useRoute();
 const barList = reactive(
   router.options.routes.filter((item) => item.isBar == true)
 );
-const user=ref()
-const notHome = ref(true)
+const user = ref();
+const notHome = ref(true);
 const getRootPath = (whole) => {
-  return whole.split('/')[1]
-}
+  return whole.split("/")[1];
+};
 const searchIndexInRoutes = () => {
   let i = 0;
-  if (route.path == "/user") {
-    document.getElementsByClassName('user')[0].style.right="13vw"
+  if (getRootPath(route.path) == "user" || getRootPath(route.path) == "case") {
+    setTimeout(() => {
+      document.getElementsByClassName("user-topbar")[0].style.right = "2vw";
+      document.getElementById("logo").style.marginLeft = "2vw";
+      document.getElementsByClassName("topbar")[0].style.left = "5vw";
+    }, 150);
+
     pick.value = new Array(barList.length).fill(0);
-    return
-  }else{
-    document.getElementsByClassName('user')[0].style.right="28vw"
+    return;
+  } else {
+    document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
   }
   for (; i < barList.length; i++) {
     if (getRootPath(barList[i].path) == getRootPath(route.path)) {
@@ -59,13 +87,27 @@ const searchIndexInRoutes = () => {
 };
 const emit = defineEmits(["RouterFromBar"]);
 const sendRouterToFather = (route, index) => {
-  if (index == -1) {
-    router.push('/user')
-    pick.value = new Array(barList.length).fill(0);
-    document.getElementsByClassName('user')[0].style.right="13vw"
+  if (index == -1 || getRootPath(route) == "case") {
+    router.push(route);
+    setTimeout(() => {
+      pick.value = new Array(barList.length).fill(0);
+    }, 601);
+
+    document.getElementsByClassName("user-topbar")[0].style.right = "1vw";
+    document.getElementById("logo").style.marginLeft = "2vw";
+    document.getElementsByClassName("topbar")[0].style.left = "5vw";
+    document.getElementsByClassName("user-info")[0].style.opacity = 1;
+    document.getElementsByClassName("science")[0].style.opacity = 0;
+    // document.getElementsByClassName('user')[0].style.color=""
     return;
   }
-  document.getElementsByClassName('user')[0].style.right="28vw"
+  setTimeout(() => {
+    document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
+    document.getElementById("logo").style.marginLeft = "17vw";
+    document.getElementsByClassName("topbar")[0].style.left =
+      "calc(17% + 50px)";
+  }, 1000);
+
   pickup(index);
   emit("RouterFromBar", route);
 };
@@ -76,21 +118,19 @@ const pickup = (row) => {
   pick.value[row] = 1;
 };
 setTimeout(searchIndexInRoutes, 100);
-
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
 @import "../../css/btn/btn7.css";
 
-.user {
+.user-topbar {
   position: relative;
   transition: all 1s;
   color: aliceblue;
   width: 5vw;
   height: 5vh;
-  right: 28vw;
+  right: 20vw;
   margin-top: 1vh;
   cursor: pointer;
 }
@@ -100,6 +140,7 @@ setTimeout(searchIndexInRoutes, 100);
   width: 100%;
   position: absolute;
   left: calc(17% + 50px);
+  transition: all 1s;
 }
 
 .pickup {
@@ -162,7 +203,7 @@ setTimeout(searchIndexInRoutes, 100);
     100% {
       width: 100.4vw;
       z-index: 2;
-      background-color: hsla(200, 100%, 2%, .9);
+      background-color: hsla(200, 100%, 2%, 0.9);
     }
   }
 }
@@ -179,7 +220,7 @@ setTimeout(searchIndexInRoutes, 100);
   @keyframes background_hide {
     0% {
       width: 100.4vw;
-      background-color: hsla(200, 100%, 2%, .9);
+      background-color: hsla(200, 100%, 2%, 0.9);
       transform: translateX(0px);
       opacity: 1;
     }
@@ -272,118 +313,5 @@ setTimeout(searchIndexInRoutes, 100);
   margin-left: 10px;
   font-size: 20px;
   color: white;
-}
-
-@keyframes glitched {
-  0% {
-    left: -4px;
-    transform: skew(-20deg) scale(1.1);
-  }
-
-  11% {
-    left: 2px;
-    transform: skew(0deg) scale(1.1);
-  }
-
-  50% {
-    transform: skew(0deg) scale(1.1);
-  }
-
-  51% {
-    transform: skew(10deg) scale(1.1);
-  }
-
-  60% {
-    transform: skew(0deg) scale(1.1);
-  }
-
-  100% {
-    transform: skew(0deg) scale(1.1);
-  }
-}
-
-@keyframes beforeglitched {
-  0% {
-    left: -4px;
-    transform: skew(-20deg);
-    clip-path: polygon(0px 0px,
-        85px 0px,
-        90px 5px,
-        100% 5px,
-        100% 6px,
-        85px 6px,
-        80px 10px,
-        0px 10px);
-  }
-
-  11% {
-    left: 2px;
-    transform: skew(0deg);
-    clip-path: polygon(0px 0px,
-        85px 0px,
-        90px 5px,
-        100% 5px,
-        100% 6px,
-        85px 6px,
-        80px 10px,
-        0px 10px);
-  }
-
-  50% {
-    transform: skew(0deg);
-    clip-path: polygon(0px 0px,
-        85px 0px,
-        90px 5px,
-        100% 5px,
-        100% 6px,
-        85px 6px,
-        80px 10px,
-        0px 10px);
-  }
-
-  51% {
-    transform: skew(0deg);
-    clip-path: polygon(0px 0px,
-        85px 0px,
-        90px 5px,
-        100% 5px,
-        40% 5px,
-        calc(40% - 30px) 0px,
-        calc(40% + 30px) 0px,
-        calc(45% - 15px) 5px,
-        100% 5px,
-        100% 6px,
-        calc(45% - 14px) 6px,
-        calc(40% + 29px) 1px,
-        calc(40% - 29px) 1px,
-        calc(40% + 1px) 6px,
-        85px 6px,
-        80px 10px,
-        0px 10px);
-  }
-
-  60% {
-    transform: skew(0deg);
-    clip-path: polygon(0px 0px,
-        85px 0px,
-        90px 5px,
-        100% 5px,
-        100% 6px,
-        85px 6px,
-        80px 10px,
-        0px 10px);
-  }
-
-  100% {
-    transform: skew(0deg);
-    clip-path: polygon(0px 0px,
-        85px 0px,
-        90px 5px,
-        100% 5px,
-        100% 6px,
-        85px 6px,
-        80px 10px,
-        0px 10px);
-  }
 }
 </style>

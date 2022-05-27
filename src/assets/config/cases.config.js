@@ -1,9 +1,9 @@
 export const cases_config = [    
     {
-        name:"SWMM",
+        name:"汾湖高新区城市雨洪管网模拟系统",
         img_path:require("../img/cases/swmm.png"),
         path:"swmm",
-        description:" SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。",
+        description:" 本案例基于SWMM模型实现，主要用于模拟汾湖高新区降水事件的模拟，分别依照当地官方量化的五年一遇、十年一遇、二十年一遇、三十年一遇、五十年一遇的五个降雨量级下，二十四小时内下的城市排水管网与管点的水流情况。",
         component:() => import( "views/CasesView/SWMM.vue")
     },
     {

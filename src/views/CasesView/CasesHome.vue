@@ -39,11 +39,11 @@ const toCase = (path) => {
   left: 5%;
   top: 4%;
   height: 85%;
-  width: 100% - 2*$left;
+  width: 100% - 2 * $left;
   padding-bottom: 50px;
   display: flex;
-//   flex-direction: column;
-      flex-wrap: wrap;
+  //   flex-direction: column;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   .scrollbar {

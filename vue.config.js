@@ -69,7 +69,7 @@ module.exports = {
         proxy: {
             // 配置跨域
             '/back': {
-                target: "http://172.21.213.183:8999",
+                target: "http://172.21.212.63:8999",
                 ws: true,
                 timeout: 3600000,
                 changOrigin: true,

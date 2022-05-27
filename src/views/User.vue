@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="user-space">
-            <el-divider style="top:3vw"></el-divider>
+            <el-divider style="top:4.6vh"></el-divider>
             <div class="user-info">
                 <UserInfo></UserInfo>
             </div>
@@ -24,27 +24,31 @@ import UserFunction from "@/components/User/UserFunction.vue";
 .user-space {
     position: absolute;
     width: 100%;
-    height: 92.5vh;
+    height: 93vh;
     top: 7.5vh;
     background-color: white;
+    overflow-y: hidden;
 }
 
 .user-info {
     position: absolute;
     // background: red;
-    width: 20vw;
-    height: 65vh;
+    width: 18vw;
+    height: 88vh;
     left: 16.5vw;
     top: 3vh;
+      transition: all 1s;
 }
 
 .function {
     position: absolute;
     // background: blue;
     // border-color: aqua;
-    width: 49.2vw;
+    width: 51.2vw;
+    max-width: calc(88vw - 290px);
     right: 15vw;
-    height: 88vh;
+    height: 95vh;
     top: 3vh;
+    transition: all 1s;
 }
 </style>

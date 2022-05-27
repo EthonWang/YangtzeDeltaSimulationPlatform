@@ -77,6 +77,8 @@ export default {
   mounted() {
     this.cesiumInit();
     // this.add3DTiles();
+    // this.add3DTiles1();
+    // this.add3DTiles2();
     // this.addPlane();
     // this.addKMZ();
     // this.addJsonList();
@@ -126,7 +128,7 @@ export default {
         32.389027
       );
       Cesium.Camera.DEFAULT_VIEW_RECTANGLE = ChinaRectangle;
-      // this.viewer.camera.flyHome(6);
+      this.viewer.camera.flyHome(4);
       // this.viewer.camera.setView({
       //   destination: {
       //     x: -3837625.3684990564,
@@ -190,8 +192,7 @@ export default {
       this.viewer.dataSources
         .add(
           Cesium.KmlDataSource.load(
-            "http://172.21.212.63:8999/store" +
-              this.loadedTifList[index].path,
+            "http://172.21.212.63:8999/store" + this.loadedTifList[index].path,
             options
           )
         )
@@ -247,9 +248,6 @@ export default {
             one_time_end[i][0],
             one_time_end[i][1] + 3432500,
           ]);
-          // var p1 = proj4(this.projection).inverse([starts[i][0], starts[i][1]]);
-          // var p2 = proj4(this.projection).inverse([one_time_end[i][0], one_time_end[i][1]]);
-          // one_time_positions.push([p1[0]+7.4, p1[1]+30.92, p2[0]+7.4, p2[1]+30.92]);
           one_time_positions.push([p1[0] + 8.15, p1[1], p2[0] + 8.15, p2[1]]);
 
           // 经纬度
@@ -405,27 +403,36 @@ export default {
     addGltf() {
       let box = this.viewer.entities.add({
         name: "gltf",
-        position: Cesium.Cartesian3.fromDegrees(121.79, 31.15046, 0),
+        // position: new Cesium.Cartesian3(
+        //   1327713.5649879673,
+        //   -4644925.129053015,
+        //   4153499.5031920094
+        // ),
+        position: new Cesium.Cartesian3(
+          1327881.91755585,
+          -4153731.06261319,
+          -4644670.03394715
+        ),
         model: {
           uri: "data/model/gltf/box.gltf",
-          minimumPixelSize: 128,
+          minimumPixelSize: 1280,
           maximumScale: 9000,
         },
       });
       // this.viewer.camera.lookAt(box.position);
       console.log(box.position._value);
-      this.viewer.camera.setView({
-        // Cesium的坐标是以地心为原点，一向指向南美洲，一向指向亚洲，一向指向北极州
-        // fromDegrees()方法，将经纬度和高程转换为世界坐标
-        destination: Cesium.Cartesian3.fromDegrees(121.79, 31.15046, 1000),
-        orientation: {
-          // 指向
-          heading: Cesium.Math.toRadians(90, 0),
-          // 视角
-          pitch: Cesium.Math.toRadians(-90),
-          roll: 0.0,
-        },
-      });
+      // this.viewer.camera.setView({
+      //   // Cesium的坐标是以地心为原点，一向指向南美洲，一向指向亚洲，一向指向北极州
+      //   // fromDegrees()方法，将经纬度和高程转换为世界坐标
+      //   destination: Cesium.Cartesian3.fromDegrees(121.79, 31.15046, 1000),
+      //   orientation: {
+      //     // 指向
+      //     heading: Cesium.Math.toRadians(90, 0),
+      //     // 视角
+      //     pitch: Cesium.Math.toRadians(-90),
+      //     roll: 0.0,
+      //   },
+      // });
     },
     // addPlane() {
     //   Cesium.Math.setRandomNumberSeed(3);
@@ -626,26 +633,64 @@ export default {
     // },
     add3DTiles() {
       // 加载3DTiles数据
-      let box = this.viewer.scene.primitives.add(
-        new Cesium.Cesium3DTileset({
-          url: "data/model/3dtilesFromGltf/tileset.json",
-          // url: "data/level_3dtiles_clt/tileset.json",
-          // maximumScreenSpaceError: 2, //最大的屏幕空间误差
-          // maximumNumberOfLoadedTiles: 1000, //最大加载瓦片个数
-          // material: Cesium.Color.RED.withAlpha(0.5),
-        })
-      );
-      // this.viewer.zoomTo(box);
-      let m = Cesium.Matrix4.fromArray([
-        100000000.0, 0.0, 0.0, 0.0, 0.0, 100000000.0, 0.0, 0.0, 0.0, 0.0,
-        100000000.0, 0.0, 0.0, 0.0, 0.0, 100000000.0,
-      ]);
-      box._modelMatrix = m;
-      let defaultStyle = new Cesium.Cesium3DTileStyle({
-        color: "color('red', 0.7)", // 让建筑变透明
-        show: true,
+      // debugger;
+      let tileset = new Cesium.Cesium3DTileset({
+        // url: "data/model/test22222/tileset.json",
+        url: "http://172.21.213.44:8087/static/resRepository/tileset/tileset.json",
+        // url: "data/model/3dtilesFromGltf/tileset.json",
+        // url: "data/level_3dtiles_clt/tileset.json",
+        maximumScreenSpaceError: 2, //最大的屏幕空间误差
+        maximumNumberOfLoadedTiles: 10000, //最大加载瓦片个数
+        // modelMatrix: myTransform,
       });
-      box.style = defaultStyle;
+      let that = this;
+      tileset.readyPromise.then(function (tilesetData) {
+        // debugger;
+        let center = tilesetData.boundingSphere.center; //正球投影中心
+        let lonlat = that.webMercator2lonLat(center); //经纬度
+        let ellipsoidCenter = Cesium.Cartesian3.fromDegrees(
+          lonlat.x,
+          lonlat.y,
+          lonlat.z
+        ); //椭球投影中心
+        let m = Cesium.Matrix4.fromArray([
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          ellipsoidCenter.x - center.x,
+          ellipsoidCenter.y - center.y,
+          ellipsoidCenter.z - center.z,
+          1.0,
+        ]); //偏差矩阵
+        tilesetData.modelMatrix = m;
+      });
+      this.viewer.scene.primitives.add(tileset);
+      // this.viewer.zoomTo(tileset);
+    },
+    webMercator2lonLat(mercator) {
+      let lonlat = { x: 0, y: 0, z: 0 };
+      let pi = Math.PI;
+      let R = Math.sqrt(
+        mercator.x * mercator.x +
+          mercator.y * mercator.y +
+          mercator.z * mercator.z
+      );
+      let Latitude = (180.0 / pi) * Math.atan2(mercator.y, mercator.x);
+      let Longitude = (180.0 / pi) * Math.asin(mercator.z / R);
+      let Height = R - 6371010;
+      lonlat.x = Latitude;
+      lonlat.y = Longitude;
+      lonlat.z = Height;
+      return lonlat;
     },
 
     addGeoJSON_level1() {

@@ -41,8 +41,6 @@
                   </div>
                 </el-card>
               </template>
-              <el-button :icon="Plus" size="large"  class="hvr-grow" plain></el-button>
-
 <!--              <el-tag-->
 <!--                  v-for="tag in dynamicTags"-->
 <!--                  :key="tag"-->
@@ -67,11 +65,24 @@
 <!--              </el-button>-->
 
             </div>
+            <div class="dataBlock">
+              请在此处创建与该专题相关的案例
+              <el-button :icon="Plus" size="large"  class="hvr-grow" plain></el-button>
+            </div>
           </div>
           <div>
             <h3 class="typeName">相关数据</h3>
             <el-divider ></el-divider>
-
+            <div style="display: flex;align-items: center;">
+              <template v-for="(item,key) in thematicItem.relatedData" :key="key">
+                <el-card :body-style="{ padding: '0px'}" class="caseCard hvr-grow">
+                  <el-image class="caseImage"  :src="item.thumbnail"></el-image>
+                  <div style="display: flex;justify-content: center;">
+                    <span>{{item.name}}</span>
+                  </div>
+                </el-card>
+              </template>
+            </div>
             <div class="dataBlock">
               请在此处上传与该专题相关的数据
               <el-button :icon="Plus" size="large"  class="hvr-grow" plain></el-button>
@@ -228,6 +239,24 @@ thematic.value = [
         description:"SAGA3"
       },
     ],
+    relatedData:[
+      {
+        name:"shanghai DEM",
+        thumbnail:"http://localhost:3030/img/map_1_3697_8171.ca8e9f30.jpg"
+      },{
+        name:"nanjing DEM",
+        thumbnail:"http://localhost:3030/img/land1_2855_3514.fadfdab8.jpg"
+      },{
+        name:"shanghai landuse",
+        thumbnail:"http://localhost:3030/img/v2-cd0df2d77622805c422b8c2fbdb02823_720w_7778.4a5e44c9.jpg"
+      },{
+        name:"shanghai Soil",
+        thumbnail:"http://localhost:3030/img/v2-d36ccca3213e09091d17ec71e902cecc_720w_654.acd158a0.jpg"
+      },{
+        name:"shanghai DEM",
+        thumbnail:"http://localhost:3030/img/map_1_3697_8171.ca8e9f30.jpg"
+      },
+    ],
     description: [
       {
         type: "text",
@@ -274,6 +303,8 @@ thematic.value = [
         thumbnail:"http://www.encyclopedie-environnement.org/app/uploads/2017/08/Phosphore-eutrophisation_fig1_cycle-phosphore.jpg",
         description:"SAGA3"
       },
+    ],relatedData:[
+      
     ],
     description: [
       {
@@ -353,6 +384,7 @@ const handleInputConfirm = () => {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 20px;
 }
 .descriptionBlock{
   display: flex;

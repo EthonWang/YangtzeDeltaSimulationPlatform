@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@jiaminghi/data-view": "^2.10.0",
+    "@mapbox/mapbox-gl-language": "^1.0.0",
     "axios": "^0.26.1",
     "cesium": "^1.92.0",
     "copy-webpack-plugin": "^6.0.3",
@@ -17,8 +18,7 @@
     "echarts-gl": "^2.0.9",
     "element-plus": "^2.1.9",
     "jquery": "^3.6.0",
-    "js-md5": "^0.7.3",
-    "mapbox-gl": "^2.8.0",
+    "mapbox-gl": "^2.8.2",
     "proj4": "^2.8.0",
     "style-resources-loader": "^1.5.0",
     "vue": "^3.0.0",

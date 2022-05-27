@@ -1,26 +1,16 @@
 <template>
   <div class="container">
-    <span
-      style="position: absolute;z-index:2;"
-      :class="{
-        background_show: background_show,
-        background_hide: !background_show,
-      }"
-    ></span>
+    <span style="position: absolute;z-index:2;" :class="{
+      background_show: background_show,
+      background_hide: !background_show,
+    }"></span>
     <div class="head">
       <!-- <span class="logo">长 三 角 模 拟 器</span> -->
-      <img
-        src="../../assets/globle.svg"
-        style="height: 70%; margin-left: 17%; margin-top: 0px; color: white;position:relative;z-index:5"
-      />
+      <img src="../../assets/globle.svg"
+        style="height: 70%; margin-left: 17%; margin-top: 0px; color: white;position:relative;z-index:5" />
       <div class="main-menucontainer topbar">
-        <div
-          v-for="(bar, index) in barList"
-          :key="bar"
-          @click="sendRouterToFather(bar.path, index)"
-          style="font-size: 1.2vw; cursor: pointer"
-          class="set_7_btn-wrapper"
-        >
+        <div v-for="(bar, index) in barList" :key="bar" @click="sendRouterToFather(bar.path, index)"
+          style="font-size: 1.2vw; cursor: pointer" class="set_7_btn-wrapper">
           <svg height="54" width="120">
             <rect id="set_7_button1" height="54" width="120"></rect>
           </svg>
@@ -29,6 +19,7 @@
           </div>
         </div>
       </div>
+        <avatar @click="sendRouterToFather('', -1)" class="user" ref="user"/>
     </div>
   </div>
 </template>
@@ -45,12 +36,20 @@ const route = useRoute();
 const barList = reactive(
   router.options.routes.filter((item) => item.isBar == true)
 );
-const notHome=ref(true)
-const getRootPath=(whole)=>{
+const user=ref()
+const notHome = ref(true)
+const getRootPath = (whole) => {
   return whole.split('/')[1]
 }
 const searchIndexInRoutes = () => {
   let i = 0;
+  if (route.path == "/user") {
+    document.getElementsByClassName('user')[0].style.right="13vw"
+    pick.value = new Array(barList.length).fill(0);
+    return
+  }else{
+    document.getElementsByClassName('user')[0].style.right="28vw"
+  }
   for (; i < barList.length; i++) {
     if (getRootPath(barList[i].path) == getRootPath(route.path)) {
       pick.value[i] = 1;
@@ -60,6 +59,13 @@ const searchIndexInRoutes = () => {
 };
 const emit = defineEmits(["RouterFromBar"]);
 const sendRouterToFather = (route, index) => {
+  if (index == -1) {
+    router.push('/user')
+    pick.value = new Array(barList.length).fill(0);
+    document.getElementsByClassName('user')[0].style.right="13vw"
+    return;
+  }
+  document.getElementsByClassName('user')[0].style.right="28vw"
   pickup(index);
   emit("RouterFromBar", route);
 };
@@ -69,7 +75,7 @@ const pickup = (row) => {
   pick.value = new Array(barList.length).fill(0);
   pick.value[row] = 1;
 };
-setTimeout(searchIndexInRoutes,100);
+setTimeout(searchIndexInRoutes, 100);
 
 
 </script>
@@ -78,12 +84,24 @@ setTimeout(searchIndexInRoutes,100);
 <style scoped lang="less">
 @import "../../css/btn/btn7.css";
 
+.user {
+  position: relative;
+  transition: all 1s;
+  color: aliceblue;
+  width: 5vw;
+  height: 5vh;
+  right: 28vw;
+  margin-top: 1vh;
+  cursor: pointer;
+}
+
 .topbar {
   // margin-left: 20px;
   width: 100%;
   position: absolute;
   left: calc(17% + 50px);
 }
+
 .pickup {
   border: hsl(54, 94%, 75%) 1px solid;
   border-top: 0;
@@ -107,6 +125,7 @@ setTimeout(searchIndexInRoutes,100);
   // }
   // box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
 }
+
 .logo {
   font-size: 35px;
   font-weight: 600;
@@ -114,6 +133,7 @@ setTimeout(searchIndexInRoutes,100);
   position: relative;
   z-index: 100;
 }
+
 .container {
   display: flex;
   flex-direction: column;
@@ -123,22 +143,25 @@ setTimeout(searchIndexInRoutes,100);
   background-color: hsla(200, 100%, 36%, 0);
   backdrop-filter: blur(10px);
 }
+
 .background_show {
   position: absolute;
   height: 100%;
   top: 0;
   left: 0;
-  z-index:2;
+  z-index: 2;
   // backdrop-filter: blur(10px);
   animation: background_show 0.8s linear forwards;
+
   @keyframes background_show {
     0% {
       width: 0vw;
       background-color: hsla(200, 100%, 100%, 1);
     }
+
     100% {
       width: 100.4vw;
-      z-index:2;
+      z-index: 2;
       background-color: hsla(200, 100%, 2%, .9);
     }
   }
@@ -152,6 +175,7 @@ setTimeout(searchIndexInRoutes,100);
   left: 0;
   // backdrop-filter: blur(10px);
   animation: background_hide 0.8s linear forwards;
+
   @keyframes background_hide {
     0% {
       width: 100.4vw;
@@ -159,17 +183,20 @@ setTimeout(searchIndexInRoutes,100);
       transform: translateX(0px);
       opacity: 1;
     }
+
     99% {
       width: 0vw;
       background-color: hsla(200, 0%, 52%, 0.7);
       transform: translateX(100vw);
       opacity: 1;
     }
+
     100% {
       opacity: 0;
     }
   }
 }
+
 .head {
   width: 100%;
   height: 100%;
@@ -191,6 +218,7 @@ setTimeout(searchIndexInRoutes,100);
   width: 100%;
   height: 100%;
 }
+
 .contact-info {
   width: fit-content;
   display: flex;
@@ -198,21 +226,25 @@ setTimeout(searchIndexInRoutes,100);
   align-items: center;
   margin-right: 0.625vw;
 }
+
 .head .main-iconbox {
   display: flex;
   align-items: center;
   margin-left: 40px;
   margin-right: 10px;
 }
+
 .head .main-iconbox .main-icon {
   width: 38px;
   height: 38px;
   margin-right: 5px;
 }
+
 .head .main-iconbox .main-iconname {
   width: 80px;
   height: 40px;
 }
+
 .head .main-menucontainer {
   display: flex;
   flex-direction: row;
@@ -220,6 +252,7 @@ setTimeout(searchIndexInRoutes,100);
   height: 100%;
   width: fit-content;
 }
+
 .head .main-user {
   display: flex;
   flex-direction: row;
@@ -228,127 +261,129 @@ setTimeout(searchIndexInRoutes,100);
 
   margin-right: 40px;
 }
+
 .head .main-user i {
   font-size: 30px;
   color: white;
   font-size: 28px;
 }
+
 .head .main-user p {
   margin-left: 10px;
   font-size: 20px;
   color: white;
 }
+
 @keyframes glitched {
   0% {
     left: -4px;
     transform: skew(-20deg) scale(1.1);
   }
+
   11% {
     left: 2px;
     transform: skew(0deg) scale(1.1);
   }
+
   50% {
     transform: skew(0deg) scale(1.1);
   }
+
   51% {
     transform: skew(10deg) scale(1.1);
   }
+
   60% {
     transform: skew(0deg) scale(1.1);
   }
+
   100% {
     transform: skew(0deg) scale(1.1);
   }
 }
+
 @keyframes beforeglitched {
   0% {
     left: -4px;
     transform: skew(-20deg);
-    clip-path: polygon(
-      0px 0px,
-      85px 0px,
-      90px 5px,
-      100% 5px,
-      100% 6px,
-      85px 6px,
-      80px 10px,
-      0px 10px
-    );
+    clip-path: polygon(0px 0px,
+        85px 0px,
+        90px 5px,
+        100% 5px,
+        100% 6px,
+        85px 6px,
+        80px 10px,
+        0px 10px);
   }
+
   11% {
     left: 2px;
     transform: skew(0deg);
-    clip-path: polygon(
-      0px 0px,
-      85px 0px,
-      90px 5px,
-      100% 5px,
-      100% 6px,
-      85px 6px,
-      80px 10px,
-      0px 10px
-    );
+    clip-path: polygon(0px 0px,
+        85px 0px,
+        90px 5px,
+        100% 5px,
+        100% 6px,
+        85px 6px,
+        80px 10px,
+        0px 10px);
   }
+
   50% {
     transform: skew(0deg);
-    clip-path: polygon(
-      0px 0px,
-      85px 0px,
-      90px 5px,
-      100% 5px,
-      100% 6px,
-      85px 6px,
-      80px 10px,
-      0px 10px
-    );
+    clip-path: polygon(0px 0px,
+        85px 0px,
+        90px 5px,
+        100% 5px,
+        100% 6px,
+        85px 6px,
+        80px 10px,
+        0px 10px);
   }
+
   51% {
     transform: skew(0deg);
-    clip-path: polygon(
-      0px 0px,
-      85px 0px,
-      90px 5px,
-      100% 5px,
-      40% 5px,
-      calc(40% - 30px) 0px,
-      calc(40% + 30px) 0px,
-      calc(45% - 15px) 5px,
-      100% 5px,
-      100% 6px,
-      calc(45% - 14px) 6px,
-      calc(40% + 29px) 1px,
-      calc(40% - 29px) 1px,
-      calc(40% + 1px) 6px,
-      85px 6px,
-      80px 10px,
-      0px 10px
-    );
+    clip-path: polygon(0px 0px,
+        85px 0px,
+        90px 5px,
+        100% 5px,
+        40% 5px,
+        calc(40% - 30px) 0px,
+        calc(40% + 30px) 0px,
+        calc(45% - 15px) 5px,
+        100% 5px,
+        100% 6px,
+        calc(45% - 14px) 6px,
+        calc(40% + 29px) 1px,
+        calc(40% - 29px) 1px,
+        calc(40% + 1px) 6px,
+        85px 6px,
+        80px 10px,
+        0px 10px);
   }
+
   60% {
     transform: skew(0deg);
-    clip-path: polygon(
-      0px 0px,
-      85px 0px,
-      90px 5px,
-      100% 5px,
-      100% 6px,
-      85px 6px,
-      80px 10px,
-      0px 10px
-    );
+    clip-path: polygon(0px 0px,
+        85px 0px,
+        90px 5px,
+        100% 5px,
+        100% 6px,
+        85px 6px,
+        80px 10px,
+        0px 10px);
   }
+
   100% {
     transform: skew(0deg);
-    clip-path: polygon(
-      0px 0px,
-      85px 0px,
-      90px 5px,
-      100% 5px,
-      100% 6px,
-      85px 6px,
-      80px 10px,
-      0px 10px
-    );
+    clip-path: polygon(0px 0px,
+        85px 0px,
+        90px 5px,
+        100% 5px,
+        100% 6px,
+        85px 6px,
+        80px 10px,
+        0px 10px);
   }
 }
 </style>

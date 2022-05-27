@@ -7,7 +7,7 @@
         :class="{ scroll3: isScroll }"
       >
         <!-- {{ left_data.name }} -->
-          <img :src="left_data.pic" class="img intro" />
+        <img :src="left_data.pic" class="img intro" />
         <!-- <div class="left_span"></div> -->
       </div>
       <div class="default_span main_span" :class="{ smallize: isScroll }">
@@ -24,10 +24,13 @@
         <img :src="right_data1.pic" class="img img3 intro" />
       </div>
       <div class="word" :class="{ scroll_word: isScroll }">
-        <h4>{{tittle}}</h4>
-        <p>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{des}}
-        </p>
+        <h4>{{ tittle }}</h4>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ des }}</p>
+        <el-button
+          type="primary"
+          style="right: 6%; position: absolute; bottom: 5%"
+          >转到&nbsp;<el-icon><DArrowRight /></el-icon
+        ></el-button>
       </div>
     </div>
   </div>
@@ -39,8 +42,10 @@ import { reactive, ref, defineProps, defineExpose } from "vue";
 const props = defineProps({
   new_data: ref(Object),
 });
-const tittle=ref("流域生态环境演变")
-const des=ref("随着生态环境问题的日益突出,流域生态环境演变研究成为生态环境研究领域的热点。流域生态环境由流域生物群落及非生物自然因素组成的各种生态系统所构成的整体，是“对人类生存和发展有影响的流域中自然因子的综合”。在自然因素与人为因素的共同作用下，生态环境以不同的时间尺度在发展演变。")
+const tittle = ref("流域生态环境演变");
+const des = ref(
+  "随着生态环境问题的日益突出,流域生态环境演变研究成为生态环境研究领域的热点。流域生态环境由流域生物群落及非生物自然因素组成的各种生态系统所构成的整体，是“对人类生存和发展有影响的流域中自然因子的综合”。在自然因素与人为因素的共同作用下，生态环境以不同的时间尺度在发展演变。"
+);
 const temp_data = ref({
   name: "4444",
   pic: require("../../assets/problem/流域生态环境演变.png"),
@@ -72,14 +77,14 @@ const scrollingSpan = () => {
     right_data.value.pic = main_data.value.pic;
     right_data1.value.pic = temp_data.value.pic;
     main_data.value.pic = left_data.value.pic;
-    
+
     isScroll.value = false;
-  }, animation_time*2+10);
+  }, animation_time * 2 + 10);
   setTimeout(() => {
-    des.value=props.new_data.des;
-    tittle.value=props.new_data.name
+    des.value = props.new_data.des;
+    tittle.value = props.new_data.name;
     // left_data.value = props.new_data;
-  }, animation_time  + 10);
+  }, animation_time + 10);
 };
 defineExpose({ scrollingSpan });
 //变换逻辑：接受新值，覆盖left，动画完成后，main→right left→main
@@ -92,10 +97,10 @@ defineExpose({ scrollingSpan });
   left: calc(37% + 50px);
   background-color: rgba(129, 192, 243, 0);
   z-index: 5;
-  top:calc(70% + 15px);
+  top: calc(70% + 15px);
   box-shadow: 0 2px 24px 0 hsla(220, 50%, 8%, 0.8);
   transition: box-shadow 1s;
-  h4{
+  h4 {
     text-align: left;
     padding-left: 20px;
     margin: 15px;
@@ -110,12 +115,12 @@ defineExpose({ scrollingSpan });
     line-height: 160%;
     font-size: 1.15vw;
   }
-  &:hover{
-      box-shadow: 0 2px 24px 0 hsla(220, 100%, 58%, 1);
+  &:hover {
+    box-shadow: 0 2px 24px 0 hsla(220, 100%, 58%, 1);
   }
 }
 
-@scroll_time: .8s;
+@scroll_time: 0.8s;
 @tilt: scale(0.6) perspective(1500px) rotateY(160deg);
 @tilt_main_50: scale(0.9) perspective(1500px) rotateY(80deg);
 @side1-left: 50%;
@@ -125,17 +130,19 @@ defineExpose({ scrollingSpan });
 @side2-top: -5%;
 // @randomNum: `Math.ceil(Math.random() * 80) -40`;
 @randomNum: 0;
-.intro-ani{
+.intro-ani {
   @keyframes identifier {
-    0%{}
-    100%{}
+    0% {
+    }
+    100% {
+    }
   }
 }
 .intro {
   box-shadow: 0 2px 24px 0 hsla(220, 50%, 8%, 0.8);
   transition: box-shadow 1s;
-  &:hover{
-      box-shadow: 0 2px 24px 0 hsla(220, 100%, 58%, 1);
+  &:hover {
+    box-shadow: 0 2px 24px 0 hsla(220, 100%, 58%, 1);
   }
 }
 .randMove() {
@@ -259,10 +266,10 @@ defineExpose({ scrollingSpan });
   animation: scroll1 @scroll_time linear 1 @scroll_time;
 }
 .scroll2 {
-  animation: scroll2 @scroll_time linear forwards ;
+  animation: scroll2 @scroll_time linear forwards;
 }
 .scroll21 {
-  animation: scroll21 @scroll_time/2 linear forwards @scroll_time;
+  animation: scroll21 @scroll_time / 2 linear forwards @scroll_time;
   @keyframes scroll21 {
     0% {
     }
@@ -280,13 +287,15 @@ defineExpose({ scrollingSpan });
     0% {
       transform: scale(1);
     }
-    50%{
+    50% {
       opacity: 0.5;
-      transform: scale(1) translateX(-1000px) perspective(1000px) rotateY(100deg);
+      transform: scale(1) translateX(-1000px) perspective(1000px)
+        rotateY(100deg);
     }
-    55%{
+    55% {
       opacity: 0.5;
-      transform: scale(1) translateX(-1000px) perspective(1000px) rotateY(-100deg);
+      transform: scale(1) translateX(-1000px) perspective(1000px)
+        rotateY(-100deg);
     }
     100% {
       opacity: 1;

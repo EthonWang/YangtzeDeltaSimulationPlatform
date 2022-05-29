@@ -79,6 +79,7 @@
 import mapboxgl from "mapbox-gl";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapboxLanguage  from '@mapbox/mapbox-gl-language'
+//此处在mapboxview里已经设置过，不能多次设置
 // mapboxgl.setRTLTextPlugin("https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.1.0/mapbox-gl-rtl-text.js");
 
 import * as echarts from "echarts";

@@ -78,11 +78,20 @@
 <script>
 import mapboxgl from "mapbox-gl";
 import 'mapbox-gl/dist/mapbox-gl.css';
+import MapboxLanguage  from '@mapbox/mapbox-gl-language'
+//此处在mapboxview里已经设置过，不能多次设置
+// mapboxgl.setRTLTextPlugin("https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.1.0/mapbox-gl-rtl-text.js");
+
 import * as echarts from "echarts";
 import axios from "axios";
 
 var map = null
 var map2 = null
+
+var rainRankChart;
+var lineChart;
+var pieChart;
+var barChart;
 
 export default {
   data() {
@@ -123,6 +132,7 @@ export default {
         // center:[-75.789, 41.874],
         zoom: 6.5,
       });
+      map.addControl(new MapboxLanguage({ defaultLanguage: "zh-Hans" }));
 
 
       map.on('load', function () {
@@ -165,9 +175,6 @@ export default {
     },
 
     initMap2() {
-      mapboxgl.accessToken =
-          "pk.eyJ1Ijoid3lqcSIsImEiOiJjbDBnZDdwajUxMXRzM2htdWxubDh1MzJrIn0.2e2_rdU2nOUvtwltBIZtZg";
-
       map2 = new mapboxgl.Map({
         container: "map2",
         style: "mapbox://styles/mapbox/dark-v10",
@@ -175,6 +182,7 @@ export default {
         // center:[-75.789, 41.874],
         zoom: 6.5,
       });
+      map2.addControl(new MapboxLanguage({ defaultLanguage: "zh-Hans" }));
 
       map2.on('load', function () {
         map2.addSource("rainStationSource", {
@@ -194,7 +202,7 @@ export default {
         // });
 
 
-        map2.loadImage('http://localhost:3030/case/rainForecast/station.png', function (error, image) {
+        map2.loadImage('/case/rainForecast/station.png', function (error, image) {
           if (error) throw error;
           map2.addImage('station', image);
           map2.addLayer({
@@ -285,8 +293,13 @@ export default {
     },
     //降雨地区排行绘图
     createRainRankChart(name,rain) {
-      let chartDom = document.getElementById('rainRank');
-      let myChart = echarts.init(chartDom, "dark");
+
+      if (rainRankChart != null && rainRankChart != "" && rainRankChart != undefined) {
+        rainRankChart.dispose();//销毁
+      }
+
+      rainRankChart = echarts.init(document.getElementById('rainRank'), "dark");
+
       let option;
 
       const colors = ['#f00', '#ffde00', "#0000FF", "#008000", "#FFA500", "#00FFFF", "#7FFFD4", "#FFE4C4", "#5F9EA0", "#B8860B"];
@@ -338,7 +351,7 @@ export default {
         ]
       };
 
-      option && myChart.setOption(option);
+      option && rainRankChart.setOption(option);
     },
 
     //部分地区降雨预测数据获取
@@ -360,8 +373,11 @@ export default {
     },
     //部分地区降雨预测绘图
     createLineChart(name,rainData) {
-      let chartDom = document.getElementById('lineChart');
-      let myChart = echarts.init(chartDom, "dark");
+
+      if (lineChart != null && lineChart != "" && lineChart != undefined) {
+        lineChart.dispose();//销毁
+      }
+      lineChart = echarts.init(document.getElementById('lineChart'), "dark");
       let option;
 
       option = {
@@ -475,15 +491,18 @@ export default {
         ]
       };
 
-      option && myChart.setOption(option);
+      option && lineChart.setOption(option);
 
     },
 
 
     //历史降雨饼状图
     createPieChart() {
-      let chartDom = document.getElementById('pieChart');
-      let myChart = echarts.init(chartDom, "dark");
+
+      if (pieChart != null && pieChart != "" && pieChart != undefined) {
+        pieChart.dispose();//销毁
+      }
+      pieChart = echarts.init(document.getElementById('pieChart'), "dark");
       let option;
 
       option = {
@@ -531,13 +550,16 @@ export default {
         ]
       };
 
-      option && myChart.setOption(option);
+      option && pieChart.setOption(option);
     },
 
 
     createBarChart() {
-      let chartDom = document.getElementById('barChart');
-      let myChart = echarts.init(chartDom, "dark");
+
+      if (barChart != null && barChart != "" && barChart != undefined) {
+        barChart.dispose();//销毁
+      }
+      barChart = echarts.init(document.getElementById('barChart'), "dark");
       let option;
 
       option = {
@@ -582,7 +604,7 @@ export default {
         ]
       };
 
-      option && myChart.setOption(option);
+      option && barChart.setOption(option);
     }
 
   }

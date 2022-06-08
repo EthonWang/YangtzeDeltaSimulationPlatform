@@ -5,7 +5,7 @@
     <div class="flex-row-center" style="height: 75px;">
       <!--      <h2 style="color: white"></h2>-->
       <dv-decoration-3 style="width:250px;height:40px;"/>
-      <dv-decoration-11 style="width:400px;height:75px;color: white"><h1>长三角降雨预报专题</h1></dv-decoration-11>
+      <dv-decoration-11 style="width:400px;height:75px;color: white"><h1>王家坝流域降雨预报专题</h1></dv-decoration-11>
       <dv-decoration-3 style="width:250px;height:40px;"/>
 
     </div>
@@ -120,7 +120,6 @@ export default {
 
   methods: {
 
-
     initMap() {
       mapboxgl.accessToken =
           "pk.eyJ1Ijoid3lqcSIsImEiOiJjbDBnZDdwajUxMXRzM2htdWxubDh1MzJrIn0.2e2_rdU2nOUvtwltBIZtZg";
@@ -182,21 +181,22 @@ export default {
         // center:[-75.789, 41.874],
         zoom: 6.5,
       });
-      map2.addControl(new MapboxLanguage({ defaultLanguage: "zh-Hans" }));
+      // map2.addControl(new MapboxLanguage({ defaultLanguage: "zh-Hans" }));
 
       map2.on('load', function () {
         map2.addSource("rainStationSource", {
               "type": "geojson",
               "data": "/case/rainForecast/output.json"
-            }
+        }
+
         )
 
         // map2.addLayer({
-        //   "id": "rainStationLayer",
+        //   "id": "rainStationLayer2",
         //   "source": "rainStationSource",
         //   "type": "circle",
         //   'paint': {
-        //     'circle-radius': 2,
+        //     'circle-radius': 20,
         //     'circle-color': 'rgba(55,148,179,1)'
         //   },
         // });
@@ -220,6 +220,7 @@ export default {
             filter: ['>', 'ranData0', 0]
           });
         });
+
       });
     },
     changeRainDay() {
@@ -315,7 +316,7 @@ export default {
         yAxis: {type: 'category', data: name},
         title: [
           {
-            text: '地区降雨排行图',
+            text: '地区降雨排行图(mm)',
             left: 'center',
           }
         ],
@@ -337,7 +338,6 @@ export default {
               show: true,
               // 标签的文字。
               formatter: function (param) {
-                console.log(param)
                 return param.data[1];
               },
               position: 'right',
@@ -382,7 +382,7 @@ export default {
 
       option = {
         title: {
-          text: '部分地区降雨预测',
+          text: '部分地区降雨预测(mm)',
           left: "center"
         },
         tooltip: {
@@ -507,7 +507,7 @@ export default {
 
       option = {
         title: {
-          text: '历史降雨统计',
+          text: '月历史降雨统计(mm)',
           left: "center"
         },
         legend: {
@@ -531,20 +531,18 @@ export default {
             },
             label: {
               formatter: function (param) {
-                console.log(param)
                 return param.data["name"]+":"+param.data["value"];
               },
               show: true
             },
             data: [
-              {value: 40, name: '上海'},
-              {value: 38, name: '南京'},
-              {value: 32, name: '苏州'},
-              {value: 30, name: '常州'},
-              {value: 28, name: '无锡'},
-              {value: 26, name: '杭州'},
-              {value: 22, name: '扬州'},
-              {value: 18, name: '宁波'}
+              {value: 40, name: '罗山县'},
+              {value: 38, name: '汝南县'},
+              {value: 32, name: '平桥区'},
+              {value: 30, name: '正阳区'},
+              {value: 28, name: '新县'},
+              {value: 26, name: '驿城区'},
+              {value: 22, name: '浉河区'}
             ]
           }
         ]

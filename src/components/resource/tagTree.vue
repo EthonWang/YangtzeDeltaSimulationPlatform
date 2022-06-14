@@ -1,16 +1,41 @@
 <template>
   <div class="tagTreeContent">
-    <el-row class="tagContent fontSet" style="font-weight: 600; font-size: 16px;"> 数据分类体系 </el-row>
+    <el-row
+      class="tagContent fontSet"
+      style="font-weight: 600; font-size: 16px"
+    >
+      资源分类 （
+      <a @click="clearTagClick()" style="cursor: pointer; color: gray">全部</a>
+      ）
+    </el-row>
     <div v-for="(item, index) in tagList" :key="index">
       <el-row class="tagTitle">
-        <el-link @click="tagClick(item, 1)" class="clickStyle">{{ item.name }}</el-link>
+        <el-link @click="tagClick(item, 1)" class="clickStyle">{{
+          item.name
+        }}</el-link>
       </el-row>
       <el-row class="tagContent">
         <span v-for="(i, index) in item.list" :key="index" class="tagSpan">
-          <el-link @click="tagClick(item, 2, i)" class="clickStyle">{{ i }}</el-link>
+          <el-link @click="tagClick(item, 2, i)" class="clickStyle">{{
+            i
+          }}</el-link>
         </span>
       </el-row>
     </div>
+    <el-row
+      class="tagContent fontSet"
+      style="font-weight: 600; font-size: 16px; margin-top: 10px;"
+    >
+      历史搜索
+    </el-row>
+    
+    <el-row
+      class="tagContent fontSet"
+      style="font-weight: 600; font-size: 16px; margin-top: 10px;"
+    >
+      更多操作
+    </el-row>
+    
   </div>
 </template>
 
@@ -22,8 +47,17 @@ export default {
   emits: ["tagClick"],
   setup(props, ctx) {
     let tagList = [
+        {
+        name: "专题",
+        list: [
+          "流域水循环及其驱动机制",
+          "全球变化与区域环境演化",
+          "长三角灾害响应与治理",
+          "长三角城市化与人地关系协调发展"
+        ],
+      },
       {
-        name: "陆地表层",
+        name: "数据",
         list: [
           "基础地理",
           "土地利用/覆盖",
@@ -38,50 +72,37 @@ export default {
           "灾害",
           "环境",
           "气候",
+          "水文",
+          "农业"
         ],
       },
       {
-        name: "陆地水圈",
-        list: ["地表水", "水利工程", "水环境", "水文"],
+        name: "模型",
+        list: ["自然模拟", "人类活动", "综合分析", "其他"],
       },
       {
-        name: "大气圈",
-        list: ["综合观测"],
-      },
-      {
-        name: "自然资源",
-        list: ["土地资源", "农业资源", "旅游资源", "气候资源", "水资源"],
-      },
-      {
-        name: "海洋",
-        list: ["基础地理", "土地利用/覆盖", "统计资料"],
-      },
-      {
-        name: "固体地球与古环境",
-        list: ["地质", "陆地记录"],
-      },
-      {
-        name: "遥感数据",
-        list: ["卫星影像", "反演数据产品"],
-      },
-      {
-        name: "历史数据",
-        list: ["历史地图数据"],
-      },
+        name: "其他",
+        list: ["学术研究"],
+      }
     ];
-    const tagClick = function (item,level,i2) {
-        let emitData = [];
-        if(level == 1){
-            emitData.push(item.name);
-        } else if (level == 2){
-            emitData.push(item.name);
-            emitData.push(i2)
-        }
+    const clearTagClick = function () {
+      let emitData = [];
+      ctx.emit("tagClick", emitData);
+    };
+    const tagClick = function (item, level, i2) {
+      let emitData = [];
+      if (level == 1) {
+        emitData.push(item.name);
+      } else if (level == 2) {
+        emitData.push(item.name);
+        emitData.push(i2);
+      }
       ctx.emit("tagClick", emitData);
     };
     return {
       tagList,
-      tagClick
+      clearTagClick,
+      tagClick,
     };
   },
 };
@@ -109,8 +130,8 @@ export default {
 .tagSpan {
   margin-right: 7px;
 }
-.clickStyle{
-    cursor: pointer;
+.clickStyle {
+  cursor: pointer;
 }
 .fontSet {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",

@@ -77,8 +77,6 @@ export default {
   mounted() {
     this.cesiumInit();
     // this.add3DTiles();
-    // this.add3DTiles1();
-    // this.add3DTiles2();
     // this.addPlane();
     // this.addKMZ();
     // this.addJsonList();
@@ -635,44 +633,44 @@ export default {
       // 加载3DTiles数据
       // debugger;
       let tileset = new Cesium.Cesium3DTileset({
-        // url: "data/model/test22222/tileset.json",
-        url: "http://172.21.213.44:8087/static/resRepository/tileset/tileset.json",
-        // url: "data/model/3dtilesFromGltf/tileset.json",
+        url: "data/model/3dtilesFromGltf/tileset.json",
+        // url: "http://172.21.213.44:8087/static/resRepository/tileset/tileset.json",
+        // url: "data/model/obj2Tiles/tileset.json",
         // url: "data/level_3dtiles_clt/tileset.json",
         maximumScreenSpaceError: 2, //最大的屏幕空间误差
         maximumNumberOfLoadedTiles: 10000, //最大加载瓦片个数
         // modelMatrix: myTransform,
       });
-      let that = this;
-      tileset.readyPromise.then(function (tilesetData) {
+      // let that = this;
+      // tileset.readyPromise.then(function (tilesetData) {
         // debugger;
-        let center = tilesetData.boundingSphere.center; //正球投影中心
-        let lonlat = that.webMercator2lonLat(center); //经纬度
-        let ellipsoidCenter = Cesium.Cartesian3.fromDegrees(
-          lonlat.x,
-          lonlat.y,
-          lonlat.z
-        ); //椭球投影中心
-        let m = Cesium.Matrix4.fromArray([
-          1.0,
-          0.0,
-          0.0,
-          0.0,
-          0.0,
-          1.0,
-          0.0,
-          0.0,
-          0.0,
-          0.0,
-          1.0,
-          0.0,
-          ellipsoidCenter.x - center.x,
-          ellipsoidCenter.y - center.y,
-          ellipsoidCenter.z - center.z,
-          1.0,
-        ]); //偏差矩阵
-        tilesetData.modelMatrix = m;
-      });
+        // let center = tilesetData.boundingSphere.center; //正球投影中心
+        // let lonlat = that.webMercator2lonLat(center); //经纬度
+        // let ellipsoidCenter = Cesium.Cartesian3.fromDegrees(
+        //   lonlat.x,
+        //   lonlat.y,
+        //   lonlat.z
+        // ); //椭球投影中心
+        // let m = Cesium.Matrix4.fromArray([
+        //   1.0,
+        //   0.0,
+        //   0.0,
+        //   0.0,
+        //   0.0,
+        //   1.0,
+        //   0.0,
+        //   0.0,
+        //   0.0,
+        //   0.0,
+        //   1.0,
+        //   0.0,
+        //   ellipsoidCenter.x - center.x,
+        //   ellipsoidCenter.y - center.y,
+        //   ellipsoidCenter.z - center.z,
+        //   1.0,
+        // ]); //偏差矩阵
+        // tilesetData.modelMatrix = m;
+      // });
       this.viewer.scene.primitives.add(tileset);
       // this.viewer.zoomTo(tileset);
     },

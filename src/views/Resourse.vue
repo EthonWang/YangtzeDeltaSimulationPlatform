@@ -1,6 +1,49 @@
 <template>
   <div class="main">
-    <div class="content">
+    <div class="search" v-if="searchPage">
+      <el-row style="padding-top: 7%">
+        <div style="margin: auto; display: flex">
+          <h1
+            style="
+              color: white;
+              line-height: 70px;
+              font-size: 50px;
+              vertical-align: top;
+            "
+          >
+            长三角资源目录 · 检索
+          </h1>
+          <!-- <img src="../assets/globle.svg" style="width: 70px; margin: 0 25px" /> -->
+          <!-- <h1
+            style="
+              color: white;
+              line-height: 70px;
+              font-size: 50px;
+              vertical-align: top;
+            "
+          >
+            检索
+          </h1> -->
+        </div>
+      </el-row>
+      <el-row style="padding-top: 3%">
+        <div class="startSearchBox">
+          <input
+            type="text" 
+            v-model="searchValue"
+            placeholder="  请输入想要检索的内容..."
+            class="startSearchInput"
+          >
+          <el-button type="primary" class="startSearchButton" @click="startSearch()">检索</el-button>
+        </div>
+      </el-row>
+      <!-- <el-row style="padding-top: 3%">
+        <div style="width: 30%; margin: auto; color: white;">
+          <h4>热门搜索></h4>
+        </div>
+      </el-row> -->
+    </div>
+    <div class="content" v-else>
       <el-row>
         <el-col :span="5">
           <div class="tagTree">
@@ -49,16 +92,27 @@
               <el-row class="sortBox">
                 <div class="sortMoudle">
                   <span class="fontSet">排序：</span>
-                  <el-link class="sortButton" :underline="false"  @click="sortByField('relativity')"
+                  <el-link
+                    class="sortButton"
+                    :underline="false"
+                    @click="sortByField('relativity')"
                     >相关度</el-link
                   >
                   <el-divider direction="vertical"></el-divider>
-                  <el-link class="sortButton" :underline="false" @click="sortByField('time')">最新
+                  <el-link
+                    class="sortButton"
+                    :underline="false"
+                    @click="sortByField('time')"
+                    >最新
                     <span v-if="sortField == 'timeDown'">▼</span>
                     <span v-if="sortField == 'timeUp'">▲</span>
                   </el-link>
                   <el-divider direction="vertical"></el-divider>
-                  <el-link class="sortButton" :underline="false" @click="sortByField('size')">大小
+                  <el-link
+                    class="sortButton"
+                    :underline="false"
+                    @click="sortByField('size')"
+                    >大小
                     <span v-if="sortField == 'sizeDown'">▼</span>
                     <span v-if="sortField == 'sizeUp'">▲</span>
                   </el-link>
@@ -102,6 +156,8 @@ export default {
     resourceList,
   },
   setup(props, ctx) {
+    let searchPage = ref(true);
+    let searchValue = ref("");
     let selectedTag = ref([]);
     let searchInputValue = ref("");
     let questionsSelectValue = ref("");
@@ -125,31 +181,38 @@ export default {
         label: "长三角城市化与人地关系协调发展",
       },
     ];
+    let startSearch = function(){
+      searchPage.value = false;
+      searchInputValue.value = searchValue.value;
+    };
     const tagClick = function (data) {
       selectedTag.value = data;
     };
-    let sortByField = function(type) {
-      if(type == "relativity"){
+    let sortByField = function (type) {
+      if (type == "relativity") {
         sortField.value = "relativity";
-      } else if (type == "time"){
-        if(sortField.value == "timeDown"){
-          sortField.value = "timeUp"
-        } else if(sortField.value == "timeUp"){
-          sortField.value = "relativity"
+      } else if (type == "time") {
+        if (sortField.value == "timeDown") {
+          sortField.value = "timeUp";
+        } else if (sortField.value == "timeUp") {
+          sortField.value = "relativity";
         } else {
-          sortField.value = "timeDown"
+          sortField.value = "timeDown";
         }
-      } else if (type == "size"){
-        if(sortField.value == "sizeDown"){
-          sortField.value = "sizeUp"
-        } else if(sortField.value == "sizeUp"){
-          sortField.value = "relativity"
+      } else if (type == "size") {
+        if (sortField.value == "sizeDown") {
+          sortField.value = "sizeUp";
+        } else if (sortField.value == "sizeUp") {
+          sortField.value = "relativity";
         } else {
-          sortField.value = "sizeDown"
+          sortField.value = "sizeDown";
         }
       }
     };
     return {
+      searchPage,
+      searchValue,
+      startSearch,
       tagClick,
       selectedTag,
       searchInputValue,
@@ -164,12 +227,38 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.startSearchBox {
+  width: 40%;
+  height: 50px;
+  margin: auto;
+}
+.startSearchInput {
+  margin-left: 2%;
+  width: 80%;
+  height: 40px;
+  font-size: 0.94vw;
+}
+.startSearchButton {
+  margin-left: 2%;
+  width: 12%;
+  height: 45px;
+  font-size: 0.94vw;
+  vertical-align: top;
+}
+.search {
+  height: 100%;
+  width: 100%;
+  // background: url("../assets/night.jpg");
+  // background-size: 100% 100%;
+}
 .main {
   margin-top: 4%;
-  // height: 96%;
-  background-color: white;
+  height: 94vh;
+  background: url("../assets/night.jpg");
+  background-size: 100% 100%;
 }
 .content {
+  // background-color: rgba(255, 255, 255, 0.7);
   width: 80vw;
   padding-top: 2%;
   margin: auto;
@@ -183,7 +272,7 @@ export default {
   margin-left: 10px;
   height: 100px;
   width: 100%;
-  border: solid 1px black;
+  border-bottom: solid 0.1px rgb(176, 174, 174);
   // background-color: rgb(95, 239, 17);
 }
 .searchBox {
@@ -202,6 +291,7 @@ export default {
 }
 .sortBox {
   height: 50px;
+  background-color: white;
   display: flex;
   align-items: center;
   // justify-content: space-around;
@@ -229,8 +319,9 @@ export default {
   height: 50px;
 }
 .resourceList {
+  background-color: rgb(255, 255, 255);
   margin-left: 10px;
-  margin-top: 10px;
+  // margin-top: 10px;
   // height: 600px;
   width: 100%;
   // border: solid 1px black;

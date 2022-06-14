@@ -7,6 +7,7 @@ import Help from "@/views/Help.vue";
 // import Functions from "@/views/Function.vue";
 import ModelConfig from "@/components/App/ModelConfig"
 import { cases_config } from "@/assets/config/cases.config";
+import newResource from "@/components/resource/newResource.vue"
 
 const routes = [
   {
@@ -29,6 +30,12 @@ const routes = [
     name: "资源",
     component: () => import("../views/Resourse.vue"),
     children: []
+  },
+  {
+    isBar: false,
+    path: '/newResource',
+    name: '添加资源',
+    component: newResource,
   },
   {
     isBar: true,

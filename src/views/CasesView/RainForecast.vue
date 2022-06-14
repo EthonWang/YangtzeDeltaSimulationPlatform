@@ -5,7 +5,7 @@
     <div class="flex-row-center" style="height: 75px;">
       <!--      <h2 style="color: white"></h2>-->
       <dv-decoration-3 style="width:250px;height:40px;"/>
-      <dv-decoration-11 style="width:400px;height:75px;color: white"><h1>长三角降雨预报专题</h1></dv-decoration-11>
+      <dv-decoration-11 style="width:400px;height:75px;color: white"><h1>王家坝流域降雨预报专题</h1></dv-decoration-11>
       <dv-decoration-3 style="width:250px;height:40px;"/>
 
     </div>
@@ -62,7 +62,10 @@
 
       <div class="content-col-3 flex-Column-Around-Center">
         <div class="part border-box ">
-          <div id="barChart" style="  width: 100%;  height: 100%;z-index: 5"></div>
+          <!--          <div id="barChart" style="  width: 100%;  height: 100%;z-index: 5"></div>-->
+          <div style="    width: 100%;    height: 100%;">
+            <img class="img" src="/case/rainForecast/historyRecord.png" style="height: 100%;width: 100%">
+          </div>
         </div>
         <div class="part border-box ">
           <div id="pieChart" style="  width: 100%;  height: 100%;z-index: 5"></div>
@@ -78,11 +81,20 @@
 <script>
 import mapboxgl from "mapbox-gl";
 import 'mapbox-gl/dist/mapbox-gl.css';
+import MapboxLanguage from '@mapbox/mapbox-gl-language'
+//此处在mapboxview里已经设置过，不能多次设置
+// mapboxgl.setRTLTextPlugin("https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.1.0/mapbox-gl-rtl-text.js");
+
 import * as echarts from "echarts";
 import axios from "axios";
 
 var map = null
 var map2 = null
+
+var rainRankChart;
+var lineChart;
+var pieChart;
+var barChart;
 
 export default {
   data() {
@@ -101,7 +113,7 @@ export default {
     this.getDailyRainfallByDistrict()
 
     this.createPieChart()
-    this.createBarChart()
+    // this.createBarChart()
 
     this.autoChange()
     this.clearSomething()
@@ -110,7 +122,6 @@ export default {
   },
 
   methods: {
-
 
     initMap() {
       mapboxgl.accessToken =
@@ -123,6 +134,7 @@ export default {
         // center:[-75.789, 41.874],
         zoom: 6.5,
       });
+      map.addControl(new MapboxLanguage({defaultLanguage: "zh-Hans"}));
 
 
       map.on('load', function () {
@@ -165,9 +177,6 @@ export default {
     },
 
     initMap2() {
-      mapboxgl.accessToken =
-          "pk.eyJ1Ijoid3lqcSIsImEiOiJjbDBnZDdwajUxMXRzM2htdWxubDh1MzJrIn0.2e2_rdU2nOUvtwltBIZtZg";
-
       map2 = new mapboxgl.Map({
         container: "map2",
         style: "mapbox://styles/mapbox/dark-v10",
@@ -175,6 +184,7 @@ export default {
         // center:[-75.789, 41.874],
         zoom: 6.5,
       });
+      // map2.addControl(new MapboxLanguage({ defaultLanguage: "zh-Hans" }));
 
       map2.on('load', function () {
         map2.addSource("rainStationSource", {
@@ -184,17 +194,17 @@ export default {
         )
 
         // map2.addLayer({
-        //   "id": "rainStationLayer",
+        //   "id": "rainStationLayer2",
         //   "source": "rainStationSource",
         //   "type": "circle",
         //   'paint': {
-        //     'circle-radius': 2,
+        //     'circle-radius': 20,
         //     'circle-color': 'rgba(55,148,179,1)'
         //   },
         // });
 
 
-        map2.loadImage('http://localhost:3030/case/rainForecast/station.png', function (error, image) {
+        map2.loadImage('/case/rainForecast/station.png', function (error, image) {
           if (error) throw error;
           map2.addImage('station', image);
           map2.addLayer({
@@ -212,6 +222,7 @@ export default {
             filter: ['>', 'ranData0', 0]
           });
         });
+
       });
     },
     changeRainDay() {
@@ -272,21 +283,26 @@ export default {
           })
           .then((res) => {
             let data = res.data.data
-            let name =[]
-            let rain=[]
-            data.forEach((item,index,array)=>{
-              Object.keys(item).forEach(key=>{
+            let name = []
+            let rain = []
+            data.forEach((item, index, array) => {
+              Object.keys(item).forEach(key => {
                 name.unshift(key)
                 rain.unshift(item[key])
               })
             })
-            this.createRainRankChart(name,rain)
+            this.createRainRankChart(name, rain)
           });
     },
     //降雨地区排行绘图
-    createRainRankChart(name,rain) {
-      let chartDom = document.getElementById('rainRank');
-      let myChart = echarts.init(chartDom, "dark");
+    createRainRankChart(name, rain) {
+
+      if (rainRankChart != null && rainRankChart != "" && rainRankChart != undefined) {
+        rainRankChart.dispose();//销毁
+      }
+
+      rainRankChart = echarts.init(document.getElementById('rainRank'), "dark");
+
       let option;
 
       const colors = ['#f00', '#ffde00', "#0000FF", "#008000", "#FFA500", "#00FFFF", "#7FFFD4", "#FFE4C4", "#5F9EA0", "#B8860B"];
@@ -302,7 +318,7 @@ export default {
         yAxis: {type: 'category', data: name},
         title: [
           {
-            text: '地区降雨排行图',
+            text: '地区降雨排行图(mm)',
             left: 'center',
           }
         ],
@@ -324,7 +340,6 @@ export default {
               show: true,
               // 标签的文字。
               formatter: function (param) {
-                console.log(param)
                 return param.data[1];
               },
               position: 'right',
@@ -338,11 +353,11 @@ export default {
         ]
       };
 
-      option && myChart.setOption(option);
+      option && rainRankChart.setOption(option);
     },
 
     //部分地区降雨预测数据获取
-    getDailyRainfallByDistrict(){
+    getDailyRainfallByDistrict() {
       axios
           .post("http://172.21.212.63:8999/dashboard/getDailyRainfallByDistrict", {
             "count": 10,
@@ -350,23 +365,26 @@ export default {
           })
           .then((res) => {
             let rainData = res.data.data
-            let name =[]
-              Object.keys(rainData).forEach(key=>{
-                name.push(key)
-              })
+            let name = []
+            Object.keys(rainData).forEach(key => {
+              name.push(key)
+            })
 
-            this.createLineChart(name,rainData)
+            this.createLineChart(name, rainData)
           });
     },
     //部分地区降雨预测绘图
-    createLineChart(name,rainData) {
-      let chartDom = document.getElementById('lineChart');
-      let myChart = echarts.init(chartDom, "dark");
+    createLineChart(name, rainData) {
+
+      if (lineChart != null && lineChart != "" && lineChart != undefined) {
+        lineChart.dispose();//销毁
+      }
+      lineChart = echarts.init(document.getElementById('lineChart'), "dark");
       let option;
 
       option = {
         title: {
-          text: '部分地区降雨预测',
+          text: '部分地区降雨预测(mm)',
           left: "center"
         },
         tooltip: {
@@ -475,20 +493,23 @@ export default {
         ]
       };
 
-      option && myChart.setOption(option);
+      option && lineChart.setOption(option);
 
     },
 
 
     //历史降雨饼状图
     createPieChart() {
-      let chartDom = document.getElementById('pieChart');
-      let myChart = echarts.init(chartDom, "dark");
+
+      if (pieChart != null && pieChart != "" && pieChart != undefined) {
+        pieChart.dispose();//销毁
+      }
+      pieChart = echarts.init(document.getElementById('pieChart'), "dark");
       let option;
 
       option = {
         title: {
-          text: '历史降雨统计',
+          text: '月历史降雨统计(mm)',
           left: "center"
         },
         legend: {
@@ -512,78 +533,78 @@ export default {
             },
             label: {
               formatter: function (param) {
-                console.log(param)
-                return param.data["name"]+":"+param.data["value"];
+                return param.data["name"] + ":" + param.data["value"];
               },
               show: true
             },
             data: [
-              {value: 40, name: '上海'},
-              {value: 38, name: '南京'},
-              {value: 32, name: '苏州'},
-              {value: 30, name: '常州'},
-              {value: 28, name: '无锡'},
-              {value: 26, name: '杭州'},
-              {value: 22, name: '扬州'},
-              {value: 18, name: '宁波'}
+              {value: 40, name: '罗山县'},
+              {value: 38, name: '汝南县'},
+              {value: 32, name: '平桥区'},
+              {value: 30, name: '正阳区'},
+              {value: 28, name: '新县'},
+              {value: 26, name: '驿城区'},
+              {value: 22, name: '浉河区'}
             ]
           }
         ]
       };
 
-      option && myChart.setOption(option);
+      option && pieChart.setOption(option);
     },
 
+    /*createBarChart() {*/
 
-    createBarChart() {
-      let chartDom = document.getElementById('barChart');
-      let myChart = echarts.init(chartDom, "dark");
-      let option;
+    /*  if (barChart != null && barChart != "" && barChart != undefined) {*/
+    /*    barChart.dispose();//销毁*/
+    /*  }*/
+    /*  barChart = echarts.init(document.getElementById('barChart'), "dark");*/
+    /*  let option;*/
 
-      option = {
-        title: {
-          text: '历史暴雨事件',
-          left: "center"
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow'
-          }
-        },
-        legend: {
-          top: 'bottom'
-        },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
-        },
-        xAxis: {
-          type: 'value',
-          boundaryGap: [0, 0.01]
-        },
-        yAxis: {
-          type: 'category',
-          data: ['Brazil', 'Indonesia', 'USA', 'India', 'China', 'World']
-        },
-        series: [
-          {
-            name: '2011',
-            type: 'bar',
-            data: [18203, 23489, 29034, 104970, 131744, 630230]
-          },
-          {
-            name: '2012',
-            type: 'bar',
-            data: [19325, 23438, 31000, 121594, 134141, 681807]
-          }
-        ]
-      };
-
-      option && myChart.setOption(option);
-    }
+    /*  option = {*/
+    /*    title: {*/
+    /*      text: '历史暴雨事件',*/
+    /*      left: "center"*/
+    /*    },*/
+    /*    tooltip: {*/
+    /*      trigger: 'axis',*/
+    /*      axisPointer: {*/
+    /*        type: 'shadow'*/
+    /*      }*/
+    /*    },*/
+    /*    legend: {*/
+    /*      top: 'bottom'*/
+    /*    },*/
+    /*    grid: {*/
+    /*      left: '3%',*/
+    /*      right: '4%',*/
+    /*      bottom: '3%',*/
+    /*      containLabel: true*/
+    /*    },*/
+    /*    xAxis: {*/
+    /*      type: 'value',*/
+    /*      boundaryGap: [0, 0.01]*/
+    /*    },*/
+    /*    yAxis: {*/
+    /*      type: 'category',*/
+    /*      data: ['Brazil', 'Indonesia', 'USA', 'India', 'China', 'World']*/
+    /*    },*/
+    /*    series: [*/
+    /*      {*/
+    /*        name: '2011',*/
+    /*        type: 'bar',*/
+    /*        data: [18203, 23489, 29034, 104970, 131744, 630230]*/
+    //       },
+    //       {
+    //         name: '2012',
+    //         type: 'bar',
+    //         data: [19325, 23438, 31000, 121594, 134141, 681807]
+    //       }
+    //     ]
+    //   };
+    //
+    //   option && barChart.setOption(option);
+    // }
 
   }
 

@@ -24,18 +24,17 @@
     </div>
     <el-row
       class="tagContent fontSet"
-      style="font-weight: 600; font-size: 16px; margin-top: 10px;"
+      style="font-weight: 600; font-size: 16px; margin-top: 10px"
     >
       历史搜索
     </el-row>
-    
+
     <el-row
       class="tagContent fontSet"
-      style="font-weight: 600; font-size: 16px; margin-top: 10px;"
+      style="font-weight: 600; font-size: 16px; margin-top: 10px"
     >
       更多操作
     </el-row>
-    
   </div>
 </template>
 
@@ -47,13 +46,13 @@ export default {
   emits: ["tagClick"],
   setup(props, ctx) {
     let tagList = [
-        {
+      {
         name: "专题",
         list: [
           "流域水循环及其驱动机制",
           "全球变化与区域环境演化",
           "长三角灾害响应与治理",
-          "长三角城市化与人地关系协调发展"
+          "长三角城市化与人地关系协调发展",
         ],
       },
       {
@@ -73,7 +72,7 @@ export default {
           "环境",
           "气候",
           "水文",
-          "农业"
+          "农业",
         ],
       },
       {
@@ -82,8 +81,8 @@ export default {
       },
       {
         name: "其他",
-        list: ["学术研究"],
-      }
+        list: ["学术研究","说明文档"],
+      },
     ];
     const clearTagClick = function () {
       let emitData = [];

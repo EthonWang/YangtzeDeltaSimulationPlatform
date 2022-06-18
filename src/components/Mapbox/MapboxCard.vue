@@ -2,10 +2,67 @@
   <div class="mapbox-page">
     <div id="map"></div>
   </div>
+  <el-card shadow="always" class="info-card">
+    <el-scrollbar max-height="40vh">
+      <el-descriptions :column="1" border style="width: 100%; height: 100%">
+        <el-descriptions-item
+          label="名称"
+          label-align="center"
+          align="center"
+          label-class-name="my-label"
+          class-name="my-content"
+          min-width="65px"
+          >{{ jsonData.name }}</el-descriptions-item
+        >
+        <el-descriptions-item label="类型" label-align="center" align="center"
+          ><el-tag size="small">{{
+            jsonData.type
+          }}</el-tag></el-descriptions-item
+        >
+        <el-descriptions-item
+          label="作者"
+          label-align="center"
+          align="center"
+          >{{ jsonData.userEmail }}</el-descriptions-item
+        >
+        <el-descriptions-item label="标签" label-align="center" align="center">
+          <el-tag
+            size="small"
+            v-for="(item, index) in tagList"
+            :key="index"
+            style="max-width: 150px; overflow: hidden"
+            :title="tagList[index]"
+            >{{ tagList[index] }}</el-tag
+          >
+        </el-descriptions-item>
+        <el-descriptions-item
+          label="数据量"
+          label-align="center"
+          align="center"
+          >{{ jsonData.fileSize }}</el-descriptions-item
+        >
+        <el-descriptions-item
+          label="时间"
+          label-align="center"
+          align="center"
+          >{{ jsonData.createTime }}</el-descriptions-item
+        >
+        <el-descriptions-item
+          label="描述"
+          label-align="center"
+          align="center"
+          >{{ jsonData.description }}</el-descriptions-item
+        >
+      </el-descriptions>
+    </el-scrollbar>
+  </el-card>
 </template>
 
 <script>
 import mapboxgl from "mapbox-gl";
+
+import { ElMessage } from "element-plus";
+import { ElNotification } from "element-plus";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 import { toRaw } from "@vue/reactivity";
@@ -42,22 +99,34 @@ export default {
             // "fill-sort-key":999
           },
           paint: {
+            "fill-antialias": true,
             "fill-color": "#" + Math.random().toString(16).substr(2, 6),
+            "fill-outline-color": "#000000",
           },
         },
       },
       newShpInfo: {},
+      tagList: [],
     };
   },
   watch: {
     jsonData(value) {
-    //   console.log(value);
-      if (this.newShpInfo != value) {
+      //   console.log(value);
+      if (
+        this.newShpInfo != value &&
+        this.newShpInfo.visualWebAddress != "" &&
+        this.newShpInfo.visualizationBoolean
+      ) {
         map.removeLayer(this.newShpInfo.id);
         map.removeSource(this.newShpInfo.name + "_" + this.newShpInfo.id);
       }
       this.newShpInfo = value;
       this.addLayerToMap(value);
+      console.log(map);
+      map.flyTo({
+        center: [119.5, 31.5],
+        zoom: 6,
+      })
     },
   },
   mounted() {
@@ -79,7 +148,7 @@ export default {
       map = new mapboxgl.Map({
         container: "map",
         style: "mapbox://styles/mapbox/dark-v10",
-        center: [120, 32],
+        center: [119.5, 31.5],
         zoom: 6,
       });
       // map.addControl(new MapboxLanguage({ defaultLanguage: "zh-Hans" }));
@@ -92,7 +161,9 @@ export default {
       scale.setUnit("metric");
 
       // 添加控件缩放按钮和一个指南针.
-      var nav = new mapboxgl.NavigationControl();
+      var nav = new mapboxgl.NavigationControl({
+        visualizePitch: true,
+      });
       map.addControl(nav, "bottom-right");
       // 全局缩放
       map.addControl(new mapboxgl.FullscreenControl(), "bottom-right");
@@ -127,29 +198,54 @@ export default {
       });
 
       this.newShpInfo = this.jsonData;
-    //   console.log(this.newShpInfo);
+      //   console.log(this.newShpInfo);
       let that = this;
-      setTimeout(function(){
+      setTimeout(function () {
         that.addLayerToMap(that.newShpInfo);
-      },1000)
-      
+      }, 1500);
     },
     addLayerToMap(data) {
+      this.tagList = [];
+      let normalTags = this.newShpInfo.normalTags.split(",");
+      let problemTags = this.newShpInfo.problemTags.split(",");
+      for (let i = 0; i < normalTags.length; i++) {
+        this.tagList.push(normalTags[i]);
+      }
+      for (let i = 0; i < problemTags.length; i++) {
+        this.tagList.push(problemTags[i]);
+      }
       // 加载数据
       let newShpInfo = data;
-      map.addSource(newShpInfo.name + "_" + newShpInfo.id, {
-        type: "geojson",
-        data:
-          "http://172.21.213.44:8087/static/resRepository/素材库/" +
-          newShpInfo.path,
-      });
-      let newLayer = {
-        id: newShpInfo.id,
-        source: newShpInfo.name + "_" + newShpInfo.id,
-        type: newShpInfo.geoType,
-        paint: this.layerStyle[newShpInfo.geoType].paint,
-      };
-      map.addLayer(newLayer);
+      if (
+        newShpInfo.visualWebAddress != "" &&
+        newShpInfo.visualizationBoolean
+      ) {
+        map.addSource(newShpInfo.name + "_" + newShpInfo.id, {
+          type: "geojson",
+          data: "http://172.21.212.63:8999" + newShpInfo.visualWebAddress,
+        });
+        let newLayer = {
+          id: newShpInfo.id,
+          source: newShpInfo.name + "_" + newShpInfo.id,
+          type: newShpInfo.geoType,
+          paint: this.layerStyle[newShpInfo.geoType].paint,
+        };
+        map.addLayer(newLayer);
+      } else if (!newShpInfo.visualizationBoolean) {
+        ElNotification({
+          title: newShpInfo.name,
+          message: "该资源未开放可视化权限，详情请联系网站管理员！",
+          type: "warning",
+          duration: 0,
+        });
+      } else if (newShpInfo.visualWebAddress == "") {
+        ElNotification({
+          title: newShpInfo.name,
+          message: "未找到可视化资源文件！",
+          type: "warning",
+          duration: 0,
+        });
+      }
     },
   },
 };
@@ -169,5 +265,23 @@ export default {
   /* bottom: 0; */
   width: 100%;
   height: 100%;
+}
+.info-card {
+  position: absolute;
+  left: 20px;
+  top: 75px;
+  width: 27%;
+  height: 45vh;
+}
+.scrollbar-demo-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  margin: 10px;
+  text-align: center;
+  border-radius: 4px;
+  background: var(--el-color-primary-light-9);
+  color: var(--el-color-primary);
 }
 </style>

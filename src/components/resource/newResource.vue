@@ -1,7 +1,12 @@
 <style scoped>
 h1 {
   text-align: center;
-  margin-top: 2.5%;
+  margin-top: 2%;
+}
+.main {
+  margin-top: 7vh;
+  height: 93vh;
+  background-color: #fff;
 }
 .projectForm {
   width: 60%;
@@ -14,6 +19,9 @@ h1 {
 }
 .inline_style {
   display: flex;
+}
+.questionsSelect {
+  width: 20vw;
 }
 .create {
   width: 20%;
@@ -106,259 +114,286 @@ h1 {
 /* 结束 */
 </style>
 <template>
-  <div class="project form">
-    <h1>创建新作品</h1>
-    <div>
-      <Form
-        ref="formInline"
-        :model="formInline"
-        :rules="newProjectRule"
-        class="projectForm"
-      >
-        <!-- 选择类别 -->
-        <FormItem prop="type" label="作品类别" :label-width="100">
-          <RadioGroup
-            v-model="formInline.type"
-            style="width: 80%"
-            @on-change="changeTagTemplate"
-          >
-            <Radio label="Image" style="font-size: 18px">图像类</Radio>
-            <Radio label="Video" style="font-size: 18px">视频类</Radio>
-            <Radio label="Model" style="font-size: 18px">模型类</Radio>
-            <Radio label="Website" style="font-size: 18px">网站类</Radio>
-            <Radio label="music" style="font-size: 18px">音乐类</Radio>
-          </RadioGroup>
-        </FormItem>
-        <FormItem prop="workName" label="作品名称" :label-width="100">
-          <Input
-            v-model="formInline.workName"
-            placeholder="输入作品名称（少于 20 个字）..."
-          />
-        </FormItem>
-        <FormItem prop="description" label="作品描述" :label-width="100">
-          <Input
-            v-model="formInline.description"
-            type="textarea"
-            placeholder="输入作品描述..."
-          />
-        </FormItem>
-        <FormItem prop="tagList" label="赏析模板" :label-width="100">
-          <Input
-            v-model="inputTag"
-            placeholder="输入一些标签来描述作品..."
-            style="width: 400px"
-            @keyup.enter="addTag(inputTag)"
-          />
-          <Button
-            icon="ios-add"
-            type="dashed"
-            size="small"
-            @click="addTag(inputTag)"
-            style="margin-left: 2.5%"
-            >添加标签</Button
-          >
-          <Select
-            v-model="useTagTemplate"
-            style="width: 200px; margin-left: 15px"
-            placeholder="从历史模板中选择"
-            @on-change="pushTagTemplate"
-          >
-            <Option
-              v-for="(tagItem, index) in tagTemplateList"
-              :value="tagItem.value"
-              :key="index"
-              >{{ tagItem.label }}</Option
-            >
-          </Select>
-          <div>
-            <Tag
-              color="primary"
-              v-for="(item, index) in this.formInline.tagList"
-              :key="index"
-              closable
-              @on-close="deleteTag(index)"
-              >{{ item }}</Tag
-            >
-          </div>
-          <!-- <div>
-            <Tag style="cursor: pointer" @click.native="addTag('陆地')"
-              >陆地</Tag
-            >
-            <Tag style="cursor: pointer" @click.native="addTag('沿海')"
-              >沿海</Tag
-            >
-            <Tag style="cursor: pointer" @click.native="addTag('海洋')"
-              >海洋</Tag
-            >
-            <Tag style="cursor: pointer" @click.native="addTag('气候')"
-              >气候</Tag
-            >
-            <Tag style="cursor: pointer" @click.native="addTag('生态')"
-              >生态</Tag
-            >
-            <Tag style="cursor: pointer" @click.native="addTag('地质')"
-              >地质</Tag
-            >
-            <Tag style="cursor: pointer" @click.native="addTag('人类')"
-              >人类</Tag
-            >
-            <Tag style="cursor: pointer" @click.native="addTag('GIS & RS')"
-              >GIS & RS</Tag
-            >
-          </div> -->
-          <Checkbox
-            v-model="saveTagTemplate"
-            v-if="
-              formInline.tagList.length > 0 &&
-              (useTagTemplate == '' || useTagTemplate == undefined)
-            "
-            >是否保存模板</Checkbox
-          >
-        </FormItem>
-        <FormItem prop="file" label="资源上传" :label-width="100">
-          <div style="width: 80%">
-            <uploader
-              :options="uploaderOptions"
-              :autoStart="true"
-              :fileStatusText="{
-                success: '上传成功',
-                error: '上传失败',
-                uploading: '正在上传',
-                paused: '暂停上传',
-                waiting: '等待上传',
-              }"
-              @file-success="onFileSuccess"
-              @file-added="fileAdded"
-              @file-error="onFileError"
-            >
-              <uploader-unsupport></uploader-unsupport>
-              <uploader-drop>
-                <uploader-btn :attrs="attrs" single>上传</uploader-btn>
-              </uploader-drop>
-              <uploader-list></uploader-list>
-            </uploader>
-          </div>
-          <!-- <Upload
-            :max-size="1024 * 1024"
-            type="drag"
-            v-if="this.toUploadFiles.length == 0"
-            :before-upload="gatherFile"
-            action="-"
-            style="width: 30%"
-          >
-            <div style="padding: 20px 0">
-              <Icon
-                type="ios-cloud-upload"
-                size="52"
-                style="color: #3399ff"
-              ></Icon>
-              <p>
-                点击或拖拽文件上传 ( 文件大小不超过
-                <span style="color: red">2GB</span>)
-              </p>
-            </div>
-          </Upload>
-          <div
-            style="padding: 0 10px 0 10px; max-height: 200px; overflow-y: auto"
-            v-else
-          >
-            <ul v-for="(list, index) in toUploadFiles" :key="index">
-              <li style="display: flex">
-                File name:
-                <span style="font-size: 10px; margin: 0 5px 0 5px"
-                  >{{ list.name }} ( {{ list.fileSize }} )</span
-                >
-                <Icon
-                  type="ios-close"
-                  size="20"
-                  @click="delFileList(index)"
-                  style="
-                    display: flex;
-                    justify-content: flex-end;
-                    cursor: pointer;
-                  "
-                ></Icon>
-              </li>
-            </ul>
-          </div> -->
-        </FormItem>
-        <Alert
-          type="warning"
-          v-if="formInline.type == 'Model'"
-          style="width: 70%; margin-left: 8%"
-          >1.请上传模型文件的压缩文件，尽量使用英文命名。2.目前仅支持obj、pmx、fbx格式的模型。</Alert
+  <div class="main">
+    <div class="project form">
+      <h1>添加资源</h1>
+      <div>
+        <Form
+          ref="formInline"
+          :model="formInline"
+          :rules="newProjectRule"
+          class="projectForm"
         >
-        <FormItem prop="image" label="作品封面" :label-width="100">
-          <div class="inline_style">
-            <div class="demo-upload-list" v-if="img != ''">
-              <template>
+          <FormItem prop="resType" label="资源类别" :label-width="150">
+            <RadioGroup v-model="formInline.resType" style="width: 80%">
+              <Radio label="data" style="font-size: 14px">数据资源</Radio>
+              <Radio label="model" style="font-size: 14px">模型资源</Radio>
+              <Radio label="other" style="font-size: 14px">其他资源</Radio>
+            </RadioGroup>
+          </FormItem>
+          <FormItem prop="workName" label="资源名称" :label-width="150">
+            <Input
+              v-model="formInline.workName"
+              placeholder="输入资源名称（少于 20 个字）..."
+            />
+          </FormItem>
+          <FormItem prop="description" label="资源描述" :label-width="150">
+            <Input
+              v-model="formInline.description"
+              type="textarea"
+              placeholder="输入资源描述..."
+            />
+          </FormItem>
+          <FormItem
+            prop="geoType"
+            label="数据类别"
+            :label-width="150"
+            v-if="formInline.resType == 'data'"
+          >
+            <RadioGroup v-model="formInline.geoType" style="width: 80%">
+              <Radio label="circle" style="font-size: 14px">点</Radio>
+              <Radio label="line" style="font-size: 14px">线</Radio>
+              <Radio label="fill" style="font-size: 14px">面</Radio>
+            </RadioGroup>
+          </FormItem>
+          <FormItem prop="problemTags" label="涉及问题选择" :label-width="150">
+            <el-select
+              v-model="formInline.problemTags"
+              placeholder="请选择"
+              class="questionsSelect"
+              multiple
+              collapse-tags
+            >
+              <el-option
+                v-for="item in questionsSelectOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </FormItem>
+          <FormItem prop="tagList" label="资源标签" :label-width="150">
+            <!-- <el-input
+              v-model="inputTag"
+              placeholder="输入一些标签来描述作品..."
+              style="width: 400px"
+              @keyup.enter="addTag(inputTag)"
+            /> -->
+            <el-autocomplete
+              class="inline-input"
+              v-model="inputTag"
+              :fetch-suggestions="querySearch"
+              placeholder="输入一些标签来描述作品..."
+              :trigger-on-focus="false"
+              @select="handleSelect"
+              @keyup.enter="addTag(inputTag)"
+              style="width: 400px"
+            ></el-autocomplete>
+            <Button
+              icon="ios-add"
+              type="dashed"
+              size="small"
+              @click="addTag(inputTag)"
+              style="margin-left: 2.5%"
+              >添加标签</Button
+            >
+            <div>
+              <Tag
+                color="primary"
+                v-for="(item, index) in this.formInline.tagList"
+                :key="index"
+                closable
+                @on-close="deleteTag(index)"
+                >{{ item }}</Tag
+              >
+            </div>
+            <div>
+              <Tag style="cursor: pointer" @click="addTag('地形')">地形</Tag>
+              <Tag style="cursor: pointer" @click="addTag('土壤')">土壤</Tag>
+              <Tag style="cursor: pointer" @click="addTag('海洋')">海洋</Tag>
+              <Tag style="cursor: pointer" @click="addTag('气候')">气候</Tag>
+              <Tag style="cursor: pointer" @click="addTag('生态')">生态</Tag>
+              <Tag style="cursor: pointer" @click="addTag('地质')">地质</Tag>
+              <Tag style="cursor: pointer" @click="addTag('水文')">水文</Tag>
+              <Tag style="cursor: pointer" @click="addTag('社会经济')"
+                >社会经济</Tag
+              >
+            </div>
+          </FormItem>
+          <FormItem prop="file" label="资源上传" :label-width="150">
+            <div style="width: 80%">
+              <uploader
+                :options="uploaderOptions"
+                :autoStart="autoStart"
+                :fileStatusText="{
+                  success: '上传成功',
+                  error: '上传失败',
+                  uploading: '正在上传',
+                  paused: '暂停上传',
+                  waiting: '等待上传',
+                }"
+                @file-success="onFileSuccess"
+                @file-added="fileAdded"
+                @file-error="onFileError"
+              >
+                <uploader-unsupport></uploader-unsupport>
+                <uploader-drop>
+                  <uploader-btn :attrs="attrs" single>上传</uploader-btn>
+                </uploader-drop>
+                <uploader-list></uploader-list>
+              </uploader>
+            </div>
+          </FormItem>
+          <FormItem
+            prop="visualFile"
+            label="可视化文件上传"
+            :label-width="150"
+            v-if="formInline.resType == 'data'"
+          >
+            <div style="width: 300px">
+              <Upload
+                :max-size="1024 * 1024"
+                multiple
+                type="drag"
+                :before-upload="gatherFile"
+                action="-"
+              >
+                <div style="padding: 20px 0">
+                  <Icon
+                    type="ios-cloud-upload"
+                    size="52"
+                    style="color: #3399ff"
+                  ></Icon>
+                  <p>
+                    点击或拖拽文件上传 ( 文件大小不超过
+                    <span style="color: red">2GB</span>)
+                  </p>
+                </div>
+              </Upload>
+              <div
+                style="
+                  padding: 0 10px 0 10px;
+                  max-height: 200px;
+                  overflow-y: auto;
+                "
+              >
+                <ul v-for="(list, index) in toUploadVisualFiles" :key="index">
+                  <li style="display: flex">
+                    文件名:
+                    <span style="font-size: 10px; margin: 0 5px 0 5px"
+                      >{{ list.name }} ( {{ list.fileSize }} )</span
+                    >
+                    <Icon
+                      type="ios-close"
+                      size="20"
+                      @click="delFileList(index)"
+                      style="
+                        display: flex;
+                        justify-content: flex-end;
+                        cursor: pointer;
+                      "
+                    ></Icon>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </FormItem>
+          <FormItem prop="image" label="资源封面" :label-width="150">
+            <div class="inline_style">
+              <div class="demo-upload-list" v-if="img != ''">
+                <!-- <template> -->
                 <img v-bind:src="img" />
                 <div class="demo-upload-list-cover">
-                  <Icon
-                    type="ios-eye-outline"
-                    @click="handleView()"
-                  ></Icon>
-                  <Icon
-                    type="ios-trash-outline"
-                    @click="handleRemove()"
-                  ></Icon>
+                  <Icon type="ios-eye-outline" @click="handleView()"></Icon>
+                  <Icon type="ios-trash-outline" @click="handleRemove()"></Icon>
                 </div>
-              </template>
+                <!-- </template> -->
+              </div>
+              <div class="uploadBox">
+                <Icon
+                  type="ios-camera"
+                  size="20"
+                  style="position: absolute; margin: 18px"
+                ></Icon>
+                <input
+                  id="choosePicture"
+                  @change="uploadPhoto($event)"
+                  type="file"
+                  class="uploadAvatar"
+                  accept="image/*"
+                />
+              </div>
+              <br />
             </div>
-            <div class="uploadBox">
-              <Icon
-                type="ios-camera"
-                size="20"
-                style="position: absolute; margin: 18px"
-              ></Icon>
-              <input
-                id="choosePicture"
-                @change="uploadPhoto($event)"
-                type="file"
-                class="uploadAvatar"
-                accept="image/*"
-              />
+          </FormItem>
+          <FormItem>
+            <div class="inline_style" style="margin-top: 20px">
+              <Button @click="back2List" style="margin-left: 37%; width: 150px"
+                >取消</Button
+              >
+              <Button
+                type="success"
+                @click="validateCreateProject('formInline')"
+                style="margin-left: 15px; width: 150px"
+                >保存</Button
+              >
             </div>
-            <br />
-          </div>
-        </FormItem>
-        <FormItem>
-          <div class="inline_style" style="margin-top: 20px">
-            <Button @click="back2List" style="margin-left: 37%; width: 150px"
-              >取消</Button
-            >
-            <Button
-              type="success"
-              @click="validateCreateProject('formInline')"
-              style="margin-left: 15px; width: 150px"
-              >保存</Button
-            >
-          </div>
-        </FormItem>
-      </Form>
+          </FormItem>
+        </Form>
+      </div>
+      <Modal title="View Image" v-model="visible">
+        <img :src="img" v-if="visible" style="width: 100%" />
+      </Modal>
     </div>
-    <Modal title="View Image" v-model="visible">
-      <img :src="img" v-if="visible" style="width: 100%" />
-    </Modal>
   </div>
 </template>
 
 
 <script>
+import axios from "axios";
+import "./style.css";
 // import { get, post, del, put } from "@/axios";
 
 export default {
   data() {
     return {
       formInline: {
+        resType: "data",
         workName: "",
-        type: "Image",
+        geoType: "circle",
         description: "",
         //tag列表
         tagList: [],
+        problemTags: [],
         file: "",
       },
+      questionsSelectOptions: [
+        {
+          value: "流域水循环及其驱动机制",
+          label: "流域水循环及其驱动机制",
+        },
+        {
+          value: "全球变化与区域环境演化",
+          label: "全球变化与区域环境演化",
+        },
+        {
+          value: "长三角灾害响应与治理",
+          label: "长三角灾害响应与治理",
+        },
+        {
+          value: "长三角城市化与人地关系协调发展",
+          label: "长三角城市化与人地关系协调发展",
+        },
+      ],
       newProjectRule: {
+        resType: [
+          {
+            required: true,
+            message: "Please select category",
+            trigger: "change",
+          },
+        ],
         workName: [
           {
             required: true,
@@ -367,20 +402,27 @@ export default {
             max: 60,
           },
         ],
-        type: [
+        geoType: [
           {
             required: true,
             message: "Please select category",
             trigger: "change",
           },
         ],
-        // tagList: [
-        //   {
-        //     required: true,
-        //     message: "Please select tag",
-        //     trigger: "change",
-        //   },
-        // ],
+        problemTags: [
+          {
+            required: true,
+            message: "Please select tag",
+            trigger: "change",
+          },
+        ],
+        tagList: [
+          {
+            required: true,
+            message: "Please select tag",
+            trigger: "blur",
+          },
+        ],
         file: [
           {
             required: true,
@@ -390,6 +432,7 @@ export default {
         ],
       },
       toUploadFiles: [],
+      toUploadVisualFiles: [],
       fileCountTimer: null,
       //用来存储输入的单个标签变量
       inputTag: "",
@@ -403,12 +446,11 @@ export default {
       imageFile: null,
       createProjectInfo: {},
       uploaderOptions: {
-        target: "/visualResourceLibrary/work/bigFile/", //上传地址
+        target: "http://172.21.212.63:8999/fileTransfer/upload", //上传地址
         chunkSize: 5 * 1024 * 1024,
         testChunks: false,
         headers: {
-          //设置header
-          Authorization: JSON.parse(localStorage.getItem("userInfo")).token,
+          //设置header,
         },
         singleFile: true,
         query: {
@@ -417,10 +459,34 @@ export default {
           // type: this.fileType,
         },
       },
+      autoStart: true,
       attrs: {
         accept: "*", //接受文件类型
       },
       uploaderRes: {},
+      restaurants: [
+        { value: "基础地理", label: "基础地理" },
+        { value: "土地利用/覆盖", label: "土地利用/覆盖" },
+        { value: "人口", label: "人口" },
+        { value: "社会经济", label: "社会经济" },
+        { value: "地形", label: "地形" },
+        { value: "地貌", label: "地貌" },
+        { value: "土壤", label: "土壤" },
+        { value: "湖泊", label: "湖泊" },
+        { value: "植被", label: "植被" },
+        { value: "生态系统", label: "生态系统" },
+        { value: "灾害", label: "灾害" },
+        { value: "环境", label: "环境" },
+        { value: "气候", label: "气候" },
+        { value: "水文", label: "水文" },
+        { value: "农业", label: "农业" },
+        { value: "自然模拟", label: "自然模拟" },
+        { value: "人类活动", label: "人类活动" },
+        { value: "综合分析", label: "综合分析" },
+        { value: "其他", label: "其他" },
+        { value: "学术研究", label: "学术研究" },
+        { value: "说明文档", label: "说明文档" },
+      ],
     };
   },
   created() {
@@ -428,7 +494,6 @@ export default {
     // if (!this.$store.getters.userState) {
     //   this.$router.push({ name: "Login" });
     // }
-
     // Array.prototype.contains = function (obj) {
     //   var i = this.length;
     //   while (i--) {
@@ -453,76 +518,71 @@ export default {
       }
     },
     validateCreateProject(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.commitProject();
-          if (this.saveTagTemplate) {
-            this.commitTagTemplate();
-          }
-        } else {
-          this.$Message.error("创建失败，请检查填写的内容！");
-        }
-      });
-    },
-    changeTagTemplate(value) {
-      // console.log(value);
-      this.getTagTemplateByType(value);
-    },
-    // async commitProject() {
-    //   // 将已经上传至chunk区的文件或压缩包进行保存
-    //   let uploaderRes = this.uploaderRes;
-    //   if (uploaderRes.code == 0) {
-    //     // let uploadFiles = this.toUploadFiles[0];
-    //     let formData = new FormData();
-    //     formData.append("filePath", uploaderRes.data.path);
-    //     // formData.append("file", uploadFiles);
-    //     formData.append("type", this.formInline.type);
-    //     formData.append("description", this.formInline.description);
-    //     formData.append("workName", this.formInline.workName);
-    //     formData.append("image", this.imageFile);
-    //     formData.append("tags", this.formInline.tagList);
-    //     try {
-    //       let res = await post("/visualResourceLibrary/work", formData);
-    //       // console.log(res);
-    //       this.$Message.success("创建成功");
-    //       this.$router.go(-1);
-    //     } catch (e) {
-    //       this.$Message.error("创建失败");
-    //       console.log(e);
-    //     }
-    //   } else {
-    //     //上传失败，请重新上传
-    //     this.$Message.error("上传失败，请重新上传");
-    //   }
-    // },
-    gatherFile(file) {
-      this.toUploadFiles = [];
-      let that = this;
-      if (that.toUploadFiles.length >= 10) {
-        if (this.fileCountTimer != null) {
-          clearTimeout(this.fileCountTimer);
-        }
-        this.fileCountTimer = setTimeout(() => {
-          this.$Message.info("最多只能上传10个文件");
-        }, 500);
+      //   this.$refs[name].validate((valid) => {
+      //     if (valid) {
+      //       this.commitProject();
+      //     } else {
+      //
+      //     }
+      //   });
+      console.log(this.formInline);
+      console.log(this.uploaderRes);
+      if (
+        this.formInline.workName != "" &&
+        this.formInline.geoType != "" &&
+        this.formInline.problemTags != [] &&
+        this.formInline.tagList != [] &&
+        this.uploaderRes.code == 0
+      ) {
+        this.commitProject();
       } else {
-        var fileSize = file.size;
-        if (fileSize < 1024) {
-          file.fileSize = fileSize + "b";
-        } else if (fileSize < 1024 * 1024) {
-          file.fileSize = Math.round((fileSize / 1024) * 100) / 100 + "Kb";
-        } else {
-          file.fileSize =
-            Math.round((fileSize / (1024 * 1024)) * 100) / 100 + "Mb";
-        }
-        that.formInline.file = file.name;
-        that.toUploadFiles.push(file);
-        // console.log(file);
+        this.$Message.error("创建失败，请检查填写的内容！");
       }
-      return false;
     },
-    delFileList(index) {
-      this.toUploadFiles.splice(index, 1);
+    commitProject() {
+      // 将已经上传至chunk区的文件或压缩包进行保存
+      let uploaderRes = this.uploaderRes;
+      if (uploaderRes.code == 0) {
+        let formData = new FormData();
+        let info = {};
+        info.name = this.formInline.workName;
+        info.description = this.formInline.description;
+        info.type = this.formInline.resType;
+        info.normalTags = this.formInline.tagList.toString();
+        info.problemTags = this.formInline.problemTags.toString();
+        info.publicBoolean = true;
+        info.visualizationBoolean = true;
+        info.geoType = this.formInline.geoType;
+        info.fileStoreName = uploaderRes.data.fileStoreName;
+        info.fileSize = this.formInline.fileSize;
+
+        formData.append("imgFile", this.imageFile);
+        formData.append("visualFile", this.toUploadVisualFiles[0]);
+        formData.append(
+          "info",
+          new Blob([JSON.stringify(info)], { type: "application/json" })
+        );
+        axios({
+          url: "http://172.21.212.63:8999/saveResourceData",
+          method: "post",
+          //忽略contentType
+          contentType: false,
+          //取消序列换 formData本来就是序列化好的
+          processData: false,
+          dataType: "json",
+          data: formData,
+        }).then(
+          (res) => {
+            console.log(res.data);
+            this.$router.go(-1);
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+      } else {
+        confirm("Created project fail.");
+      }
     },
     //创建历史纪录的函数
     addHistoryEvent(scopeId) {
@@ -551,7 +611,7 @@ export default {
         });
     },
     addTag(tag) {
-      if (tag != "" && !this.formInline.tagList.contains(tag)) {
+      if (tag != "" && this.formInline.tagList.toString().indexOf(tag) == -1) {
         this.formInline.tagList.push(tag);
         this.inputTag = "";
         this.useTagTemplate = "";
@@ -602,12 +662,59 @@ export default {
       //选择文件后暂停文件上传，上传时手动启动
       file.pause();
     },
+    gatherFile(file) {
+      let that = this;
+      if (that.toUploadVisualFiles.length >= 5) {
+        if (this.fileCountTimer != null) {
+          clearTimeout(this.fileCountTimer);
+        }
+        this.fileCountTimer = setTimeout(() => {
+          this.$Message.info("最多只能上传5个文件");
+        }, 500);
+      } else {
+        var fileSize = file.size;
+        if (fileSize < 1024) {
+          file.fileSize = fileSize + "b";
+        } else if (fileSize < 1024 * 1024) {
+          file.fileSize = Math.round((fileSize / 1024) * 100) / 100 + "Kb";
+        } else {
+          file.fileSize =
+            Math.round((fileSize / (1024 * 1024)) * 100) / 100 + "Mb";
+        }
+        that.toUploadVisualFiles.push(file);
+      }
+      return false;
+    },
+    delFileList(index) {
+      this.toUploadVisualFiles.splice(index, 1);
+    },
     onFileError(file) {
       console.log("error", file);
     },
     onFileSuccess(rootFile, file, response, chunk) {
       this.uploaderRes = JSON.parse(response);
-      this.formInline.file = this.uploaderRes.data.name;
+      this.formInline.file = this.uploaderRes.data.fileStoreName;
+      this.formInline.fileSize = this.uploaderRes.data.fileSize;
+    },
+    querySearch(queryString, cb) {
+      var restaurants = this.restaurants;
+      var results = queryString
+        ? restaurants.filter(this.createFilter(queryString))
+        : restaurants;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        return (
+          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
+          0
+        );
+      };
+    },
+    handleSelect(item) {
+      this.addTag(item.value);
+      this.inputTag = "";
     },
   },
 };

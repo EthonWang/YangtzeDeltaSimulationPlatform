@@ -32,12 +32,6 @@ const routes = [
     children: []
   },
   {
-    isBar: false,
-    path: '/newResource',
-    name: '添加资源',
-    component: newResource,
-  },
-  {
     isBar: true,
     path: "/model",
     name: "模型",
@@ -131,6 +125,12 @@ const routes = [
     component: () =>
       import("../views/Register.vue"),
     children: []
+  },
+  {
+    isBar: false,
+    path: '/newResource',
+    name: '添加资源',
+    component: newResource,
   },
 ];
 class base_route {

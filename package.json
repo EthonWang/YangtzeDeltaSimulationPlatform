@@ -26,6 +26,7 @@
     "vue": "^3.0.0",
     "vue-cli-plugin-style-resources-loader": "^0.1.5",
     "vue-router": "^4.0.0-0",
+    "vue-simple-uploader": "^1.0.0-beta.5",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {

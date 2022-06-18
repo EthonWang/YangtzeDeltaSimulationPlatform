@@ -3,7 +3,11 @@
     <el-col :span="6" v-for="(item, index) in resList" :key="index">
       <el-card class="resListCard">
         <div class="imageBox">
-          <el-image :src="item.src" class="image" :fit="contain"></el-image>
+          <el-image
+            :src="'http://172.21.212.63:8999/' + item.imgWebAddress"
+            class="image"
+            :fit="contain"
+          ></el-image>
         </div>
         <div style="padding: 7px">
           <span class="cardTitle" :title="item.name">{{ item.name }}</span>
@@ -14,12 +18,16 @@
             @click="showMapCard(item)"
             >查看</el-button
           >
-          <el-button class="downloadButton">下载</el-button>
+          <el-button class="downloadButton" @click="downloadRes(item)"
+            >下载</el-button
+          >
           <div class="fontSet" style="margin: 5px 0">
-            <span>{{ item.fileSize }}</span
+            <span>{{ filterSizeType(item.fileSize) }}</span
             ><br />
-            <span>南京师范大学地理科学学院</span>
-            <span style="float: right">2022-5-11</span>
+            <span>{{ item.userEmail }}</span>
+            <span style="float: right">{{
+              item.createTime.split(" ")[0]
+            }}</span>
           </div>
         </div>
       </el-card>
@@ -32,19 +40,14 @@
   <el-dialog
     v-model="mapCardDialogVisible"
     :title="selectedRes.name"
-    width="50%"
-    :before-close="handleClose"
-    class="mapboxCardDialog"
+    width="60%"
+    custom-class="mapboxCardDialog"
   >
-    <mapbox-card :jsonData="selectedRes" ></mapbox-card>
+    <mapbox-card :jsonData="selectedRes"></mapbox-card>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="go2Model()"
-          >添加到个人中心</el-button
-        >
-        <el-button @click="mapCardDialogVisible = false"
-          >取消</el-button
-        >
+        <el-button type="primary" @click="go2Model()">添加到个人中心</el-button>
+        <el-button @click="mapCardDialogVisible = false">取消</el-button>
       </span>
     </template>
   </el-dialog>
@@ -54,114 +57,17 @@
 import { onMounted, ref } from "vue";
 import { ElMessageBox } from "element-plus";
 import MapboxCard from "../Mapbox/MapboxCard.vue";
+import { ElMessage } from "element-plus";
 export default {
   name: "resourceList",
-  props: [],
+  props: {
+    resList: Array,
+  },
   components: {
     MapboxCard,
   },
   emits: [],
   setup(props, ctx) {
-    let resList = [
-      {
-        id: "111",
-        name: "dock",
-        src: require("@/assets/map/land1_2855_3514.jpg"),
-        path: "dock2_Project1_FeaturesToJSON.json",
-        geoType: "line",
-        fileSize: "23.72MB",
-      },
-      {
-        id: "222",
-        name: "CN_province",
-        src: require("@/assets/map/map_1_3697_8171.jpg"),
-        path: "CN_province.json",
-        geoType: "fill",
-        fileSize: "49.2MB",
-      },
-      {
-        id: "333",
-        name: "中国河湖矢量数据1",
-        src: require("@/assets/map/v2-cd0df2d77622805c422b8c2fbdb02823_720w_7778.jpg"),
-        path: "CHN_water_areas_dcw.json",
-        geoType: "line",
-        fileSize: "23.72MB",
-      },
-      {
-        id: "444",
-        name: "中国河湖矢量数据2",
-        src: require("@/assets/map/v2-d36ccca3213e09091d17ec71e902cecc_720w_654.jpg"),
-        path: "CHN_water_lines_dcw.json",
-        geoType: "line",
-        fileSize: "1.66MB",
-      },
-      {
-        id: "555",
-        name: "长三角1:1000万自然人文地理",
-        src: require("@/assets/map/v2-d36ccca3213e09091d17ec71e902cecc_720w_7034.jpg"),
-        fileSize: "2.15GB",
-      },
-      {
-        id: "111",
-        name: "nanjing DEM",
-        src: require("@/assets/map/land1_2855_3514.jpg"),
-        fileSize: "23.72MB",
-      },
-      {
-        id: "222",
-        name: "shanghai DEM",
-        src: require("@/assets/map/map_1_3697_8171.jpg"),
-        fileSize: "49.2MB",
-      },
-      {
-        id: "333",
-        name: "shanghai landuse",
-        src: require("@/assets/map/v2-cd0df2d77622805c422b8c2fbdb02823_720w_7778.jpg"),
-        fileSize: "23.72MB",
-      },
-      {
-        id: "444",
-        name: "shanghai Soil",
-        src: require("@/assets/map/v2-d36ccca3213e09091d17ec71e902cecc_720w_654.jpg"),
-        fileSize: "1.66MB",
-      },
-      {
-        id: "555",
-        name: "长三角1:1000万自然人文地理",
-        src: require("@/assets/map/v2-d36ccca3213e09091d17ec71e902cecc_720w_7034.jpg"),
-        fileSize: "2.15GB",
-      },
-      {
-        id: "111",
-        name: "nanjing DEM",
-        src: require("@/assets/map/land1_2855_3514.jpg"),
-        fileSize: "23.72MB",
-      },
-      {
-        id: "222",
-        name: "shanghai DEM",
-        src: require("@/assets/map/map_1_3697_8171.jpg"),
-        fileSize: "49.2MB",
-      },
-      {
-        id: "333",
-        name: "shanghai landuse",
-        src: require("@/assets/map/v2-cd0df2d77622805c422b8c2fbdb02823_720w_7778.jpg"),
-        fileSize: "23.72MB",
-      },
-      {
-        id: "444",
-        name: "shanghai Soil",
-        src: require("@/assets/map/v2-d36ccca3213e09091d17ec71e902cecc_720w_654.jpg"),
-        fileSize: "1.66MB",
-      },
-      {
-        id: "555",
-        name: "长三角1:1000万自然人文地理",
-        src: require("@/assets/map/v2-d36ccca3213e09091d17ec71e902cecc_720w_7034.jpg"),
-        fileSize: "2.15GB",
-      },
-    ];
     const mapCardDialogVisible = ref(false);
     const selectedRes = ref({});
     const handleClose = function (done) {
@@ -174,20 +80,48 @@ export default {
         });
     };
     const showMapCard = function (info) {
-    //   console.log(info);
+      // if (info.visualizationBoolean) {
       selectedRes.value = info;
       mapCardDialogVisible.value = true;
+      // } else {
+      //   // this.$Message.warning("该资源未开放可视化权限，详情请联系网站管理员！");
+      //   ElMessage({
+      //     message: "该资源未开放可视化权限，详情请联系网站管理员！",
+      //     type: "warning",
+      //   });
+      // }
     };
-    const go2Model = function(){
-        location.href = "/model";
+    const downloadRes = function (item) {
+      if (item.publicBoolean) {
+        window.location.href =
+          "http://172.21.212.63:8999/" + item.fileWebAddress;
+      } else {
+        // this.$Message.warning("该资源未开放下载权限，详情请联系网站管理员！");
+        ElMessage({
+          message: "该资源未开放下载权限，详情请联系网站管理员！",
+          type: "warning",
+        });
+      }
+    };
+    const go2Model = function () {
+      location.href = "/model";
+    };
+    const filterSizeType = function (value) {
+      if (value === 0) return "0 B";
+      let k = 1024;
+      let sizes = ["B", "KB", "MB", "GB"];
+      let i = Math.floor(Math.log(value) / Math.log(k));
+      return (value / Math.pow(k, i)).toPrecision(4) + " " + sizes[i];
     };
     return {
-      resList,
+      // showResList,
       mapCardDialogVisible,
       selectedRes,
       handleClose,
       showMapCard,
-      go2Model
+      downloadRes,
+      go2Model,
+      filterSizeType,
     };
   },
 };
@@ -243,5 +177,10 @@ export default {
 }
 .el-card {
   --el-card-padding: 0px;
+}
+</style>
+<style lang="less">
+.mapboxCardDialog .el-dialog__body {
+  padding: 10px;
 }
 </style>

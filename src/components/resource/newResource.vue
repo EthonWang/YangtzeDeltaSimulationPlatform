@@ -144,18 +144,6 @@ h1 {
               placeholder="输入资源描述..."
             />
           </FormItem>
-          <FormItem
-            prop="geoType"
-            label="数据类别"
-            :label-width="150"
-            v-if="formInline.resType == 'data'"
-          >
-            <RadioGroup v-model="formInline.geoType" style="width: 80%">
-              <Radio label="circle" style="font-size: 14px">点</Radio>
-              <Radio label="line" style="font-size: 14px">线</Radio>
-              <Radio label="fill" style="font-size: 14px">面</Radio>
-            </RadioGroup>
-          </FormItem>
           <FormItem prop="problemTags" label="涉及问题选择" :label-width="150">
             <el-select
               v-model="formInline.problemTags"
@@ -244,6 +232,31 @@ h1 {
                 <uploader-list></uploader-list>
               </uploader>
             </div>
+          </FormItem>
+          <FormItem
+            prop="visualType"
+            label="数据类别"
+            :label-width="150"
+            v-if="formInline.resType == 'data'"
+          >
+            <RadioGroup v-model="formInline.visualType" style="width: 80%">
+              <Radio label="shp" style="font-size: 14px">矢量</Radio>
+              <Radio label="tif" style="font-size: 14px">栅格</Radio>
+              <Radio label="img" style="font-size: 14px">图片</Radio>
+              <Radio label="video" style="font-size: 14px">视频</Radio>
+            </RadioGroup>
+          </FormItem>
+          <FormItem
+            prop="geoType"
+            label="矢量数据类别"
+            :label-width="150"
+            v-if="formInline.resType == 'data' && formInline.visualType == 'shp'"
+          >
+            <RadioGroup v-model="formInline.geoType" style="width: 80%">
+              <Radio label="circle" style="font-size: 14px">点</Radio>
+              <Radio label="line" style="font-size: 14px">线</Radio>
+              <Radio label="fill" style="font-size: 14px">面</Radio>
+            </RadioGroup>
           </FormItem>
           <FormItem
             prop="visualFile"
@@ -361,6 +374,7 @@ export default {
       formInline: {
         resType: "data",
         workName: "",
+        visualType: "shp",
         geoType: "circle",
         description: "",
         //tag列表
@@ -400,6 +414,13 @@ export default {
             message: "The name cannot be empty and no more than 20 characters",
             trigger: "blur",
             max: 60,
+          },
+        ],
+        visualType: [
+          {
+            required: true,
+            message: "Please select category",
+            trigger: "change",
           },
         ],
         geoType: [
@@ -529,6 +550,7 @@ export default {
       console.log(this.uploaderRes);
       if (
         this.formInline.workName != "" &&
+        this.formInline.visualType != "" &&
         this.formInline.geoType != "" &&
         this.formInline.problemTags != [] &&
         this.formInline.tagList != [] &&
@@ -551,7 +573,12 @@ export default {
         info.normalTags = this.formInline.tagList.toString();
         info.problemTags = this.formInline.problemTags.toString();
         info.publicBoolean = true;
-        info.visualizationBoolean = true;
+        if(this.toUploadVisualFiles.length >= 1){
+          info.visualizationBoolean = true;
+        } else {
+          info.visualizationBoolean = false;
+        }
+        info.visualType = this.formInline.visualType;
         info.geoType = this.formInline.geoType;
         info.fileStoreName = uploaderRes.data.fileStoreName;
         info.fileSize = this.formInline.fileSize;

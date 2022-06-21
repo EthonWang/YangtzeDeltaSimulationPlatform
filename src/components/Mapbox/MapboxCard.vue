@@ -126,7 +126,7 @@ export default {
       map.flyTo({
         center: [119.5, 31.5],
         zoom: 6,
-      })
+      });
     },
   },
   mounted() {
@@ -199,10 +199,11 @@ export default {
 
       this.newShpInfo = this.jsonData;
       //   console.log(this.newShpInfo);
+
       let that = this;
       setTimeout(function () {
         that.addLayerToMap(that.newShpInfo);
-      }, 1500);
+      }, 1000);
     },
     addLayerToMap(data) {
       this.tagList = [];
@@ -215,10 +216,12 @@ export default {
         this.tagList.push(problemTags[i]);
       }
       // 加载数据
+      console.log(data);
       let newShpInfo = data;
       if (
         newShpInfo.visualWebAddress != "" &&
-        newShpInfo.visualizationBoolean
+        newShpInfo.visualizationBoolean && 
+        newShpInfo.visualType == "shp"
       ) {
         map.addSource(newShpInfo.name + "_" + newShpInfo.id, {
           type: "geojson",
@@ -231,19 +234,37 @@ export default {
           paint: this.layerStyle[newShpInfo.geoType].paint,
         };
         map.addLayer(newLayer);
+      } else if(
+        newShpInfo.visualWebAddress != "" &&
+        newShpInfo.visualizationBoolean && 
+        newShpInfo.visualType == "tif"
+      ){
+        map.addSource(newShpInfo.name + "_" + newShpInfo.id, {
+          type: "raster",
+          tiles: [
+            "http://localhost:8088/geoserver/landuse_test/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=landuse_test%3AyangtzeRiver_landuse&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857&WIDTH=690&HEIGHT=768&BBOX={bbox-epsg-3857}",
+          ],
+          tileSize: 256, // 切片的最小展示尺寸（可选，单位：像素，默认值为 512，即 1024/2）
+        });
+        let newLayer = {
+          id: newShpInfo.id,
+          source: newShpInfo.name + "_" + newShpInfo.id,
+          type: "raster",
+        };
+        map.addLayer(newLayer);
       } else if (!newShpInfo.visualizationBoolean) {
         ElNotification({
           title: newShpInfo.name,
           message: "该资源未开放可视化权限，详情请联系网站管理员！",
           type: "warning",
-          duration: 0,
+          duration: 5000,
         });
       } else if (newShpInfo.visualWebAddress == "") {
         ElNotification({
           title: newShpInfo.name,
           message: "未找到可视化资源文件！",
           type: "warning",
-          duration: 0,
+          duration: 5000,
         });
       }
     },

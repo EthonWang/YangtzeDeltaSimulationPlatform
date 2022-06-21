@@ -202,7 +202,7 @@ const InvokeModel = () => {
 const modelTreeData = ref([]);
 
 const getTreeData = () => {
-  axios.get("http://172.21.212.63:8999/model/getModelTree").then((res) => {
+  axios.get("/back/model/getModelTree").then((res) => {
     console.log("模型目录树", res.data.data);
     modelTreeData.value = res.data.data;
   });

@@ -25,7 +25,7 @@
 
       <div class="content-col-2 flex-Column-Around-Center">
 
-        <!--地图-->
+        <!--地图-->`
         <div class="part border-box">
           <div id="map" style=" z-index: 5"></div>
           <div class="dateForestShow" style=" z-index: 5"><h1>{{ dateForest }}</h1></div>
@@ -63,8 +63,9 @@
       <div class="content-col-3 flex-Column-Around-Center">
         <div class="part border-box ">
           <!--          <div id="barChart" style="  width: 100%;  height: 100%;z-index: 5"></div>-->
-          <div style="    width: 100%;    height: 100%;">
-            <img class="img" src="/case/rainForecast/historyRecord.png" style="height: 100%;width: 100%">
+          <div style="    width: 100%;    height: 100%;display: flex;    justify-content: center;">
+            <h3 style=" color: #ffffff;position: absolute;    margin-top: -2px;">历史洪灾</h3>
+            <img class="img" src="/case/rainForecast/historyRecord1.png" style="height: 100%;width: 100%">
           </div>
         </div>
         <div class="part border-box ">
@@ -318,7 +319,7 @@ export default {
         yAxis: {type: 'category', data: name},
         title: [
           {
-            text: '地区降雨排行图(mm)',
+            text: '周地区降雨排行图(mm)',
             left: 'center',
           }
         ],
@@ -384,7 +385,7 @@ export default {
 
       option = {
         title: {
-          text: '部分地区降雨预测(mm)',
+          text: '部分地区降雨预测趋势图(mm)',
           left: "center"
         },
         tooltip: {
@@ -410,7 +411,8 @@ export default {
           {
             type: 'category',
             boundaryGap: false,
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            // data: ['Day1', 'Day2', 'Day3', 'Day4', 'Day5', 'Day6', 'Day7']
+            data: ['4.3', '4.4', '4.5', '4.6', '4.7', '4.8', '4.9']
           }
         ],
         yAxis: [
@@ -666,6 +668,14 @@ export default {
 .part {
   width: 90%;
   height: 40%;
+  padding: 20px;
+  position: relative;
+  box-shadow: rgb(0 108 255) 0px 0px 25px inset;
+}
+
+.partBig{
+  width: 90%;
+  height: 90%;
   padding: 20px;
   position: relative;
   box-shadow: rgb(0 108 255) 0px 0px 25px inset;

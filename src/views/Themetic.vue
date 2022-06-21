@@ -560,7 +560,7 @@ allThematic.value = [
       },
       {
         type: "image",
-        value: "/img/%E6%B5%81%E5%9F%9F%E7%94%9F%E6%80%81%E7%8E%AF%E5%A2%83%E6%BC%94%E5%8F%98.ed4630ac.png"
+        value: "/img/%E6%B5%81%E   5%9F%9F%E7%94%9F%E6%80%81%E7%8E%AF%E5%A2%83%E6%BC%94%E5%8F%98.ed4630ac.png"
       },
     ]
   }, {

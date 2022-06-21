@@ -131,7 +131,7 @@
             <el-card :body-style="{ padding: '0px'}" style="margin-left: 10px" >
               <el-image class="caseImage"  :src="baseUrl+item.thumbnail" fit="fill"></el-image>
               <div style="display: flex;flex-direction: column;align-items: flex-start;padding:0 10px 10px 10px">
-                <p style="line-height: 0.2">{{item.name}}</p>
+                <p style="line-height: 2">{{item.name}}</p>
                 <div style="">
                   <el-button size="small" @click="handleEditCases(item,key)">编辑</el-button>
                   <el-button size="small" @click="deleteCases(key)">删除</el-button>

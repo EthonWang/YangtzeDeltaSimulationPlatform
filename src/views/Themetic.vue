@@ -13,7 +13,6 @@
               @node-click="handleNodeClick"
               :default-expand-all='true'
               :highlight-current="true"
-
           >
             <template class="custom-tree-node" v-slot="{ node,data}" >
               <span @click="checked=>getCurrentNode(checked,data)">{{node.label}}</span>
@@ -23,9 +22,14 @@
       </el-col>
       <el-col :offset="1" :span="15">
         <el-card style="padding-bottom: 40px">
-          <div>
-            <h2 class="thematicName">{{thematicItem.name}}</h2>
-          </div>
+          <el-row style="align-items: center;justify-content: space-between">
+            <h2 class="thematicName">{{thematicName}}</h2>
+            <el-icon :size="40" color="#246abd" style="cursor: pointer">
+              <el-tooltip content="编辑专题" placement="top" effect="light">
+                <Edit @click="editThematic"/>
+              </el-tooltip>
+            </el-icon>
+          </el-row>
           <el-row>
             <p class="descriptionText">{{thematicItem.introduction}}</p>
           </el-row>
@@ -35,39 +39,49 @@
             <div style="display: flex;align-items: center;">
               <template v-for="(item,key) in thematicItem.relatedCases" :key="key">
                 <el-card :body-style="{ padding: '0px'}" class="caseCard hvr-grow" @click="toCase(item.path)">
-                  <el-image class="caseImage"  :src="item.thumbnail"></el-image>
+                  <el-image class="caseImage"  :src="baseUrl+item.thumbnail" fit="fill"></el-image>
                   <div style="display: flex;justify-content: center;">
                     <span>{{item.name}}</span>
                   </div>
                 </el-card>
               </template>
-<!--              <el-tag-->
-<!--                  v-for="tag in dynamicTags"-->
-<!--                  :key="tag"-->
-<!--                  class="mx-1"-->
-<!--                  closable-->
-<!--                  :disable-transitions="false"-->
-<!--                  @close="handleClose(tag)"-->
-<!--              >-->
-<!--                {{ tag }}-->
-<!--              </el-tag>-->
-<!--              <el-input-->
-<!--                  v-if="inputVisible"-->
-<!--                  ref="InputRef"-->
-<!--                  v-model="inputValue"-->
-<!--                  class="input-new-tag"-->
-<!--                  size="small"-->
-<!--                  @keyup.enter="handleInputConfirm"-->
-<!--                  @blur="handleInputConfirm"-->
-<!--              />-->
-<!--              <el-button v-else class="button-new-tag ml-1" size="small" @click="showInput">-->
-<!--                + New Case-->
-<!--              </el-button>-->
-
             </div>
             <div class="dataBlock">
               请在此处创建与该专题相关的案例
-              <el-button :icon="Plus" size="large"  class="hvr-grow" plain></el-button>
+              <el-button :icon="Plus" size="large" @click="outNewCases"  class="hvr-grow" plain></el-button>
+              <el-dialog
+                  v-model="newCasesVisible"
+                  title="新增案例"
+                  width="35%"
+              >
+                  <el-row class="editDialogRow"><span>案例名称:</span><el-col :span="20" :offset="1"><el-input v-model="editingCases.name"  placeholder="请输入案例名称"></el-input></el-col></el-row>
+                  <el-row class="editDialogRow"><span>案例描述:</span><el-col :span="20" :offset="1"><el-input v-model="editingCases.description" placeholder="请输入案例描述"></el-input></el-col></el-row>
+                  <el-row class="editDialogRow"><span>Path名称:</span><el-col :span="20" :offset="1"><el-input v-model="editingCases.path" placeholder="案例在系统对应的vue文件名"></el-input></el-col></el-row>
+                  <el-row class="editDialogRow"><span>缩略图片:</span>
+                    <el-col style="display: flex;flex-direction: row" :span="20" :offset="1"><el-input placeholder="请上传案例缩略图" v-model="editingCases.imageName"  style="width: 100%;"></el-input>
+                      <el-upload
+                          ref="upload"
+                          class="upload-demo"
+                          style="width: 30%"
+                          action="/back/uploadThemeImg"
+                          :limit="1"
+                          method="post"
+                          :on-success="handleSuccess"
+                          :on-exceed="handleExceed"
+                          :auto-upload="true"
+                          :show-file-list="false"
+                      >
+                        <template #trigger>
+                          <el-button :icon="Upload"  type="success" plain>上传图片</el-button>
+                        </template>
+                      </el-upload>
+                    </el-col>
+                  </el-row>
+                  <el-row class="editDialogRow">
+                      <el-button type="warning" size="default" @click="outCancelCases">取消</el-button>
+                      <el-button type="success" size="default" @click="outSubmitCases">保存</el-button>
+                  </el-row>
+              </el-dialog>
             </div>
           </div>
           <div>
@@ -76,7 +90,7 @@
             <div style="display: flex;align-items: center;">
               <template v-for="(item,key) in thematicItem.relatedData" :key="key">
                 <el-card :body-style="{ padding: '0px'}" class="caseCard hvr-grow">
-                  <el-image class="caseImage"  :src="item.thumbnail"></el-image>
+                  <el-image class="caseImage"  :src="item.thumbnail" fit="fill"></el-image>
                   <div style="display: flex;justify-content: center;">
                     <span>{{item.name}}</span>
                   </div>
@@ -95,7 +109,7 @@
               <template v-for="(item,key) in thematicItem.description" :key="key">
                 <p v-if="item.type == 'text'" class="descriptionText">{{item.value}}</p>
                 <div class="imageBlock">
-                  <el-image v-if="item.type == 'image'" :src="item.value"></el-image>
+                  <el-image v-if="item.type == 'image'" :src="baseUrl+item.value"></el-image>
                 </div>
               </template>
             </div>
@@ -103,98 +117,395 @@
         </el-card>
       </el-col>
     </el-row>
+    <el-dialog
+        v-model="editDialogVisible"
+        title="编辑问题信息"
+        width="35%"
+    draggable>
+        <el-divider>问题简介</el-divider>
+        <el-row class="editDialogRow"><span>问题名称:</span><el-col :span="20" :offset="1"><el-input disabled :placeholder="thematicName"></el-input></el-col></el-row>
+        <el-row class="editDialogRow"><span>问题简介:</span><el-col :span="20" :offset="1"><el-input v-model="editThemeItem.introduction" type="textarea" placeholder="请输入问题简介" :autosize="{ minRows: 2, maxRows: 4 }"></el-input></el-col></el-row>
+        <el-divider>相关案例</el-divider>
+        <div style="display: flex;align-items: center;flex-wrap: wrap;margin-bottom: 10px">
+          <template v-for="(item,key) in relatedCases" :key="key">
+            <el-card :body-style="{ padding: '0px'}" style="margin-left: 10px" >
+              <el-image class="caseImage"  :src="baseUrl+item.thumbnail" fit="fill"></el-image>
+              <div style="display: flex;flex-direction: column;align-items: flex-start;padding:0 10px 10px 10px">
+                <p style="line-height: 0.2">{{item.name}}</p>
+                <div style="">
+                  <el-button size="small" @click="handleEditCases(item,key)">编辑</el-button>
+                  <el-button size="small" @click="deleteCases(key)">删除</el-button>
+                </div>
+              </div>
+            </el-card>
+          </template>
+        </div>
+        <el-row style="justify-content: center;margin-bottom: 10px"><el-button :icon="Plus" size="large" @click="newCases"   plain>添加专题相关案例</el-button></el-row>
+        <el-row v-show="editOrNew == 'new' || editOrNew == 'edit'" style="align-items: center;margin-bottom: 10px;">
+          <el-card style="width: 100%;margin-right:10px;">
+            <el-row class="editDialogRow"><span>案例名称:</span><el-col :span="20" :offset="1"><el-input v-model="editingCases.name"  placeholder="请输入案例名称"></el-input></el-col></el-row>
+            <el-row class="editDialogRow"><span>案例描述:</span><el-col :span="20" :offset="1"><el-input v-model="editingCases.description" placeholder="请输入案例描述"></el-input></el-col></el-row>
+            <el-row class="editDialogRow"><span>Path名称:</span><el-col :span="20" :offset="1"><el-input v-model="editingCases.path" placeholder="案例在系统对应的vue文件名"></el-input></el-col></el-row>
+            <el-row class="editDialogRow"><span>缩略图片:</span>
+              <el-col style="display: flex;flex-direction: row" :span="20" :offset="1"><el-input placeholder="请上传案例缩略图" v-model="editingCases.imageName"  style="width: 100%;"></el-input>
+                <el-upload
+                    ref="upload"
+                    class="upload-demo"
+                    style="width: 30%"
+                    action="/back/uploadThemeImg"
+                    :limit="1"
+                    method="post"
+                    :on-success="handleSuccess"
+                    :on-exceed="handleExceed"
+                    :auto-upload="true"
+                    :show-file-list="false"
+                >
+                  <template #trigger>
+                    <el-button :icon="Upload"  type="success" plain>上传图片</el-button>
+                  </template>
+                </el-upload>
+              </el-col>
+            </el-row>
+            <el-row class="editDialogRow">
+              <template v-if="editOrNew == 'new'">
+                <el-button type="warning" size="default" @click="cancelEdit">取消</el-button>
+                <el-button type="success" size="default" @click="submitNewCases">保存</el-button>
+              </template>
+              <template v-else>
+                <el-button type="warning" size="default" @click="cancelEdit">取消</el-button>
+                <el-button type="success" size="default" @click="saveEditCases">保存</el-button>
+              </template>
+            </el-row>
+          </el-card>
+        </el-row>
+        <el-divider>问题描述</el-divider>
+        <el-row style="justify-content: space-around;margin-bottom: 10px">
+          <el-button :icon="Plus" size="large" @click="newDescription('text')"   plain>添加文字描述</el-button>
+          <el-button :icon="Plus" size="large" @click="newDescription('image')"   plain>添加图片描述</el-button>
+        </el-row>
+        <template v-for="(item,key) in description" :key="key">
+          <el-row v-if="item.type == 'text'" class="editDialogRow">
+            <span>问题描述:</span>
+            <el-col :span="20" :offset="1" style="align-items: center">
+              <el-input style="width: 94%;" v-model="item.value" type="textarea" placeholder="请输入问题描述" :autosize="{ minRows: 2, maxRows: 4 }"></el-input>
+              <el-icon style="cursor: pointer;margin-left: 2%" @click="deleteDescription('text',key)" :size="20"><Delete/></el-icon>
+            </el-col>
+          </el-row>
+          <el-row v-if="item.type == 'image'" class="editDialogRow">
+            <span>相关图片:</span>
+            <el-col style="display: flex;flex-direction: row" :span="20" :offset="1"><el-input placeholder="请上传案例缩略图" v-model="item.imageName"  style="width: 94%;"></el-input>
+              <el-upload
+                  ref="upload"
+                  class="upload-demo"
+                  action="/back/uploadThemeImg"
+                  :limit="1"
+                  method="post"
+                  :on-success="uploadDescImg"
+                  :on-exceed="handleExceed"
+                  :auto-upload="true"
+                  :show-file-list="false"
+              >
+                <template #trigger>
+                  <el-button :icon="Upload" @click="addImage(key)" type="success"  plain>上传图片</el-button>
+                </template>
+              </el-upload>
+              <el-icon style="cursor: pointer;margin-left: 2%" @click="deleteDescription('image',key)" :size="20"><Delete/></el-icon>
+            </el-col>
+          </el-row>
+        </template>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="editCancel">取消</el-button>
+          <el-button type="primary" @click="editOK"
+          >提交修改</el-button
+          >
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script  setup>
-import {nextTick,ref} from 'vue'
-import {Plus} from '@element-plus/icons-vue'
+import {nextTick,ref,onMounted} from 'vue'
+import {Plus,Edit,Upload,Delete,Select} from '@element-plus/icons-vue'
+import { ElNotification,ElMessageBox,ElMessage} from "element-plus";
 import { useRouter } from "vue-router";
+import axios from "axios";
 const router = useRouter();
+const baseUrl = ref("http://172.21.212.63:8999/")
+
+onMounted(()=>{
+  thematicName.value = "流域生态环境演变";
+  getThemeInfo("流域生态环境演变");
+})
+const thematicName = ref("");
+const thematicItem = ref({});
+const editThemeItem = ref({});
+
+const getThemeInfo = (thematicName) => {
+  axios.get("/back/getTheme/"+thematicName).then(res=>{
+    let themeInfo = res.data.data;
+    if(themeInfo != null){
+      thematicItem.value = themeInfo;
+    }else {
+      thematicItem.value = {}
+      relatedCases.value = [];
+      description.value = []
+    }
+  });
+
+}
 const toCase = (path) => {
   router.push("/case/" + path + "/");
 }
+
 const getCurrentNode = (checked,data) => {
-  console.log("checked,data",checked,data)
-  thematic.value.map(item=>{
-    if(item.name == data.label){
-        thematicItem.value = item
+  thematicName.value = data.label;
+  getThemeInfo(thematicName.value);
+}
+const editDialogVisible = ref(false);
+const editThematic = () => {
+  editDialogVisible.value = true;
+  editThemeItem.value =JSON.parse(JSON.stringify(thematicItem.value)) ;
+  if(editThemeItem.value.relatedCases != null){
+    relatedCases.value = [];
+    editThemeItem.value.relatedCases.map(item=>{
+      relatedCases.value.push(item)
+    })
+  }else {
+    relatedCases.value = []
+  }
+  if(editThemeItem.value.description != null){
+    description.value = []
+    editThemeItem.value.description.map(item=>{
+      description.value.push(item)
+    })
+  }else {
+    description.value = []
+  }
+}
+
+const newCasesVisible = ref(false);
+const outNewCases = () => {
+  newCasesVisible.value = true ;
+  editingCases.value = {};
+}
+const outCancelCases = () => {
+  newCasesVisible.value = false;
+}
+const outSubmitCases = () => {
+  let tempCases = thematicItem.value.relatedCases;
+  tempCases.push(editingCases.value);
+  thematicItem.value.relatedCases = tempCases;
+  let successMessage = "添加成功";
+  saveToServer(JSON.parse(JSON.stringify(thematicItem.value)),successMessage);
+  newCasesVisible.value = false;
+}
+
+const editingCases = ref({});
+const relatedCases = ref([]);
+const editOrNew = ref('');
+const isSaved = ref(true)
+
+const handleEditCases = (item,key) => {
+  tempKey.value = key;
+  editOrNew.value = 'edit';
+  isSaved.value = false;
+  editingCases.value = JSON.parse(JSON.stringify(item));
+}
+const saveEditCases = () => {
+  relatedCases.value[tempKey.value] = editingCases.value;
+  editOrNew.value ='none'
+  ElMessage({
+    message: '已保存！',
+    type: 'success',
+  })
+  isSaved.value = true ;
+  editOrNew.value ='none';
+  editingCases.value = {};
+}
+const cancelEdit = () => {
+  editingCases.value = {};
+  editOrNew.value ='none';
+  isSaved.value = true;
+  ElMessage({
+    message: '取消编辑!',
+    type: 'warning',
+  })
+}
+const deleteCases = (key) => {
+  ElMessageBox.confirm("确认删除此案例吗？").then(()=>{
+    relatedCases.value.splice(key,1)
+    ElMessage({
+      type:'success',
+      message:'案例已删除！'
+    })
+  })
+      .catch(()=>{
+        ElMessage({
+          type:'info',
+          message:'取消删除！'
+        })
+      })
+}
+const newCases = () => {
+  if(isSaved.value == false){
+    ElMessageBox.alert("请先保存！！！","提示",{
+      confirmButtonText: 'OK',
+    })
+  }else {
+    editOrNew.value = 'new';
+    editingCases.value = {};
+  }
+}
+
+const submitNewCases = () => {
+  isSaved.value = true;
+  relatedCases.value.push(editingCases.value);
+  editOrNew.value ='none'
+  ElMessage({
+    message: '已保存！',
+    type: 'success',
+  })
+  editingCases.value = {};
+}
+
+const description = ref([]);
+const newDescription = (type) => {
+  if(type == 'text'){
+    description.value.push({
+      type: "text",
+      value:""
+    })
+  }else {
+    description.value.push({
+      type: "image",
+      value:""
+    })
+  }
+}
+
+const uploadDescImg = (res,uploadFile) => {
+  let descriptionTemp = description.value;
+  let key = tempKey.value;
+  descriptionTemp[key].value = res.data.imgWebPath;
+  descriptionTemp[key].imageName = uploadFile.name;
+  description.value = descriptionTemp;
+}
+const deleteDescription = (type,key) => {
+  if(type == 'text'){
+    description.value.splice(key,1)
+  }else {
+    description.value.splice(key,1)
+  }
+}
+//用于标识当前案例或者描述的索引
+const tempKey = ref('')
+const handleSuccess = (res,uploadFile) => {
+  let editingCase = editingCases.value;
+  editingCase.thumbnail = res.data.imgWebPath;
+  editingCase.imageName = uploadFile.name;
+  editingCases.value = editingCase;
+}
+const addImage = (key) => {
+  tempKey.value = key;
+}
+const editOK = () => {
+  let bodyData = {
+    name:thematicName.value,
+    introduction:editThemeItem.value.introduction,
+    relatedCases:relatedCases.value,
+    relatedData:[],
+    description:description.value
+  }
+  let successMessage = "完成编辑";
+  saveToServer(bodyData,successMessage);
+  editDialogVisible.value = false;
+}
+const saveToServer = (bodyData,successMessage) => {
+  axios.post("/back/saveTheme",bodyData).then((res)=>{
+    if(res.data.msg == "Success"){
+      ElNotification({
+        title: 'Success',
+        message: successMessage,
+        type: 'success',
+        duration: 10000,
+      });
+      thematicItem.value = bodyData;
     }
   })
+}
+
+const editCancel = () => {
+  ElMessage({
+    type:'info',
+    message:'取消编辑！'
+  })
+  editDialogVisible.value = false;
 }
 
 const modelTreeData = ref([]);
 modelTreeData.value = [
   {
-    label:"自然",
+    label:"流域水循环及驱动机制",
     children:[
       {
-        label:"流域水循环及驱动机制",
-        children:[
-          {
-            label:"流域生态环境演变",
-          }, {
-            label:"流域碳水耦合循环",
-          },{
-            label:"地表地下水耦合",
-          },{
-            label:"湖泊水环境监测",
-          },
-        ]
-      },
-      {
-        label:"全球变化与区域环境演化",
-        children:[
-          {
-            label:"海岸带变迁",
-          }, {
-            label:"河口海岸水动力",
-          },{
-            label:"湖泊碳循环",
-          },{
-            label:"土壤碳氮循环",
-          },{
-            label:"土壤氮转化过程及其环境效应",
-          },
-        ]
-      },
-      {
-        label:"灾害响应与治理",
-        children:[
-          {
-            label:"台风与风暴潮",
-          }, {
-            label:"洪涝水环境灾害",
-          },{
-            label:"湿地保护",
-          },{
-            label:"地质灾害",
-          },{
-            label:"大气污染",
-          },
-        ]
+        label:"流域生态环境演变",
+      }, {
+        label:"流域碳水耦合循环",
+      },{
+        label:"地表地下水耦合",
+      },{
+        label:"湖泊水环境监测",
       },
     ]
   },
   {
-    label:"人文",
-    children: [
+    label:"全球变化与区域环境演化",
+    children:[
       {
-        label: "城市化与人地关系协调发展",
-        children:[
-          {
-            label:"城市扩张",
-          }, {
-            label:"农业生态",
-          },{
-            label:"人地关系",
-          },{
-            label:"城市水问题",
-          },{
-            label:"自然遗产",
-          },
-        ]
-      }
+        label:"海岸带变迁",
+      }, {
+        label:"河口海岸水动力",
+      },{
+        label:"湖泊碳循环",
+      },{
+        label:"土壤碳氮循环",
+      },{
+        label:"土壤氮转化过程及其环境效应",
+      },
+    ]
+  },
+  {
+    label:"灾害响应与治理",
+    children:[
+      {
+        label:"台风与风暴潮",
+      }, {
+        label:"洪涝水环境灾害",
+      },{
+        label:"湿地保护",
+      },{
+        label:"地质灾害",
+      },{
+        label:"大气污染",
+      },
+    ]
+  },
+  {
+    label: "城市化与人地关系协调发展",
+    children:[
+      {
+        label:"城市扩张",
+      }, {
+        label:"农业生态",
+      },{
+        label:"人地关系",
+      },{
+        label:"城市水问题",
+      },{
+        label:"自然遗产",
+      },
     ]
   }
 ]
@@ -202,41 +513,24 @@ const handleNodeClick = () => {
 
 }
 
-const thematicItem = ref({});
-const thematic = ref([])
-thematic.value = [
+
+const allThematic = ref([])
+allThematic.value = [
   {
     name: "流域生态环境演变",
     introduction: "随着生态环境问题的日益突出,流域生态环境演变研究成为生态环境研究领域的热点。流域生态环境由流域生物群落及非生物自然因素组成的各种生态系统所构成的整体，" +
         "是“对人类生存和发展有影响的流域中自然因子的综合”。在自然因素与人为因素的共同作用下，生态环境以不同的时间尺度在发展演变。",
-    classification: "自然",
     relatedCases:[
       {
         name:"SWMM",
         path:"SWMM",
-        thumbnail:"http://localhost:3030/img/swmm.2f8c8c5d.png",
+        thumbnail:"/img/swmm.2f8c8c5d.png",
         description:"SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。"
       },{
         name:"长三角降雨预报专题",
         path:"rainForecast",
-        thumbnail:"http://localhost:3030/img/rainForecast.d75c80f8.png",
+        thumbnail:"/img/rainForecast.d75c80f8.png",
         description:"长三角降雨预报专题"
-      },{
-        name:"SAGA1",
-        path:"saga",
-        thumbnail:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
-        description:"SAGA1"
-      },
-      {
-        name:"SAGA2",
-        path:"saga",
-        thumbnail:"http://nnu.geodata.cn:8008/res/images/180131/1-1.jpg",
-        description:"SAGA2"
-      },{
-        name:"SAGA3",
-        path:"saga",
-        thumbnail:"http://nnu.geodata.cn:8008/res/images/180131/2-4.jpg",
-        description:"SAGA3"
       },
     ],
     relatedData:[
@@ -266,20 +560,12 @@ thematic.value = [
       },
       {
         type: "image",
-        value: "http://localhost:3030/img/%E6%B5%81%E5%9F%9F%E7%94%9F%E6%80%81%E7%8E%AF%E5%A2%83%E6%BC%94%E5%8F%98.ed4630ac.png"
-      },
-      {
-        type: "text",
-        value: "随着生态环境问题的日益突出,流域生态环境演变研究成为生态环境研究领域的热点。流域生态环境由流域生物群落及非生物自然因素组成的各种生态系统所构成的整体，" +
-            "是“对人类生存和发展有影响的流域中自然因子的综合”。在自然因素与人为因素的共同作用下，生态环境以不同的时间尺度在发展演变。随着生态环境问题的日益突出,流域生态环境演变研究成为生态环境研究领域的热点。流域生态环境由流域生物群落及非生物自然因素组成的各种生态系统所构成的整体，" +
-            "是“对人类生存和发展有影响的流域中自然因子的综合”。在自然因素与人为因素的共同作用下，生态环境以不同的时间尺度在发展演变。" + "随着生态环境问题的日益突出,流域生态环境演变研究成为生态环境研究领域的热点。流域生态环境由流域生物群落及非生物自然因素组成的各种生态系统所构成的整体，" +
-            "是“对人类生存和发展有影响的流域中自然因子的综合”。在自然因素与人为因素的共同作用下，生态环境以不同的时间尺度在发展演变。"
+        value: "/img/%E6%B5%81%E   5%9F%9F%E7%94%9F%E6%80%81%E7%8E%AF%E5%A2%83%E6%BC%94%E5%8F%98.ed4630ac.png"
       },
     ]
   }, {
     name: "流域碳水耦合循环",
     introduction: " 在气候变化背景下,人类和流域生态系统的水平衡及碳平衡已成为首要环境问题。气候变化深刻影响到碳水循环多过程及其多向反馈作用机制,进一步加剧水资源供需矛盾,导致生态系统的碳捕获能力降低。流域碳水循环的研究能够为水资源与生态环境保护规划提供直接支持,还能够为大型水利工程提供依据,具有较为显著的实践意义。",
-    classification: "自然",
     relatedCases:[
       {
         name:"SWMM",
@@ -304,7 +590,7 @@ thematic.value = [
         description:"SAGA3"
       },
     ],relatedData:[
-      
+
     ],
     description: [
       {
@@ -322,31 +608,6 @@ thematic.value = [
     ]
   }
 ]
-thematicItem.value = thematic.value[0]
-
-const inputValue = ref('')
-const dynamicTags = ref(['SWMM', 'SWMM', 'SWMM'])
-const inputVisible = ref(false)
-const InputRef = ("")
-
-const handleClose = (tag) => {
-  dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
-}
-
-const showInput = () => {
-  inputVisible.value = true
-  nextTick(() => {
-    // InputRef.value!.input!.focus()
-  })
-}
-
-const handleInputConfirm = () => {
-  if (inputValue.value) {
-    dynamicTags.value.push(inputValue.value)
-  }
-  inputVisible.value = false
-  inputValue.value = ''
-}
 </script>
 
 <style lang="less" scoped>
@@ -356,29 +617,18 @@ const handleInputConfirm = () => {
   overflow: scroll;
 }
 .caseImage{
-  height: 10vh;
-  width: 16vh;
+  height: 100px;
+  width: 160px;
 }
 .caseCard{
   margin-right: 20px;
-  width: 16vh;
   cursor: pointer;
 }
-
-.el-tag + .el-tag {
-  margin-left: 10px;
-}
-.button-new-tag {
-  margin-left: 10px;
-  //height: 32px;
-  //line-height: 30px;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-.input-new-tag {
-  width: 90px;
-  margin-left: 10px;
-  vertical-align: bottom;
+.editDialogRow{
+  align-items: center;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  justify-content: center;
 }
 .dataBlock{
   display: flex;

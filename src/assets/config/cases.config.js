@@ -1,7 +1,7 @@
-export const cases_config = [    
+export const cases_config = [
     {
         name:"汾湖高新区城市雨洪管网模拟系统",
-        img_path:require("../img/cases/swmm.png"),
+        img_path:"http://172.21.212.63:8999/store/themeImg/swmm.png",
         path:"swmm",
         description:" 本案例基于SWMM模型实现，主要用于模拟汾湖高新区降水事件的模拟，分别依照当地官方量化的五年一遇、十年一遇、二十年一遇、三十年一遇、五十年一遇的五个降雨量级下，二十四小时内下的城市排水管网与管点的水流情况。",
         component:() => import( "views/CasesView/SWMM.vue")

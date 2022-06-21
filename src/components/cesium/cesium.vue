@@ -77,8 +77,6 @@ export default {
   mounted() {
     this.cesiumInit();
     // this.add3DTiles();
-    // this.add3DTiles1();
-    // this.add3DTiles2();
     // this.addPlane();
     // this.addKMZ();
     // this.addJsonList();
@@ -102,6 +100,8 @@ export default {
         vrButton: false,
         // globe: false,
       });
+      //开启深度检测
+      this.viewer.scene.globe.depthTestAgainstTerrain = true;
       // 提示错误Blocked script execution in ‘about:blank’ because the document’s frame is sandboxed and the ‘allow-scripts’ permission is not set.的解决方法
       let iframe = document.getElementsByClassName("cesium-infoBox-iframe")[0];
       iframe.setAttribute(
@@ -635,9 +635,9 @@ export default {
       // 加载3DTiles数据
       // debugger;
       let tileset = new Cesium.Cesium3DTileset({
-        // url: "data/model/test22222/tileset.json",
-        url: "http://172.21.213.44:8087/static/resRepository/tileset/tileset.json",
         // url: "data/model/3dtilesFromGltf/tileset.json",
+        url: "http://172.21.213.44:8087/static/resRepository/tileset/tileset.json",
+        // url: "data/model/obj2Tiles/tileset.json",
         // url: "data/level_3dtiles_clt/tileset.json",
         maximumScreenSpaceError: 2, //最大的屏幕空间误差
         maximumNumberOfLoadedTiles: 10000, //最大加载瓦片个数
@@ -645,7 +645,7 @@ export default {
       });
       let that = this;
       tileset.readyPromise.then(function (tilesetData) {
-        // debugger;
+        debugger;
         let center = tilesetData.boundingSphere.center; //正球投影中心
         let lonlat = that.webMercator2lonLat(center); //经纬度
         let ellipsoidCenter = Cesium.Cartesian3.fromDegrees(
@@ -675,6 +675,9 @@ export default {
       });
       this.viewer.scene.primitives.add(tileset);
       // this.viewer.zoomTo(tileset);
+      // var clickHandler = this.viewer.screenSpaceEventHandler.getInputAction(
+      //   Cesium.ScreenSpaceEventType.LEFT_CLICK
+      // );
     },
     webMercator2lonLat(mercator) {
       let lonlat = { x: 0, y: 0, z: 0 };

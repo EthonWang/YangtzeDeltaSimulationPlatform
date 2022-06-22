@@ -3,15 +3,13 @@
     <div class="tabs-page">
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane label="概览" name=""> </el-tab-pane>
-        <el-tab-pane label="数据中心" name="data"> </el-tab-pane>
-        <el-tab-pane label="模型中心" name="model"></el-tab-pane>
-        <el-tab-pane label="任务中心" name="task"></el-tab-pane>
+        <el-tab-pane label="我的数据" name="data"> </el-tab-pane>
+        <!-- <el-tab-pane label="我的模型" name="model"></el-tab-pane> -->
+        <el-tab-pane label="我的实验" name="task"></el-tab-pane>
         <router-view class="data-center"></router-view>
         <!-- <el-tab-pane label="其他" name="fourth">Task</el-tab-pane> -->
       </el-tabs>
-      <ScienceProblemData
-        class="science"
-      ></ScienceProblemData>
+      <ScienceProblemData class="science"></ScienceProblemData>
     </div>
   </div>
 </template>
@@ -29,25 +27,50 @@ const route = useRoute();
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const activeName = ref("");
-const handleClick = (tab, event) => {
-  // console.log(tab,event)
-  toRouter(tab.props.name);
-  if (tab.props.name == "") {
+switch(route.path.split('/')[route.path.split("/").length - 1]){
+  case "task" :
+    activeName.value='task'
+    break;
+  case "model" :
+    activeName.value='model'
+    break;
+  case "data" :
+    activeName.value='data'
+    break;
+}
+const spaceAniChange = (scene = 0) => {
+  if (scene == 0) {
     document.getElementsByClassName("user-info")[0].style.opacity = 1;
     document.getElementsByClassName("user-info")[0].style.left = "16.5vw";
-    document.getElementsByClassName("el-tabs__nav")[0].style.marginLeft="5vw"
+    document.getElementsByClassName("el-tabs__nav")[0].style.marginLeft = "5vw";
     document.getElementsByClassName("science")[0].style.opacity = 0;
-    document.getElementsByClassName("function")[0].style.width="51.2vw"
-    document.getElementsByClassName("function")[0].style.right="15vw"
-
+    document.getElementsByClassName("function")[0].style.width = "51.2vw";
+    document.getElementsByClassName("function")[0].style.right = "15vw";
   } else {
     document.getElementsByClassName("user-info")[0].style.opacity = 0;
     document.getElementsByClassName("user-info")[0].style.left = "6vw";
-    document.getElementsByClassName("el-tabs__nav")[0].style.marginLeft="17vw"
+    document.getElementsByClassName("el-tabs__nav")[0].style.marginLeft =
+      "17vw";
     document.getElementsByClassName("science")[0].style.opacity = 1;
-    document.getElementsByClassName("function")[0].style.width="72vw"
-    document.getElementsByClassName("function")[0].style.right="5vw"
-
+    document.getElementsByClassName("function")[0].style.width = "72vw";
+    document.getElementsByClassName("function")[0].style.right = "5vw";
+  }
+};
+setTimeout(() => {
+  if (route.path.split("/")[route.path.split("/").length - 1] == "user") {
+    spaceAniChange(0);
+  } else {
+    spaceAniChange(1);
+  }
+}, 410);
+const handleClick = (tab, event) => {
+  console.log(tab)
+  // console.log(tab,event)
+  toRouter(tab.props.name);
+  if (tab.props.name == "") {
+    spaceAniChange(0);
+  } else {
+    spaceAniChange(1);
   }
 };
 // const showScience = () => {
@@ -96,7 +119,7 @@ const toRouter = (route) => {
 .data-center {
   width: 90%;
   height: 100%;
-  overflow-y:scroll ;
+  overflow-y: scroll;
 }
 .science {
   position: fixed;

@@ -32,14 +32,14 @@ const routes = [
     children: []
   },
   {
-    isBar: true,
+    isBar: false,
     path: "/model",
     name: "模型",
     component: Model,
     children: []
   },
   {
-    isBar: true,
+    isBar: false,
     path: "/case",
     name: "案例",
     component: Cases,
@@ -52,7 +52,7 @@ const routes = [
     ]
   },
   {
-    isBar: true,
+    isBar: false,
     path: "/about",
     name: "关于",
     component: () =>
@@ -74,9 +74,9 @@ const routes = [
     children: []
   },
   {
-    isBar: false,
+    isBar: true,
     path: "/user",
-    name: "用户",
+    name: "实验室",
     component: () =>
       import("../views/User.vue"),
     children: [

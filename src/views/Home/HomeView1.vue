@@ -108,9 +108,9 @@ const home1 = ref();
   flex-direction: column;
   align-items: center;
   position: absolute;
-  left: 15%;
+  left: 13%;
   top: 18%;
-  width: 31.25vw;
+  width: 35.55vw;
   height: 42.64vh;
   transition: all 1s;
   padding: 20px 20px;
@@ -118,9 +118,10 @@ const home1 = ref();
     color: white;
     font-size: 3.75vw;
     margin-top: -10px;
+    margin-bottom: 10px;
   }
   p {
-    margin-top: -10px;
+    // margin-top: -10px;
     font-size: 1.458vw;
     color: white;
     line-height: 170%;

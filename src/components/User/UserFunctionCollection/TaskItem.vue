@@ -1,40 +1,145 @@
 <template>
   <div>
     <div class="task-item">
-      <h3>
-        {{ props.task.name }}任务
-        <span
-          class="task-public"
-          v-if="props.task.public"
-          ><el-icon><Unlock /></el-icon>公开</span
-        >
-        <span class="task-public task-private" v-if="!props.task.public"
-          ><el-icon><Lock /></el-icon>私密</span
-        >
-      </h3>
-      <p v-if="!edit_task">任务描述：{{ props.task.des }}</p>
-      <p v-if="edit_task">
-        <el-input
-          v-model="task_data"
-          autosize
-          type="textarea"
-          placeholder="Please input"
-        />
-      </p>
-      <el-button class="btn_edit" v-if="!edit_task" @click="edit_task=!edit_task"
-        ><el-icon><Edit /></el-icon>&nbsp;编辑描述</el-button
+      <h3 v-if="!edit_task">{{ props.task.name }}实验</h3>
+      <el-input
+        style="width: 40%; font-size: 18px !important; padding: 10px"
+        v-if="edit_task"
+        v-model="task_data.name"
+        placeholder="请输入标题"
+      />
+      <span class="task-public" v-if="props.task.public"
+        ><el-icon><Unlock /></el-icon>公开</span
       >
-      <el-button class="btn_edit" v-if="edit_task" @click="edit_task=!edit_task"
-        ><el-icon><Edit /></el-icon>&nbsp;完成编辑</el-button
+      <span class="task-public task-private" v-if="!props.task.public"
+        ><el-icon><Lock /></el-icon>私密</span
       >
-      <el-button type="success" class="btn_public" v-if="!props.task.public"
+      <el-button
+        type="danger"
+        v-if="edit_task"
+        class="btn_delete"
+        @click="centerDialogVisible = true"
+        ><el-icon><CloseBold /></el-icon>&nbsp; 删除本实验</el-button
+      >
+      <el-form
+        :label-position="labelPosition"
+        label-width="100px"
+        :model="task_data"
+        style="max-width: calc(95% - 130px)"
+      >
+        <el-form-item label="实验描述">
+          <span v-if="!edit_task">{{ props.task.description }}</span>
+
+          <el-input
+            v-if="edit_task"
+            v-model="task_data.description"
+            autosize
+            type="textarea"
+            placeholder="请输入描述"
+          />
+        </el-form-item>
+        <el-form-item label="面向科学问题">
+          <el-tag
+            v-for="item in props.task.problemTags"
+            :key="item.label"
+            class="mx-1"
+            style="margin: 2px"
+            v-show="!edit_task"
+            >{{ item }}
+          </el-tag>
+
+          <el-tree-select
+            :popper-append-to-body="false"
+            v-model="task_data.problemTags"
+            :data="options"
+            multiple
+            show-checkbox
+            v-show="edit_task"
+          />
+        </el-form-item>
+      </el-form>
+      <el-button
+        class="btn_edit"
+        v-if="!edit_task"
+        @click="edit_task = !edit_task"
+        ><el-icon><Edit /></el-icon>&nbsp;编辑</el-button
+      >
+      <el-button
+        class="btn_edit"
+        type="success"
+        v-if="edit_task"
+        @click="edit_task = !edit_task"
+        ><el-icon><Edit /></el-icon>&nbsp;完成</el-button
+      >
+      <!-- <el-button type="success" class="btn_public" v-if="!props.task.public"
         ><el-icon><Unlock /></el-icon>&nbsp;设为公开</el-button
       >
       <el-button type="warning" class="btn_public" v-if="props.task.public"
         ><el-icon><Lock /></el-icon>&nbsp;设为私密</el-button
-      >
+      > -->
       <el-divider></el-divider>
-      <span class="state">
+
+      <el-button
+        style="float: left; margin-right: 5px"
+        @click="router.push('/user/data')"
+        >选择并添加<strong>云端</strong>数据</el-button
+      >
+      <el-upload
+        style="float: left; margin-right: 5px"
+        class="upload-demo"
+        action=""
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :before-remove="beforeRemove"
+        multiple
+        :limit="10"
+        :on-change="handleChange"
+        :on-exceed="handleExceed"
+       :before-upload="beforeUpload"
+        :file-list="fileList"
+      >
+        <el-button>选择并添加<strong>本地</strong>数据</el-button>
+      </el-upload>
+
+      <el-button
+        @click="router.push('/resourse')"
+        style="float: left; margin-right: 5px"
+        >选择并添加<strong>专题</strong>数据</el-button
+      >
+      <br /><br />
+      <el-form
+        :inline="true"
+        :label-position="labelPosition"
+        label-width="200px"
+        :model="task_data"
+        style="max-width: 80%"
+        class="data-list demo-form-inline"
+      >
+        <h4>数据配置：</h4>
+        <el-form-item
+          v-for="(data, index) in props.task.dataList"
+          :key="data"
+          :label="data.name"
+        >
+          <el-button
+            type="success"
+            v-if="!edit_task"
+            disabled
+            circle
+            size="small"
+            ><el-icon><Check /></el-icon
+          ></el-button>
+          <el-button
+            type="danger"
+            v-if="edit_task"
+            circle
+            size="small"
+            @click="deleteData(index)"
+            ><el-icon><Close /></el-icon
+          ></el-button>
+        </el-form-item>
+      </el-form>
+      <!-- <span class="state">
         <span
           v-if="props.task.state == 'success'"
           style="color: hsl(120, 80%, 42%)"
@@ -50,11 +155,30 @@
           style="color: hsl(0, 50%, 52%)"
           >任务失败。</span
         >
-      </span>
-      <el-button type="primary" class="btn_view"
-        ><el-icon><List /></el-icon>&nbsp;任务详情</el-button
+      </span> -->
+      <el-button
+        type="primary"
+        class="btn_view"
+        @click="gotoLiboratory(props.task)"
+        ><el-icon><Checked /></el-icon>&nbsp;进入实验室</el-button
       >
     </div>
+    <el-dialog
+      v-model="centerDialogVisible"
+      title="删除实验"
+      width="30%"
+      center
+    >
+      <span>删除后将无法回复，确认删除？</span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="centerDialogVisible = false">取消</el-button>
+          <el-button type="danger" @click="deleteTask()"
+            >确定</el-button
+          >
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -63,24 +187,76 @@
 import { reactive, computed, ref, defineProps, defineEmits, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { sciencePro } from "@/assets/data/home/sciencePro";
+
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const props = defineProps({
-  task: reactive({ Object }),
+  task: reactive(Object),
 });
-const emit = defineEmits(["update:task"]);
-const task_data = ref(props.task.des);
+const centerDialogVisible = ref(false);
+const emit = defineEmits(["update:task","deleteTask"]);
+const task_data = ref(props.task);
 const edit_task = ref(false);
 watch(task_data, (newValue, oldValue) => {
   emit("update:task", newValue);
   //   console.log(newValue);
 });
+
+const gotoLiboratory = (task) => {
+  localStorage.setItem("task", JSON.stringify(task));
+  router.push("/model");
+};
+
+const labelPosition = ref("left");
+
+const deleteData = (index) => {
+  task_data.value.dataList.splice(index, 1);
+};
+const handleChange = (file,fileList) => {
+let path=document.getElementsByClassName("el-upload__input")[0].value
+task_data.value.dataList.push({
+  id:path,
+  type:"local",
+  name:file.name
+})
+};
+
+const beforeUpload=(rawFile)=>{
+  return false
+}
+
+const options = Array.from({ length: sciencePro.length }).map((_, idx) => {
+  const label = idx;
+  return {
+    value: sciencePro[label].name,
+    label: sciencePro[label].name,
+    children: Array.from({ length: sciencePro[label].children.length }).map(
+      (_, idx1) => ({
+        value: sciencePro[label].children[idx1].name,
+        label: sciencePro[label].children[idx1].name,
+      })
+    ),
+  };
+});
+const deleteTask=()=>{
+  centerDialogVisible.value = false
+  emit("deleteTask",props.task)
+}
+const handleClose = (tag) => {
+  task_data.value.problemTags.splice(
+    task_data.value.problemTags.indexOf(tag),
+    1
+  );
+};
 </script>
 
 <style lang="less" scoped>
 // 兼容css
 .task-public {
-  position: relative;
+  position: absolute;
+  top: 15px;
+  right: calc(5% + 90px);
   padding: 8px;
   margin-left: 12px;
   font-size: 12px;
@@ -95,24 +271,39 @@ watch(task_data, (newValue, oldValue) => {
 .task-item {
   position: relative;
   border: 0.5px solid rgba(206, 206, 206, 0.5);
-  margin: 5px;
   width: 100%;
-  padding: 0 5% 2% 5%;
+  padding: 0 5% 35px 5%;
+  transition: all 0.5s;
+  &:hover {
+    border: .5px solid rgba(81, 113, 255, 0.5);
+    
+  }
+  strong {
+    color: hsl(210, 100%, 60%);
+  }
 }
 .btn_public {
   position: absolute;
-  top: 6%;
+  top: 15px;
   right: 5%;
 }
 .btn_view {
   position: absolute;
   right: 5%;
+  bottom: 35px;
+}
+.btn_delete {
+  position: absolute;
+  right: 5%;
+  top: 60px;
+  // background: rgb(231, 231, 231);
+  font-weight: 800;
 }
 .btn_edit {
   position: absolute;
   right: 5%;
-  top: 30%;
-  background: rgb(231, 231, 231);
+  top: 15px;
+  // background: rgb(231, 231, 231);
   font-weight: 800;
 }
 .state {
@@ -120,8 +311,28 @@ watch(task_data, (newValue, oldValue) => {
   font-weight: 500;
   font-style: italic;
 }
-p {
-  width: 80%;
+// p {
+//   width: calc(80% - 100px);
+// }
+.data-list {
+  transition: all 0.5s;
+  /deep/ .el-form-item {
+    transition: all 0.5s;
+    --font-size: 14px;
+    margin-bottom: 0px;
+    margin-right: 10%;
+    animation: come 1s linear 1;
+    @keyframes come {
+      0%{
+        transform: translateX(-300px);
+        opacity: 0.1;
+      }
+      100%{
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  }
 }
 </style>
 

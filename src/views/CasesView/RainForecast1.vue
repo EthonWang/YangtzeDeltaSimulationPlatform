@@ -14,82 +14,63 @@
     <div class="content-container flex-row-evenly">
       <div class="content-col-1 flex-Column-Around-Center">
         <!--降雨排行图-->
+        <div class="part border-box ">
+          <div id="rainRank" style="  width: 100%;  height: 100%;z-index: 5"></div>
+        </div>
 
-        <dv-border-box-9 :color="['#00a1ff']" style="  width: 100%;  height: 45%; position: relative;">
-          <div class="content-part-1">
-            <div id="rainRank" style="  width: 90%;  height: 90%;"></div>
-          </div>
-        </dv-border-box-9>
-
-        <dv-border-box-9 :color="['#00a1ff']" style="  width: 100%;  height: 45%; position: relative;">
-          <div class="content-part-1">
-            <div id="lineChart" style="  width: 90%;  height: 90%;"></div>
-          </div>
-        </dv-border-box-9>
-
+        <div class="part border-box ">
+          <div id="lineChart" style="  width: 100%;  height: 100%;z-index: 5"></div>
+        </div>
       </div>
 
       <div class="content-col-2 flex-Column-Around-Center">
 
-        <dv-border-box-11 :color="['#00a1ff']" title="流域降雨预测"
-                          style="  width: 100%;  height: 60%;   position: relative;">
-          <div class="content-part-map">
-            <div id="map" style="    margin-bottom: 15px;"></div>
-            <div class="dateForestShow" style=" z-index: 5"><h1>{{ dateForest }}</h1></div>
-            <div class="rainfallforcast-color" style=" z-index: 5">
-              <div class="color-bar">
-                <div class="color">
-                  <div class="color-item" style="background-color: #ffffff"></div>
-                  <div class="color-item" style="background-color: #9cf790"></div>
-                  <div class="color-item" style="background-color: #37a600"></div>
-                  <div class="color-item" style="background-color: #67b4f8"></div>
-                  <div class="color-item" style="background-color: #0002fe"></div>
-                  <div class="color-item" style="background-color: #fa03f0"></div>
-                  <div class="color-item" style="background-color: #710100"></div>
-                </div>
-                <div class="label">
-                  <div class="color-item" style="text-align: right">0</div>
-                  <div class="color-item" style="text-align: right">5</div>
-                  <div class="color-item" style="text-align: right">10</div>
-                  <div class="color-item" style="text-align: right">15</div>
-                  <div class="color-item" style="text-align: right">20</div>
-                  <div class="color-item" style="text-align: right">25</div>
-                  <div class="color-item" style="text-align: right"></div>
-                </div>
+        <!--地图-->
+        <div class="part border-box">
+          <div id="map" style=" z-index: 5"></div>
+          <div class="dateForestShow" style=" z-index: 5"><h1>{{ dateForest }}</h1></div>
+          <div class="rainfallforcast-color" style=" z-index: 5">
+            <div class="color-bar">
+              <div class="color">
+                <div class="color-item" style="background-color: #ffffff"></div>
+                <div class="color-item" style="background-color: #9cf790"></div>
+                <div class="color-item" style="background-color: #37a600"></div>
+                <div class="color-item" style="background-color: #67b4f8"></div>
+                <div class="color-item" style="background-color: #0002fe"></div>
+                <div class="color-item" style="background-color: #fa03f0"></div>
+                <div class="color-item" style="background-color: #710100"></div>
+              </div>
+              <div class="label">
+                <div class="color-item" style="text-align: right">0</div>
+                <div class="color-item" style="text-align: right">5</div>
+                <div class="color-item" style="text-align: right">10</div>
+                <div class="color-item" style="text-align: right">15</div>
+                <div class="color-item" style="text-align: right">20</div>
+                <div class="color-item" style="text-align: right">25</div>
+                <div class="color-item" style="text-align: right"></div>
               </div>
             </div>
           </div>
-        </dv-border-box-11>
+        </div>
 
-
-        <dv-border-box-1 :color="['#00a1ff']" style="  width: 100%;  height: 35%; position: relative;">
-          <div class="content-part-1">
-
-          </div>
-        </dv-border-box-1>
+        <!--地图2-->
+        <div class="part border-box">
+          <div id="map2" style=" z-index: 5"></div>
+          <div class="dateForestShow" style=" z-index: 5"><h1>{{ dateForest }}</h1></div>
+        </div>
       </div>
 
       <div class="content-col-3 flex-Column-Around-Center">
-
-
-
-
         <div class="part border-box ">
+          <!--          <div id="barChart" style="  width: 100%;  height: 100%;z-index: 5"></div>-->
           <div style="    width: 100%;    height: 100%;display: flex;    justify-content: center;">
             <h3 style=" color: #ffffff;position: absolute;    margin-top: -2px;">历史洪灾</h3>
             <img class="img" src="/case/rainForecast/historyRecord1.png" style="height: 100%;width: 100%">
           </div>
         </div>
-
-
-<!--        <div class="part border-box ">-->
-<!--          <div id="pieChart" style="  width: 100%;  height: 100%;z-index: 5"></div>-->
-<!--        </div>-->
-        <dv-border-box-8 :reverse="true" :color="['#00a1ff']" style="  width: 100%;  height: 45%; position: relative;">
-          <div class="content-part-1">
-            <div id="pieChart" style="  width: 90%;  height: 90%;z-index: 5"></div>
-          </div>
-        </dv-border-box-8>
+        <div class="part border-box ">
+          <div id="pieChart" style="  width: 100%;  height: 100%;z-index: 5"></div>
+        </div>
 
       </div>
 
@@ -109,6 +90,7 @@ import * as echarts from "echarts";
 import axios from "axios";
 
 var map = null
+var map2 = null
 
 var rainRankChart;
 var lineChart;
@@ -126,6 +108,7 @@ export default {
   mounted() {
 
     this.initMap()
+    this.initMap2()
 
     this.getSortRainfallByDistrict()
     this.getDailyRainfallByDistrict()
@@ -150,7 +133,7 @@ export default {
         style: "mapbox://styles/mapbox/dark-v10",
         center: [114.1, 32.5],
         // center:[-75.789, 41.874],
-        zoom: 6,
+        zoom: 6.5,
       });
       map.addControl(new MapboxLanguage({defaultLanguage: "zh-Hans"}));
 
@@ -167,13 +150,6 @@ export default {
               ]
             }
         )
-
-        map.addSource("rainStationSource", {
-              "type": "geojson",
-              "data": "/case/rainForecast/output.json"
-            }
-        )
-
         map.addLayer({
           "id": "rainImgLayer",
           "source": "rainImgSource",
@@ -182,10 +158,57 @@ export default {
         });
 
 
-        map.loadImage('/case/rainForecast/station.png', function (error, image) {
+        // map.addSource("rainStationSource", {
+        //       "type": "geojson",
+        //       "data": "/case/rainForecast/output.json"
+        //     }
+        // )
+        // map.addLayer({
+        //   "id": "rainStationLayer",
+        //   "source": "rainStationSource",
+        //   "type": "circle",
+        //   'paint': {
+        //     'circle-radius': 2,
+        //     'circle-color': 'rgba(55,148,179,1)'
+        //   },
+        // });
+
+
+      });
+    },
+
+    initMap2() {
+      map2 = new mapboxgl.Map({
+        container: "map2",
+        style: "mapbox://styles/mapbox/dark-v10",
+        center: [114.1, 32.5],
+        // center:[-75.789, 41.874],
+        zoom: 6.5,
+      });
+      // map2.addControl(new MapboxLanguage({ defaultLanguage: "zh-Hans" }));
+
+      map2.on('load', function () {
+        map2.addSource("rainStationSource", {
+              "type": "geojson",
+              "data": "/case/rainForecast/output.json"
+            }
+        )
+
+        // map2.addLayer({
+        //   "id": "rainStationLayer2",
+        //   "source": "rainStationSource",
+        //   "type": "circle",
+        //   'paint': {
+        //     'circle-radius': 20,
+        //     'circle-color': 'rgba(55,148,179,1)'
+        //   },
+        // });
+
+
+        map2.loadImage('/case/rainForecast/station.png', function (error, image) {
           if (error) throw error;
-          map.addImage('station', image);
-          map.addLayer({
+          map2.addImage('station', image);
+          map2.addLayer({
             "id": "rainStationLayer",
             "source": "rainStationSource",
             "type": "symbol",
@@ -203,7 +226,6 @@ export default {
 
       });
     },
-
     changeRainDay() {
 
       map.removeLayer("rainImgLayer");
@@ -227,13 +249,13 @@ export default {
         "source": "rainImgSource",
         "type": "raster",
         "paint": {"raster-opacity": 0.85}
-      }, "rainStationLayer");
+      });
 
       let randData = "{ranData" + this.dayCount + "}"
-      map.setLayoutProperty("rainStationLayer", "text-field", randData);
+      map2.setLayoutProperty("rainStationLayer", "text-field", randData);
 
       let ranDatath = "ranData" + this.dayCount
-      map.setFilter('rainStationLayer', ['>', ranDatath, 0]);
+      map2.setFilter('rainStationLayer', ['>', ranDatath, 0]);
 
       let tempCount = 3 + this.dayCount
       this.dateForest = "2017-4-" + tempCount
@@ -247,6 +269,8 @@ export default {
 
     //清除
     clearSomething() {
+      document.getElementsByClassName("mapboxgl-ctrl-bottom-left")[0].remove()
+      document.getElementsByClassName("mapboxgl-ctrl-bottom-right")[0].remove()
       document.getElementsByClassName("mapboxgl-ctrl-bottom-left")[0].remove()
       document.getElementsByClassName("mapboxgl-ctrl-bottom-right")[0].remove()
     },
@@ -531,7 +555,58 @@ export default {
       option && pieChart.setOption(option);
     },
 
+    /*createBarChart() {*/
 
+    /*  if (barChart != null && barChart != "" && barChart != undefined) {*/
+    /*    barChart.dispose();//销毁*/
+    /*  }*/
+    /*  barChart = echarts.init(document.getElementById('barChart'), "dark");*/
+    /*  let option;*/
+
+    /*  option = {*/
+    /*    title: {*/
+    /*      text: '历史暴雨事件',*/
+    /*      left: "center"*/
+    /*    },*/
+    /*    tooltip: {*/
+    /*      trigger: 'axis',*/
+    /*      axisPointer: {*/
+    /*        type: 'shadow'*/
+    /*      }*/
+    /*    },*/
+    /*    legend: {*/
+    /*      top: 'bottom'*/
+    /*    },*/
+    /*    grid: {*/
+    /*      left: '3%',*/
+    /*      right: '4%',*/
+    /*      bottom: '3%',*/
+    /*      containLabel: true*/
+    /*    },*/
+    /*    xAxis: {*/
+    /*      type: 'value',*/
+    /*      boundaryGap: [0, 0.01]*/
+    /*    },*/
+    /*    yAxis: {*/
+    /*      type: 'category',*/
+    /*      data: ['Brazil', 'Indonesia', 'USA', 'India', 'China', 'World']*/
+    /*    },*/
+    /*    series: [*/
+    /*      {*/
+    /*        name: '2011',*/
+    /*        type: 'bar',*/
+    /*        data: [18203, 23489, 29034, 104970, 131744, 630230]*/
+    //       },
+    //       {
+    //         name: '2012',
+    //         type: 'bar',
+    //         data: [19325, 23438, 31000, 121594, 134141, 681807]
+    //       }
+    //     ]
+    //   };
+    //
+    //   option && barChart.setOption(option);
+    // }
 
   }
 
@@ -572,49 +647,34 @@ export default {
   width: 100%;
 }
 
+
 .content-col-1 {
   /*height: calc(100vh - 60px);*/
   height: 100%;
-  width: 25%;
+  width: 29%;
 }
 
 .content-col-2 {
   /*height: calc(100vh - 60px);*/
   height: 100%;
-  width: 50%;
+  width: 40%;
 }
 
 .content-col-3 {
   /*height: calc(100vh - 60px);*/
   height: 100%;
-  width: 25%;
-}
-
-.content-part-1 {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.content-part-map {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  width: 29%;
 }
 
 .part {
-  width: 100%;
-  height: 35%;
+  width: 90%;
+  height: 40%;
   padding: 20px;
   position: relative;
   box-shadow: rgb(0 108 255) 0px 0px 25px inset;
 }
 
-.partBig {
+.partBig{
   width: 90%;
   height: 90%;
   padding: 20px;
@@ -624,9 +684,8 @@ export default {
 
 
 #map {
-  width: 96%;
-  height: 85%;
-
+  width: 100%;
+  height: 100%;
 }
 
 #map2 {
@@ -680,7 +739,7 @@ export default {
 .dateForestShow {
   color: #ff003b;
   position: absolute;
-  top: 15%;
+  top: 20px;
   right: 30px;
 }
 

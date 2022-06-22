@@ -1,5 +1,8 @@
 <template>
   <div style="height: 100%; width: 100%">
+  <div class="model-operate">
+    <el-button type="primary" @click="toModelMap"><el-icon><DataLine /></el-icon>&nbsp; 进入模型实验室</el-button>
+  </div>
     <ModelItem
       v-for="model in models"
       :key="model"
@@ -34,9 +37,29 @@ const models = reactive([
     tag: [""],
   },
 ]);
+setTimeout(() => {
+  window.addEventListener("scroll", mousedown, true);
+}, 300);
+const mousedown = () => {
+console.log(5896)
+};
+
+const toModelMap=()=>{
+  router.push('/model')
+}
 </script>
 
 <style lang="less" scoped>
 // 兼容css
+.model-operate{
+  position: relative;
+  height: 60px;
+  // background: blue;
+  margin-bottom: 1vh;
+  display: flex;
+  flex-direction: column;
+  // align-items: center;
+  justify-items: center;
+}
 </style>
 

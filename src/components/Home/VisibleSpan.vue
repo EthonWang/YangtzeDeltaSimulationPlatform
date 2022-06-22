@@ -27,8 +27,9 @@
         <h4>{{ tittle }}</h4>
         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ des }}</p>
         <el-button
+        @click="toThemetic()"
           type="primary"
-          style="right: 6%; position: absolute; bottom: 5%"
+          style="right: 6%; position: absolute; top: 5%"
           >转到&nbsp;<el-icon><DArrowRight /></el-icon
         ></el-button>
       </div>
@@ -37,7 +38,15 @@
 </template>
 
 <script setup>
-import { reactive, ref, defineProps, defineExpose } from "vue";
+import { reactive, ref, defineProps, defineExpose, } from "vue";
+import { useRouter } from "vue-router";
+
+const router=useRouter()
+
+const toThemetic=()=>{
+  localStorage.setItem("show_themetic",tittle.value)
+  router.push("/themetic")
+}
 
 const props = defineProps({
   new_data: ref(Object),
@@ -95,10 +104,11 @@ defineExpose({ scrollingSpan });
   width: 30%;
   position: absolute;
   left: calc(37% + 50px);
-  background-color: rgba(129, 192, 243, 0);
+  background-color: rgb(255, 255, 255);
   z-index: 5;
+  color: rgb(0, 0, 0);
   top: calc(70% + 15px);
-  box-shadow: 0 2px 24px 0 hsla(220, 50%, 8%, 0.8);
+  box-shadow: 0 2px 24px 0 hsla(0, 0%, 25%, 0.8);
   transition: box-shadow 1s;
   h4 {
     text-align: left;
@@ -139,7 +149,7 @@ defineExpose({ scrollingSpan });
   }
 }
 .intro {
-  box-shadow: 0 2px 24px 0 hsla(220, 50%, 8%, 0.8);
+  box-shadow: 0 2px 24px 0 hsla(0, 0%, 85%, 0.8);
   transition: box-shadow 1s;
   &:hover {
     box-shadow: 0 2px 24px 0 hsla(220, 100%, 58%, 1);
@@ -177,6 +187,7 @@ defineExpose({ scrollingSpan });
   max-height: 72%;
   height: auto;
   vertical-align: middle;
+  filter: saturate(70%);
   clip: rect(0 auto 50% 0);
 }
 .img1 {

@@ -1,75 +1,83 @@
 export const cases_config = [
     {
+        problem:"城市水问题",
         name:"汾湖高新区城市雨洪管网模拟系统",
-        img_path:"http://172.21.212.63:8999/store/themeImg/swmm.png",
+        img_path:require("../img/cases/swmm.png"),
+        data:"",
         path:"swmm",
         description:" 本案例基于SWMM模型实现，主要用于模拟汾湖高新区降水事件的模拟，分别依照当地官方量化的五年一遇、十年一遇、二十年一遇、三十年一遇、五十年一遇的五个降雨量级下，二十四小时内下的城市排水管网与管点的水流情况。",
         component:() => import( "views/CasesView/SWMM.vue")
     },
     {
+        problem:"洪涝水环境灾害",
         name:"长三角降雨预报专题",
+        data:"",
         img_path:require("../img/cases/rainForecast.png"),
         path:"rainForecast",
         description:" 长三角降雨预报专题",
         component:() => import( "views/CasesView/RainForecast.vue")
     },
-    {
-        name:"SAGA1",
-        img_path:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
-        path:"saga",
-        description:" SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。",
-        component:() => import( "views/CasesView/SAGA.vue")
-    },
-    {
-        name:"SAGA2",
-        img_path:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
-        path:"saga",
-        description:" SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。",
-        component:() => import( "views/CasesView/SAGA.vue")
-    },
-    {
-        name:"SAGA3",
-        img_path:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
-        path:"saga",
-        description:" SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。",
-        component:() => import( "views/CasesView/SAGA.vue")
-    },
-    {
-        name:"PROBLEM",//唯一
-        img_path:require("../img/cases/problem.jpg"),//本地路径加上require（），网址不用加
-        path:"saga",//唯一
-        description:" SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。",
-        component:() => import( "views/CasesView/SAGA.vue")//位置
-    },
-    {
-        name:"SAGA4",
-        img_path:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
-        path:"saga",
-        component:() => import( "views/CasesView/SAGA.vue")
-    },
-    {
-        name:"SAGA5",
-        img_path:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
-        path:"saga",
-        component:() => import( "views/CasesView/SAGA.vue")
-    },
-    {
-        name:"SAGA6",
-        img_path:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
-        path:"saga",
-        component:() => import( "views/CasesView/SAGA.vue")
-    },
-    {
-        name:"SAGA7",
-        img_path:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
-        path:"saga",
-        component:() => import( "views/CasesView/SAGA.vue")
-    },
-    {
-        name:"SAGA8",
-        img_path:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
-        path:"saga",
-        component:() => import( "views/CasesView/SAGA.vue")
-    },
+    // {
+    //     problem:"湖泊水环境监测",
+    //     name:"滇池模型-富营养化水质参数",
+    //     data:require("@/assets/video/滇池模型-富营养化水质参数.mp4"),
+    //     img_path:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
+    //     path:"dian_water",
+    //     description:" SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。",
+    //     component:() => import( "@/views/CasesView/Video.vue")
+    // },
+    // {
+    //     problem:"湖泊水环境监测",
+    //     name:"滇池模型-水华",
+    //     data:require("@/assets/video/滇池模型-水华.mp4"),
+    //     img_path:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
+    //     path:"dian_shuihua",
+    //     description:" SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。",
+    //     component:() => import( "@/views/CasesView/Video.vue")
+    // },
+    // {
+    //     problem:"湖泊水环境监测",
+    //     name:"太湖流场20141021",
+    //     data:require("@/assets/video/太湖流场.avi"),
+    //     img_path:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
+    //     path:"taihu_liuchang20141021",
+    //     description:" SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。",
+    //     component:() => import( "@/views/CasesView/Video.vue")
+    // },
+    // {
+    //     problem:"湖泊水环境监测",
+    //     name:"太湖水污染扩散系统演示",
+    //     data:require("@/assets/video/太湖水污染扩散系统演示.mp4"),
+    //     img_path:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
+    //     path:"taihu_pollution",
+    //     description:" SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。",
+    //     component:() => import( "@/views/CasesView/Video.vue")
+    // },
+    // {
+    //     problem:"洪涝水环境灾害",
+    //     name:"流域洪涝模拟视频",
+    //     data:require("@/assets/video/流域洪涝模拟视频-短-有配音.mp4"),
+    //     img_path:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
+    //     path:"river_flood",
+    //     description:" SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。",
+    //     component:() => import( "@/views/CasesView/Video.vue")
+    // },
+    // {
+    //     problem:"湖泊水环境监测",
+    //     name:"应急响应-非溶于水",
+    //     data:require("@/assets/video/应急响应-非溶于水.mp4"),
+    //     img_path:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
+    //     path:"emergency_nowater",
+    //     description:" SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。",
+    //     component:() => import( "@/views/CasesView/Video.vue")
+    // },{
+    //     problem:"湖泊水环境监测",
+    //     name:"应急响应-污染扩散",
+    //     data:require("@/assets/video/应急响应-污染扩散.mp4"),
+    //     img_path:"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654395485&t=c87aa06645ddff89c99968c1385455eb",
+    //     path:"emergency_spread",
+    //     description:" SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。",
+    //     component:() => import( "@/views/CasesView/Video.vue")
+    // },
 
 ]

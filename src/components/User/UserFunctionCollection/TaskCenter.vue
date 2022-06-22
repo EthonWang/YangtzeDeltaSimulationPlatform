@@ -1,12 +1,31 @@
 <template>
-  <div style="height: 100%; width: 100%">
-    <TaskItem
-      class="task"
-      v-for="task in tasks"
-      :key="task"
-      :task="task"
-      @update:task="task.des=$event"
-    ></TaskItem>
+  <div style="width: 100%; height: 100%">
+    <div style="margin-bottom: -10px">
+      <el-button type="primary" @click="createTask()" style="width: 100%"
+        ><el-icon><folder-add /></el-icon>&nbsp;新建实验</el-button
+      >
+    </div>
+    <el-divider></el-divider>
+    <div
+      style="
+        height: 100%;
+        width: 100%;
+        /* display: block; */
+        /* flex-direction: column; */
+        /* align-items: center; */
+        /* flex-wrap: wrap; */
+        justify-content: center;
+      "
+    >
+      <TaskItem
+        class="task"
+        v-for="task in tasks"
+        :key="task"
+        :task="task"
+        @update:task="task = $event"
+        @delete-task="deleteTask(task)"
+      ></TaskItem>
+    </div>
   </div>
 </template>
 
@@ -16,35 +35,59 @@ import { reactive, computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import TaskItem from "./TaskItem.vue";
+import Api from "@/api/user/task";
+import { ElMessage } from "element-plus";
+import { random } from "lodash";
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
-const tasks = reactive([
-  {
-    name: "SWMM模型",
-    des: "本任务作为SWMM模型应用的典型案例，现在共享出来方便大家学习。",
-    state: "success",
-    public: true,
-  },
-  {
-    name: "SWMM模型",
-    des: "本任务作为SWMM模型应用的典型案例，现在共享出来方便大家学习。",
-    state: "processing",
-    public: false,
-  },
-  {
-    name: "SWMM模型",
-    des: "本任务作为SWMM模型应用的典型案例，现在共享出来方便大家学习。",
-    state: "failure",
-    public: false,
-  },
-]);
+const api = new Api();
+class task {
+  constructor() {
+    this.name = "";
+    this.description = "";
+    this.public = false;
+    this.problemTags = [];
+    this.dataList = [];
+    this.id = String(new Date());
+  }
+}
+
+const tasks = ref([]);
+const refresh = () => {
+  api.getTaskList("ssa").then((res) => {
+    console.log(res.data);
+    tasks.value = [];
+    for(let i in res.data)
+    {tasks.value.push(res.data[i])}
+    console.log(tasks.value);
+  });
+};
+
+const createTask = () => {
+  let new_task = new task()
+  console.log(new_task);
+  api.createTask(new_task).then((res) => {
+    refresh();
+  });
+};
+
+const deleteTask = (task) => {
+  api.deleteTask(task).then((res) => {
+    refresh();
+  });
+};
+
+setTimeout(() => {
+  refresh();
+}, 320);
 </script>
 
 <style lang="less" scoped>
 // 兼容css
 .task {
-  width: 90%;
+  width: calc(90% - 10px);
+  margin: 5px;
 }
 </style>
 

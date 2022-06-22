@@ -3,11 +3,11 @@
     <div class="card">
       <img
         class="img"
-        :src="img_url"
+        :src="props.img_url"
         alt=""
       />
-      <h2>{{tittle}}</h2>
-      <p>{{description}}</p>
+      <h2>{{props.tittle}}</h2>
+      <p>{{props.description}}</p>
     </div>
   </div>
 </template>

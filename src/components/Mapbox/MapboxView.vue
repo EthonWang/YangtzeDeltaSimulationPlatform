@@ -229,6 +229,8 @@ import MapboxLanguage  from '@mapbox/mapbox-gl-language'
 mapboxgl.setRTLTextPlugin("https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.1.0/mapbox-gl-rtl-text.js");
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { toRaw } from '@vue/reactivity';
+import MapboxDraw from "@mapbox/mapbox-gl-draw";
+import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 var map = null
 
 export default {
@@ -369,6 +371,9 @@ export default {
         zoom: 7,
       });
       map.addControl(new MapboxLanguage({ defaultLanguage: "zh-Hans" }));
+
+      var Draw = new MapboxDraw();
+      map.addControl(Draw, 'top-left');
 
 
       var scale = new mapboxgl.ScaleControl({

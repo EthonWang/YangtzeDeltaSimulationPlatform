@@ -30,8 +30,8 @@
           style="font-size: 1.2vw; cursor: pointer"
           class="set_7_btn-wrapper"
         >
-          <svg height="54" width="120">
-            <rect id="set_7_button1" height="54" width="120"></rect>
+          <svg height="54" width="150">
+            <rect id="set_7_button1" height="54" width="150"></rect>
           </svg>
           <div id="set_7_text" :class="{ pickup: pick[index] }">
             <span>{{ bar.name }}</span>
@@ -39,7 +39,7 @@
         </div>
       </div>
       <avatar
-        @click="sendRouterToFather('/user', -1)"
+
         class="user-topbar"
         ref="user"
       />
@@ -49,9 +49,11 @@
 
 <script setup>
 import { userInfo } from "os";
-import { reactive, computed, ref, defineEmits, defineProps } from "vue";
+import { reactive, computed, ref, defineEmits, defineProps,watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+// import dataApi from "@/api/user/data"
 
+// const dataapi=new dataApi()
 const props = defineProps({
   background_show: ref(Boolean),
 });
@@ -60,6 +62,8 @@ const route = useRoute();
 const barList = reactive(
   router.options.routes.filter((item) => item.isBar == true)
 );
+const relation=require("@/assets/data/another/relation.json")
+localStorage.setItem("relation",JSON.stringify(relation))
 const user = ref();
 const notHome = ref(true);
 const getRootPath = (whole) => {
@@ -67,7 +71,7 @@ const getRootPath = (whole) => {
 };
 const searchIndexInRoutes = () => {
   let i = 0;
-  if (getRootPath(route.path) == "user" || getRootPath(route.path) == "case") {
+  if (getRootPath(route.path) != "") {
     setTimeout(() => {
       document.getElementsByClassName("user-topbar")[0].style.right = "2vw";
       document.getElementById("logo").style.marginLeft = "2vw";
@@ -75,10 +79,11 @@ const searchIndexInRoutes = () => {
     }, 150);
 
     pick.value = new Array(barList.length).fill(0);
-    return;
+
   } else {
     document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
   }
+  if (getRootPath(route.path) != ""){return}
   for (; i < barList.length; i++) {
     if (getRootPath(barList[i].path) == getRootPath(route.path)) {
       pick.value[i] = 1;
@@ -86,26 +91,37 @@ const searchIndexInRoutes = () => {
     }
   }
 };
+watch(()=>route.path,(newValue,oldValue)=>{
+  if (getRootPath(newValue) != "") {
+    setTimeout(() => {
+      pick.value = new Array(barList.length).fill(0);
+      document.getElementsByClassName("user-topbar")[0].style.right = "2vw";
+      document.getElementById("logo").style.marginLeft = "2vw";
+      document.getElementsByClassName("topbar")[0].style.left = "5vw";
+      for(let i in barList){
+        if(getRootPath(barList[i].path)==getRootPath(newValue))
+        {
+          pickup(i)
+        }
+      }
+    }, 201);
+  }
+}
+)
 const emit = defineEmits(["RouterFromBar"]);
-const sendRouterToFather = (route, index) => {
-  if (index == -1 || getRootPath(route) == "case") {
+const sendRouterToFather = (route1, index) => {
+  if (getRootPath(route1) != "") {
     let user_info = localStorage.getItem("userInfo");
     console.log(user_info);
-    if (user_info == null) {
+    if (user_info == null && getRootPath(route1) != "case"&&getRootPath(route1) != "themetic") {
       router.push("/login");
       return;
     }
-    router.push(route);
-    setTimeout(() => {
-      pick.value = new Array(barList.length).fill(0);
-      document.getElementsByClassName("user-topbar")[0].style.right = "1vw";
-      document.getElementById("logo").style.marginLeft = "2vw";
-      document.getElementsByClassName("topbar")[0].style.left = "5vw";
-      document.getElementsByClassName("user-info")[0].style.opacity = 1;
-      document.getElementsByClassName("science")[0].style.opacity = 0;
-    }, 601);
+    router.push(route1);
+    // if (index != -1) {
+    //     pickup(index);
+    //   }
 
-    // document.getElementsByClassName('user')[0].style.color=""
     return;
   }
   setTimeout(() => {
@@ -116,7 +132,7 @@ const sendRouterToFather = (route, index) => {
   }, 1000);
 
   pickup(index);
-  emit("RouterFromBar", route);
+  emit("RouterFromBar", route1);
 };
 let pick = ref(new Array(barList.length).fill(0));
 
@@ -156,9 +172,9 @@ setTimeout(searchIndexInRoutes, 100);
   border-left: 0;
   border-right: 0;
   text-align: center;
-  transform: scale(1.1);
+  transform: scale(1.05);
   // animation-name: glitched;
-
+  // transition: transform 1s;
   margin-left: 26%;
   width: 50%;
   animation-duration: calc(0.9s * 1.4);

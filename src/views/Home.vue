@@ -2,7 +2,7 @@
   <div ref="home_scroll_listen">
     <HomeView1 :show="show1" style="width: 100%; height: 95.94vh"></HomeView1>
     <HomeView2 :show="show2" style="width: 100%; height: 98.08vh"></HomeView2>
-    <HomeView3 :show="show2" style="width: 100%; height: 980px"></HomeView3>
+    <!-- <HomeView3 :show="show2" style="width: 100%; height: 980px"></HomeView3> -->
   </div>
 </template>
 

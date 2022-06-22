@@ -10,20 +10,21 @@
         width: 100%;
       "
     >
-      <div class="opt" @click="comeIn" v-if="props.file.type=='folder'">
+      <div class="opt" @click="comeIn()" v-if="props.file.type == 'folder'">
         <el-icon><FolderOpened /></el-icon>&nbsp;进入
       </div>
-      <div class="opt">
-        <el-icon><Download /></el-icon>&nbsp;下载
+      <!-- <div class="opt" @click="emit('edit_r')">
+        <el-icon><Edit /></el-icon>&nbsp;编辑
+      </div> -->
+      <div class="opt" @click="downloadData">
+        <el-icon><Download /></el-icon>&nbsp;下载({{ props.num }})
       </div>
-      <div class="opt">
+      <!-- <div class="opt">
         <el-icon><Bicycle /></el-icon>&nbsp;移动
-      </div>
-      <div class="opt" @click="emit('rename')">
-        <el-icon><Edit /></el-icon>&nbsp;重命名
-      </div>
-      <div class="opt">
-        <el-icon><Delete /></el-icon>&nbsp;删除
+      </div> -->
+
+      <div class="opt" @click="deleteData">
+        <el-icon><Delete /></el-icon>&nbsp;删除({{ props.num }})
       </div>
     </div>
   </div>
@@ -33,33 +34,36 @@
 //采用vue2写法的话把setup去掉，
 import { ElMessage } from "element-plus/lib/components";
 import { rename } from "fs";
-import { reactive, computed, ref, defineProps ,defineExpose,defineEmits} from "vue";
+import {
+  reactive,
+  computed,
+  ref,
+  defineProps,
+  defineExpose,
+  defineEmits,
+} from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const props = defineProps({
   file: Object,
+  num: Number,
 });
-const emit=defineEmits(['rename'])
+const emit = defineEmits(["comeIn_r", "downloadData", "deleteData"]);
 // const rename=()=>{
-    
-// }
-const comeIn = () => {
-  if (props.file.type != "folder") {
-    ElMessage({
-      message: "这不是文件夹，无法进入",
-      type: "warning",
-    });
-    return;
-  }
-  ElMessage({
-      message: "成功进入<"+props.file.name+">",
-      type: "success",
-    });
-};
 
-defineExpose({comeIn})
+// }
+const downloadData = () => {
+  emit("downloadData");
+};
+const deleteData = () => {
+  emit("deleteData");
+};
+const comeIn=()=>{
+  console.log(props.file)
+  emit("comeIn_r",props.file)
+}
 
 </script>
 

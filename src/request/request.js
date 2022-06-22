@@ -12,6 +12,14 @@ const request = axios.create({
   baseURL: config.baseUrl.dev,
   timeout: 60000,
 });
+request.interceptors.request.use(config => {
+    if (localStorage.getItem('token')) {
+        config.headers.Token = localStorage.getItem('token')
+    }
+    return config
+}, err => {
+    return Promise.reject(err)
+})
 
 //get请求
 export function get(url, params = {}) {

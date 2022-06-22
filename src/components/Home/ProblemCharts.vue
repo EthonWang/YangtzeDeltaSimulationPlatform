@@ -26,92 +26,82 @@ function init() {
   const myChart = echarts.init(earthchart.value);
   // 指定图表的配置项和数据
   const colors = [
-    "hsl(221, 60%, 67%)",
-    "hsl(191, 60%, 67%)",
-    "hsl(201, 60%, 67%)",
-    "hsl(211, 60%, 67%)",
-    "hsl(181, 60%, 67%)",
+    "hsl(221, 100%, 25%)",
+    "hsl(191, 100%, 75%)",
+    "hsl(201, 100%, 75%)",
+    "hsl(211, 100%, 75%)",
+    "hsl(181, 100%, 75%)",
   ];
   const bgColor = "hsla(238,65%,8%,0)";
   const itemStyle = {
     star5: {
-      color: colors[0],
+      color: "hsl(191, 100%, 75%)",
     },
     star4: {
-      color: colors[1],
+      color: "hsl(191, 100%, 75%)",
     },
-    star3: {
-      color: colors[2],
-    },
-    star2: {
-      color: colors[3],
-    },
+
   };
   let option;
   const data = sciencePro;
 
   for (let j = 0; j < data.length; ++j) {
-    let level1 = data[j].children;
+    let level1 = data[j].children; //第二层，到底了
     for (let i = 0; i < level1.length; ++i) {
-      let block = level1[i].children;
+      let block = level1;
       let bookScore = [];
       let bookScoreId;
-      for (let star = 0; star < block.length; ++star) {
-        let style = (function (name) {
-          switch (name) {
-            case "5☆":
-              bookScoreId = 0;
-              return itemStyle.star5;
-            case "4☆":
-              bookScoreId = 1;
-              return itemStyle.star4;
-            case "3☆":
-              bookScoreId = 2;
-              return itemStyle.star3;
-            case "2☆":
-              bookScoreId = 3;
-              return itemStyle.star2;
-          }
-        })(block[star].name);
-        block[star].label = {
-          color: style.color,
-          downplay: {
-            opacity: 1,
-          },
-        };
-        if (block[star].children) {
-          style = {
-            opacity: 1,
-            color: style.color,
-          };
-          block[star].children.forEach(function (book) {
-            book.value = 1;
-            book.itemStyle = style;
-            book.label = {
-              color: style.color,
-              // color: "#fafafa",
-              textShadow:
-                "-1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000,-1px -1px 0 #000",
-              fontSize: "1.56rem",
-              fontWeight: 700,
-            };
-            let value = 1;
-            if (bookScoreId === 0 || bookScoreId === 3) {
-              value = 5;
-            }
-            if (bookScore[bookScoreId]) {
-              bookScore[bookScoreId].value += value;
-            } else {
-              bookScore[bookScoreId] = {
-                color: colors[bookScoreId],
-                value: value,
-              };
-            }
-          });
+
+      let style = (function (it) {
+        //自定义一个临时函数
+        switch (it%2) {
+          case 0:
+            bookScoreId = 0;
+            return itemStyle.star4;
+          case 1:
+            bookScoreId = 1;
+            return itemStyle.star5;
         }
+      })(i); //使用临时函数
+      block[i].label = {
+        color: style.color,
+        downplay: {
+          opacity: 1,
+        },
+      };
+      if (block) {
+        style = {
+          opacity: 1,
+          color: style.color,
+        };
+        block.forEach(function (book) {
+          book.value = 1;
+          book.itemStyle = style;
+          book.label = {
+            color: "black",
+            // color: "#fafafa",
+            textShadow:
+              "-1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000,-1px -1px 0 #000",
+            fontSize: "1.56rem",
+            fontWeight: 500,
+          };
+          let value = 1;
+          if (bookScoreId === 0 || bookScoreId === 3) {
+            value = 5;
+          }
+          if (bookScore[bookScoreId]) {
+            bookScore[bookScoreId].value += value;
+          } else {
+            bookScore[bookScoreId] = {
+              color: colors[bookScoreId],
+              value: value,
+            };
+          }
+        });
       }
+
       level1[i].itemStyle = {
-        color: data[j].itemStyle.color,
+        color: colors[0],
       };
     }
   }
@@ -132,7 +122,7 @@ function init() {
         },
         label: {
           rotate: "radial",
-          color: "white",
+          color: "black",
           fontSize: "1.437rem",
           // formatter:(val)=>{
           //   while(val.length>5){
@@ -141,40 +131,19 @@ function init() {
           // }
         },
         itemStyle: {
-          borderColor: "hsla(14,100%,80%,0.5)",
+          borderColor: "hsla(204,100%,90%,0.5)",
           borderWidth: 2,
         },
         levels: [
           {},
+
           {
-            r0: 0,
-            r: 40,
-            label: {
-              rotate: 0,
-            },
+            r0: 20,
+            r: 180,
           },
+
           {
-            r0: 43,
-            r: 220,
-          },
-          {
-            r0: 180,
-            r: 181,
-            itemStyle: {
-              shadowBlur: 10,
-              shadowColor: colors[2],
-              color: "transparent",
-              opacity:0
-            },
-            label: {
-              rotate: "tangential",
-              fontSize: "0px",
-              color: colors[0],
-              opacity:0
-            },
-          },
-          {
-            r0: 235,
+            r0: 230,
             r: 250,
             itemStyle: {
               shadowBlur: 10,
@@ -198,7 +167,7 @@ function init() {
 
   option && myChart.setOption(option);
   myChart.on("click", (params) => {
-        console.log(params)
+    console.log(params);
 
     if (params.name == "" || params.value != 1) {
       return;
@@ -213,7 +182,7 @@ function init() {
 
 <style lang="less" scoped>
 // @randomNum: `Math.ceil(Math.random() * 30) -15`;
-@randomNum:0;
+@randomNum: 0;
 .randMove() {
   animation: floating calc((abs(@randomNum / 2) + 20) * 1s) ease-in-out infinite
     alternate;
@@ -238,5 +207,4 @@ function init() {
 .img1 {
   .randMove();
 }
-
 </style>

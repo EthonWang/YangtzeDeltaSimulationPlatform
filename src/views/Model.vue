@@ -49,6 +49,7 @@ export default {
   },
   data() {
     return {
+      data_list:JSON.parse(localStorage.getItem("task")).dataList,
       mapType: "mapBox",
       //使用mapbox-view组件需要传递的参数
       shpList: [], //格式参考[{name: "111", type: "circle", nameId: "111_123"}]
@@ -61,6 +62,7 @@ export default {
     };
   },
   mounted() {
+    setTimeout(()=>{console.log(this.data_list)},500)
     let mapType = this.getURLParameter("mapType");
     if (mapType != null) {
       if (mapType == "cesium") {

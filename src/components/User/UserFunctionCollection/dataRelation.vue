@@ -16,10 +16,8 @@ const graph = relation;
 // onMounted(() => {
 //   init();
 // });
-setTimeout(init,500)
+setTimeout(init, 500);
 function init() {
-  const city = [3291, 3307, 3289, 3292, 3263];
-
   const myChart = echarts.init(relationship.value);
 
   let option = {
@@ -35,7 +33,7 @@ function init() {
       {
         name: "Les Miserables",
         type: "graph",
-        layout: "none",
+        layout: "force",
         data: graph.nodes,
         links: graph.links,
         categories: graph.categories,
@@ -56,10 +54,22 @@ function init() {
           color: "source",
           curveness: 0.3,
         },
+        force: {
+          repulsion: 950
+        },
+        emphasis: {
+          focus: 'adjacency',
+          lineStyle: {
+            width: 5
+          }
+        },
       },
     ],
   };
   option && myChart.setOption(option);
+  myChart.on("click", (params) => {
+    console.log(params.data,params.seriesName);
+  });
 }
 </script>
 

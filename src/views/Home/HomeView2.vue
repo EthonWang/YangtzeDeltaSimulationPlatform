@@ -12,6 +12,12 @@
       :class="{ hide_ani: !props.show, show_ani: props.show }"
       class="visible"
     ></VisibalSpan>
+    <!-- <img
+      class="img-bg"
+      :class="{ hide_ani: !props.show, show_ani: props.show }"
+      src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.vjshi.com%2F2018-12-06%2Fa6abae7edf699783cc97fea1c3d59913%2F00003.jpg%3Fx-oss-process%3Dstyle%2Fwatermark&refer=http%3A%2F%2Fpic.vjshi.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1656569246&t=face99307646b24b69dabccc55627cf4"
+      alt=""
+    /> -->
   </div>
 </template>
 
@@ -42,7 +48,6 @@ const recieveProblem = (name, path, des) => {
   });
 };
 const visibility = ref();
-
 </script>
 
 <style lang="less" scoped>
@@ -72,7 +77,7 @@ const visibility = ref();
 .img-pro {
   position: absolute;
   right: calc(4vw - 1px);
-  top:15%;
+  top: 15%;
   width: 2.8vw;
   height: $width * 1.5;
   .randMove();
@@ -117,11 +122,21 @@ const visibility = ref();
   // }
 }
 .home2 {
-  // background: url("../../assets/problem.jpg");
-  background-size: 25% 30%;
+  // background: url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.vjshi.com%2F2018-12-06%2Fa6abae7edf699783cc97fea1c3d59913%2F00003.jpg%3Fx-oss-process%3Dstyle%2Fwatermark&refer=http%3A%2F%2Fpic.vjshi.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1656569246&t=face99307646b24b69dabccc55627cf4");
+  background-size: 100% 100%;
   background-color: hsl(196, 87%, 100%);
   background-repeat: no-repeat;
-  background-position: 110% -5%;
+
+  // background-position: 110% -5%;
+}
+.img-bg {
+  position: absolute;
+  filter: saturate(100%) brightness(85%) blur(5px);
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
 }
 .hide_ani {
   animation: hide1 0.8s linear forwards;

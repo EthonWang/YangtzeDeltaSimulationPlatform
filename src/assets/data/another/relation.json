@@ -1,0 +1,323 @@
+{
+    "nodes": [
+      {
+        "name": "灾害响应",
+        "symbolSize": 20,
+        "value": "科学问题大类",
+        "category": 3
+      },
+      {
+        "name": "台风与风暴湖",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 3
+      },
+      {
+        "name": "洪涝水环境灾害",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 3
+      },
+      {
+        "name": "地质灾害",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 3
+      },
+      {
+        "name": "大气污染",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 3
+      },
+      {
+        "name": "全球与区域变化",
+        "symbolSize": 20,
+        "value": "科学问题大类",
+        "category": 4
+      },
+      {
+        "name": "海岸带变迁",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 4
+      },
+      {
+        "name": "河口河岸水动力",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 4
+      },
+      {
+        "name": "湖泊碳循环",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 4
+      },
+      {
+        "name": "土壤碳氮循环",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 4
+      },
+      {
+        "name": "土壤氮转化过程与环境效应",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 4
+      },
+      {
+        "name": "流域水循环",
+        "symbolSize": 20,
+        "value": "科学问题大类",
+        "category": 5
+      },
+      {
+        "name": "流域生态环境演变",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 5
+      },
+      {
+        "name": "流域碳水耦合循环",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 5
+      },
+      {
+        "name": "地表地下水耦合",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 5
+      },
+      {
+        "name": "湖泊水环境监测",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 5
+      },
+      {
+        "name": "城市化与人地关系",
+        "symbolSize": 20,
+        "value": "科学问题大类",
+        "category": 6
+      },
+      {
+        "name": "湿地保护",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 6
+      },
+      {
+        "name": "城市扩张",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 6
+      },
+      {
+        "name": "农业生态",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 6
+      },
+      {
+        "name": "人地关系",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 6
+      },
+      {
+        "name": "城市水问题",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 6
+      },
+      {
+        "name": "自然遗产",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 6
+      },
+      {
+        "name": "城市群发展",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 6
+      },
+      {
+        "name": "非面向问题类",
+        "symbolSize": 10,
+        "value": "科学问题",
+        "category": 7
+      },
+      {
+        "name":"数据",
+        "symbolSize":20,
+        "category":0,
+        "value": "我的实验数据"
+      },
+      {
+        "name":"模型",
+        "symbolSize":20,
+        "category":1,
+        "value": "我的实验模型"
+      },
+      {
+        "name":"实验",
+        "symbolSize":20,
+        "category":2,
+        "value": "我的实验"
+      },
+      {
+        "name":"科学问题",
+        "symbolSize":25,
+        "category":8,
+        "value": "科学问题汇总"
+      },
+      {
+        "name":"长江三角洲",
+        "symbolSize":30,
+        "category":8,
+        "value": "模拟器知识网络"
+      }
+    ],
+    "links": [
+      {
+        "source":"台风与风暴湖",
+        "target":"灾害响应"
+      },
+      {
+        "source":"洪涝水环境灾害",
+        "target":"灾害响应"
+      },
+      {
+        "source":"地质灾害",
+        "target":"灾害响应"
+      },
+      {
+        "source":"大气污染",
+        "target":"灾害响应"
+      },
+      {
+        "source":"海岸带变迁",
+        "target":"全球与区域变化"
+      },
+      {
+        "source":"河口河岸水动力",
+        "target":"全球与区域变化"
+      },
+      {
+        "source":"湖泊碳循环",
+        "target":"全球与区域变化"
+      },
+      {
+        "source":"土壤碳氮循环",
+        "target":"全球与区域变化"
+      },
+      {
+        "source":"土壤氮转化过程与环境效应",
+        "target":"全球与区域变化"
+      },
+      {
+        "source":"流域生态环境演变",
+        "target":"流域水循环"
+      },
+      {
+        "source":"流域碳水耦合循环",
+        "target":"流域水循环"
+      },
+      {
+        "source":"地表地下水耦合",
+        "target":"流域水循环"
+      },
+      {
+        "source":"湖泊水环境监测",
+        "target":"流域水循环"
+      },
+      {
+        "source":"湿地保护",
+        "target":"城市化与人地关系"
+      },
+      {
+        "source":"城市扩张",
+        "target":"城市化与人地关系"
+      },
+      {
+        "source":"农业生态",
+        "target":"城市化与人地关系"
+      },
+      {
+        "source":"城市群发展",
+        "target":"城市化与人地关系"
+      },
+      {
+        "source":"人地关系",
+        "target":"城市化与人地关系"
+      },
+      {
+        "source":"城市水问题",
+        "target":"城市化与人地关系"
+      },
+      {
+        "source":"自然遗产",
+        "target":"城市化与人地关系"
+      },
+      {
+        "source":"灾害响应",
+        "target":"科学问题"
+      },
+      {
+        "source":"全球与区域变化",
+        "target":"科学问题"
+      },
+      {
+        "source":"流域水循环",
+        "target":"科学问题"
+      },
+      {
+        "source":"城市化与人地关系",
+        "target":"科学问题"
+      },{
+        "source":"科学问题",
+        "target":"长江三角洲"
+      },{
+        "source":"模型",
+        "target":"长江三角洲"
+      },{
+        "source":"实验",
+        "target":"长江三角洲"
+      },{
+        "source":"非面向问题类",
+        "target":"长江三角洲"
+      }
+    ],
+    "categories": [
+      {
+        "name": "数据"
+      },
+      {
+        "name": "模型"
+      },
+      {
+        "name": "实验"
+      },
+      {
+        "name": "灾害响应"
+      },
+      {
+        "name": "全球与区域变化"
+      },
+      {
+        "name": "流域水循环"
+      },
+      {
+        "name": "城市化与人地关系"
+      },
+      {
+        "name": "非面向问题类"
+      },
+      {
+        "name": "描述性节点"
+      }
+    ]
+  }

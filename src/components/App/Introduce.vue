@@ -116,7 +116,7 @@
             <el-divider></el-divider>
           </div>
         </el-carousel-item>
-        <el-carousel-item
+        <!-- <el-carousel-item
           style="height: 100%"
           v-for="item in props.picture"
           :key="item"
@@ -127,7 +127,7 @@
             :fit="fill"
             alt=""
           />
-        </el-carousel-item>
+        </el-carousel-item> -->
       </el-carousel>
     </div>
   </div>
@@ -200,6 +200,7 @@ const configs = reactive([
   h3 {
     color: #0969da;
     font-weight: 500;
+    margin:2% 0 2% 0 ;
   }
   span {
     color: rgb(105, 105, 105);

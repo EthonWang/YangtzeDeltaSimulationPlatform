@@ -51,9 +51,21 @@
 import { userInfo } from "os";
 import { reactive, computed, ref, defineEmits, defineProps,watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import graphAPI from "@/api/user/graph"
+
+const user_info=JSON.parse(localStorage.getItem("userInfo"))
+
 // import dataApi from "@/api/user/data"
 
 // const dataapi=new dataApi()
+
+const graphapi=new graphAPI()
+graphapi.initGraph(user_info.id).then((res)=>{
+
+  console.log(graphapi.giveRecommend(["公开"]))
+
+})
+
 const props = defineProps({
   background_show: ref(Boolean),
 });
@@ -148,6 +160,7 @@ setTimeout(searchIndexInRoutes, 100);
 @import "../../css/btn/btn7.css";
 
 .user-topbar {
+  display: none;
   position: relative;
   transition: all 1s;
   color: aliceblue;

@@ -8,10 +8,10 @@
         v-model="task_data.name"
         placeholder="请输入标题"
       />
-      <span class="task-public" v-if="props.task.public"
+      <span class="task-public" v-if="props.task.publicBoolean"
         ><el-icon><Unlock /></el-icon>公开</span
       >
-      <span class="task-public task-private" v-if="!props.task.public"
+      <span class="task-public task-private" v-if="!props.task.publicBoolean"
         ><el-icon><Lock /></el-icon>私密</span
       >
       <el-button
@@ -80,11 +80,13 @@
       <el-divider></el-divider>
 
       <el-button
+      v-if="edit_task"
         style="float: left; margin-right: 5px"
         @click="router.push('/user/data')"
-        >选择并添加<strong>云端</strong>数据</el-button
+        >选择并添加<strong>我的云端</strong>数据</el-button
       >
       <el-upload
+      v-if="edit_task"
         style="float: left; margin-right: 5px"
         class="upload-demo"
         action=""
@@ -102,9 +104,10 @@
       </el-upload>
 
       <el-button
+      v-if="edit_task"
         @click="router.push('/resourse')"
         style="float: left; margin-right: 5px"
-        >选择并添加<strong>专题</strong>数据</el-button
+        >选择并添加<strong>公共资源</strong></el-button
       >
       <br /><br />
       <el-form
@@ -272,7 +275,7 @@ const handleClose = (tag) => {
   position: relative;
   border: 0.5px solid rgba(206, 206, 206, 0.5);
   width: 100%;
-  padding: 0 5% 35px 5%;
+  padding: 2% 5% 35px 5%;
   transition: all 0.5s;
   &:hover {
     border: .5px solid rgba(81, 113, 255, 0.5);

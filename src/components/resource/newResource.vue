@@ -573,7 +573,7 @@ export default {
         info.normalTags = this.formInline.tagList.toString();
         info.problemTags = this.formInline.problemTags.toString();
         info.publicBoolean = true;
-        if(this.toUploadVisualFiles.length >= 1){
+        if(this.toUploadVisualFiles.length >= 1 || this.formInline.visualType == "tif"){
           info.visualizationBoolean = true;
         } else {
           info.visualizationBoolean = false;

@@ -1,12 +1,15 @@
 <template>
   <div class="about">
-    <ModelTree
+    <!-- <ModelTree
       @getCheckData="getCheckData"
       @getCheckChart="getCheckChart"
       @getCheckTif="getCheckTif"
       @getCheckJson="getCheckJson"
-    ></ModelTree>
-    <button class="mapSwitchButton" @click="switchMap">2D/3D</button>
+    ></ModelTree> -->
+    <el-button size="small" @click="switchMap" class="mapSwitchButton"
+      >2D/3D
+    </el-button>
+    <!-- <button class="mapSwitchButton" @click="switchMap">2D/3D</button> -->
     <mapbox-view
       :shpShowList="shpList"
       v-show="mapType == 'mapBox'"
@@ -39,17 +42,17 @@ import { useStore } from "vuex";
 import MapboxView from "../components/Mapbox/MapboxView";
 import Cesium from "../components/cesium/cesium.vue";
 import chartTemplate from "../components/chartPlugin/chartTemplate.vue";
-import ModelTree from "components/App/ModelTree";
+// import ModelTree from "components/App/ModelTree";
 export default {
   components: {
-    ModelTree,
+    // ModelTree,
     MapboxView,
     Cesium,
     chartTemplate,
   },
   data() {
     return {
-      data_list:JSON.parse(localStorage.getItem("task")).dataList,
+      data_list: JSON.parse(localStorage.getItem("task")).dataList,
       mapType: "mapBox",
       //使用mapbox-view组件需要传递的参数
       shpList: [], //格式参考[{name: "111", type: "circle", nameId: "111_123"}]
@@ -62,7 +65,9 @@ export default {
     };
   },
   mounted() {
-    setTimeout(()=>{console.log(this.data_list)},500)
+    setTimeout(() => {
+      console.log(this.data_list);
+    }, 500);
     let mapType = this.getURLParameter("mapType");
     if (mapType != null) {
       if (mapType == "cesium") {
@@ -136,11 +141,12 @@ const store = useStore(); //vuex直接用store.commit
 // 兼容css
 .about {
   position: relative;
+  height: 100vh;
 }
 .mapSwitchButton {
   position: absolute;
   top: 75px;
-  right: 60px;
+  left: 40px;
   z-index: 1000;
 }
 </style>

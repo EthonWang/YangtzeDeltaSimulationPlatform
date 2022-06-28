@@ -242,6 +242,7 @@ h1 {
             <RadioGroup v-model="formInline.visualType" style="width: 80%">
               <Radio label="shp" style="font-size: 14px">矢量</Radio>
               <Radio label="tif" style="font-size: 14px">栅格</Radio>
+              <Radio label="txt" style="font-size: 14px">文本</Radio>
               <Radio label="img" style="font-size: 14px">图片</Radio>
               <Radio label="video" style="font-size: 14px">视频</Radio>
             </RadioGroup>

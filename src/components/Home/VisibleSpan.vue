@@ -114,7 +114,7 @@ defineExpose({ scrollingSpan });
     text-align: left;
     padding-left: 20px;
     margin: 15px;
-    margin-bottom: -2%;
+    // margin-bottom: -2%;
     font-size: 1.25vw;
   }
   p {

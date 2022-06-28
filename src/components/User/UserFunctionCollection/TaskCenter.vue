@@ -47,7 +47,7 @@ class task {
     this.name = "";
     this.description = "";
     this.publicBoolean = false;
-    this.problemTags = "";
+    this.problemTags = [];
     this.dataList = [];
     // this.id = String(new Date());
   }

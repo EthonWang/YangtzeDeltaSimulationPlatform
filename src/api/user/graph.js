@@ -67,6 +67,7 @@ export default class {
     getKnowledgeSorce(user_id) {
         return new Promise((resolve, reject) => {
             post("/resource/getUserAllResource?userId=" + user_id,).then((res) => {
+                localStorage.setItem("allResource",JSON.stringify(res.data))
                 let personalData = res.data.personalData
                 let publicData = res.data.publicData
                 let modelList = res.data.modelList

@@ -103,6 +103,17 @@ export default class {
         return post("/LabTask/createLabTask",task)
         
     }
-    addData(task_id,data){}
-
+    editTask(task){
+        return post("/LabTask/updateLabTask/"+task.id,task)
+    }
+    addData(task,dataList){
+        for(let i in dataList){
+            task.dataList.push(dataList[i])
+        }
+        this.editTask(task)
+    }
+    deleteData(task,index){
+        task.dataList.splice(index, 1);
+        this.editTask(task)
+    }
 }

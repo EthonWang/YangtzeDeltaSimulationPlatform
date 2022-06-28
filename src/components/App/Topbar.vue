@@ -31,7 +31,7 @@
           class="set_7_btn-wrapper"
         >
           <svg height="54" width="150">
-            <rect id="set_7_button1" height="54" width="150"></rect>
+            <rect id="set_7_button1" height="50" width="150"></rect>
           </svg>
           <div id="set_7_text" :class="{ pickup: pick[index] }">
             <span>{{ bar.name }}</span>
@@ -217,7 +217,7 @@ setTimeout(searchIndexInRoutes, 100);
   width: 100%;
   height: 100%;
   padding-top: 1.06vh;
-  background-color: hsla(200, 100%, 36%, 0);
+  background-color: #24292f3b;
   backdrop-filter: blur(10px);
 }
 

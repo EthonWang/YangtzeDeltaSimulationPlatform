@@ -186,24 +186,31 @@ const task_list = ref([]);
 
 const upload_header = { token: localStorage.getItem("token") };
 task_api.getTaskList(userInfo.id).then((res) => {
-  for (let i in res.data) {
-    task_list.value.push(res.data[i]);
+  for (let i in res.data.data) {
+    task_list.value.push(res.data.data[i]);
   }
 });
 const addToTask = () => {
   show_task.value = true;
 };
 const addDataToTask = (task) => {
+  console.log(task)
+  let dataList=[]
   for (let i in choosing_files) {
-    setTimeout(() => {
+    
       let data = {
         name: choosing_files[i].name,
         id: choosing_files[i].id,
-        type: "cloud",
+        source: "cloud",
+        type:"data",
+        "fill-color":"red",
+        visualizationBoolean:false,
+        visualWebAddress:""
       };
-      task_api.addData(task.id, data);
-    }, 100 * i);
+      dataList.push(data)
+ 
   }
+  task_api.addData(task, dataList);
   show_task.value = false;
 };
 var upload_file = reactive({

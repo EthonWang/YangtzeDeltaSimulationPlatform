@@ -5,7 +5,7 @@
     <Topbar
     :background_show="background_show"
       @RouterFromBar="routerGo"
-      style="height: 6.39vh; position: absolute; z-index: 500"
+      style="height: 6.49vh; position: absolute; z-index: 500;overflow-x: hidden;"
     ></Topbar>
 
     <router-view @showTopbarBackground="showTopbarBackground" class="main"></router-view>

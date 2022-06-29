@@ -81,19 +81,7 @@ export default class {
         return get("/LabTask/getLabTaskList/"+id)
     }
     deleteTask(task){
-        return new Promise((resolve,reject)=>{
-            ElMessage({
-                type:"success",
-                message:"成功删除实验"
-              })
-            for(let i in tasks){
-                if(tasks[i].id==task.id){
-                    tasks.splice(i,1)
-                    break
-                }
-            }
-            resolve("成功")
-        })
+        return get("/LabTask/deleteLabTaskList/"+task.id)
     }
     createTask(task){
         // return new Promise((resolve, reject) => {

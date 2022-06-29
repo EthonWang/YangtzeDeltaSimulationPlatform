@@ -239,7 +239,7 @@ setTimeout(searchIndexInRoutes, 100);
     100% {
       width: 100.4vw;
       z-index: 2;
-      background-color: hsla(200, 100%, 2%, 0.9);
+      background-color: #24292fce;
     }
   }
 }
@@ -256,14 +256,14 @@ setTimeout(searchIndexInRoutes, 100);
   @keyframes background_hide {
     0% {
       width: 100.4vw;
-      background-color: hsla(200, 100%, 2%, 0.9);
+      background-color: #24292fce;
       transform: translateX(0px);
       opacity: 1;
     }
 
     99% {
       width: 0vw;
-      background-color: hsla(200, 0%, 52%, 0.7);
+      background-color: hsla(200, 0%, 52%, 0.3);
       transform: translateX(100vw);
       opacity: 1;
     }

@@ -108,7 +108,7 @@ defineExpose({ scrollingSpan });
   z-index: 5;
   color: rgb(0, 0, 0);
   top: calc(70% + 15px);
-  box-shadow: 0 2px 24px 0 hsla(0, 0%, 25%, 0.8);
+  box-shadow: 0 2px 12px 0 hsla(0, 0%, 25%, 0.4);
   transition: box-shadow 1s;
   h4 {
     text-align: left;
@@ -122,6 +122,7 @@ defineExpose({ scrollingSpan });
     padding: 0px;
     padding-left: 35px;
     padding-right: 25px;
+    padding-bottom: 15px;
     line-height: 160%;
     font-size: 1.15vw;
   }

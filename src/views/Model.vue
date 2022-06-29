@@ -12,6 +12,7 @@
     <!-- <button class="mapSwitchButton" @click="switchMap">2D/3D</button> -->
     <mapbox-view
       :shpShowList="shpList"
+      @openTxtEditor="openTxtEditor"
       v-show="mapType == 'mapBox'"
     ></mapbox-view>
     <cesium
@@ -29,6 +30,25 @@
         @closeChart="closeChart"
       />
     </div>
+
+    <!-- 富文本编辑器 -->
+    <el-dialog
+      v-model="txtEditorModal"
+      draggable
+      sticky
+      scrollable
+      :mask="false"
+      @on-ok="ok"
+      @on-cancel="cancel"
+      :width="1000"
+    >
+      <template #header>
+        <Icon type="md-create" size="18" />
+        <span style="margin-left: 5px; font-size: 18px">文本编辑器</span>
+        <span style="margin-left: 300px; font-size: 18px;">{{ txtInfo.name }}</span>
+      </template>
+      <txt-editor :txtInfo="txtInfo"></txt-editor>
+    </el-dialog>
   </div>
 </template>
 
@@ -43,16 +63,18 @@ import MapboxView from "../components/Mapbox/MapboxView";
 import Cesium from "../components/cesium/cesium.vue";
 import chartTemplate from "../components/chartPlugin/chartTemplate.vue";
 // import ModelTree from "components/App/ModelTree";
+import txtEditor from "../components/Mapbox/labUtils/wangEditorBox.vue";
 export default {
   components: {
     // ModelTree,
     MapboxView,
     Cesium,
     chartTemplate,
+    txtEditor,
   },
   data() {
     return {
-      data_list: JSON.parse(localStorage.getItem("task")).dataList,
+      res_list: JSON.parse(localStorage.getItem("task")).dataList,
       mapType: "mapBox",
       //使用mapbox-view组件需要传递的参数
       shpList: [], //格式参考[{name: "111", type: "circle", nameId: "111_123"}]
@@ -62,11 +84,14 @@ export default {
       tifList: [],
       chartList: [],
       jsonList: [],
+      txtEditorModal: false,
     };
   },
   mounted() {
+    let that = this;
     setTimeout(() => {
-      console.log(this.data_list);
+      // console.log(this.data_list);
+      // that.filterResList();
     }, 500);
     let mapType = this.getURLParameter("mapType");
     if (mapType != null) {
@@ -130,6 +155,10 @@ export default {
     },
     changeURLParameter(name) {
       window.history.replaceState(null, null, "/model?mapType=" + name);
+    },
+    openTxtEditor(info) {
+      this.txtInfo = info;
+      this.txtEditorModal = !this.txtEditorModal;
     },
   },
 };

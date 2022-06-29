@@ -205,7 +205,9 @@ const addDataToTask = (task) => {
         type:"data",
         "fill-color":"red",
         visualizationBoolean:false,
-        visualWebAddress:""
+        visualWebAddress:"",
+        visualType: choosing_files[i].name.split('.')[1],
+        geoType: "line",
       };
       dataList.push(data)
  

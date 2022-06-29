@@ -3,7 +3,6 @@
     <el-tag class="map-zoom-lnglat" type="info">
       Zoom:{{ zoom }} &nbsp; LngLat:{{ showCenter }}
     </el-tag>
-
     <div style="position: absolute; top: 75px; left: 110px; z-index: 99">
       <el-button
         v-if="!editBoardShow"
@@ -19,7 +18,10 @@
       </el-button>
     </div>
 
+
 <transition-group name="lyric">
+
+
     <div class="edit-board" v-if="editBoardShow">
       <el-collapse v-model="activeNames" @change="handleChange">
         <el-collapse-item title="数据列表" name="data">
@@ -453,18 +455,13 @@
                     </div>
                   </div>
                   <!--              栅格层编辑-->
-                  <div v-else-if="scope.row.data.visualType == 'tif'">
-
-                  </div>
+                  <div v-else-if="scope.row.data.visualType == 'tif'"></div>
                   <!--              文本编辑-->
                   <div v-else-if="scope.row.data.visualType == 'txt'">
-                    <div
-                      class="flex-row-start"
-                    >
-                      <el-button
-                        :width="30"
-                        @click="openTxtEditor(scope.row)"
-                      >打开文本编辑器</el-button>
+                    <div class="flex-row-start">
+                      <el-button :width="30" @click="openTxtEditor(scope.row)"
+                        >打开文本编辑器</el-button
+                      >
                     </div>
                   </div>
                   <template #reference>
@@ -484,9 +481,11 @@
         <el-collapse-item title="模型列表" name="model"> </el-collapse-item>
       </el-collapse>
     </div>
-</transition-group>
-    <!--    <el-button type="primary">Primary</el-button>-->
 
+</transition-group>
+
+
+    <!--    <el-button type="primary">Primary</el-button>-->
     <div id="map"></div>
   </div>
   <Modal
@@ -662,11 +661,26 @@ export default {
             geoType: "line",
           },
           {
-            name: "南京市区下水道.txt",
-            id: "45455",
+            createTime: "2022-06-27 17:12:02",
+            description: "lianshui_tmpdc",
+            fileSize: "180751",
+            fileStoreName: "c33bc621-ba01-410a-8799-f36f9f54b859.txt",
+            fileWebAddress:
+              "/store/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
+            geoType: "circle",
+            id: "62b974624aa65fa32ff1be79",
+            imgStoreName: "62b974624aa65fa32ff1be7a.png",
+            imgWebAddress: "/store/resourceData/62b974624aa65fa32ff1be7a.png",
+            name: "lianshui_tmpdc",
+            normalTags: "水文",
+            problemTags: "流域水循环及其驱动机制,全球变化与区域环境演化",
+            publicBoolean: true,
             type: "data",
+            userEmail: "temp@xx.com",
+            visualStoreName: null,
             visualType: "txt",
-            geoType: "line",
+            visualWebAddress: "",
+            visualizationBoolean: false,
           },
           {
             name: "南京市区道路.shp",
@@ -729,7 +743,6 @@ export default {
   },
 
   mounted() {
-    this.initMap();
     let showLayerTableList_temp =JSON.parse(localStorage.getItem("task")).dataList
     for(let i in showLayerTableList_temp){
       if(!("visualType" in showLayerTableList_temp[i])){
@@ -741,9 +754,13 @@ export default {
     }
     this.taskInfo.dataList=showLayerTableList_temp
     console.log(this.showLayerTableList);
-    this.filterResList();
-    this.initShpShowList();
-    
+
+    let that = this;
+    setTimeout(function () {
+      that.initMap();
+      that.filterResList();
+      that.initShpShowList();
+    }, 500);
   },
 
   methods: {
@@ -1052,7 +1069,7 @@ export default {
           startEditor: false,
           data: {
             visualType: "shp",
-          }
+          },
           // "source-layer": "default"
         };
 
@@ -1132,7 +1149,7 @@ export default {
           startEditor: false,
           data: {
             visualType: "shp",
-          }
+          },
           // "source-layer": "default"
         };
 
@@ -1157,7 +1174,7 @@ export default {
     },
     openTxtEditor(info) {
       this.$emit("openTxtEditor", info);
-    }
+    },
   },
 };
 </script>

@@ -5,7 +5,7 @@
     <div class="flex-row-center" style="height: 75px;">
       <!--      <h2 style="color: white"></h2>-->
       <dv-decoration-3 style="width:250px;height:40px;"/>
-      <dv-decoration-11 style="width:400px;height:75px;color: white"><h1>王家坝流域降雨预报专题</h1></dv-decoration-11>
+      <dv-decoration-11 style="width:400px;height:75px;color: white"><h1>长三角降雨预报专题</h1></dv-decoration-11>
       <dv-decoration-3 style="width:250px;height:40px;"/>
 
     </div>
@@ -14,20 +14,22 @@
     <div class="content-container flex-row-evenly">
       <div class="content-col-1 flex-Column-Around-Center">
         <!--降雨排行图-->
-
         <dv-border-box-9 :color="['#00a1ff']" style="  width: 100%;  height: 45%; position: relative;">
           <div class="content-part-1">
             <div id="rainRank" style="  width: 90%;  height: 90%;"></div>
           </div>
         </dv-border-box-9>
 
-        <dv-border-box-9 :color="['#00a1ff']" style="  width: 100%;  height: 45%; position: relative;">
-          <div class="content-part-1">
-            <div id="lineChart" style="  width: 90%;  height: 90%;"></div>
+        <div class="part45 border-box ">
+          <div class="flex-row-center">
+            <h2 style=" color: #ffffff;position: absolute; margin-top: 70px; z-index: 50">长三角气候</h2>
           </div>
-        </dv-border-box-9>
-
+          <div class="content-part-1">
+            <img class="img" src="/case/rainForecast/长三角气候.gif" style="height: 90%;width: 90%">
+          </div>
+        </div>
       </div>
+
 
       <div class="content-col-2 flex-Column-Around-Center">
 
@@ -63,33 +65,35 @@
 
 
         <dv-border-box-1 :color="['#00a1ff']" style="  width: 100%;  height: 35%; position: relative;">
-          <div class="content-part-1">
+          <div class="content-part-2">
+
+            <div id="lineChart" style="  width: 45%;  height: 90%;"></div>
+
+            <div id="pieChart" style="  width: 45%;  height: 90%;"></div>
 
           </div>
         </dv-border-box-1>
+
+
       </div>
+
 
       <div class="content-col-3 flex-Column-Around-Center">
 
-
-
-
-        <div class="part border-box ">
-          <div style="    width: 100%;    height: 100%;display: flex;    justify-content: center;">
-            <h3 style=" color: #ffffff;position: absolute;    margin-top: -2px;">历史洪灾</h3>
-            <img class="img" src="/case/rainForecast/historyRecord1.png" style="height: 100%;width: 100%">
+        <dv-border-box-9 :color="['#00a1ff']" style="  width: 100%;  height: 70%; position: relative;">
+          <div class="flex-row-center">
+            <h2 style=" color: #ffffff;position: absolute;    margin-top: 70px; z-index: 50">历史洪灾</h2>
           </div>
+          <div class="content-part-1">
+            <img class="img" src="/case/rainForecast/historyRecord1.png" style="height: 90%;width: 90%">
+          </div>
+        </dv-border-box-9>
+
+
+        <div class="part25 border-box ">
+          <div id="historyRiverLevelChart" style="  width: 100%;  height: 100%;z-index: 50"></div>
         </div>
 
-
-<!--        <div class="part border-box ">-->
-<!--          <div id="pieChart" style="  width: 100%;  height: 100%;z-index: 5"></div>-->
-<!--        </div>-->
-        <dv-border-box-8 :reverse="true" :color="['#00a1ff']" style="  width: 100%;  height: 45%; position: relative;">
-          <div class="content-part-1">
-            <div id="pieChart" style="  width: 90%;  height: 90%;z-index: 5"></div>
-          </div>
-        </dv-border-box-8>
 
       </div>
 
@@ -114,6 +118,7 @@ var rainRankChart;
 var lineChart;
 var pieChart;
 var barChart;
+var historyRiverLevelChart
 
 export default {
   data() {
@@ -132,10 +137,10 @@ export default {
 
     this.createPieChart()
     // this.createBarChart()
+    this.createHistoryRiverLevelChart()
 
     this.autoChange()
     this.clearSomething()
-
 
   },
 
@@ -148,9 +153,9 @@ export default {
       map = new mapboxgl.Map({
         container: "map",
         style: "mapbox://styles/mapbox/dark-v10",
-        center: [114.1, 32.5],
+        center: [118.5, 31],
         // center:[-75.789, 41.874],
-        zoom: 6,
+        zoom: 5,
       });
       map.addControl(new MapboxLanguage({defaultLanguage: "zh-Hans"}));
 
@@ -158,12 +163,16 @@ export default {
       map.on('load', function () {
         map.addSource("rainImgSource", {
               "type": "image",
-              "url": "/case/rainForecast/temp_rain_imgs/2017-04-03-0.png",
+              "url": "/case/rainForecast/temp_rain_imgs/2008-08-06-0.png",
               "coordinates": [
-                [113.25, 33.55],
-                [115.65, 33.55],
-                [115.65, 31.45],
-                [113.25, 31.45]
+                // [113.25, 33.55],
+                // [115.65, 33.55],
+                // [115.65, 31.45],
+                // [113.25, 31.45]
+                [114.8, 35.1],
+                [122.8, 35.1],
+                [122.8, 27.1],
+                [114.8, 27.1]
               ]
             }
         )
@@ -181,6 +190,15 @@ export default {
           "paint": {"raster-opacity": 0.85}
         });
 
+        // map.addLayer({
+        //   "id": "point",
+        //   "source": "rainStationSource",
+        //   "type": "circle",
+        //   "paint": {
+        //     "circle-radius": 1,
+        //     "circle-color": "#007cbf"
+        //   }
+        // });
 
         map.loadImage('/case/rainForecast/station.png', function (error, image) {
           if (error) throw error;
@@ -191,13 +209,13 @@ export default {
             "type": "symbol",
             "layout": {
               "icon-image": "station",
-              "text-field": "{ranData0}",
+              "text-field": "{rainData0}",
               "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
               "text-offset": [0, 0.6],
               "text-anchor": "top",
               "icon-size": 0.1
             },
-            filter: ['>', 'ranData0', 0]
+            filter: ['>', 'rainData0', 1]
           });
         });
 
@@ -210,16 +228,20 @@ export default {
       map.removeSource("rainImgSource");
 
       this.dayCount = (this.dayCount + 1) % 7
-      let imgUrl = "/case/rainForecast/temp_rain_imgs/2017-04-03-" + this.dayCount + ".png"
+      let imgUrl = "/case/rainForecast/temp_rain_imgs/2008-08-06-" + this.dayCount + ".png"
 
       map.addSource("rainImgSource", {
         "type": "image",
         "url": imgUrl,
         "coordinates": [
-          [113.25, 33.55],
-          [115.65, 33.55],
-          [115.65, 31.45],
-          [113.25, 31.45]
+          // [113.25, 33.55],
+          // [115.65, 33.55],
+          // [115.65, 31.45],
+          // [113.25, 31.45]
+          [114.8, 35.1],
+          [122.8, 35.1],
+          [122.8, 27.1],
+          [114.8, 27.1]
         ]
       })
       map.addLayer({
@@ -229,11 +251,11 @@ export default {
         "paint": {"raster-opacity": 0.85}
       }, "rainStationLayer");
 
-      let randData = "{ranData" + this.dayCount + "}"
+      let randData = "{rainData" + this.dayCount + "}"
       map.setLayoutProperty("rainStationLayer", "text-field", randData);
 
-      let ranDatath = "ranData" + this.dayCount
-      map.setFilter('rainStationLayer', ['>', ranDatath, 0]);
+      let ranDatath = "rainData" + this.dayCount
+      map.setFilter('rainStationLayer', ['>', ranDatath, 1]);
 
       let tempCount = 3 + this.dayCount
       this.dateForest = "2017-4-" + tempCount
@@ -245,7 +267,7 @@ export default {
       }, 2000)
     },
 
-    //清除
+    //清除地图水印
     clearSomething() {
       document.getElementsByClassName("mapboxgl-ctrl-bottom-left")[0].remove()
       document.getElementsByClassName("mapboxgl-ctrl-bottom-right")[0].remove()
@@ -364,6 +386,7 @@ export default {
           text: '部分地区降雨预测趋势图(mm)',
           left: "center"
         },
+        avoidLabelOverlap: true,
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -375,12 +398,12 @@ export default {
         },
         legend: {
           data: name,
-          bottom: 20,
+          bottom: 2,
         },
         grid: {
-          left: '8%',
-          right: '4%',
-          bottom: '12%',
+          left: '1%',
+          right: '2%',
+          bottom: '10%',
           containLabel: true
         },
         xAxis: [
@@ -407,7 +430,7 @@ export default {
             },
             label: {
               position: 'right',
-              show: true
+              // show: true
             },
             data: rainData[name[0]]
           },
@@ -421,7 +444,7 @@ export default {
             },
             label: {
               position: 'right',
-              show: true
+              // show: true
             },
             data: rainData[name[1]]
           },
@@ -435,7 +458,7 @@ export default {
             },
             label: {
               position: 'right',
-              show: true
+              // show: true
             },
             data: rainData[name[2]]
           },
@@ -449,7 +472,7 @@ export default {
             },
             label: {
               position: 'right',
-              show: true
+              // show: true
             },
             data: rainData[name[3]]
           },
@@ -463,7 +486,7 @@ export default {
             },
             label: {
               position: 'right',
-              show: true
+              // show: true
             },
             data: rainData[name[4]]
           },
@@ -486,10 +509,25 @@ export default {
       let option;
 
       option = {
-        title: {
-          text: '月历史降雨统计(mm)',
-          left: "center"
-        },
+        title: [
+          {
+            text: '长三角历史年梅雨统计(天)',
+            left: "center",
+          },
+          {
+            subtext: '2020年',
+            left: '25%',
+            top: '75%',
+            textAlign: 'center'
+          },
+          {
+            subtext: '历史情况',
+            right: '12%',
+            top: '75%',
+            textAlign: 'center'
+          },
+
+        ],
         legend: {
           top: 'bottom'
         },
@@ -501,36 +539,128 @@ export default {
         },
         series: [
           {
-            name: 'Nightingale Chart',
+            name: 'Access From',
             type: 'pie',
-            radius: [20, 100],
-            center: ['50%', '50%'],
-            roseType: 'area',
-            itemStyle: {
-              borderRadius: 8
-            },
+            radius: '40%',
+            // center: ['50%', '50%'],
+            // roseType: 'area',
+            // itemStyle: {
+            //   borderRadius: 8
+            // },
             label: {
               formatter: function (param) {
-                return param.data["name"] + ":" + param.data["value"];
+                // return param.data["name"] + ":" + param.data["value"];
+                return param.data["value"];
               },
               show: true
             },
             data: [
-              {value: 40, name: '罗山县'},
-              {value: 38, name: '汝南县'},
-              {value: 32, name: '平桥区'},
-              {value: 30, name: '正阳区'},
-              {value: 28, name: '新县'},
-              {value: 26, name: '驿城区'},
-              {value: 22, name: '浉河区'}
-            ]
+              {value: 43, name: '江苏省'},
+              {value: 50, name: '浙江省'},
+              {value: 42, name: '上海市'},
+              {value: 60, name: '安徽省'},
+            ],
+            left: 0,
+            right: '50%',
+            top: 0,
+            bottom: 0
+          },
+          {
+            name: 'Access From',
+            type: 'pie',
+            radius: '40%',
+            // center: ['50%', '50%'],
+            // roseType: 'area',
+            // itemStyle: {
+            //   borderRadius: 8
+            // },
+            label: {
+              formatter: function (param) {
+                // return param.data["name"] + ":" + param.data["value"];
+                return param.data["value"];
+              },
+              show: true
+            },
+            data: [
+              {value: 24, name: '江苏省'},
+              {value: 30, name: '浙江省'},
+              {value: 23, name: '上海市'},
+              {value: 24, name: '安徽省'},
+            ],
+            left: '50%',
+            right: 0,
+            top: 0,
+            bottom: 0
           }
+
         ]
       };
 
       option && pieChart.setOption(option);
     },
 
+
+    //长江历年最高水位折线图
+    createHistoryRiverLevelChart() {
+      if (historyRiverLevelChart != null && historyRiverLevelChart != "" && historyRiverLevelChart != undefined) {
+        historyRiverLevelChart.dispose();//销毁
+      }
+      historyRiverLevelChart = echarts.init(document.getElementById('historyRiverLevelChart'), "dark");
+      let option;
+
+      option = {
+        title: {
+          text: '长江历年最高水位(m)',
+          left: "center"
+        },
+        grid: {
+          left: '10%',
+          right: '10%',
+          bottom: '15%',
+          top: '15%'
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: ['1954', '1973', '1983', '1998', '1999', '2010', '2020']
+        },
+        yAxis: {
+          type: 'value'
+        },
+        tooltip: {
+          trigger: 'item',
+          axisPointer: {
+            type: 'shadow'
+          }
+        },
+        series: [
+          {
+            type: 'line',
+            areaStyle: {
+              // color:"red"
+            },
+            label: {
+              formatter: function (param) {
+                // return param.data["year"] + ":" + param.data["value"];
+                return param.data["value"];
+              },
+              show: true
+            },
+            data: [
+              {value: 12.33, year: '1954'},
+              {value: 10.76, year: '1973'},
+              {value: 9.99, year: '1983'},
+              {value: 11.99, year: '1998'},
+              {value: 11.7, year: '1999'},
+              {value: 27.08, year: '2010'},
+              {value: 28.77, year: '2020'}
+            ]
+          }
+        ]
+      };
+
+      option && historyRiverLevelChart.setOption(option);
+    }
 
 
   }
@@ -598,6 +728,14 @@ export default {
   align-items: center;
 }
 
+.content-part-2 {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
 .content-part-map {
   width: 100%;
   height: 100%;
@@ -606,9 +744,17 @@ export default {
   align-items: flex-end;
 }
 
-.part {
+.part25 {
   width: 100%;
-  height: 35%;
+  height: 25%;
+  padding: 20px;
+  position: relative;
+  box-shadow: rgb(0 108 255) 0px 0px 25px inset;
+}
+
+.part45 {
+  width: 100%;
+  height: 45%;
   padding: 20px;
   position: relative;
   box-shadow: rgb(0 108 255) 0px 0px 25px inset;

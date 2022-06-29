@@ -494,30 +494,75 @@
     </template>
     <Form :model="clipForm" label-position="top">
       <FormItem label="输入要素">
-        <Input v-model="clipForm.inputFeaturesName" style="width: 90%"></Input>
+        <Input
+          v-model="clipForm.inputFeaturesName"
+          style="width: 90%"
+          readonly
+        ></Input>
         <Button
           :size="buttonSize"
           icon="ios-folder-open"
           style="margin-left: 15px"
+          @click="selectClipFeatures('inputRaster')"
         ></Button>
       </FormItem>
       <FormItem label="裁剪要素">
-        <Input v-model="clipForm.clipFeaturesName" style="width: 90%"></Input>
+        <Input
+          v-model="clipForm.clipFeaturesName"
+          style="width: 90%"
+          readonly
+        ></Input>
         <Button
           :size="buttonSize"
           icon="ios-folder-open"
           style="margin-left: 15px"
+          @click="selectClipFeatures('inputShp')"
         ></Button>
       </FormItem>
       <FormItem label="输出要素">
         <Input v-model="clipForm.outputFeaturesName" style="width: 90%"></Input>
-        <Button
-          :size="buttonSize"
-          icon="ios-folder-open"
-          style="margin-left: 15px"
-        ></Button>
       </FormItem>
     </Form>
+  </Modal>
+  <Modal
+    v-model="clipSelectFeaturesModal"
+    draggable
+    sticky
+    scrollable
+    :mask="false"
+    @on-ok="ok"
+    @on-cancel="cancel"
+  >
+    <template #header>
+      <Icon type="md-cut" size="18" />
+      <span style="margin-left: 5px; font-size: 18px"
+        >选择{{ clipForm.title }}</span
+      >
+    </template>
+    <RadioGroup
+      v-model="clipForm.inputFeaturesName"
+      vertical
+      v-if="clipForm.title == '输入要素'"
+      :on-change="clipFormChange(clipForm.inputFeaturesName,'raster')"
+    >
+      <div v-for="(item, index) in showLayerTableList" :key="index">
+        <Radio :label="item.name" v-if="item.visualType == 'tif'">
+          <span>{{ item.name }}</span>
+        </Radio>
+      </div>
+    </RadioGroup>
+    <RadioGroup
+      v-model="clipForm.clipFeaturesName"
+      vertical
+      v-if="clipForm.title == '裁剪要素'"
+      :on-change="clipFormChange(clipForm.clipFeaturesName,'shp')"
+    >
+      <div v-for="(item, index) in showLayerTableList" :key="index">
+        <Radio :label="item.name" v-if="item.visualType == 'shp' && item.type == 'fill'">
+          <span>{{ item.name }}</span>
+        </Radio>
+      </div>
+    </RadioGroup>
   </Modal>
 </template>
 
@@ -621,11 +666,13 @@ export default {
         type: "FeatureCollection",
       },
       clipModal: false,
+      clipSelectFeaturesModal: false,
       clipForm: {
+        title: "输入要素",
         inputFeaturesName: "",
         clipFeaturesName: "",
-        inputFeaturesId: "",
-        clipFeaturesId: "",
+        inputRaster: "",
+        inputShp: "",
         outputFeaturesName: "",
       },
 
@@ -672,25 +719,100 @@ export default {
             visualizationBoolean: false,
           },
           {
-            name: "南京市区道路.shp",
-            id: "45456",
             type: "data",
+            createTime: "2022-06-16 10:43:44",
+            description: "长三角流域数据（level 02-09）",
+            fileSize: "16363498",
+            fileStoreName: "aa7a127d-2133-4405-908b-bbdca2b90c4d.zip",
+            fileWebAddress: null,
+            geoType: "fill",
+            id: "62aa98e048d84b48479e4a46",
+            imgStoreName: "62aa98e048d84b48479e4a48.png",
+            imgWebAddress: "/store/resourceData/62aa98e048d84b48479e4a48.png",
+            name: "长三角流域数据（level 02-09）",
+            normalTags: "基础地理, 水文",
+            problemTags: "流域水循环及其驱动机制",
+            publicBoolean: true,
+            userEmail: "temp@xx.com",
+            visualStoreName: "62aa98e048d84b48479e4a47.json",
             visualType: "shp",
-            geoType: "line",
+            visualWebAddress:
+              "/store/resourceData/62aa98e048d84b48479e4a47.json",
+            visualizationBoolean: true,
           },
+          // {
+          //   type: "data",
+          //   geoType: "line",
+          //   createTime: "2022-06-15 16:03:42",
+          //   description: "dock2",
+          //   fileSize: null,
+          //   fileStoreName: "92821b31-92a7-49cf-9209-dd52c8bad90d.zip",
+          //   fileWebAddress:
+          //     "/store/resourceData/92821b31-92a7-49cf-9209-dd52c8bad90d.zip",
+          //   id: "62a9925e48d8862c04888cbc",
+          //   imgStoreName: "62a9925e48d8862c04888cbe.png",
+          //   imgWebAddress: "/store/resourceData/62a9925e48d8862c04888cbe.png",
+          //   name: "dock2",
+          //   normalTags: "沿海,海洋,人类",
+          //   problemTags: "流域水循环及其驱动机制",
+          //   publicBoolean: true,
+          //   userEmail: "temp@xx.com",
+          //   visualStoreName: "62a9925e48d8862c04888cbd.json",
+          //   visualType: "shp",
+          //   visualWebAddress:
+          //     "/store/resourceData/62a9925e48d8862c04888cbd.json",
+          //   visualizationBoolean: true,
+          // },
+          // {
+          //   type: "data",
+          //   visualType: "tif",
+          //   createTime: "2022-06-15 16:42:10",
+          //   description: "土地利用数据-N50_25_2020LC030",
+          //   fileSize: null,
+          //   fileStoreName: "6cfbb0a9-2759-4234-9a9f-55ac0154c6e8.zip",
+          //   fileWebAddress:
+          //     "/store/resourceData/6cfbb0a9-2759-4234-9a9f-55ac0154c6e8.zip",
+          //   geoType: "line",
+          //   id: "62a99b6248d8862c04888cdb",
+          //   imgStoreName: "62a99b6248d8862c04888cdd.png",
+          //   imgWebAddress: "/store/resourceData/62a99b6248d8862c04888cdd.png",
+          //   name: "土地利用数据-N50_25_2020LC030",
+          //   normalTags: "土地利用,生态,GIS & RS",
+          //   problemTags: "全球变化与区域环境演化",
+          //   publicBoolean: true,
+          //   userEmail: "temp@xx.com",
+          //   visualStoreName: "62a99b6248d8862c04888cdc.png",
+          //   visualWebAddress:
+          //     "http://172.21.213.92:8089/geoserver/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3AnanjingDEM_project&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857&WIDTH=512&HEIGHT=512&BBOX={bbox-epsg-3857}",
+          //   visualizationBoolean: true,
+          // },
           {
-            name: "南京市区道路.shp",
-            id: "45457",
+            createTime: "2022-06-21 23:00:19",
+            description: "南京1万DEM数据",
+            fileRelativePath:
+              "/resourceData/6714d163-6ab4-4e71-8bff-16dbfebf8895.zip",
+            fileSize: "409554533",
+            fileStoreName: "6714d163-6ab4-4e71-8bff-16dbfebf8895.zip",
+            fileWebAddress:
+              "/store/resourceData/6714d163-6ab4-4e71-8bff-16dbfebf8895.zip",
+            geoType: "circle",
+            id: "62b1dd0348d81b078f984988",
+            imgRelativePath: "/resourceData/62b1dd0648d81b078f984989.png",
+            imgStoreName: "62b1dd0648d81b078f984989.png",
+            imgWebAddress: "/store/resourceData/62b1dd0648d81b078f984989.png",
+            name: "南京1万DEM数据",
+            normalTags: "地形,土壤,地质",
+            problemTags:
+              "流域水循环及其驱动机制,全球变化与区域环境演化,长三角灾害响应与治理,长三角城市化与人地关系协调发展",
+            publicBoolean: true,
             type: "data",
-            visualType: "shp",
-            geoType: "line",
-          },
-          {
-            name: "南京市DEM",
-            id: "45458",
-            type: "data",
+            userEmail: "temp@xx.com",
+            visualRelativePath: "",
+            visualStoreName: null,
             visualType: "tif",
-            geoType: "line",
+            visualWebAddress:
+              "http://172.21.213.92:8089/geoserver/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3AnanjingDEM_project&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857&WIDTH=433&HEIGHT=768&BBOX={bbox-epsg-3857}",
+            visualizationBoolean: true,
           },
         ],
       },
@@ -732,9 +854,9 @@ export default {
   },
 
   mounted() {
+    this.initMap();
     let that = this;
     setTimeout(function () {
-      that.initMap();
       that.filterResList();
       that.initShpShowList();
     }, 500);
@@ -834,26 +956,9 @@ export default {
           this.resList.dataList[i].visualType == "shp" ||
           this.resList.dataList[i].visualType == "tif"
         ) {
-          // this.addLayerToMap(JSON.parse(JSON.stringify(this.resList.dataList[i])));
-          //添加layer
-          let newLayer = {
-            show: true,
-            name: this.resList.dataList[i].name,
-            id: this.resList.dataList[i].id,
-            type: this.resList.dataList[i].geoType,
-            visualType: this.resList.dataList[i].visualType,
-            filter: ["all"],
-            layout: this.layerStyle[this.resList.dataList[i].geoType].layout,
-            maxzoom: 22,
-            metadata: "",
-            minzoom: 0,
-            paint: this.layerStyle[this.resList.dataList[i].geoType].paint,
-            data: this.resList.dataList[i],
-            // "source-layer": "default"
-          };
-          newLayer.paint[this.resList.dataList[i].geoType + "-color"] =
-            "#" + Math.random().toString(16).substr(2, 6);
-          this.showLayerTableList.push(newLayer);
+          this.addLayerToMap(
+            JSON.parse(JSON.stringify(this.resList.dataList[i]))
+          );
         } else {
           //添加layer
           let newLayer = {
@@ -872,51 +977,51 @@ export default {
     },
     addLayerToMap(newShpInfo) {
       //添加数据源
-      // map.addSource(newShpInfo.dataSourceId, {
-      //   type: "vector",
-      //   tiles: ["http://172.21.212.63:8995/mvt/"+newShpInfo.dataSourceId+"/{z}/{x}/{y}.pbf?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMTEifQ.Ne6qdHY2XgpBNQ74MeO-23ZyF0OahH-AHMbrXqhKlwU"],
-      // })
-
-      if (newShpInfo.isBigShp !== undefined) {
-        map.addSource(newShpInfo.dataSourceId, {
-          type: "vector",
-          tiles: [
-            "http://172.21.212.63:8995/mvt/" +
-              newShpInfo.dataSourceId +
-              "/{z}/{x}/{y}.pbf?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMTEifQ.Ne6qdHY2XgpBNQ74MeO-23ZyF0OahH-AHMbrXqhKlwU",
-          ],
-        });
-      } else {
-        map.addSource(newShpInfo.dataSourceId, {
+      if (newShpInfo.visualType == "shp") {
+        map.addSource(newShpInfo.name + "_" + newShpInfo.id, {
           type: "geojson",
           // data: "http://172.21.212.63:8999/model/getShpJsonData?shpJsonPath="+newShpInfo.path,
-          data: "http://172.21.212.63:8999/store" + newShpInfo.path,
+          data: "http://172.21.212.63:8999" + newShpInfo.visualWebAddress,
         });
+        //添加layer
+        let newLayer = {
+          show: true,
+          name: newShpInfo.name,
+          filter: ["all"],
+          layout: this.layerStyle[newShpInfo.geoType].layout,
+          maxzoom: 22,
+          metadata: "",
+          minzoom: 0,
+          id: newShpInfo.id,
+          source: newShpInfo.name + "_" + newShpInfo.id,
+          type: newShpInfo.geoType,
+          paint: this.layerStyle[newShpInfo.geoType].paint,
+          visualType: newShpInfo.visualType,
+          data: newShpInfo,
+          // "source-layer": "default"
+        };
+        newLayer.paint[newShpInfo.geoType + "-color"] =
+          "#" + Math.random().toString(16).substr(2, 6);
+        this.showLayerTableList.push(newLayer);
+        map.addLayer(newLayer);
+      } else if (newShpInfo.visualType == "tif") {
+        map.addSource(newShpInfo.name + "_" + newShpInfo.id, {
+          type: "raster",
+          tiles: [newShpInfo.visualWebAddress],
+          tileSize: 256, // 切片的最小展示尺寸（可选，单位：像素，默认值为 512，即 1024/2）
+        });
+        let newLayer = {
+          show: true,
+          name: newShpInfo.name,
+          id: newShpInfo.id,
+          source: newShpInfo.name + "_" + newShpInfo.id,
+          type: "raster",
+          visualType: newShpInfo.visualType,
+          data: newShpInfo,
+        };
+        this.showLayerTableList.push(newLayer);
+        map.addLayer(newLayer);
       }
-
-      //添加layer
-      let newLayer = {
-        show: true,
-        name: newShpInfo.label,
-        id: newShpInfo.dataSourceId,
-        type: newShpInfo.geoType,
-        filter: ["all"],
-        layout: this.layerStyle[newShpInfo.geoType].layout,
-        maxzoom: 22,
-        metadata: "",
-        minzoom: 0,
-        paint: this.layerStyle[newShpInfo.geoType].paint,
-        source: newShpInfo.dataSourceId,
-        // "source-layer": "default"
-      };
-      // if (newShpInfo.isBigShp == undefined) {
-      //   newLayer.startEditor = false;
-      // }
-
-      newLayer.paint[newShpInfo.geoType + "-color"] =
-        "#" + Math.random().toString(16).substr(2, 6);
-      this.showLayerTableList.push(newLayer);
-      map.addLayer(newLayer);
     },
 
     handleRemoveLayer(aimDataSourceId) {
@@ -1147,10 +1252,31 @@ export default {
     clipModalShow() {
       this.clipModal = true;
       this.clipForm = {
-        inputFeaturesId: "",
-        clipFeaturesId: "",
+        title: "输入要素",
+        inputFeaturesName: "",
+        clipFeaturesName: "",
+        inputRaster: "",
+        inputShp: "",
         outputFeaturesName: "",
       };
+    },
+    selectClipFeatures(type) {
+      if (type == "inputRaster") {
+        this.clipForm.title = "输入要素";
+      } else if (type == "inputShp") {
+        this.clipForm.title = "裁剪要素";
+      }
+      this.clipSelectFeaturesModal = true;
+    },
+    clipFormChange(name,type) {
+      for(let i = 0 ; i < this.showLayerTableList.length ; i++){
+        if (this.showLayerTableList[i].name == name && type == 'raster'){
+          this.clipForm.inputRaster = this.showLayerTableList[i].id;
+        } else if (this.showLayerTableList[i].name == name && type == 'shp'){
+          this.clipForm.inputShp = this.showLayerTableList[i].id
+        }
+      }
+      console.log(this.clipForm);
     },
     openTxtEditor(info) {
       this.$emit("openTxtEditor", info);

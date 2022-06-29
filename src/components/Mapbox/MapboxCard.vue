@@ -111,7 +111,7 @@ export default {
   },
   watch: {
     jsonData(value) {
-        // console.log(value);
+      // console.log(value);
       if (
         this.newShpInfo != value &&
         this.newShpInfo.visualWebAddress != "" &&
@@ -202,7 +202,6 @@ export default {
 
       let that = this;
       setTimeout(function () {
-        
         that.addLayerToMap(that.newShpInfo);
       }, 1500);
     },
@@ -221,7 +220,7 @@ export default {
       let newShpInfo = data;
       if (
         newShpInfo.visualWebAddress != "" &&
-        newShpInfo.visualizationBoolean && 
+        newShpInfo.visualizationBoolean &&
         newShpInfo.visualType == "shp"
       ) {
         map.addSource(newShpInfo.name + "_" + newShpInfo.id, {
@@ -235,16 +234,14 @@ export default {
           paint: this.layerStyle[newShpInfo.geoType].paint,
         };
         map.addLayer(newLayer);
-      } else if(
+      } else if (
         newShpInfo.visualWebAddress != "" &&
-        newShpInfo.visualizationBoolean && 
+        newShpInfo.visualizationBoolean &&
         newShpInfo.visualType == "tif"
-      ){
+      ) {
         map.addSource(newShpInfo.name + "_" + newShpInfo.id, {
           type: "raster",
-          tiles: [
-            newShpInfo.visualWebAddress,
-          ],
+          tiles: [newShpInfo.visualWebAddress],
           tileSize: 256, // 切片的最小展示尺寸（可选，单位：像素，默认值为 512，即 1024/2）
         });
         let newLayer = {

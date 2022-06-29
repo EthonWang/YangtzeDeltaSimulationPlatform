@@ -31,7 +31,7 @@
           class="set_7_btn-wrapper"
         >
           <svg height="54" width="150">
-            <rect id="set_7_button1" height="54" width="150"></rect>
+            <rect id="set_7_button1" height="50" width="150"></rect>
           </svg>
           <div id="set_7_text" :class="{ pickup: pick[index] }">
             <span>{{ bar.name }}</span>
@@ -51,9 +51,21 @@
 import { userInfo } from "os";
 import { reactive, computed, ref, defineEmits, defineProps,watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import graphAPI from "@/api/user/graph"
+
+const user_info=JSON.parse(localStorage.getItem("userInfo"))
+
 // import dataApi from "@/api/user/data"
 
 // const dataapi=new dataApi()
+
+const graphapi=new graphAPI()
+graphapi.initGraph(user_info.id).then((res)=>{
+
+  console.log(graphapi.giveRecommend(["公开"]))
+
+})
+
 const props = defineProps({
   background_show: ref(Boolean),
 });
@@ -148,6 +160,7 @@ setTimeout(searchIndexInRoutes, 100);
 @import "../../css/btn/btn7.css";
 
 .user-topbar {
+  display: none;
   position: relative;
   transition: all 1s;
   color: aliceblue;
@@ -204,7 +217,7 @@ setTimeout(searchIndexInRoutes, 100);
   width: 100%;
   height: 100%;
   padding-top: 1.06vh;
-  background-color: hsla(200, 100%, 36%, 0);
+  background-color: #24292f3b;
   backdrop-filter: blur(10px);
 }
 
@@ -226,7 +239,7 @@ setTimeout(searchIndexInRoutes, 100);
     100% {
       width: 100.4vw;
       z-index: 2;
-      background-color: hsla(200, 100%, 2%, 0.9);
+      background-color: #24292fce;
     }
   }
 }
@@ -243,14 +256,14 @@ setTimeout(searchIndexInRoutes, 100);
   @keyframes background_hide {
     0% {
       width: 100.4vw;
-      background-color: hsla(200, 100%, 2%, 0.9);
+      background-color: #24292fce;
       transform: translateX(0px);
       opacity: 1;
     }
 
     99% {
       width: 0vw;
-      background-color: hsla(200, 0%, 52%, 0.7);
+      background-color: hsla(200, 0%, 52%, 0.3);
       transform: translateX(100vw);
       opacity: 1;
     }

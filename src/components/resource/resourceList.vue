@@ -1,6 +1,6 @@
 <template>
   <el-row>
-    <el-col :span="6" v-for="(item, index) in resList" :key="index">
+    <el-col :span="6" v-for="(item, index) in props.resList" :key="index">
       <el-card class="resListCard">
         <div class="imageBox">
           <el-image
@@ -31,6 +31,7 @@
           </div>
         </div>
       </el-card>
+
     </el-col>
   </el-row>
   <el-row class="resListPagination">
@@ -46,28 +47,70 @@
     <mapbox-card :jsonData="selectedRes"></mapbox-card>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="go2Model()">添加到个人中心</el-button>
+        <el-button type="primary" @click="show_task = true;">添加到个人中心</el-button>
         <el-button @click="mapCardDialogVisible = false">取消</el-button>
       </span>
     </template>
   </el-dialog>
+  <el-dialog
+      v-model="show_task"
+      title="选择已有实验"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <el-button
+        v-for="task in task_list"
+        :key="task"
+        @click="addDataToTask(task)"
+      >
+        <el-icon><Monitor /></el-icon> &nbsp; {{ task.name }}</el-button
+      >
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="show_task = false">取消</el-button>
+          <el-button type="primary" @click="show_task = false">完成</el-button>
+        </span>
+      </template>
+    </el-dialog>
 </template>
 
-<script>
-import { onMounted, ref } from "vue";
+<script setup>
+import { onMounted, ref,defineProps } from "vue";
 import { ElMessageBox } from "element-plus";
 import MapboxCard from "../Mapbox/MapboxCard.vue";
 import { ElMessage } from "element-plus";
-export default {
-  name: "resourceList",
-  props: {
+import taskApi from "@/api/user/task";
+
+
+const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+const task_api = new taskApi();
+const show_task = ref(false);
+const task_list = ref([]);
+const choosing_files=ref([])
+task_api.getTaskList(userInfo.id).then((res) => {
+  for (let i in res.data.data) {
+    task_list.value.push(res.data.data[i]);
+  }
+});
+
+  const props=defineProps({
     resList: Array,
-  },
-  components: {
-    MapboxCard,
-  },
-  emits: [],
-  setup(props, ctx) {
+  })
+const addDataToTask = (task) => {
+  console.log(task)
+  let dataList=[]
+  for (let i in choosing_files.value) {
+    
+      let data=choosing_files.value[i]
+      dataList.push(data)
+ 
+  }
+  task_api.addData(task, dataList);
+  show_task.value = false;
+};
+
+
     const mapCardDialogVisible = ref(false);
     const selectedRes = ref({});
     const handleClose = function (done) {
@@ -80,6 +123,8 @@ export default {
         });
     };
     const showMapCard = function (info) {
+      choosing_files.value=[]
+      choosing_files.value.push(info)
       // if (info.visualizationBoolean) {
       selectedRes.value = info;
       mapCardDialogVisible.value = true;
@@ -113,18 +158,8 @@ export default {
       let i = Math.floor(Math.log(value) / Math.log(k));
       return (value / Math.pow(k, i)).toPrecision(4) + " " + sizes[i];
     };
-    return {
-      // showResList,
-      mapCardDialogVisible,
-      selectedRes,
-      handleClose,
-      showMapCard,
-      downloadRes,
-      go2Model,
-      filterSizeType,
-    };
-  },
-};
+
+   
 </script>
 
 <style lang="less" scoped>

@@ -181,30 +181,5 @@ function init() {
 </script>
 
 <style lang="less" scoped>
-// @randomNum: `Math.ceil(Math.random() * 30) -15`;
-@randomNum: 0;
-.randMove() {
-  animation: floating calc((abs(@randomNum / 2) + 20) * 1s) ease-in-out infinite
-    alternate;
-  @keyframes floating {
-    0% {
-      transform: translate(0px, 0px);
-    }
-    25% {
-      transform: translate(-@randomNum*1px, @randomNum*1px);
-    }
-    50% {
-      transform: translate(-@randomNum*1px, -@randomNum*1px);
-    }
-    75% {
-      transform: translate(@randomNum*1px, @randomNum*1px);
-    }
-    100% {
-      transform: translate(@randomNum*1px, -@randomNum*1px);
-    }
-  }
-}
-.img1 {
-  .randMove();
-}
+
 </style>

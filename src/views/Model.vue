@@ -34,25 +34,27 @@
         @closeChart="closeChart"
       />
     </div>
+
+    <!-- 富文本编辑器 -->
+    <el-dialog
+      v-model="txtEditorModal"
+      draggable
+      sticky
+      scrollable
+      :mask="false"
+      @on-ok="ok"
+      @on-cancel="cancel"
+      :width="1000"
+    >
+      <template #header>
+        <Icon type="md-create" size="18" />
+        <span style="margin-left: 5px; font-size: 18px">文本编辑器</span>
+        <span style="margin-left: 300px; font-size: 18px;">{{ txtInfo.name }}</span>
+      </template>
+      <txt-editor :txtInfo="txtInfo"></txt-editor>
+    </el-dialog>
   </div>
-  <!-- 富文本编辑器 -->
-  <Modal
-    v-model="txtEditorModal"
-    draggable
-    scrollable
-    :mask="false"
-    @on-ok="commitTxtChange"
-    @on-cancel="cancel"
-    :width="1000"
-    v-if="txtEditorModal"
-  >
-    <template #header>
-      <Icon type="md-create" size="18" />
-      <span style="margin-left: 5px; font-size: 18px">文本编辑器</span>
-      <span style="margin-left: 300px; font-size: 18px;">{{ txtInfo.name }}</span>
-    </template>
-    <txt-editor :txtInfo="txtInfo" @saveTxtHtml="saveTxtHtml"></txt-editor>
-  </Modal>
+
 </template>
 
 <!--<script setup>-->

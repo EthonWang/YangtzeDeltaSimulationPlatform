@@ -17,6 +17,11 @@
         >收起编辑框
       </el-button>
     </div>
+
+
+<transition-group name="lyric">
+
+
     <div class="edit-board" v-if="editBoardShow">
       <el-collapse v-model="activeNames" @change="handleChange">
         <el-collapse-item title="数据列表" name="data">
@@ -476,6 +481,10 @@
         <el-collapse-item title="模型列表" name="model"> </el-collapse-item>
       </el-collapse>
     </div>
+
+</transition-group>
+
+
     <!--    <el-button type="primary">Primary</el-button>-->
     <div id="map"></div>
   </div>
@@ -567,6 +576,7 @@
 </template>
 
 <script>
+import { watch } from "vue";
 import mapboxgl from "mapbox-gl";
 import MapboxLanguage from "@mapbox/mapbox-gl-language";
 mapboxgl.setRTLTextPlugin(
@@ -587,7 +597,6 @@ export default {
       showCenter: "-90,17",
       zoom: 6,
       editBoardShow: true,
-
       layerStyle: {
         line: {
           layout: {
@@ -648,7 +657,9 @@ export default {
         },
       },
 
-      showLayerTableList: [],
+      showLayerTableList: [
+
+      ],
 
       predefineColors: [
         "#ff4500",
@@ -855,14 +866,23 @@ export default {
 
   mounted() {
     this.initMap();
+    let showLayerTableList_temp =JSON.parse(localStorage.getItem("task")).dataList
+    for(let i in showLayerTableList_temp){
+      if(!("visualType" in showLayerTableList_temp[i])){
+        showLayerTableList_temp[i]["visualType"]="txt"
+      }
+      if(showLayerTableList_temp[i].visualType=='png'||showLayerTableList_temp[i].visualType=='jpg'){
+        showLayerTableList_temp[i].visualType='img'
+      }
+    }
+    this.taskInfo.dataList=showLayerTableList_temp
+    console.log(this.showLayerTableList);
+
     let that = this;
     setTimeout(function () {
       that.filterResList();
       that.initShpShowList();
     }, 500);
-    // this.initMap();
-    // this.filterResList();
-    // this.initShpShowList();
   },
 
   methods: {
@@ -1332,5 +1352,21 @@ export default {
 }
 /deep/.mapboxgl-ctrl-top-right {
   margin-top: 3.5%;
+}
+
+.lyric-enter-from,
+.lyric-leave-to {
+  opacity: 0.1;
+  transform: translateY(-39px) translateX(70px);
+  height: 10%;
+  width: 84px;
+}
+.lyric-enter-to,
+.lyric-leave-from {
+  opacity: 1;
+}
+.lyric-enter-active,
+.lyric-leave-active {
+  transition: all 0.5s;
 }
 </style>

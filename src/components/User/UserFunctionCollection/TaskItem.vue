@@ -8,10 +8,10 @@
         v-model="task_data.name"
         placeholder="请输入标题"
       />
-      <span class="task-public" v-if="props.task.public"
+      <span class="task-public" v-if="props.task.publicBoolean"
         ><el-icon><Unlock /></el-icon>公开</span
       >
-      <span class="task-public task-private" v-if="!props.task.public"
+      <span class="task-public task-private" v-if="!props.task.publicBoolean"
         ><el-icon><Lock /></el-icon>私密</span
       >
       <el-button
@@ -68,7 +68,7 @@
         class="btn_edit"
         type="success"
         v-if="edit_task"
-        @click="edit_task = !edit_task"
+        @click="confirmEdit()"
         ><el-icon><Edit /></el-icon>&nbsp;完成</el-button
       >
       <!-- <el-button type="success" class="btn_public" v-if="!props.task.public"
@@ -80,11 +80,13 @@
       <el-divider></el-divider>
 
       <el-button
+      v-if="edit_task"
         style="float: left; margin-right: 5px"
         @click="router.push('/user/data')"
-        >选择并添加<strong>云端</strong>数据</el-button
+        >选择并添加<strong>我的云端</strong>数据</el-button
       >
       <el-upload
+      v-if="edit_task"
         style="float: left; margin-right: 5px"
         class="upload-demo"
         action=""
@@ -102,9 +104,10 @@
       </el-upload>
 
       <el-button
+      v-if="edit_task"
         @click="router.push('/resourse')"
         style="float: left; margin-right: 5px"
-        >选择并添加<strong>专题</strong>数据</el-button
+        >选择并添加<strong>公共资源</strong></el-button
       >
       <br /><br />
       <el-form
@@ -139,23 +142,6 @@
           ></el-button>
         </el-form-item>
       </el-form>
-      <!-- <span class="state">
-        <span
-          v-if="props.task.state == 'success'"
-          style="color: hsl(120, 80%, 42%)"
-          >任务完成！</span
-        >
-        <span
-          v-if="props.task.state == 'processing'"
-          style="color: hsl(220, 90%, 52%)"
-          >任务进行中...</span
-        >
-        <span
-          v-if="props.task.state == 'failure'"
-          style="color: hsl(0, 50%, 52%)"
-          >任务失败。</span
-        >
-      </span> -->
       <el-button
         type="primary"
         class="btn_view"
@@ -188,7 +174,9 @@ import { reactive, computed, ref, defineProps, defineEmits, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { sciencePro } from "@/assets/data/home/sciencePro";
+import taskApi from "@/api/user/task";
 
+const task_api = new taskApi();
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const props = defineProps({
@@ -217,13 +205,18 @@ const handleChange = (file,fileList) => {
 let path=document.getElementsByClassName("el-upload__input")[0].value
 task_data.value.dataList.push({
   id:path,
-  type:"local",
+  source:"local",
   name:file.name
 })
 };
 
 const beforeUpload=(rawFile)=>{
   return false
+}
+
+const confirmEdit=()=>{
+  edit_task.value = !edit_task.value
+  task_api.editTask(task_data.value)
 }
 
 const options = Array.from({ length: sciencePro.length }).map((_, idx) => {
@@ -272,7 +265,7 @@ const handleClose = (tag) => {
   position: relative;
   border: 0.5px solid rgba(206, 206, 206, 0.5);
   width: 100%;
-  padding: 0 5% 35px 5%;
+  padding: 2% 5% 35px 5%;
   transition: all 0.5s;
   &:hover {
     border: .5px solid rgba(81, 113, 255, 0.5);

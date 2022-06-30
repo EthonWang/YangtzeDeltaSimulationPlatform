@@ -4,181 +4,408 @@
         "name": "灾害响应",
         "symbolSize": 20,
         "value": "科学问题大类",
-        "category": 3
+        "category": 3,
+        "weight":-100
       },
       {
         "name": "台风与风暴湖",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 3
+        "category": 3,
+        "weight":-100
       },
       {
         "name": "洪涝水环境灾害",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 3
+        "category": 3,
+        "weight":-100
       },
       {
         "name": "地质灾害",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 3
+        "category": 3,
+        "weight":-100
       },
       {
         "name": "大气污染",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 3
+        "category": 3,
+        "weight":-100
       },
       {
         "name": "全球与区域变化",
         "symbolSize": 20,
         "value": "科学问题大类",
-        "category": 4
+        "category": 4,
+        "weight":-100
       },
       {
         "name": "海岸带变迁",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 4
+        "category": 4,
+        "weight":-100
       },
       {
         "name": "河口河岸水动力",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 4
+        "category": 4,
+        "weight":-100
       },
       {
         "name": "湖泊碳循环",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 4
+        "category": 4,
+        "weight":-100
       },
       {
         "name": "土壤碳氮循环",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 4
+        "category": 4,
+        "weight":-100
       },
       {
         "name": "土壤氮转化过程与环境效应",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 4
+        "category": 4,
+        "weight":-100
       },
       {
-        "name": "流域水循环",
+        "name": "流域水循环及其驱动机制",
         "symbolSize": 20,
         "value": "科学问题大类",
-        "category": 5
+        "category": 5,
+        "weight":-100
       },
       {
         "name": "流域生态环境演变",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 5
+        "category": 5,
+        "weight":-100
       },
       {
         "name": "流域碳水耦合循环",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 5
+        "category": 5,
+        "weight":-100
       },
       {
         "name": "地表地下水耦合",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 5
+        "category": 5,
+        "weight":-100
       },
       {
         "name": "湖泊水环境监测",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 5
+        "category": 5,
+        "weight":-100
       },
       {
-        "name": "城市化与人地关系",
+        "name": "长三角城市化与人地关系协调发展",
         "symbolSize": 20,
         "value": "科学问题大类",
-        "category": 6
+        "category": 6,
+        "weight":-100
       },
       {
         "name": "湿地保护",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 6
+        "category": 6,
+        "weight":-100
       },
       {
         "name": "城市扩张",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 6
+        "category": 6,
+        "weight":-100
       },
       {
         "name": "农业生态",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 6
+        "category": 6,
+        "weight":-100
       },
       {
         "name": "人地关系",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 6
+        "category": 6,
+        "weight":-100
       },
       {
         "name": "城市水问题",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 6
+        "category": 6,
+        "weight":-100
       },
       {
         "name": "自然遗产",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 6
+        "category": 6,
+        "weight":-100
       },
       {
         "name": "城市群发展",
-        "symbolSize": 10,
+        "symbolSize": 15,
         "value": "科学问题",
-        "category": 6
+        "category": 6,
+        "weight":-100
       },
       {
         "name": "非面向问题类",
-        "symbolSize": 10,
+        "symbolSize": 20,
         "value": "科学问题",
-        "category": 7
+        "category": 7,
+        "weight":-100
       },
       {
         "name":"数据",
-        "symbolSize":20,
-        "category":0,
-        "value": "我的实验数据"
+        "symbolSize":40,
+        "category":8,
+        "value": "我的实验数据",
+        "weight":-100
       },
       {
         "name":"模型",
-        "symbolSize":20,
-        "category":1,
-        "value": "我的实验模型"
+        "symbolSize":40,
+        "category":8,
+        "value": "我的实验模型",
+        "weight":-100
       },
       {
         "name":"实验",
-        "symbolSize":20,
-        "category":2,
-        "value": "我的实验"
+        "symbolSize":40,
+        "category":8,
+        "value": "我的实验",
+        "weight":-100
       },
       {
         "name":"科学问题",
         "symbolSize":25,
         "category":8,
-        "value": "科学问题汇总"
+        "value": "科学问题汇总",
+        "weight":-100
       },
       {
         "name":"长江三角洲",
+        "symbolSize":100,
+        "category":8,
+        "value": "模拟器知识网络",
+        "weight":-100
+      },
+      {
+        "name":"私人",
         "symbolSize":30,
         "category":8,
-        "value": "模拟器知识网络"
+        "value": "私人数据",
+        "weight":-100
+      },
+      {
+        "name":"公开",
+        "symbolSize":30,
+        "category":8,
+        "value": "公开数据",
+        "weight":-100
+      },
+      {
+        "name":"基础地理",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"土地利用/覆盖",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"人口",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"社会经济",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"地形",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"地貌",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"土壤",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"湖泊",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"植被",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"生态系统",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"灾害",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"环境",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"气候",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"水文",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"农业",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"沿海",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"海洋",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"人类",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"河流",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"GIS & RS",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"陆地",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"矢量",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"地质",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"栅格",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":-100
+      },
+      {
+        "name":"案例",
+        "symbolSize":15,
+        "category":8,
+        "value": "",
+        "weight":-100
+      }
+      ,
+      {
+        "name":"领域",
+        "symbolSize":25,
+        "category":8,
+        "value": "",
+        "weight":-100
       }
     ],
     "links": [
@@ -220,47 +447,47 @@
       },
       {
         "source":"流域生态环境演变",
-        "target":"流域水循环"
+        "target":"流域水循环及其驱动机制"
       },
       {
         "source":"流域碳水耦合循环",
-        "target":"流域水循环"
+        "target":"流域水循环及其驱动机制"
       },
       {
         "source":"地表地下水耦合",
-        "target":"流域水循环"
+        "target":"流域水循环及其驱动机制"
       },
       {
         "source":"湖泊水环境监测",
-        "target":"流域水循环"
+        "target":"流域水循环及其驱动机制"
       },
       {
         "source":"湿地保护",
-        "target":"城市化与人地关系"
+        "target":"长三角城市化与人地关系协调发展"
       },
       {
         "source":"城市扩张",
-        "target":"城市化与人地关系"
+        "target":"长三角城市化与人地关系协调发展"
       },
       {
         "source":"农业生态",
-        "target":"城市化与人地关系"
+        "target":"长三角城市化与人地关系协调发展"
       },
       {
         "source":"城市群发展",
-        "target":"城市化与人地关系"
+        "target":"长三角城市化与人地关系协调发展"
       },
       {
         "source":"人地关系",
-        "target":"城市化与人地关系"
+        "target":"长三角城市化与人地关系协调发展"
       },
       {
         "source":"城市水问题",
-        "target":"城市化与人地关系"
+        "target":"长三角城市化与人地关系协调发展"
       },
       {
         "source":"自然遗产",
-        "target":"城市化与人地关系"
+        "target":"长三角城市化与人地关系协调发展"
       },
       {
         "source":"灾害响应",
@@ -271,14 +498,17 @@
         "target":"科学问题"
       },
       {
-        "source":"流域水循环",
+        "source":"流域水循环及其驱动机制",
         "target":"科学问题"
       },
       {
-        "source":"城市化与人地关系",
+        "source":"长三角城市化与人地关系协调发展",
         "target":"科学问题"
       },{
         "source":"科学问题",
+        "target":"长江三角洲"
+      },{
+        "source":"数据",
         "target":"长江三角洲"
       },{
         "source":"模型",
@@ -289,7 +519,114 @@
       },{
         "source":"非面向问题类",
         "target":"长江三角洲"
+      },{
+        "source":"私人",
+        "target":"数据"
+      },{
+        "source":"公开",
+        "target":"数据"
+      },
+      {
+        "source":"基础地理",
+        "target":"领域"
+      },
+      {
+        "source":"土地利用/覆盖",
+        "target":"领域"
+      },
+      {
+        "source":"人口",
+        "target":"领域"
+      },
+      {
+        "source":"社会经济",
+        "target":"领域"
+      },
+      {
+        "source":"地形",
+        "target":"领域"
+      },
+      {
+        "source":"地貌",
+        "target":"领域"
+      },
+      {
+        "source":"土壤",
+        "target":"领域"
+      },
+      {
+        "source":"湖泊",
+        "target":"领域"
+      },
+      {
+        "source":"植被",
+        "target":"领域"
+      },
+      {
+        "source":"生态系统",
+        "target":"领域"
+      },
+      {
+        "source":"灾害",
+        "target":"领域"
+      },
+      {
+        "source":"环境",
+        "target":"领域"
+      },
+      {
+        "source":"气候",
+        "target":"领域"
+      },
+      {
+        "source":"水文",
+        "target":"领域"
+      },
+      {
+        "source":"农业",
+        "target":"领域"
+      },
+      {
+        "source":"沿海",
+        "target":"领域"
+      },
+      {
+        "source":"海洋",
+        "target":"领域"
+      },
+      {
+        "source":"人类",
+        "target":"领域"
+      },
+      {
+        "source":"河流",
+        "target":"领域"
+      },
+      {
+        "source":"GIS & RS",
+        "target":"领域"
+      },
+      {
+        "source":"陆地",
+        "target":"领域"
+      },
+      {
+        "source":"地质",
+        "target":"领域"
+      },
+      {
+        "source":"矢量",
+        "target":"数据"
+      },
+      {
+        "source":"栅格",
+        "target":"数据"
+      },
+      {
+        "source":"案例",
+        "target":"实验"
       }
+      
     ],
     "categories": [
       {
@@ -308,16 +645,19 @@
         "name": "全球与区域变化"
       },
       {
-        "name": "流域水循环"
+        "name": "流域水循环及其驱动机制"
       },
       {
-        "name": "城市化与人地关系"
+        "name": "长三角城市化与人地关系协调发展"
       },
       {
         "name": "非面向问题类"
       },
       {
-        "name": "描述性节点"
+        "name": "层级节点"
+      },
+      {
+        "name": "地理领域"
       }
     ]
   }

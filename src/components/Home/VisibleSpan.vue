@@ -104,17 +104,17 @@ defineExpose({ scrollingSpan });
   width: 30%;
   position: absolute;
   left: calc(37% + 50px);
-  background-color: rgb(255, 255, 255);
+  background-color: rgba(255, 255, 255, 0.9);
   z-index: 5;
   color: rgb(0, 0, 0);
   top: calc(70% + 15px);
-  box-shadow: 0 2px 24px 0 hsla(0, 0%, 25%, 0.8);
+  box-shadow: 0 2px 12px 0 hsla(0, 0%, 25%, 0.4);
   transition: box-shadow 1s;
   h4 {
     text-align: left;
     padding-left: 20px;
     margin: 15px;
-    margin-bottom: -2%;
+    // margin-bottom: -2%;
     font-size: 1.25vw;
   }
   p {
@@ -122,6 +122,7 @@ defineExpose({ scrollingSpan });
     padding: 0px;
     padding-left: 35px;
     padding-right: 25px;
+    padding-bottom: 15px;
     line-height: 160%;
     font-size: 1.15vw;
   }
@@ -179,6 +180,7 @@ defineExpose({ scrollingSpan });
 .img {
   position: relative;
   left: 0;
+  opacity: 0.95;
   top: 0;
   width: auto;
   min-width: 98%;

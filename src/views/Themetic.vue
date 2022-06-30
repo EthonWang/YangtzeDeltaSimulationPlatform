@@ -609,6 +609,13 @@ allThematic.value = [
     ]
   }
 ]
+setTimeout(()=>{
+  const show_name=localStorage.getItem("show_themetic")
+thematicName.value = show_name.replace('\n','');
+  getThemeInfo(show_name);
+},600)
+
+
 </script>
 
 <style lang="less" scoped>

@@ -10,10 +10,6 @@
       style="
         height: 100%;
         width: 100%;
-        /* display: block; */
-        /* flex-direction: column; */
-        /* align-items: center; */
-        /* flex-wrap: wrap; */
         justify-content: center;
       "
     >
@@ -38,6 +34,10 @@ import TaskItem from "./TaskItem.vue";
 import Api from "@/api/user/task";
 import { ElMessage } from "element-plus";
 import { random } from "lodash";
+const user_info=JSON.parse(localStorage.getItem("userInfo"))
+
+
+
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
@@ -46,20 +46,20 @@ class task {
   constructor() {
     this.name = "";
     this.description = "";
-    this.public = false;
+    this.publicBoolean = false;
     this.problemTags = [];
     this.dataList = [];
-    this.id = String(new Date());
+    // this.id = String(new Date());
   }
 }
 
 const tasks = ref([]);
 const refresh = () => {
-  api.getTaskList("ssa").then((res) => {
-    console.log(res.data);
+  api.getTaskList(user_info.id).then((res) => {
+    console.log(res.data.data);
     tasks.value = [];
-    for(let i in res.data)
-    {tasks.value.push(res.data[i])}
+    for(let i in res.data.data)
+    {tasks.value.push(res.data.data[i])}
     console.log(tasks.value);
   });
 };
@@ -86,7 +86,7 @@ setTimeout(() => {
 <style lang="less" scoped>
 // 兼容css
 .task {
-  width: calc(90% - 10px);
+  width: calc(100% - 10px);
   margin: 5px;
 }
 </style>

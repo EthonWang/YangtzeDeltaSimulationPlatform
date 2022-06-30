@@ -3,7 +3,7 @@ import { get, post } from "@/request/request"
 // 上传文件
 export default class {
     getAllFile(user_id){
-        return post("/resource/getAllUserResource?userId="+user_id,)
+        return post("/resource/getUserAllResource?userId="+user_id,)
     }
     getFile(parent_id) {
         return post("/resource/getUserResource?parentId="+parent_id, )

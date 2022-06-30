@@ -16,12 +16,14 @@ const store=useStore()//vuex直接用store.commit
 const route=useRoute()
 const userInfo=JSON.parse(localStorage.getItem("userInfo"))
 
+const emit=defineEmits(['explore'])
 const explore=()=>{
-if(userInfo!=undefined){
-  router.push('/user')
-}else{
-  router.push('/login')
-}
+  emit('explore')
+// if(userInfo!=undefined){
+//   router.push('/user')
+// }else{
+//   router.push('/login')
+// }
 }
 const showIntro=ref(false)
 

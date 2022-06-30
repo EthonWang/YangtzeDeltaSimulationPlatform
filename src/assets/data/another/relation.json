@@ -374,7 +374,7 @@
       {
         "name":"矢量",
         "symbolSize":15,
-        "category":8,
+        "category":9,
         "value": "",
         "weight":-100
       },
@@ -388,14 +388,14 @@
       {
         "name":"栅格",
         "symbolSize":15,
-        "category":8,
+        "category":9,
         "value": "",
         "weight":-100
       },
       {
         "name":"案例",
         "symbolSize":15,
-        "category":2,
+        "category":8,
         "value": "",
         "weight":-100
       }
@@ -654,7 +654,7 @@
         "name": "非面向问题类"
       },
       {
-        "name": "描述性节点"
+        "name": "层级节点"
       },
       {
         "name": "地理领域"

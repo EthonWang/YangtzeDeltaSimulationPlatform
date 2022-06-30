@@ -1,7 +1,8 @@
 <template>
   <div class="container">
     <span
-      style="position: absolute; z-index: 2"
+      class="bg"
+      style="position: absolute; z-index: 2; transition: all 1s"
       :class="{
         background_show: background_show,
         background_hide: !background_show,
@@ -38,33 +39,27 @@
           </div>
         </div>
       </div>
-      <avatar
-
-        class="user-topbar"
-        ref="user"
-      />
+      <avatar class="user-topbar" ref="user" />
     </div>
   </div>
 </template>
 
 <script setup>
 import { userInfo } from "os";
-import { reactive, computed, ref, defineEmits, defineProps,watch } from "vue";
+import { reactive, computed, ref, defineEmits, defineProps, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import graphAPI from "@/api/user/graph"
+import graphAPI from "@/api/user/graph";
 
-const user_info=JSON.parse(localStorage.getItem("userInfo"))
+const user_info = JSON.parse(localStorage.getItem("userInfo"));
 
 // import dataApi from "@/api/user/data"
 
 // const dataapi=new dataApi()
 
-const graphapi=new graphAPI()
-graphapi.initGraph(user_info.id).then((res)=>{
-
-  console.log(graphapi.giveRecommend(["公开"]))
-
-})
+const graphapi = new graphAPI();
+graphapi.initGraph(user_info.id).then((res) => {
+  console.log(graphapi.giveRecommend(["公开"]));
+});
 
 const props = defineProps({
   background_show: ref(Boolean),
@@ -74,8 +69,8 @@ const route = useRoute();
 const barList = reactive(
   router.options.routes.filter((item) => item.isBar == true)
 );
-const relation=require("@/assets/data/another/relation.json")
-localStorage.setItem("relation",JSON.stringify(relation))
+const relation = require("@/assets/data/another/relation.json");
+localStorage.setItem("relation", JSON.stringify(relation));
 const user = ref();
 const notHome = ref(true);
 const getRootPath = (whole) => {
@@ -91,11 +86,12 @@ const searchIndexInRoutes = () => {
     }, 150);
 
     pick.value = new Array(barList.length).fill(0);
-
   } else {
     document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
   }
-  if (getRootPath(route.path) != ""){return}
+  if (getRootPath(route.path) != "") {
+    return;
+  }
   for (; i < barList.length; i++) {
     if (getRootPath(barList[i].path) == getRootPath(route.path)) {
       pick.value[i] = 1;
@@ -103,29 +99,39 @@ const searchIndexInRoutes = () => {
     }
   }
 };
-watch(()=>route.path,(newValue,oldValue)=>{
-  if (getRootPath(newValue) != "") {
-    setTimeout(() => {
-      pick.value = new Array(barList.length).fill(0);
-      document.getElementsByClassName("user-topbar")[0].style.right = "2vw";
-      document.getElementById("logo").style.marginLeft = "2vw";
-      document.getElementsByClassName("topbar")[0].style.left = "5vw";
-      for(let i in barList){
-        if(getRootPath(barList[i].path)==getRootPath(newValue))
-        {
-          pickup(i)
+watch(
+  () => route.path,
+  (newValue, oldValue) => {
+    if (getRootPath(newValue) != "") {
+      setTimeout(() => {
+        document.getElementsByClassName("bg")[0].style.opacity = "0";
+        document.getElementsByClassName("container")[0].style.background =
+          "#24292f3b";
+      }, 800);
+      setTimeout(() => {
+        pick.value = new Array(barList.length).fill(0);
+        document.getElementsByClassName("user-topbar")[0].style.right = "2vw";
+        document.getElementById("logo").style.marginLeft = "2vw";
+        document.getElementsByClassName("topbar")[0].style.left = "5vw";
+        for (let i in barList) {
+          if (getRootPath(barList[i].path) == getRootPath(newValue)) {
+            pickup(i);
+          }
         }
-      }
-    }, 201);
+      }, 201);
+    }
   }
-}
-)
+);
 const emit = defineEmits(["RouterFromBar"]);
 const sendRouterToFather = (route1, index) => {
   if (getRootPath(route1) != "") {
     let user_info = localStorage.getItem("userInfo");
     console.log(user_info);
-    if (user_info == null && getRootPath(route1) != "case"&&getRootPath(route1) != "themetic") {
+    if (
+      user_info == null &&
+      getRootPath(route1) != "case" &&
+      getRootPath(route1) != "themetic"
+    ) {
       router.push("/login");
       return;
     }
@@ -216,9 +222,10 @@ setTimeout(searchIndexInRoutes, 100);
   flex-direction: column;
   width: 100%;
   height: 100%;
-  padding-top: 1.06vh;
+  // padding-top: 0vh;
   background-color: #24292f3b;
   backdrop-filter: blur(10px);
+  transition: all 1s;
 }
 
 .background_show {

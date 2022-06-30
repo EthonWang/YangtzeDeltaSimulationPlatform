@@ -1,24 +1,13 @@
 <template>
   <div class="about">
-    <!-- <ModelTree
-      @getCheckData="getCheckData"
-      @getCheckChart="getCheckChart"
-      @getCheckTif="getCheckTif"
-      @getCheckJson="getCheckJson"
-    ></ModelTree> -->
     <el-button size="small" @click="switchMap" class="mapSwitchButton"
       >2D/3D
     </el-button>
-    <!-- <button class="mapSwitchButton" @click="switchMap">2D/3D</button> -->
     <mapbox-view
       :shpShowList="shpList"
       @openTxtEditor="openTxtEditor"
       v-show="mapType == 'mapBox'"
     ></mapbox-view>
-    <!-- <mapbox-view
-      :shpShowList="shpList"
-      v-show="mapType == 'mapBox'"
-    ></mapbox-view> -->
     <cesium
       :tifList="tifList"
       :jsonList="jsonList"
@@ -34,27 +23,28 @@
         @closeChart="closeChart"
       />
     </div>
-
-    <!-- 富文本编辑器 -->
-    <el-dialog
-      v-model="txtEditorModal"
-      draggable
-      sticky
-      scrollable
-      :mask="false"
-      @on-ok="ok"
-      @on-cancel="cancel"
-      :width="1000"
-    >
-      <template #header>
-        <Icon type="md-create" size="18" />
-        <span style="margin-left: 5px; font-size: 18px">文本编辑器</span>
-        <span style="margin-left: 300px; font-size: 18px;">{{ txtInfo.name }}</span>
-      </template>
-      <txt-editor :txtInfo="txtInfo"></txt-editor>
-    </el-dialog>
   </div>
-
+  <!-- 富文本编辑器 -->
+  <Modal
+    v-model="txtEditorModal"
+    draggable
+    sticky
+    scrollable
+    :mask="false"
+    @on-ok="ok"
+    @on-cancel="cancel"
+    :width="1000"
+    v-if="txtEditorModal"
+  >
+    <template #header>
+      <Icon type="md-create" size="18" />
+      <span style="margin-left: 5px; font-size: 18px">文本编辑器</span>
+      <span style="margin-left: 300px; font-size: 18px">{{
+        txtInfo.name
+      }}</span>
+    </template>
+    <txt-editor :txtInfo="txtInfo"></txt-editor>
+  </Modal>
 </template>
 
 <!--<script setup>-->
@@ -161,13 +151,13 @@ export default {
       this.txtInfo = info;
       this.txtEditorModal = !this.txtEditorModal;
     },
-    saveTxtHtml(html){
+    saveTxtHtml(html) {
       // console.log(html);
       this.txtData = html;
     },
-    commitTxtChange(){
+    commitTxtChange() {
       console.log(this.txtData);
-    }
+    },
   },
 };
 const router = useRouter(); //路由直接用router.push(...)

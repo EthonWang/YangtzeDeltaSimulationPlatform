@@ -144,11 +144,13 @@
       width="30%"
       :before-close="handleClose"
     >
-      <el-button v-for="task in task_list" :key="task" @click="addDataToTask(task)">
-      <el-icon><Monitor /></el-icon> &nbsp;
-      {{
-        task.name
-      }}</el-button>
+      <el-button
+        v-for="task in task_list"
+        :key="task"
+        @click="addDataToTask(task)"
+      >
+        <el-icon><Monitor /></el-icon> &nbsp; {{ task.name }}</el-button
+      >
 
       <template #footer>
         <span class="dialog-footer">
@@ -182,27 +184,36 @@ const task_api = new taskApi();
 const show_task = ref(false);
 const task_list = ref([]);
 
-const upload_header = {"token":localStorage.getItem('token')}
+const upload_header = { token: localStorage.getItem("token") };
 task_api.getTaskList(userInfo.id).then((res) => {
-  for (let i in res.data) {
-    task_list.value.push(res.data[i]);
+  for (let i in res.data.data) {
+    task_list.value.push(res.data.data[i]);
   }
 });
 const addToTask = () => {
   show_task.value = true;
 };
 const addDataToTask = (task) => {
+  console.log(task)
+  let dataList=[]
   for (let i in choosing_files) {
-    setTimeout(() => {
+    
       let data = {
         name: choosing_files[i].name,
         id: choosing_files[i].id,
-        type: "cloud",
+        source: "cloud",
+        type:"data",
+        "fill-color":"red",
+        visualizationBoolean:false,
+        visualWebAddress:"",
+        visualType: choosing_files[i].name.split('.')[1],
+        geoType: "line",
       };
-      task_api.addData(task.id, data);
-    }, 100 * i);
+      dataList.push(data)
+ 
   }
-  show_task.value=false
+  task_api.addData(task, dataList);
+  show_task.value = false;
 };
 var upload_file = reactive({
   name: "",
@@ -329,7 +340,6 @@ const uploadFile = (file_artribute, file_data) => {
 
 const refresh = () => {
   api.getFile(now_id.value).then((res) => {
-    
     console.log(res.data[0]);
     for (let i in res.data) {
       let data = JSON.parse(JSON.stringify(res.data[i]));
@@ -344,42 +354,12 @@ const refresh = () => {
       message: "数据获取成功",
     });
   });
-  api.getAllFile(now_id.value).then((res)=>{
-    initRelation();
-    for (let i in res.data) {
-      let data = JSON.parse(JSON.stringify(res.data[i]));
-      data.name = data.name.split(".")[0];
-      if (res.data[i].problemTags[0] != "" && res.data[i].problemTags != []) {
-        res.data[i].problemTags = data.problemTags.split(",");
-      }
-
-      relation.nodes.push({
-        name: data.name,
-        category: 0,
-        symbolSize: 5,
-        value: data.description,
-      });
-      relation.links.push({
-        source: data.name,
-        target: "数据",
-      });
-      if (data.problemTags.length == 0) {
-        relation.links.push({
-          source: data.name,
-          target: "非面向问题类",
-        });
-      } else {
-        for (let j in data.problemTags) {
-          let problem = data.problemTags[j].replace("\n", "");
-          relation.links.push({
-            source: data.name,
-            target: problem,
-          });
-        }
-      }
-      console.log(relation);
-    }
-  })
+  setTimeout(() => {
+    api.getAllFile(now_id.value).then((res) => {
+      console.log(res)
+      
+    });
+  }, 500);
 };
 const comeIn = (file) => {
   console.log(file);

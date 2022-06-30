@@ -251,7 +251,9 @@ h1 {
             prop="geoType"
             label="矢量数据类别"
             :label-width="150"
-            v-if="formInline.resType == 'data' && formInline.visualType == 'shp'"
+            v-if="
+              formInline.resType == 'data' && formInline.visualType == 'shp'
+            "
           >
             <RadioGroup v-model="formInline.geoType" style="width: 80%">
               <Radio label="circle" style="font-size: 14px">点</Radio>
@@ -471,6 +473,7 @@ export default {
         target: "http://172.21.212.63:8999/fileTransfer/upload", //上传地址
         chunkSize: 5 * 1024 * 1024,
         testChunks: false,
+        simultaneousUploads: 1,
         headers: {
           //设置header,
         },
@@ -555,14 +558,23 @@ export default {
         this.formInline.geoType != "" &&
         this.formInline.problemTags != [] &&
         this.formInline.tagList != [] &&
-        this.uploaderRes.code == 0
+        this.uploaderRes.code == 0 &&
+        this.formInline.resType == "data"
       ) {
-        this.commitProject();
+        this.commitProjectData();
+      } else if (
+        this.formInline.workName != "" &&
+        this.formInline.problemTags != [] &&
+        this.formInline.tagList != [] &&
+        this.uploaderRes.code == 0 &&
+        this.formInline.resType == "model"
+      ) {
+        this.commitProjectModel();
       } else {
         this.$Message.error("创建失败，请检查填写的内容！");
       }
     },
-    commitProject() {
+    commitProjectData() {
       // 将已经上传至chunk区的文件或压缩包进行保存
       let uploaderRes = this.uploaderRes;
       if (uploaderRes.code == 0) {
@@ -574,7 +586,10 @@ export default {
         info.normalTags = this.formInline.tagList.toString();
         info.problemTags = this.formInline.problemTags.toString();
         info.publicBoolean = true;
-        if(this.toUploadVisualFiles.length >= 1 || this.formInline.visualType == "tif"){
+        if (
+          this.toUploadVisualFiles.length >= 1 ||
+          this.formInline.visualType == "tif"
+        ) {
           info.visualizationBoolean = true;
         } else {
           info.visualizationBoolean = false;
@@ -583,6 +598,7 @@ export default {
         info.geoType = this.formInline.geoType;
         info.fileStoreName = uploaderRes.data.fileStoreName;
         info.fileSize = this.formInline.fileSize;
+        info.fileOriginName = this.formInline.fileOriginName;
 
         formData.append("imgFile", this.imageFile);
         formData.append("visualFile", this.toUploadVisualFiles[0]);
@@ -611,6 +627,9 @@ export default {
       } else {
         confirm("Created project fail.");
       }
+    },
+    commitProjectModel(){
+
     },
     //创建历史纪录的函数
     addHistoryEvent(scopeId) {
@@ -723,6 +742,7 @@ export default {
       this.uploaderRes = JSON.parse(response);
       this.formInline.file = this.uploaderRes.data.fileStoreName;
       this.formInline.fileSize = this.uploaderRes.data.fileSize;
+      this.formInline.fileOriginName = this.uploaderRes.data.fileOriginName;
     },
     querySearch(queryString, cb) {
       var restaurants = this.restaurants;

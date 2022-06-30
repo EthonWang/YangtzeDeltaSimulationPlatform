@@ -1,8 +1,9 @@
 <template>
-  <div ref="home_scroll_listen">
+  <div ref="home_scroll_listen" style="overflow-x: hidden !important;">
+    <HomeView3 :show="show2" style="width: 100%; height: 100vh"></HomeView3>
     <HomeView1 :show="show1" style="width: 100%; height: 95.94vh"></HomeView1>
     <HomeView2 :show="show2" style="width: 100%; height: 98.08vh"></HomeView2>
-    <!-- <HomeView3 :show="show2" style="width: 100%; height: 980px"></HomeView3> -->
+    
   </div>
 </template>
 
@@ -26,12 +27,13 @@ const standardizeHeight = (top) => {
 };
 const show1 = computed(() => {
   //计算属性只能监听ref而非reactive，因为ref有包装便于script属性之间响应式交互
-  return scrollTop.value < standardizeHeight(260);
+  return scrollTop.value < standardizeHeight(260+x);
 });
+const x=980
 const show2 = computed(() => {
   return (
-    scrollTop.value > standardizeHeight(330) &&
-    scrollTop.value < standardizeHeight(1360)
+    scrollTop.value > standardizeHeight(330+x) &&
+    scrollTop.value < standardizeHeight(1360+x)
   );
 });
 

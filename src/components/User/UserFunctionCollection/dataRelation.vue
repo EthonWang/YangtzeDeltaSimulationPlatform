@@ -22,6 +22,7 @@ function init() {
 
   let option = {
     tooltip: {},
+    color:['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc',"hsl(195,95%,45%)","hsl(120,100%,40%)","hsl(80,90%,50%)","hsl(50,90%,50%)"],
     legend: [
       {
         data: graph.categories.map(function (a) {
@@ -31,13 +32,16 @@ function init() {
     ],
     series: [
       {
-        name: "Les Miserables",
+        name: "长三角综合模拟图谱",
         type: "graph",
         layout: "force",
         data: graph.nodes,
         links: graph.links,
         categories: graph.categories,
         roam: true,
+        draggable:true,
+        edgeSymbol: ['', 'arrow'],
+        edgeSymbolSize : 10,
         label: {
           show: true,
           position: "right",
@@ -55,7 +59,7 @@ function init() {
           curveness: 0.3,
         },
         force: {
-          repulsion: 950
+          repulsion: 1500
         },
         emphasis: {
           focus: 'adjacency',

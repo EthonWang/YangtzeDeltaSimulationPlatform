@@ -17,6 +17,11 @@
         >收起编辑框
       </el-button>
     </div>
+
+
+<transition-group name="lyric">
+
+
     <div class="edit-board" v-if="editBoardShow">
       <el-collapse v-model="activeNames" @change="handleChange">
         <el-collapse-item title="数据列表" name="data">
@@ -476,6 +481,10 @@
         <el-collapse-item title="模型列表" name="model"> </el-collapse-item>
       </el-collapse>
     </div>
+
+</transition-group>
+
+
     <!--    <el-button type="primary">Primary</el-button>-->
     <div id="map"></div>
   </div>
@@ -494,34 +503,80 @@
     </template>
     <Form :model="clipForm" label-position="top">
       <FormItem label="输入要素">
-        <Input v-model="clipForm.inputFeaturesName" style="width: 90%"></Input>
+        <Input
+          v-model="clipForm.inputFeaturesName"
+          style="width: 90%"
+          readonly
+        ></Input>
         <Button
           :size="buttonSize"
           icon="ios-folder-open"
           style="margin-left: 15px"
+          @click="selectClipFeatures('inputRaster')"
         ></Button>
       </FormItem>
       <FormItem label="裁剪要素">
-        <Input v-model="clipForm.clipFeaturesName" style="width: 90%"></Input>
+        <Input
+          v-model="clipForm.clipFeaturesName"
+          style="width: 90%"
+          readonly
+        ></Input>
         <Button
           :size="buttonSize"
           icon="ios-folder-open"
           style="margin-left: 15px"
+          @click="selectClipFeatures('inputShp')"
         ></Button>
       </FormItem>
       <FormItem label="输出要素">
         <Input v-model="clipForm.outputFeaturesName" style="width: 90%"></Input>
-        <Button
-          :size="buttonSize"
-          icon="ios-folder-open"
-          style="margin-left: 15px"
-        ></Button>
       </FormItem>
     </Form>
+  </Modal>
+  <Modal
+    v-model="clipSelectFeaturesModal"
+    draggable
+    sticky
+    scrollable
+    :mask="false"
+    @on-ok="ok"
+    @on-cancel="cancel"
+  >
+    <template #header>
+      <Icon type="md-cut" size="18" />
+      <span style="margin-left: 5px; font-size: 18px"
+        >选择{{ clipForm.title }}</span
+      >
+    </template>
+    <RadioGroup
+      v-model="clipForm.inputFeaturesName"
+      vertical
+      v-if="clipForm.title == '输入要素'"
+      :on-change="clipFormChange(clipForm.inputFeaturesName,'raster')"
+    >
+      <div v-for="(item, index) in showLayerTableList" :key="index">
+        <Radio :label="item.name" v-if="item.visualType == 'tif'">
+          <span>{{ item.name }}</span>
+        </Radio>
+      </div>
+    </RadioGroup>
+    <RadioGroup
+      v-model="clipForm.clipFeaturesName"
+      vertical
+      v-if="clipForm.title == '裁剪要素'"
+      :on-change="clipFormChange(clipForm.clipFeaturesName,'shp')"
+    >
+      <div v-for="(item, index) in showLayerTableList" :key="index">
+        <Radio :label="item.name" v-if="item.visualType == 'shp' && item.type == 'fill'">
+          <span>{{ item.name }}</span>
+        </Radio>
+      </div>
+    </RadioGroup>
   </Modal>
 </template>
 
 <script>
+import { watch } from "vue";
 import mapboxgl from "mapbox-gl";
 import MapboxLanguage from "@mapbox/mapbox-gl-language";
 mapboxgl.setRTLTextPlugin(
@@ -542,28 +597,19 @@ export default {
       showCenter: "-90,17",
       zoom: 6,
       editBoardShow: true,
-
       layerStyle: {
         line: {
           layout: {
-            "line-cap": "butt", //One of "butt", "round", "square"
-            "line-join": "miter", //One of "bevel", "round", "miter"
-            "line-miter-limit": 2,
-            "line-round-limit": 1.05,
             visibility: "visible",
             // "line-sort-key":999
           },
           paint: {
+            "line-color": "#" + Math.random().toString(16).substr(2, 6),
             "line-blur": 0,
-            "line-color": "#000000",
-            "line-dasharray": [0, 0],
-            "line-gap-width": 0,
+            "line-dasharray": [1, 0],
             // "line-gradient":"",  //ignore  Requires source to be "geojson".
-            "line-offset": 0,
             "line-opacity": 1,
             // "line-pattern": "",  //ignore  Optional resolvedImage.
-            "line-translate": [0, 0],
-            "line-translate-anchor": "map", //One of "map", "viewport".
             "line-width": 1,
           },
         },
@@ -593,17 +639,16 @@ export default {
           },
           paint: {
             "fill-antialias": true,
-            "fill-color": "#000000",
-            "fill-opacity": 1,
+            "fill-color": "#" + Math.random().toString(16).substr(2, 6),
             "fill-outline-color": "#000000",
-            //"fill-pattern":''  //ignore  Optional resolvedImage.
-            "fill-translate": [0, 0],
-            "fill-translate-anchor": "map", // One of "map", "viewport"
+            "fill-opacity": 1,
           },
         },
       },
 
-      showLayerTableList: [],
+      showLayerTableList: [
+
+      ],
 
       predefineColors: [
         "#ff4500",
@@ -621,11 +666,13 @@ export default {
         type: "FeatureCollection",
       },
       clipModal: false,
+      clipSelectFeaturesModal: false,
       clipForm: {
+        title: "输入要素",
         inputFeaturesName: "",
         clipFeaturesName: "",
-        inputFeaturesId: "",
-        clipFeaturesId: "",
+        inputRaster: "",
+        inputShp: "",
         outputFeaturesName: "",
       },
 
@@ -634,66 +681,7 @@ export default {
         modelList: [],
         dataList: [],
       },
-      taskInfo: {
-        id: "sdsd",
-        name: "城市雨洪",
-        description:
-          "本任务作为SWMM模型应用的典型案例，现在共享出来方便大家学习。",
-        public: false,
-        problemTags: ["城市水问题", "洪涝水环境灾害"],
-        dataList: [
-          {
-            name: "南京市区管网.png",
-            id: "45454",
-            type: "data",
-            visualType: "img",
-            geoType: "line",
-          },
-          {
-            createTime: "2022-06-27 17:12:02",
-            description: "lianshui_tmpdc",
-            fileSize: "180751",
-            fileStoreName: "c33bc621-ba01-410a-8799-f36f9f54b859.txt",
-            fileWebAddress:
-              "/store/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
-            geoType: "circle",
-            id: "62b974624aa65fa32ff1be79",
-            imgStoreName: "62b974624aa65fa32ff1be7a.png",
-            imgWebAddress: "/store/resourceData/62b974624aa65fa32ff1be7a.png",
-            name: "lianshui_tmpdc",
-            normalTags: "水文",
-            problemTags: "流域水循环及其驱动机制,全球变化与区域环境演化",
-            publicBoolean: true,
-            type: "data",
-            userEmail: "temp@xx.com",
-            visualStoreName: null,
-            visualType: "txt",
-            visualWebAddress: "",
-            visualizationBoolean: false,
-          },
-          {
-            name: "南京市区道路.shp",
-            id: "45456",
-            type: "data",
-            visualType: "shp",
-            geoType: "line",
-          },
-          {
-            name: "南京市区道路.shp",
-            id: "45457",
-            type: "data",
-            visualType: "shp",
-            geoType: "line",
-          },
-          {
-            name: "南京市DEM",
-            id: "45458",
-            type: "data",
-            visualType: "tif",
-            geoType: "line",
-          },
-        ],
-      },
+      taskInfo: JSON.parse(localStorage.getItem("task")),
     };
   },
 
@@ -732,15 +720,13 @@ export default {
   },
 
   mounted() {
+    this.initMap();
+
     let that = this;
     setTimeout(function () {
-      that.initMap();
       that.filterResList();
       that.initShpShowList();
     }, 500);
-    // this.initMap();
-    // this.filterResList();
-    // this.initShpShowList();
   },
 
   methods: {
@@ -834,26 +820,9 @@ export default {
           this.resList.dataList[i].visualType == "shp" ||
           this.resList.dataList[i].visualType == "tif"
         ) {
-          // this.addLayerToMap(JSON.parse(JSON.stringify(this.resList.dataList[i])));
-          //添加layer
-          let newLayer = {
-            show: true,
-            name: this.resList.dataList[i].name,
-            id: this.resList.dataList[i].id,
-            type: this.resList.dataList[i].geoType,
-            visualType: this.resList.dataList[i].visualType,
-            filter: ["all"],
-            layout: this.layerStyle[this.resList.dataList[i].geoType].layout,
-            maxzoom: 22,
-            metadata: "",
-            minzoom: 0,
-            paint: this.layerStyle[this.resList.dataList[i].geoType].paint,
-            data: this.resList.dataList[i],
-            // "source-layer": "default"
-          };
-          newLayer.paint[this.resList.dataList[i].geoType + "-color"] =
-            "#" + Math.random().toString(16).substr(2, 6);
-          this.showLayerTableList.push(newLayer);
+          this.addLayerToMap(
+            JSON.parse(JSON.stringify(this.resList.dataList[i]))
+          );
         } else {
           //添加layer
           let newLayer = {
@@ -872,51 +841,43 @@ export default {
     },
     addLayerToMap(newShpInfo) {
       //添加数据源
-      // map.addSource(newShpInfo.dataSourceId, {
-      //   type: "vector",
-      //   tiles: ["http://172.21.212.63:8995/mvt/"+newShpInfo.dataSourceId+"/{z}/{x}/{y}.pbf?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMTEifQ.Ne6qdHY2XgpBNQ74MeO-23ZyF0OahH-AHMbrXqhKlwU"],
-      // })
-
-      if (newShpInfo.isBigShp !== undefined) {
-        map.addSource(newShpInfo.dataSourceId, {
-          type: "vector",
-          tiles: [
-            "http://172.21.212.63:8995/mvt/" +
-              newShpInfo.dataSourceId +
-              "/{z}/{x}/{y}.pbf?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMTEifQ.Ne6qdHY2XgpBNQ74MeO-23ZyF0OahH-AHMbrXqhKlwU",
-          ],
-        });
-      } else {
-        map.addSource(newShpInfo.dataSourceId, {
+      if (newShpInfo.visualType == "shp") {
+        map.addSource(newShpInfo.name + "_" + newShpInfo.id, {
           type: "geojson",
           // data: "http://172.21.212.63:8999/model/getShpJsonData?shpJsonPath="+newShpInfo.path,
-          data: "http://172.21.212.63:8999/store" + newShpInfo.path,
+          data: "http://172.21.212.63:8999" + newShpInfo.visualWebAddress,
         });
+        //添加layer
+        let newLayer = {
+          show: true,
+          name: newShpInfo.name,
+          id: newShpInfo.id,
+          source: newShpInfo.name + "_" + newShpInfo.id,
+          type: newShpInfo.geoType,
+          paint: this.layerStyle[newShpInfo.geoType].paint,
+          visualType: newShpInfo.visualType,
+          data: newShpInfo,
+        };
+        this.showLayerTableList.push(newLayer);
+        map.addLayer(newLayer);
+      } else if (newShpInfo.visualType == "tif") {
+        map.addSource(newShpInfo.name + "_" + newShpInfo.id, {
+          type: "raster",
+          tiles: [newShpInfo.visualWebAddress],
+          tileSize: 256, // 切片的最小展示尺寸（可选，单位：像素，默认值为 512，即 1024/2）
+        });
+        let newLayer = {
+          show: true,
+          name: newShpInfo.name,
+          id: newShpInfo.id,
+          source: newShpInfo.name + "_" + newShpInfo.id,
+          type: "raster",
+          visualType: newShpInfo.visualType,
+          data: newShpInfo,
+        };
+        this.showLayerTableList.push(newLayer);
+        map.addLayer(newLayer);
       }
-
-      //添加layer
-      let newLayer = {
-        show: true,
-        name: newShpInfo.label,
-        id: newShpInfo.dataSourceId,
-        type: newShpInfo.geoType,
-        filter: ["all"],
-        layout: this.layerStyle[newShpInfo.geoType].layout,
-        maxzoom: 22,
-        metadata: "",
-        minzoom: 0,
-        paint: this.layerStyle[newShpInfo.geoType].paint,
-        source: newShpInfo.dataSourceId,
-        // "source-layer": "default"
-      };
-      // if (newShpInfo.isBigShp == undefined) {
-      //   newLayer.startEditor = false;
-      // }
-
-      newLayer.paint[newShpInfo.geoType + "-color"] =
-        "#" + Math.random().toString(16).substr(2, 6);
-      this.showLayerTableList.push(newLayer);
-      map.addLayer(newLayer);
     },
 
     handleRemoveLayer(aimDataSourceId) {
@@ -1147,10 +1108,31 @@ export default {
     clipModalShow() {
       this.clipModal = true;
       this.clipForm = {
-        inputFeaturesId: "",
-        clipFeaturesId: "",
+        title: "输入要素",
+        inputFeaturesName: "",
+        clipFeaturesName: "",
+        inputRaster: "",
+        inputShp: "",
         outputFeaturesName: "",
       };
+    },
+    selectClipFeatures(type) {
+      if (type == "inputRaster") {
+        this.clipForm.title = "输入要素";
+      } else if (type == "inputShp") {
+        this.clipForm.title = "裁剪要素";
+      }
+      this.clipSelectFeaturesModal = true;
+    },
+    clipFormChange(name,type) {
+      for(let i = 0 ; i < this.showLayerTableList.length ; i++){
+        if (this.showLayerTableList[i].name == name && type == 'raster'){
+          this.clipForm.inputRaster = this.showLayerTableList[i].id;
+        } else if (this.showLayerTableList[i].name == name && type == 'shp'){
+          this.clipForm.inputShp = this.showLayerTableList[i].id
+        }
+      }
+      console.log(this.clipForm);
     },
     openTxtEditor(info) {
       this.$emit("openTxtEditor", info);
@@ -1206,5 +1188,21 @@ export default {
 }
 /deep/.mapboxgl-ctrl-top-right {
   margin-top: 3.5%;
+}
+
+.lyric-enter-from,
+.lyric-leave-to {
+  opacity: 0.1;
+  transform: translateY(-39px) translateX(70px);
+  height: 10%;
+  width: 84px;
+}
+.lyric-enter-to,
+.lyric-leave-from {
+  opacity: 1;
+}
+.lyric-enter-active,
+.lyric-leave-active {
+  transition: all 0.5s;
 }
 </style>

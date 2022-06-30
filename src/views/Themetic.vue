@@ -40,10 +40,20 @@
             <el-divider ></el-divider>
             <div style="display: flex;align-items: center;">
               <template v-for="(item,key) in thematicItem.relatedCases" :key="key">
-                <el-card :body-style="{ padding: '0px'}" class="caseCard hvr-grow" @click="toCase(item.path)">
-                  <el-image class="caseImage"  :src="baseUrl+item.thumbnail" fit="fill"></el-image>
-                  <div style="display: flex;justify-content: center;">
-                    <span>{{item.name}}</span>
+                <el-card :body-style="{ padding: '0px'}" class="caseCard" >
+                  <div class="caseImageWrap">
+                    <el-image class="caseImage" @click="toCase(item.path)"  :src="baseUrl+item.thumbnail" fit="fill"></el-image>
+                    <div class="imageMask">
+                      <img :src="mdOpenIcon" class="caseIcon">
+                      <span >打开案例</span>
+                    </div>
+                  </div>
+                  <div style="display: flex;justify-content: center;padding: 0.5rem">
+                    <el-tooltip effect="light"
+                                placement="bottom"
+                                content="查看案例详情">
+                      <h4 class="font-size-1" @click="goCaseInfo">{{item.name}}</h4>
+                    </el-tooltip>
                   </div>
                 </el-card>
               </template>
@@ -240,13 +250,15 @@
 </template>
 
 <script  setup>
-import {nextTick,ref,onMounted} from 'vue'
+import {ref,onMounted} from 'vue'
 import {Plus,Edit,Upload,Delete,Select} from '@element-plus/icons-vue'
 import { ElNotification,ElMessageBox,ElMessage} from "element-plus";
 import { useRouter } from "vue-router";
 import axios from "axios";
 const router = useRouter();
 const baseUrl = ref("http://172.21.212.63:8999/")
+
+const mdOpenIcon = require("@/assets/img/icon/md-open.png")
 
 onMounted(()=>{
   thematicName.value = "流域生态环境演变";
@@ -272,7 +284,9 @@ const getThemeInfo = (thematicName) => {
 const toCase = (path) => {
   router.push("/case/" + path + "/");
 }
-
+const goCaseInfo = () => {
+  router.push("/caseinfo/")
+}
 const getCurrentNode = (checked,data) => {
   thematicName.value = data.label;
   getThemeInfo(thematicName.value);
@@ -603,13 +617,50 @@ allThematic.value = [
   background-color: white;
   overflow: scroll;
 }
+.caseImageWrap{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  position: relative;
+  height: 100px;
+  width: 160px;
+  cursor: pointer;
+}
 .caseImage{
   height: 100px;
   width: 160px;
+  border-bottom: 1px lightgray solid;
 }
+.imageMask{
+  height: 100px;
+  width: 160px;
+  opacity: 0;
+  position: absolute;
+  top:0;
+  right: 0;
+  background-color: rgba(0,0,0,0.7);
+  color:white;
+  pointer-events: none;
+  transition:opacity 200ms linear ;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.caseImageWrap:hover .imageMask{
+  opacity: 1;
+}
+.caseIcon{
+  width: 1em;
+}
+.font-size-1{
+  line-height: 1.5;
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+
 .caseCard{
   margin-right: 20px;
-  cursor: pointer;
 }
 .editDialogRow{
   align-items: center;
@@ -723,7 +774,7 @@ allThematic.value = [
     // flex: 5;
     width: 30%;
     min-width: 260px;
-    
+
     // position: relative;
   }
 }

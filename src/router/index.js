@@ -7,8 +7,8 @@ import Help from "@/views/Help.vue";
 // import Functions from "@/views/Function.vue";
 import ModelConfig from "@/components/App/ModelConfig"
 import { cases_config } from "@/assets/config/cases.config";
-import newResource from "@/components/resource/newResource.vue"
-
+import newResource from "@/components/resource/newResource.vue";
+import CaseInfo from "@/components/Cases/CaseInfo";
 const routes = [
   {
     isBar: true,//如果不想加入TopBar，就设定为false，或者写在对应children里面
@@ -132,6 +132,12 @@ const routes = [
     name: '添加资源',
     component: newResource,
   },
+  {
+    isBar: false,
+    path: '/caseInfo',
+    name:'caseInfo',
+    component: CaseInfo
+  }
 ];
 class base_route {
   isBar = false

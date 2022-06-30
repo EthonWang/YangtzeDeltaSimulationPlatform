@@ -5,7 +5,7 @@
     <Topbar
     :background_show="background_show"
       @RouterFromBar="routerGo"
-      style="height: 6.39vh; position: absolute; z-index: 500"
+      style="height: 6.39vh; position: absolute; z-index: 500;overflow: hidden"
     ></Topbar>
 
     <router-view @showTopbarBackground="showTopbarBackground" class="main"></router-view>
@@ -44,13 +44,13 @@ const routerGo = (router) => {
   // margin-left: -8px;
   // margin-right: -8px;
   background: #24292f;
-  
+
 }
 .main {
   position: relative;
   top: 0;
   left: 0;
-  height: 101.5vh;
+  height: 100vh;
   // height: 950px;
   padding-top: 0px;
   overflow-y: scroll;

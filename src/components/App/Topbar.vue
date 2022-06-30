@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="container">
     <span
       style="position: absolute; z-index: 2"
@@ -206,6 +206,7 @@ setTimeout(searchIndexInRoutes, 100);
   padding-top: 1.06vh;
   background-color: hsla(200, 100%, 36%, 0);
   backdrop-filter: blur(10px);
+  overflow: hidden;
 }
 
 .background_show {

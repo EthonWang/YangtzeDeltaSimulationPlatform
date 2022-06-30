@@ -600,24 +600,16 @@ export default {
       layerStyle: {
         line: {
           layout: {
-            "line-cap": "butt", //One of "butt", "round", "square"
-            "line-join": "miter", //One of "bevel", "round", "miter"
-            "line-miter-limit": 2,
-            "line-round-limit": 1.05,
             visibility: "visible",
             // "line-sort-key":999
           },
           paint: {
+            "line-color": "#" + Math.random().toString(16).substr(2, 6),
             "line-blur": 0,
-            "line-color": "#000000",
-            "line-dasharray": [0, 0],
-            "line-gap-width": 0,
+            "line-dasharray": [1, 0],
             // "line-gradient":"",  //ignore  Requires source to be "geojson".
-            "line-offset": 0,
             "line-opacity": 1,
             // "line-pattern": "",  //ignore  Optional resolvedImage.
-            "line-translate": [0, 0],
-            "line-translate-anchor": "map", //One of "map", "viewport".
             "line-width": 1,
           },
         },
@@ -647,12 +639,9 @@ export default {
           },
           paint: {
             "fill-antialias": true,
-            "fill-color": "#000000",
-            "fill-opacity": 1,
+            "fill-color": "#" + Math.random().toString(16).substr(2, 6),
             "fill-outline-color": "#000000",
-            //"fill-pattern":''  //ignore  Optional resolvedImage.
-            "fill-translate": [0, 0],
-            "fill-translate-anchor": "map", // One of "map", "viewport"
+            "fill-opacity": 1,
           },
         },
       },
@@ -692,141 +681,7 @@ export default {
         modelList: [],
         dataList: [],
       },
-      taskInfo: {
-        id: "sdsd",
-        name: "城市雨洪",
-        description:
-          "本任务作为SWMM模型应用的典型案例，现在共享出来方便大家学习。",
-        public: false,
-        problemTags: ["城市水问题", "洪涝水环境灾害"],
-        dataList: [
-          {
-            name: "南京市区管网.png",
-            id: "45454",
-            type: "data",
-            visualType: "img",
-            geoType: "line",
-          },
-          {
-            createTime: "2022-06-27 17:12:02",
-            description: "lianshui_tmpdc",
-            fileSize: "180751",
-            fileStoreName: "c33bc621-ba01-410a-8799-f36f9f54b859.txt",
-            fileWebAddress:
-              "/store/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
-            geoType: "circle",
-            id: "62b974624aa65fa32ff1be79",
-            imgStoreName: "62b974624aa65fa32ff1be7a.png",
-            imgWebAddress: "/store/resourceData/62b974624aa65fa32ff1be7a.png",
-            name: "lianshui_tmpdc",
-            normalTags: "水文",
-            problemTags: "流域水循环及其驱动机制,全球变化与区域环境演化",
-            publicBoolean: true,
-            type: "data",
-            userEmail: "temp@xx.com",
-            visualStoreName: null,
-            visualType: "txt",
-            visualWebAddress: "",
-            visualizationBoolean: false,
-          },
-          {
-            type: "data",
-            createTime: "2022-06-16 10:43:44",
-            description: "长三角流域数据（level 02-09）",
-            fileSize: "16363498",
-            fileStoreName: "aa7a127d-2133-4405-908b-bbdca2b90c4d.zip",
-            fileWebAddress: null,
-            geoType: "fill",
-            id: "62aa98e048d84b48479e4a46",
-            imgStoreName: "62aa98e048d84b48479e4a48.png",
-            imgWebAddress: "/store/resourceData/62aa98e048d84b48479e4a48.png",
-            name: "长三角流域数据（level 02-09）",
-            normalTags: "基础地理, 水文",
-            problemTags: "流域水循环及其驱动机制",
-            publicBoolean: true,
-            userEmail: "temp@xx.com",
-            visualStoreName: "62aa98e048d84b48479e4a47.json",
-            visualType: "shp",
-            visualWebAddress:
-              "/store/resourceData/62aa98e048d84b48479e4a47.json",
-            visualizationBoolean: true,
-          },
-          // {
-          //   type: "data",
-          //   geoType: "line",
-          //   createTime: "2022-06-15 16:03:42",
-          //   description: "dock2",
-          //   fileSize: null,
-          //   fileStoreName: "92821b31-92a7-49cf-9209-dd52c8bad90d.zip",
-          //   fileWebAddress:
-          //     "/store/resourceData/92821b31-92a7-49cf-9209-dd52c8bad90d.zip",
-          //   id: "62a9925e48d8862c04888cbc",
-          //   imgStoreName: "62a9925e48d8862c04888cbe.png",
-          //   imgWebAddress: "/store/resourceData/62a9925e48d8862c04888cbe.png",
-          //   name: "dock2",
-          //   normalTags: "沿海,海洋,人类",
-          //   problemTags: "流域水循环及其驱动机制",
-          //   publicBoolean: true,
-          //   userEmail: "temp@xx.com",
-          //   visualStoreName: "62a9925e48d8862c04888cbd.json",
-          //   visualType: "shp",
-          //   visualWebAddress:
-          //     "/store/resourceData/62a9925e48d8862c04888cbd.json",
-          //   visualizationBoolean: true,
-          // },
-          // {
-          //   type: "data",
-          //   visualType: "tif",
-          //   createTime: "2022-06-15 16:42:10",
-          //   description: "土地利用数据-N50_25_2020LC030",
-          //   fileSize: null,
-          //   fileStoreName: "6cfbb0a9-2759-4234-9a9f-55ac0154c6e8.zip",
-          //   fileWebAddress:
-          //     "/store/resourceData/6cfbb0a9-2759-4234-9a9f-55ac0154c6e8.zip",
-          //   geoType: "line",
-          //   id: "62a99b6248d8862c04888cdb",
-          //   imgStoreName: "62a99b6248d8862c04888cdd.png",
-          //   imgWebAddress: "/store/resourceData/62a99b6248d8862c04888cdd.png",
-          //   name: "土地利用数据-N50_25_2020LC030",
-          //   normalTags: "土地利用,生态,GIS & RS",
-          //   problemTags: "全球变化与区域环境演化",
-          //   publicBoolean: true,
-          //   userEmail: "temp@xx.com",
-          //   visualStoreName: "62a99b6248d8862c04888cdc.png",
-          //   visualWebAddress:
-          //     "http://172.21.213.92:8089/geoserver/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3AnanjingDEM_project&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857&WIDTH=512&HEIGHT=512&BBOX={bbox-epsg-3857}",
-          //   visualizationBoolean: true,
-          // },
-          {
-            createTime: "2022-06-21 23:00:19",
-            description: "南京1万DEM数据",
-            fileRelativePath:
-              "/resourceData/6714d163-6ab4-4e71-8bff-16dbfebf8895.zip",
-            fileSize: "409554533",
-            fileStoreName: "6714d163-6ab4-4e71-8bff-16dbfebf8895.zip",
-            fileWebAddress:
-              "/store/resourceData/6714d163-6ab4-4e71-8bff-16dbfebf8895.zip",
-            geoType: "circle",
-            id: "62b1dd0348d81b078f984988",
-            imgRelativePath: "/resourceData/62b1dd0648d81b078f984989.png",
-            imgStoreName: "62b1dd0648d81b078f984989.png",
-            imgWebAddress: "/store/resourceData/62b1dd0648d81b078f984989.png",
-            name: "南京1万DEM数据",
-            normalTags: "地形,土壤,地质",
-            problemTags:
-              "流域水循环及其驱动机制,全球变化与区域环境演化,长三角灾害响应与治理,长三角城市化与人地关系协调发展",
-            publicBoolean: true,
-            type: "data",
-            userEmail: "temp@xx.com",
-            visualRelativePath: "",
-            visualStoreName: null,
-            visualType: "tif",
-            visualWebAddress:
-              "http://172.21.213.92:8089/geoserver/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3AnanjingDEM_project&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857&WIDTH=433&HEIGHT=768&BBOX={bbox-epsg-3857}",
-            visualizationBoolean: true,
-          },
-        ],
-      },
+      taskInfo: JSON.parse(localStorage.getItem("task")),
     };
   },
 
@@ -866,17 +721,6 @@ export default {
 
   mounted() {
     this.initMap();
-    let showLayerTableList_temp =JSON.parse(localStorage.getItem("task")).dataList
-    for(let i in showLayerTableList_temp){
-      if(!("visualType" in showLayerTableList_temp[i])){
-        showLayerTableList_temp[i]["visualType"]="txt"
-      }
-      if(showLayerTableList_temp[i].visualType=='png'||showLayerTableList_temp[i].visualType=='jpg'){
-        showLayerTableList_temp[i].visualType='img'
-      }
-    }
-    this.taskInfo.dataList=showLayerTableList_temp
-    console.log(this.showLayerTableList);
 
     let that = this;
     setTimeout(function () {
@@ -1007,21 +851,13 @@ export default {
         let newLayer = {
           show: true,
           name: newShpInfo.name,
-          filter: ["all"],
-          layout: this.layerStyle[newShpInfo.geoType].layout,
-          maxzoom: 22,
-          metadata: "",
-          minzoom: 0,
           id: newShpInfo.id,
           source: newShpInfo.name + "_" + newShpInfo.id,
           type: newShpInfo.geoType,
           paint: this.layerStyle[newShpInfo.geoType].paint,
           visualType: newShpInfo.visualType,
           data: newShpInfo,
-          // "source-layer": "default"
         };
-        newLayer.paint[newShpInfo.geoType + "-color"] =
-          "#" + Math.random().toString(16).substr(2, 6);
         this.showLayerTableList.push(newLayer);
         map.addLayer(newLayer);
       } else if (newShpInfo.visualType == "tif") {

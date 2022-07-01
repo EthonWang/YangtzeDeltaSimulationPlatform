@@ -215,7 +215,17 @@ function updateValues(cate) {
 var map;
 const address = "/case/industrialInnovation/";
 const radar_size = 0.09;
+const screenWidth = window.screen.width * window.devicePixelRatio;
+const screenHeight = window.screen.height * window.devicePixelRatio;
+
 function addMap(cate) {
+  console.log(window.screen.width,window.screen.height)
+  let spriteUrl;
+  if((screenWidth == 1920 && screenHeight == 1080)||(screenWidth == 2048 && screenHeight == 1152)){
+    spriteUrl = "http://localhost:3030/case/industrialInnovation/mapbox_resource/sprite/" + cate + "@2x";
+  }else if(screenWidth == 2560 && screenHeight == 1440) {
+    spriteUrl = "http://localhost:3030/case/industrialInnovation/mapbox_resource/sprite/" + cate;
+  }
   document.getElementById('map').innerHTML = "";
   mapboxgl.accessToken =
       "pk.eyJ1Ijoid3lqcSIsImEiOiJjbDBnZDdwajUxMXRzM2htdWxubDh1MzJrIn0.2e2_rdU2nOUvtwltBIZtZg";
@@ -225,7 +235,7 @@ function addMap(cate) {
     zoom: 5.9, // starting zoom
     style: {
       "version": 8,
-      "sprite": "http://localhost:3030/case/industrialInnovation/mapbox_resource/sprite/" + cate + "@2x",
+      "sprite": spriteUrl,
       "glyphs": "http://localhost:3030/case/industrialInnovation/mapbox_resource/fonts/{fontstack}/{range}.pbf",
       "sources": {
         'boundary': {

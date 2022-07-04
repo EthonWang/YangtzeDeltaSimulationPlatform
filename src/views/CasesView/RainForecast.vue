@@ -276,7 +276,7 @@ export default {
     //降雨地区排行数据获取
     getSortRainfallByDistrict() {
       axios
-          .post("http://172.21.212.63:8999/dashboard/sortRainfallByDistrict", {
+          .post("/back/dashboard/sortRainfallByDistrict", {
             "count": 10,
             "isAsc": -1
           })
@@ -358,7 +358,7 @@ export default {
     //部分地区降雨预测数据获取
     getDailyRainfallByDistrict() {
       axios
-          .post("http://172.21.212.63:8999/dashboard/getDailyRainfallByDistrict", {
+          .post("/back/dashboard/getDailyRainfallByDistrict", {
             "count": 10,
             "isAsc": -1
           })

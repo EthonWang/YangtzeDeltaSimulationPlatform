@@ -92,11 +92,13 @@ export default class {
                     relation.links.push({
                         source: data.name.split(".")[0],
                         target: "私人",
+                        relation:"隐私"
                     });
                     if (data.problemTags.length == 0) {
                         relation.links.push({
                             source: data.name.split(".")[0],
                             target: "非面向问题类",
+                            relation:"问题归属"
                         });
                     } else {
                         for (let j in data.problemTags) {
@@ -104,6 +106,7 @@ export default class {
                             relation.links.push({
                                 source: data.name.split(".")[0],
                                 target: problem,
+                                relation:"问题归属"
                             });
                         }
                     }
@@ -128,11 +131,13 @@ export default class {
                     relation.links.push({
                         source: data.name.split(".")[0],
                         target: "公开",
+                        relation:"隐私"
                     });
                     if (data.problemTags.length == 0) {
                         relation.links.push({
                             source: data.name.split(".")[0],
                             target: "非面向问题类",
+                            relation:"问题归属"
                         });
                     } else {
                         for (let j in data.problemTags) {
@@ -140,6 +145,7 @@ export default class {
                             relation.links.push({
                                 source: data.name.split(".")[0],
                                 target: problem,
+                                relation:"问题归属"
                             });
                         }
                         for (let j in data.normalTags) {
@@ -147,6 +153,7 @@ export default class {
                             relation.links.push({
                                 source: data.name.split(".")[0],
                                 target: problem,
+                                relation:"问题归属"
                             });
                         }
                     }
@@ -165,11 +172,13 @@ export default class {
                     relation.links.push({
                         source: data.modelName,
                         target: "模型",
+                        relation:"类型"
                     });
                     for (let j in data.classifications) {
                         relation.links.push({
                             source: data.modelName,
                             target: data.classifications[j],
+                            relation:"归类"
                         });
 
                     }
@@ -204,6 +213,7 @@ export default class {
                             relation.links.push({
                                 source: acase.name+"案例",
                                 target: "案例",
+                                relation:"类型"
                             });
                         }
 
@@ -211,6 +221,7 @@ export default class {
                       relation.links.push({
                             source: acase.name+"案例",
                             target: data.name,
+                            relation:"问题归属"
                         });
                     }
 

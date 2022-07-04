@@ -10,13 +10,13 @@
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长三角模拟器汇聚了大量长江三角洲区域的地理模型和数据资源，用以揭示区域水循环及其内部驱动机理的水循环，阐明全球气候变化条件下区域环境演化规律，以及长三角城市化与人地关系相互作用的互动互馈机制的综合集成模型，实现区域灾害的快速响应与治理，服务于长三角高质量一体化发展国家战略。
         </p>
         <div class="login">
-          <el-input
+          <!-- <el-input
             v-model="input"
             type="password"
             placeholder="邮件地址"
             show-password
-          />
-          <el-button type="success">登录</el-button>
+          /> -->
+          <el-button style="margin-top: 3vh;width: 100%;" type="success">登录</el-button>
         </div>
       </div>
       <div class="merge-earth"></div>
@@ -129,9 +129,10 @@ const home1 = ref();
   /deep/ .login {
     display: flex;
     align-items: center;
+    width: 30vw;
     .el-button--success {
       font-size: 0.94vw;
-      width: 6.25vw;
+      // width: 6.25vw;
       height: 4.26vh;
     }
     .el-input__inner {
@@ -232,6 +233,7 @@ const home1 = ref();
   animation: show1 0.8s linear 1;
 }
 .hide_ani {
+  display: none;
   animation: hide1 0.8s linear forwards;
 }
 .earth {
@@ -246,9 +248,11 @@ const home1 = ref();
   0% {
     opacity: 0;
     transform: scale(0.9);
+    display: none;
     // transform: skew(30deg);
   }
   100% {
+    display: block;
     // -webkit-transform: scale3d(1, 1, 1);
     // transform: skew(0deg);
   }
@@ -261,6 +265,7 @@ const home1 = ref();
   100% {
     opacity: 0;
     transform: scale(0.9);
+    display: none;
   }
 }
 </style>

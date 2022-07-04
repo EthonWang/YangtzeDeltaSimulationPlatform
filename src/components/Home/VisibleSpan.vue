@@ -104,7 +104,7 @@ defineExpose({ scrollingSpan });
   width: 30%;
   position: absolute;
   left: calc(37% + 50px);
-  background-color: rgb(255, 255, 255);
+  background-color: rgba(255, 255, 255, 0.9);
   z-index: 5;
   color: rgb(0, 0, 0);
   top: calc(70% + 15px);
@@ -180,6 +180,7 @@ defineExpose({ scrollingSpan });
 .img {
   position: relative;
   left: 0;
+  opacity: 0.95;
   top: 0;
   width: auto;
   min-width: 98%;

@@ -45,6 +45,7 @@
     </template>
     <txt-editor :txtInfo="txtInfo"></txt-editor>
   </Modal>
+  <el-card class="recommend"></el-card>
 </template>
 
 <!--<script setup>-->
@@ -175,6 +176,20 @@ const store = useStore(); //vuex直接用store.commit
   top: 75px;
   left: 40px;
   z-index: 1000;
+}
+
+.recommend{
+  position: fixed;
+  right: 100px;
+  top: 100px;
+  width: 13vw;
+  height: 47vh;
+
+  border-radius: 4px;
+  border: 0px;
+background: #c0c0c0;
+box-shadow: inset 4px 4px 7px #474747,
+            inset -4px -4px 7px #ffffff !important;
 }
 </style>
 

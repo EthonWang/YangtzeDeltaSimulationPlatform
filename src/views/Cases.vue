@@ -41,10 +41,13 @@ const store = useStore(); //vuex直接用store.commit
   position: absolute;
   top: 7.46vh;
   left: 8px;
-  height: calc(100% - $top);
+  height: calc(100vh - $top);
   width: calc(100% - $left);
   background-color: white;
   overflow-x: hidden;
+}
+.about{
+  overflow: hidden;
 }
 </style>
 

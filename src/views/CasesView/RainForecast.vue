@@ -110,7 +110,8 @@ import MapboxLanguage from '@mapbox/mapbox-gl-language'
 // mapboxgl.setRTLTextPlugin("https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.1.0/mapbox-gl-rtl-text.js");
 
 import * as echarts from "echarts";
-import axios from "axios";
+// import axios from "axios";
+import {post} from "@/request/request";
 
 var map = null
 
@@ -275,13 +276,12 @@ export default {
 
     //降雨地区排行数据获取
     getSortRainfallByDistrict() {
-      axios
-          .post("/back/dashboard/sortRainfallByDistrict", {
+       post("/dashboard/sortRainfallByDistrict", {
             "count": 10,
             "isAsc": -1
           })
           .then((res) => {
-            let data = res.data.data
+            let data = res.data
             let name = []
             let rain = []
             data.forEach((item, index, array) => {
@@ -357,13 +357,12 @@ export default {
 
     //部分地区降雨预测数据获取
     getDailyRainfallByDistrict() {
-      axios
-          .post("/back/dashboard/getDailyRainfallByDistrict", {
+      post("/dashboard/getDailyRainfallByDistrict", {
             "count": 10,
             "isAsc": -1
           })
           .then((res) => {
-            let rainData = res.data.data
+            let rainData = res.data
             let name = []
             Object.keys(rainData).forEach(key => {
               name.push(key)

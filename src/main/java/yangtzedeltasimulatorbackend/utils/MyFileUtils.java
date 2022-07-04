@@ -50,4 +50,38 @@ public class MyFileUtils {
         }
     }
 
+    /**
+     * 创建文件，如果存在的话就先删除再创建
+     * @param file
+     * @return boolean
+     * @Author bin
+     **/
+    public static boolean mkFile(File file){
+        try {
+            if (file.exists()) {
+                // 如果文件存在
+                // 判断该文件的md5值
+                // 如果一样的话就不用再重复上传了
+                // 不一样的话就删除文件再上传
+                // 这个策略不知道有没有必要，因为上传的速度本来就很快了
+                // if (md5.equals(getFileMd5(localFile)))
+                //     return true;
+                boolean delete = file.delete();
+                if (!delete) {
+                    log.error("Delete exist file \"{}\" failed!!!", file.getPath(), new Exception("Delete exist file \"" + file.getPath() + "\" failed!!!"));
+                    return false;
+                }
+            }
+            // 如果文件不存在，则创建新的文件
+            // 保证这个文件的父文件夹必须要存在
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+            file.createNewFile();
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
+
 }

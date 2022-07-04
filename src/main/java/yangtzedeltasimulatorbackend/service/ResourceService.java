@@ -1,30 +1,33 @@
 package yangtzedeltasimulatorbackend.service;
 
-import ch.qos.logback.classic.Logger;
-import cn.hutool.core.io.FileTypeUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.IdUtil;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.core.util.ZipUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import yangtzedeltasimulatorbackend.dao.DataItemDao;
-import yangtzedeltasimulatorbackend.dao.FolderDao;
-import yangtzedeltasimulatorbackend.entity.dto.DataItemDTO;
-import yangtzedeltasimulatorbackend.entity.po.DataItem;
+import yangtzedeltasimulatorbackend.dao.ResourceDataDao;
+import yangtzedeltasimulatorbackend.dao.ResourceSmallFileDao;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
+import yangtzedeltasimulatorbackend.entity.dto.PageDTO;
+import yangtzedeltasimulatorbackend.entity.dto.resource.CreateResourceDataDTO;
+import yangtzedeltasimulatorbackend.entity.dto.resource.CreateResourceSmallFileDTO;
+import yangtzedeltasimulatorbackend.entity.dto.resource.ResourceDataPageDTO;
+import yangtzedeltasimulatorbackend.entity.po.DataItem;
 import yangtzedeltasimulatorbackend.entity.po.Folder;
-import yangtzedeltasimulatorbackend.utils.MyFileUtils;
+import yangtzedeltasimulatorbackend.entity.po.ResourceData;
+import yangtzedeltasimulatorbackend.entity.po.ResourceSmallFile;
+import yangtzedeltasimulatorbackend.utils.GeoServerUtils;
 import yangtzedeltasimulatorbackend.utils.ResultUtils;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.ArrayList;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,171 +40,186 @@ import java.util.Optional;
 @Service
 public class ResourceService {
 
-    @Autowired
-    DataItemDao dataItemDao;
+    @Value("${dataStoreDir}"+"/resourceData")
+    private  String resourceDataFolder;
+
+    @Value("${dataStoreDir}")
+    private  String dataStoreDir;
+
+    @Value("${bigFileUploadDir}")
+    String bigFileUploadDir;
+
+    @Value("${geoserverUrl}")
+    String geoserverUrl;
 
     @Autowired
-    FolderDao folderDao;
+    ResourceDataDao resourceDataDao;
 
-    @Value("${dataStoreDir}"+"/data")
-    private  String dataFolder;
+    @Autowired
+    ResourceSmallFileDao resourceSmallFileDao ;
 
-    public JsonResult saveDataItem(DataItemDTO dataItemDTO,String userEmail) {
+    @Autowired
+    CommonService commonService;
 
+    public JsonResult saveResourceData(CreateResourceDataDTO createResourceDataDTO, MultipartFile visualFile, MultipartFile imgFile) {
         try{
-            MultipartFile upFile=dataItemDTO.getMultipartFile();
-            if (upFile.isEmpty()) {
-                return ResultUtils.error("file is empty!!!");
-            }
-
-            DataItem dataItem=new DataItem();
-            BeanUtils.copyProperties(dataItemDTO,dataItem,"multipartFile");
-
-
-            File folder = new File(dataFolder);
+            File folder = new File(resourceDataFolder);
             if (!folder.isDirectory()) {
                 folder.mkdirs();
             }
 
+            ResourceData resourceData= new ResourceData();
+            BeanUtils.copyProperties(createResourceDataDTO,resourceData);
+
+            //大文件
+            String srcFilePath=bigFileUploadDir+"/"+createResourceDataDTO.getFileStoreName();
+            FileUtil.copy(srcFilePath,resourceDataFolder,true);
+            resourceData.setFileWebAddress("/store/resourceData/"+createResourceDataDTO.getFileStoreName());
+            resourceData.setFileRelativePath("/resourceData/"+createResourceDataDTO.getFileStoreName());
+            FileUtil.del(srcFilePath); //删除大文件临时存在的位置
+
+            if("tif".equals(resourceData.getVisualType())){
+                ZipUtil.unzip(resourceDataFolder+"/"+createResourceDataDTO.getFileStoreName(),resourceDataFolder);
+                String unzipTif=resourceDataFolder+"/"+FileUtil.mainName(createResourceDataDTO.getFileOriginName())+".tif";
+                GeoServerUtils.PublishTiff("yangtzeRiver",resourceData.getName(),unzipTif);
+                String geoServerUrl= MessageFormat.format("{0}/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A{1}&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857" +
+                        "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl,resourceData.getName());
+                resourceData.setVisualWebAddress(geoServerUrl);
+                FileUtil.del(unzipTif); //删除tif解压后的文件
+            }
+
+            //可视化文件
+            if (visualFile!=null&&!visualFile.isEmpty()) {
+                //将文件保存到指定位置
+                String visualFileName = visualFile.getOriginalFilename(); //eg: XXX.js
+                String visualFileMainName= FileNameUtil.mainName(visualFileName); // XXX
+                String visualFileExtName = FileNameUtil.extName(visualFileName); //js
+                String fileNewName=IdUtil.objectId()+"."+visualFileExtName;
+                File saveVisualFile = new File(folder, fileNewName);//eg: E:\\TEMP\\1231231.js
+                visualFile.transferTo(saveVisualFile);
+                resourceData.setVisualStoreName(fileNewName);
+                resourceData.setVisualWebAddress("/store/resourceData/"+fileNewName);
+                resourceData.setVisualRelativePath("/resourceData/"+fileNewName);
+            }
+
+
+            //图像
+            if (imgFile.isEmpty()) {
+                resourceData.setImgWebAddress("");
+            }else {
+                //将文件保存到指定位置
+                String imgFileName = imgFile.getOriginalFilename(); //eg: XXX.js
+                String imgFileMainName= FileNameUtil.mainName(imgFileName); // XXX
+                String imgFileExtName = FileNameUtil.extName(imgFileName); //js
+                String imgFileNewName=IdUtil.objectId()+"."+imgFileExtName;
+                File saveImgFile = new File(folder, imgFileNewName);//eg: E:\\TEMP\\1231231.js
+                imgFile.transferTo(saveImgFile);
+                resourceData.setImgStoreName(imgFileNewName);
+                resourceData.setImgWebAddress("/store/resourceData/"+imgFileNewName);
+                resourceData.setImgRelativePath("/resourceData/"+imgFileNewName);
+            }
+
+            resourceData.setUserEmail("temp@xx.com");
+            resourceDataDao.save(resourceData);
+
+            return ResultUtils.success("保存资源数据成功！");
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("保存资源数据失败！");
+        }
+    }
+
+    public JsonResult getResourceDataList(ResourceDataPageDTO resourceDataPageDTO) {
+        try{
+            Pageable pageable = commonService.getPageable(resourceDataPageDTO);
+            String tagClass= resourceDataPageDTO.getTagClass();
+
+            if(tagClass.equals("problemTags")){
+                Page<ResourceData> re = resourceDataDao.findAllByNameLikeIgnoreCaseAndProblemTagsLikeIgnoreCase(resourceDataPageDTO.getSearchText(),resourceDataPageDTO.getTagName(),pageable);
+                return ResultUtils.success(re);
+            }else if(tagClass.equals("normalTags")){
+                Page<ResourceData> re = resourceDataDao.findAllByNameLikeIgnoreCaseAndNormalTagsLikeIgnoreCase(resourceDataPageDTO.getSearchText(),resourceDataPageDTO.getTagName(),pageable);
+                return ResultUtils.success(re);
+            }else {
+                return ResultUtils.error("数据类别不正确，problemTags或normalTags");
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("保存资源数据失败！");
+        }
+    }
+
+
+    public JsonResult deleteResourceData(String resourceDataId) {
+        try{
+            ResourceData resourceData = resourceDataDao.findById(resourceDataId).get();
+
+            String filePath=resourceDataFolder+"/"+resourceData.getFileStoreName();
+            FileUtil.del(filePath);
+
+            String visualFilePath=resourceDataFolder+"/"+resourceData.getVisualStoreName();
+            FileUtil.del(visualFilePath);
+
+            String imgFilePath=resourceDataFolder+"/"+resourceData.getImgStoreName();
+            FileUtil.del(imgFilePath);
+
+            resourceDataDao.deleteById(resourceDataId);
+            return ResultUtils.success("删除资源数据成功！");
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("删除资源数据失败！");
+        }
+    }
+
+    public JsonResult saveResourceSmallFile(CreateResourceSmallFileDTO createResourceSmallFileDTO, MultipartFile upSmallFile) {
+        try{
+            File folder = new File(resourceDataFolder);
+            if (!folder.isDirectory()) {
+                folder.mkdirs();
+            }
+
+            ResourceSmallFile resourceSmallFile=new ResourceSmallFile();
+            BeanUtils.copyProperties(createResourceSmallFileDTO,resourceSmallFile);
+
+            //可视化文件
+            if (upSmallFile.isEmpty()) {
+                return ResultUtils.error("上传文件为空");
+            }
+
             //将文件保存到指定位置
-            String fileName = upFile.getOriginalFilename(); //eg: XXX.js
+            String fileName = upSmallFile.getOriginalFilename(); //eg: XXX.js
             String fileMainName= FileNameUtil.mainName(fileName); // XXX
             String fileExtName = FileNameUtil.extName(fileName); //js
-            String fileNewName=fileMainName+IdUtil.objectId()+"."+fileExtName;
-            File saveFile = new File(folder, fileNewName);//eg: E:\\TEMP\\XXX1231231.js
+            String fileNewName=IdUtil.objectId()+"."+fileExtName;
+            File saveVisualFile = new File(folder, fileNewName);//eg: E:\\TEMP\\1231231.js
 
-            upFile.transferTo(saveFile);
+            upSmallFile.transferTo(saveVisualFile);
+            resourceSmallFile.setFileStoreName(fileNewName);
+            resourceSmallFile.setFileWebAddress("/store/resourceData/"+fileNewName);
 
-            dataItem.setUserEmail(userEmail);
-            dataItem.setFilePath("/"+fileNewName);
-            dataItem.setType(FileTypeUtil.getType(saveFile));
-            dataItem.setSize(String.format("%.3f",saveFile.length() / 1048576.0) + " MB");
+            resourceSmallFile.setUserEmail("temp@xx.com");
+            resourceSmallFileDao.save(resourceSmallFile);
 
-
-            dataItemDao.save(dataItem);
-            return ResultUtils.success("上传文件成功");
+            return ResultUtils.success("保存资源小文件成功！");
         }catch (Exception e){
             log.error(e.getMessage());
-            return ResultUtils.error("上传文件失败");
-        }
-
-    }
-
-    public JsonResult getDataItemList() {
-        return ResultUtils.success();
-    }
-
-    public JsonResult createFolder(Folder folder, String userEmail) {
-        try{
-            folder.setUserEmail(userEmail);
-            folderDao.save(folder);
-            return ResultUtils.success("创建文件夹成功");
-        }catch (Exception e){
-            log.error(e.getMessage());
-            return ResultUtils.error("创建文件夹失败");
+            return ResultUtils.error("保存资源小文件失败！");
         }
     }
 
-    public JsonResult getUserResource(String parentId, String userEmail) {
+    public JsonResult deleteResourceSmallFile(String resourceSmallFileId) {
         try{
 
-            JSONArray jsonArray=new JSONArray();
+            ResourceSmallFile resourceSmallFile=resourceSmallFileDao.findById(resourceSmallFileId).get();
 
-            //第一级目录的parentId是用户的id
-//            List<Folder> folders = folderDao.findAllByUserEmailAndParentId(userEmail, parentId);
-            List<Folder> folders = folderDao.findAllByParentId(parentId);
-            for(int i=0;i<folders.size();i++){
-                jsonArray.add(folders.get(i));
-            }
+            String filePath=resourceDataFolder+"/"+resourceSmallFile.getFileStoreName();
+            FileUtil.del(filePath);
 
-//            List<DataItem> dataItems=dataItemDao.findAllByUserEmailAndParentId(userEmail,parentId);
-            List<Folder> dataItems = dataItemDao.findAllByParentId(parentId);
-            for(int i=0;i<dataItems.size();i++){
-                jsonArray.add(dataItems.get(i));
-            }
-
-            return ResultUtils.success(jsonArray);
+            resourceDataDao.deleteById(resourceSmallFileId);
+            return ResultUtils.success("删除资源小文件成功！");
         }catch (Exception e){
             log.error(e.getMessage());
-            return ResultUtils.error("查询用户文件资源失败");
-        }
-    }
-
-    public JsonResult deleteFolder(String folderId, String userEmail) {
-        try{
-            if(deleteFolderCascade(folderId)){
-                return ResultUtils.success("删除文件夹成功");
-            }else {
-                return ResultUtils.error("删除文件夹失败");
-            }
-        }catch (Exception e){
-            log.error(e.getMessage());
-            return ResultUtils.error("删除文件夹失败");
-        }
-    }
-
-    //递归
-    public boolean deleteFolderCascade(String folderId) {
-        try {
-            folderDao.deleteById(folderId);
-            dataItemDao.deleteAllByParentId(folderId);
-            List<Folder> childFolders = folderDao.findAllByParentId(folderId);
-            for (int i = 0; i < childFolders.size(); i++) {
-                return deleteFolderCascade(childFolders.get(i).getId());
-            }
-            return true;
-        }catch (Exception e){
-            log.error(e.getMessage());
-            return false;
-        }
-    }
-
-    //循环
-    public boolean deleteFolderCascade2(String folderId) {
-        try {
-            JSONArray deleteFolders=new JSONArray();
-            deleteFolders.add(folderId);
-            for(int i=0;i<deleteFolders.size();i++){
-                folderDao.deleteById(deleteFolders.getString(i));
-                dataItemDao.deleteAllByParentId(deleteFolders.getString(i));
-                List<Folder> childFolders = folderDao.findAllByParentId(deleteFolders.getString(i));
-                deleteFolders.addAll(childFolders);
-            }
-            return true;
-        }catch (Exception e){
-            log.error(e.getMessage());
-            return false;
-        }
-    }
-
-    public JsonResult deleteDataItem(String dataItemId) {
-        try{
-            Optional<DataItem> dataItemDB=dataItemDao.findById(dataItemId);
-            DataItem dataItem=dataItemDB.get();
-
-            File file=new File(dataFolder,dataItem.getFilePath());
-            if(file.exists()){
-                file.delete();
-            }
-
-            dataItemDao.deleteById(dataItemId);
-
-            return ResultUtils.success("删除数据成功");
-        }catch (Exception e){
-            log.error(e.getMessage());
-            return ResultUtils.error("删除数据失败");
-        }
-    }
-
-    public void downloadDataItem(String dataItemId, HttpServletResponse response) {
-        try{
-            DataItem dataItem=dataItemDao.findById(dataItemId).get();
-            String dataPath=dataItem.getFilePath();
-            File file=new File(dataFolder,dataPath);
-            MyFileUtils.downloadFile(file,response);
-
-        }catch (Exception e){
-            log.error(e.getMessage());
+            return ResultUtils.error("删除资源小文件失败！");
         }
     }
 

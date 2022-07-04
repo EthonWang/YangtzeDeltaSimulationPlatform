@@ -74,7 +74,7 @@ public class ModelController {
 
 
     @ApiOperation(value = "获取模型列表")
-    @PostMapping ("/getModelItemList")
+    @GetMapping ("/getModelItemList")
     public JsonResult getModelItemList(){
         return modelItemService.getModelItemList();
     }

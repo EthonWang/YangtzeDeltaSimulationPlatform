@@ -57,9 +57,12 @@ const user_info = JSON.parse(localStorage.getItem("userInfo"));
 // const dataapi=new dataApi()
 
 const graphapi = new graphAPI();
-graphapi.initGraph(user_info.id).then((res) => {
+if(user_info!=undefined){
+  graphapi.initGraph(user_info.id).then((res) => {
   console.log(graphapi.giveRecommend(["公开"]));
 });
+
+}
 
 const props = defineProps({
   background_show: ref(Boolean),

@@ -81,13 +81,18 @@ watch(
   (newval, oldval) => {
     console.log(newval);
     if (newval) {
-      document.getElementsByClassName("bg")[0].style.opacity = "0";
+      setTimeout(()=>{
+        document.getElementsByClassName("bg")[0].style.display = "none";
       document.getElementsByClassName("container")[0].style.background =
         "hsl(206, 100%, 42%)";
+      },200)
+      
     } else {
-      document.getElementsByClassName("bg")[0].style.opacity = "1";
+setTimeout(()=>{
+      document.getElementsByClassName("bg")[0].style.display = "block";
       document.getElementsByClassName("container")[0].style.background =
         "#24292f3b";
+        },500)
     }
   }
 );
@@ -144,7 +149,7 @@ const visibility = ref();
 .sunburst {
   position: absolute;
   right: 0px;
-  width: 900px;
+  width: 880px;
   height: $width;
   top: 7%;
   //   backdrop-filter: blur(3px);

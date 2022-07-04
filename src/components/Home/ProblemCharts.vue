@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div ref="earthchart" class="img1" style="width: 100%; height: 100%"></div>
+    <div ref="earthchart1" style="width: 100%; height: 100%"></div>
   </div>
 </template>
 
@@ -11,19 +11,19 @@ import { sciencePro } from "@/assets/data/home/sciencePro.js";
 // import 'echarts-gl';
 
 const emit = defineEmits(["sendProblem"]);
-const earthchart = ref();
+const earthchart1 = ref();
 
 const sendProblemToFather = (name, path, des) => {
   emit("sendProblem", name, path, des);
 };
 
-onMounted(() => {
-  init();
-});
+
+  setTimeout(()=>{init();},5000)
+  
+
 function init() {
-  console.log(12589);
   // 基于准备好的dom，初始化echarts实例
-  const myChart = echarts.init(earthchart.value);
+  const myChart = echarts.init(earthchart1.value);
   // 指定图表的配置项和数据
   const colors = [
     "hsl(221, 100%, 25%)",

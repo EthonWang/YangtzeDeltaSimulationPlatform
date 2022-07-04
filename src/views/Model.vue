@@ -45,7 +45,52 @@
     </template>
     <txt-editor :txtInfo="txtInfo"></txt-editor>
   </Modal>
-  <el-card class="recommend"></el-card>
+  <!-- <el-card class="recommend">
+    <div
+      class="card-header"
+      style="margin-top: 4%; font-size: 25px; font-weight: 600"
+    >
+      <span>推荐数据</span>
+    </div>
+    <el-divider
+      style="width: 100%; border-color: black !important"
+    ></el-divider>
+    <div
+      class="recommend_item"
+      style=""
+      v-for="data in dataRecommend"
+      :key="data"
+    >
+      {{ data.name }}
+    </div>
+  </el-card> -->
+
+  <el-button
+    size="small"
+    @click="showRecommend"
+    style="position: absolute; right: 50px; top: 8vh"
+    ><span v-if="recommendList">收起</span> <span v-else>展开</span
+    ><strong style="color: hsl(200, 100%, 45%)">数据推荐</strong>
+  </el-button>
+  <div class="levels">
+    <div
+      class="level"
+      v-for="data in dataRecommend"
+      :key="data"
+      @click="recommendShow(data)"
+    >
+      <div class="content">{{ data.name }}</div>
+    </div>
+  </div>
+  <el-dialog v-model="recommendVisible" title="推荐数据" width="30%">
+    <span>{{ recommendShowOne.name }}</span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="recommendVisible = false">取消</el-button>
+        <el-button type="primary" @click="addtoLab()">加入本实验</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <!--<script setup>-->
@@ -60,6 +105,8 @@ import Cesium from "../components/cesium/cesium.vue";
 import chartTemplate from "../components/chartPlugin/chartTemplate.vue";
 // import ModelTree from "components/App/ModelTree";
 import txtEditor from "../components/Mapbox/labUtils/wangEditorBox.vue";
+import taskApi from "@/api/user/task";
+
 export default {
   components: {
     // ModelTree,
@@ -70,6 +117,112 @@ export default {
   },
   data() {
     return {
+      task_api: new taskApi(),
+      recommendShowOne: {},
+      recommendList: true,
+      recommendVisible: false,
+      dataRecommend: reactive([
+        {
+          name: "长三角DEM数据.jpgdfdfdf",
+          createTime: "2022-06-27 17:12:02",
+          description: "lianshui_tmpdc",
+          fileRelativePath:
+            "/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
+          fileSize: "180751",
+          fileStoreName: "c33bc621-ba01-410a-8799-f36f9f54b859.txt",
+          fileWebAddress:
+            "/store/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
+          geoType: "circle",
+          id: "62b974624aa65fa32ff1be791",
+          imgRelativePath: "/resourceData/62b974624aa65fa32ff1be7a.png",
+          imgStoreName: "62b974624aa65fa32ff1be7a.png",
+          imgWebAddress: "/store/resourceData/62b974624aa65fa32ff1be7a.png",
+          normalTags: "水文",
+          problemTags: "流域水循环及其驱动机制,全球变化与区域环境演化",
+          publicBoolean: true,
+          type: "data",
+          userEmail: "temp@xx.com",
+          visualRelativePath: "",
+          visualType: "txt",
+          visualWebAddress: "",
+          visualizationBoolean: false,
+        },
+        {
+          name: "长三角区划数据",
+          createTime: "2022-06-27 17:12:02",
+          description: "lianshui_tmpdc",
+          fileRelativePath:
+            "/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
+          fileSize: "180751",
+          fileStoreName: "c33bc621-ba01-410a-8799-f36f9f54b859.txt",
+          fileWebAddress:
+            "/store/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
+          geoType: "circle",
+          id: "62b974624aa65fa32ff1be79581",
+          imgRelativePath: "/resourceData/62b974624aa65fa32ff1be7a.png",
+          imgStoreName: "62b974624aa65fa32ff1be7a.png",
+          imgWebAddress: "/store/resourceData/62b974624aa65fa32ff1be7a.png",
+          normalTags: "水文",
+          problemTags: "流域水循环及其驱动机制,全球变化与区域环境演化",
+          publicBoolean: true,
+          type: "data",
+          userEmail: "temp@xx.com",
+          visualRelativePath: "",
+          visualType: "txt",
+          visualWebAddress: "",
+          visualizationBoolean: false,
+        },
+        {
+          name: "上海市信令大数据",
+          createTime: "2022-06-27 17:12:02",
+          description: "lianshui_tmpdc",
+          fileRelativePath:
+            "/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
+          fileSize: "180751",
+          fileStoreName: "c33bc621-ba01-410a-8799-f36f9f54b859.txt",
+          fileWebAddress:
+            "/store/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
+          geoType: "circle",
+          id: "62b974624aa65fa32ff411be791",
+          imgRelativePath: "/resourceData/62b974624aa65fa32ff1be7a.png",
+          imgStoreName: "62b974624aa65fa32ff1be7a.png",
+          imgWebAddress: "/store/resourceData/62b974624aa65fa32ff1be7a.png",
+          normalTags: "水文",
+          problemTags: "流域水循环及其驱动机制,全球变化与区域环境演化",
+          publicBoolean: true,
+          type: "data",
+          userEmail: "temp@xx.com",
+          visualRelativePath: "",
+          visualType: "txt",
+          visualWebAddress: "",
+          visualizationBoolean: false,
+        },
+        {
+          name: "南京市社交大数据",
+          createTime: "2022-06-27 17:12:02",
+          description: "lianshui_tmpdc",
+          fileRelativePath:
+            "/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
+          fileSize: "180751",
+          fileStoreName: "c33bc621-ba01-410a-8799-f36f9f54b859.txt",
+          fileWebAddress:
+            "/store/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
+          geoType: "circle",
+          id: "62b974624aa65f74a32ff1be791",
+          imgRelativePath: "/resourceData/62b974624aa65fa32ff1be7a.png",
+          imgStoreName: "62b974624aa65fa32ff1be7a.png",
+          imgWebAddress: "/store/resourceData/62b974624aa65fa32ff1be7a.png",
+          normalTags: "水文",
+          problemTags: "流域水循环及其驱动机制,全球变化与区域环境演化",
+          publicBoolean: true,
+          type: "data",
+          userEmail: "temp@xx.com",
+          visualRelativePath: "",
+          visualType: "txt",
+          visualWebAddress: "",
+          visualizationBoolean: false,
+        },
+      ]),
       res_list: JSON.parse(localStorage.getItem("task")).dataList,
       mapType: "mapBox",
       //使用mapbox-view组件需要传递的参数
@@ -96,6 +249,55 @@ export default {
   },
 
   methods: {
+    recommendShow(data) {
+      this.recommendVisible = true;
+      this.recommendShowOne = data;
+    },
+    showRecommend() {
+      let dom = document.getElementsByClassName("level");
+
+      if (this.recommendList) {
+        document.getElementsByClassName("levels")[0].style.pointerEvents =
+          "none";
+        // document.getElementsByClassName("level")[0].style.opacity="0.5"
+        for (
+          let i = 0;
+          i < document.getElementsByClassName("level").length;
+          i++
+        ) {
+          if (i == 0) {
+            continue;
+          }
+          let ele = document.getElementsByClassName("level")[i];
+          ele.style.marginTop = "-50px";
+          ele.style.opacity = "0.75";
+        }
+      } else {
+        document.getElementsByClassName("levels")[0].style.pointerEvents =
+          "auto";
+        // document.getElementsByClassName("level")[0].style.opacity="0.95"
+        for (
+          let i = 0;
+          i < document.getElementsByClassName("level").length;
+          i++
+        ) {
+          if (i == 0) {
+            continue;
+          }
+          let ele = document.getElementsByClassName("level")[i];
+          ele.style.marginTop = "-25px";
+          ele.style.opacity = "0.95";
+        }
+      }
+
+      this.recommendList = !this.recommendList;
+    },
+    addtoLab() {
+      let newTask = JSON.parse(localStorage.getItem("task"));
+      newTask.dataList.push(this.recommendShowOne);
+      localStorage.setItem("task", JSON.stringify(newTask));
+      this.recommendVisible = false;
+    },
     switchMap() {
       if (this.mapType == "mapBox") {
         this.mapType = "cesium";
@@ -178,18 +380,125 @@ const store = useStore(); //vuex直接用store.commit
   z-index: 1000;
 }
 
-.recommend{
+.recommend {
   position: fixed;
   right: 100px;
   top: 100px;
   width: 13vw;
-  height: 47vh;
-
-  border-radius: 4px;
-  border: 0px;
-background: #c0c0c0;
-box-shadow: inset 4px 4px 7px #474747,
-            inset -4px -4px 7px #ffffff !important;
+  height: fit-content;
+  text-align: center;
+  padding: 10px;
+  border-radius: 10px;
+  border: 0px !important;
+  background: #e7e7e7;
+  box-shadow: inset 3px 3px 3px #474747, inset -4px -4px 3px #ffffff !important;
+  .recommend_item {
+    text-align: center;
+    margin: 0;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+    padding: 10px;
+    &:hover {
+      background: #474747;
+      color: #e7e7e7;
+    }
+  }
 }
 </style>
+<style lang="css">
+:root {
+  --fontColor: #ffffff;
+  --one1: #bd7be8;
+  --one2: #8063e1;
+  --two1: #7f94fc;
+  --two2: #3f58e3;
+  --three1: #21bbfe;
+  --three2: #2c6fd1;
+  --four1: #415197;
+  --four2: #352f64;
+  --levelShadow: #22325480;
+}
+.levels {
+  position: absolute;
+  top: 15%;
+  right: 3%;
+  margin-left: -140px;
+  margin-top: 0px;
+  transform-style: preserve-3d;
+  user-select: none;
+}
+.levels .level {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  justify-items: center;
+  width: 140px;
+  min-height: 55px;
+  padding: 5%;
+  border-radius: 5px;
+  color: var(--fontColor);
+  cursor: pointer;
+  transition: all 0.4s ease;
+  transform: rotateX(45deg) rotateY(-15deg) rotate(25deg);
+  opacity: 0.95;
+  margin-top: -25px;
+}
+.levels .level:nth-child(4n + 1) {
+  background: linear-gradient(135deg, var(--one1), var(--one2));
+  box-shadow: 20px 20px 60px var(--levelShadow), 1px 1px 0px 1px var(--one2);
+  z-index: 4;
+}
+.levels .level:nth-child(4n + 2) {
+  background: linear-gradient(135deg, var(--two1), var(--two2));
+  box-shadow: 20px 20px 60px var(--levelShadow), 1px 1px 0px 1px var(--two2);
+  z-index: 3;
+}
+.levels .level:nth-child(4n + 3) {
+  background-image: linear-gradient(135deg, var(--three1), var(--three2));
+  box-shadow: 20px 20px 60px var(--levelShadow), 1px 1px 0px 1px var(--three2);
+  z-index: 2;
+}
+.levels .level:nth-child(4n + 4) {
+  background-image: linear-gradient(135deg, var(--four1), var(--four2));
+  box-shadow: 20px 20px 60px var(--levelShadow), 1px 1px 0px 1px var(--four2);
+  z-index: 1;
+}
+.levels .level .title {
+  position: absolute;
+  top: 8px;
+  font-weight: 700;
 
+  left: 15px;
+  font-size: 16px;
+}
+.levels .level .content {
+  /* position: absolute; */
+  /* top: 22px; */
+
+  /* left: 15px; */
+  font-size: 14px;
+  text-align: center;
+  font-weight: bold;
+}
+.levels .level:hover {
+  transform: rotateX(30deg) rotateY(0deg) rotate(0deg) translate(-30px, 10px);
+  z-index: 100;
+  opacity: 1;
+}
+.levels .level:hover:after {
+  transform: translateX(100%);
+  transition: all 1.2s ease-in-out;
+}
+/* .levels .level::after {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: translateX(-100%);
+  background: linear-gradient(60deg, rgba(255,255,255,0) 20%, rgba(255,255,255,0.1), rgba(255,255,255,0) 80%);
+} */
+</style>

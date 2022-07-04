@@ -1,4 +1,4 @@
- <template>
+<template>
   <div class="container">
     <span
       class="bg"
@@ -59,7 +59,7 @@ const user_info = JSON.parse(localStorage.getItem("userInfo"));
 const graphapi = new graphAPI();
 if(user_info!=undefined){
   graphapi.initGraph(user_info.id).then((res) => {
-  console.log(graphapi.giveRecommend(["公开"]));
+  console.log("推薦",graphapi.giveRecommend(["公开"]));
 });
 
 }

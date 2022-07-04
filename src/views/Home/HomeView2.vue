@@ -2,7 +2,7 @@
   <div style="position: relative; display: flex" class="home2">
     <img src="../../assets/problem_small.png" alt="" class="img-pro" />
     <ProblemCharts
-      :class="{ hide_ani: !props.show, show_ani: props.show }"
+     
       class="sunburst"
       @sendProblem="recieveProblem"
     ></ProblemCharts>

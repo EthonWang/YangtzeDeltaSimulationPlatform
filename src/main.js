@@ -14,7 +14,6 @@ import uploader from 'vue-simple-uploader';
 
 
 
-
 const app = createApp(App);
 app.use(ElementPlus);
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
@@ -29,3 +28,4 @@ app.use(dragMove); // 窗口拖动
 // app.use(dragResize); // 窗口缩放
 
 app.use(dataV)
+

@@ -17,6 +17,21 @@ export const cases_config = [
         description:" 长三角降雨预报专题",
         component:() => import( "views/CasesView/RainForecast.vue")
     },
+    {
+        problem:"长三角区域创新专题",
+        path: "RegionInnovation",
+        component:() => import("views/CasesView/RegionInnovation.vue")
+    },
+    {
+        problem:"长三角科学创新空间",
+        path: "ScientificInnovation",
+        component:() => import("views/CasesView/ScientificInnovation.vue")
+    },
+    {
+        problem:"长三角工业创新环境",
+        path: "IndustrialInnovation",
+        component:() => import("views/CasesView/IndustrialInnovation.vue")
+    }
     // {
     //     problem:"湖泊水环境监测",
     //     name:"滇池模型-富营养化水质参数",

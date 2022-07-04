@@ -1,6 +1,8 @@
 package yangtzedeltasimulatorbackend;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileReader;
+import cn.hutool.core.util.ZipUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +18,16 @@ import org.springframework.web.multipart.MultipartFile;
 import yangtzedeltasimulatorbackend.dao.ModelItemDao;
 import yangtzedeltasimulatorbackend.dao.QuestionDao;
 import yangtzedeltasimulatorbackend.entity.po.QuestionItem;
+import yangtzedeltasimulatorbackend.service.LabTaskService;
+import yangtzedeltasimulatorbackend.utils.GeoServerUtils;
 import yangtzedeltasimulatorbackend.utils.Utils;
 
 import java.io.*;
+import java.lang.reflect.Member;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Paths;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -125,6 +134,7 @@ class YangtzeDeltaSimulatorBackendApplicationTests {
         BufferedWriter out = new BufferedWriter(new FileWriter(dataConfigPath));
         out.write(JSONObject.toJSONString(dataConfigJson));
         out.close();
+
     }
 
     @Test
@@ -154,13 +164,84 @@ class YangtzeDeltaSimulatorBackendApplicationTests {
 
     @Test
     void nothing(){
-        JSONArray deleteFolders=new JSONArray();
-        deleteFolders.add("00");
-        List<String> t=new ArrayList<>();
-        t.add("1");
-        t.add("2");
-        t.add("3");
-        deleteFolders.addAll(t);
+        FileUtil.del("D://aaa.txt");
+    }
+
+    @Test
+    void del(){
+        String a="1";
+        String b="2";
+        String c="2";
+
+        List<String> list=new ArrayList<>();
+        list.add(a);
+
+
+    }
+
+    @Test
+    void execTest(){
+        Process proc;
+
+//        String pyName="test.py";
+//        String scriptsDir=ClassLoader.getSystemResource("static/myScripts/").getPath().substring(1);
+//        String pyPath=scriptsDir+pyName;
+//
+//        List<String> list1=new ArrayList<>();
+//        list1.add("python");
+//        list1.add(pyPath);
+//
+//        List<String> list=new ArrayList<>();
+//        list.add("3");
+//        list.add("4");
+//
+//        list1.addAll(list);
+//
+//        String []args=list1.toArray(new String[list1.size()]);
+//        String []args2={"5","6"};
+
+        try {
+//            String cmdString= MessageFormat.format("python {0}",pyPath);
+//            String cmdString2= "cmd /c python  E:/GitProject/YangtzeDeltaSimulatorBackend/target/classes/static/myScripts/test.py E:\\del\\aa.txt";
+            String cmdString3="cmd /c python E:/GitProject/YangtzeDeltaSimulatorBackend/target/classes/static/myScripts/GDAL_clip.py E:\\del\\YangtzeRiverDeltaBoundary_1983.shp E:\\del\\yangtzeRiver_landuse.tif E:\\del\\wwww.tif";
+
+            proc = Runtime.getRuntime().exec(cmdString3);// 执行py文件
+
+            //获取错误输入流
+            BufferedReader err = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+            String errLine = null;
+            while ((errLine = err.readLine()) != null) {
+                log.info("errStream: "+errLine);
+            }
+            err.close();
+
+            //获取正常输入流
+            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            String inLine = null;
+            while ((inLine = in.readLine()) != null) {
+                log.info("inputStream: "+inLine);
+            }
+            in.close();
+
+
+            int exitVal =proc.waitFor(); //返回值如果是0表示正常结束
+            System.out.println(exitVal);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());;
+        }
+    }
+
+    @Test
+    void file2Geoserver() throws MalformedURLException, FileNotFoundException {
+
+        GeoServerUtils.PublishTiff("yangtzeRiver","landuse_1983","E:\\TempWork\\javapyhton\\yangtzeRiver\\GDAL_test\\landuse_1983.tif");
+    }
+
+    @Test
+    void filezip(){
+//        File unzip = ZipUtil.unzip("E:\\del\\aaa\\aab4e3f3-d984-4fc8-a2a9-e25b617de2d5.zip","E:\\del\\aaa");
+        File file=new File("E:\\del\\aaa\\aab4e3f3-d984-4fc8-a2a9-e25b617de2d5.zip");
+        FileUtil.rename(file,"aaa",true,true);
     }
 
 

@@ -64,7 +64,8 @@ public class UserService {
                 return ResultUtils.error("密码错误");
             }
 
-            String token= TokenUtils.createToken(email);
+            String userId=userDB.get().getId();
+            String token= TokenUtils.createToken(userId);
             JSONObject userInfo = new JSONObject();
             userInfo.put("userId", loginUser.getEmail());
             userInfo.put("username", loginUser.getName());

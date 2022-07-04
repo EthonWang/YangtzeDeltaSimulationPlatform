@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.event.ListDataEvent;
 import javax.swing.text.StyledEditorKit;
 import java.util.List;
 
@@ -18,13 +19,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DataItemDTO {
-
-    MultipartFile multipartFile;
     String name;
-    String overview;
-    List<String> issueTags;
-    List<String> normalTags;
-    boolean isPrivate;
-    boolean isVisualization;
+    String description;
     String parentId;
+    boolean publicBoolean;
+    String problemTags;
 }

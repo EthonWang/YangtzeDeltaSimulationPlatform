@@ -14,9 +14,10 @@ import java.util.List;
  **/
 @Repository
 public interface DataItemDao extends MongoRepository<DataItem, String> {
-    List<DataItem> findAllByUserEmailAndParentId(String userEmail, String parentId);
 
     void deleteAllByParentId(String folderId);
 
-    List<Folder> findAllByParentId(String parentId);
+    List<DataItem> findAllByParentId(String parentId);
+
+    List<DataItem> findAllByUserId(String userId);
 }

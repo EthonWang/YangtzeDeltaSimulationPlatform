@@ -110,7 +110,17 @@ public class DashboardService {
 
             // System.out.println(properties);
 
-            String district = (String)properties.get(aggKey);
+            Object o = properties.get(aggKey);
+            String district = null;
+            if (o instanceof String){
+                district = (String)properties.get(aggKey);
+            } else {
+                continue;
+            }
+            if (district == null){
+                continue;
+            }
+//            String district = (String)properties.get(aggKey);
 
             if (districtMap.containsKey(district)){
                 // map中有该district了直接拿，没有put进去新的

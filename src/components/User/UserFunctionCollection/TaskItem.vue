@@ -80,13 +80,13 @@
       <el-divider></el-divider>
 
       <el-button
-      v-if="edit_task"
+      v-if="!edit_task"
         style="float: left; margin-right: 5px"
         @click="router.push('/user/data')"
         >选择并添加<strong>我的云端</strong>数据</el-button
       >
       <el-upload
-      v-if="edit_task"
+      v-if="!edit_task"
         style="float: left; margin-right: 5px"
         class="upload-demo"
         action=""
@@ -104,7 +104,7 @@
       </el-upload>
 
       <el-button
-      v-if="edit_task"
+      v-if="!edit_task"
         @click="router.push('/resourse')"
         style="float: left; margin-right: 5px"
         >选择并添加<strong>公共资源</strong></el-button

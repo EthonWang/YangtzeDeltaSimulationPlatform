@@ -261,7 +261,7 @@ h1 {
               <Radio label="fill" style="font-size: 14px">面</Radio>
             </RadioGroup>
           </FormItem>
-          <FormItem
+          <!-- <FormItem
             prop="visualFile"
             label="可视化文件上传"
             :label-width="150"
@@ -314,7 +314,7 @@ h1 {
                 </ul>
               </div>
             </div>
-          </FormItem>
+          </FormItem> -->
           <FormItem prop="image" label="资源封面" :label-width="150">
             <div class="inline_style">
               <div class="demo-upload-list" v-if="img != ''">
@@ -367,6 +367,7 @@ h1 {
 
 
 <script>
+import {useStore} from "vuex";
 import axios from "axios";
 import "./style.css";
 // import { get, post, del, put } from "@/axios";
@@ -374,6 +375,7 @@ import "./style.css";
 export default {
   data() {
     return {
+      dataServer: useStore().getters.devIpAddress,
       formInline: {
         resType: "data",
         workName: "",
@@ -470,7 +472,7 @@ export default {
       imageFile: null,
       createProjectInfo: {},
       uploaderOptions: {
-        target: "http://172.21.212.63:8999/fileTransfer/upload", //上传地址
+        target: "/back/fileTransfer/upload", //上传地址
         chunkSize: 5 * 1024 * 1024,
         testChunks: false,
         simultaneousUploads: 1,
@@ -601,13 +603,13 @@ export default {
         info.fileOriginName = this.formInline.fileOriginName;
 
         formData.append("imgFile", this.imageFile);
-        formData.append("visualFile", this.toUploadVisualFiles[0]);
+        // formData.append("visualFile", this.toUploadVisualFiles[0]);
         formData.append(
           "info",
           new Blob([JSON.stringify(info)], { type: "application/json" })
         );
         axios({
-          url: "http://172.21.212.63:8999/saveResourceData",
+          url: this.dataServer + "/saveResourceData",
           method: "post",
           //忽略contentType
           contentType: false,

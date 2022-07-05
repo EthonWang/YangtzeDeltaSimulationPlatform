@@ -53,6 +53,14 @@
           align="center"
           >{{ jsonData.description }}</el-descriptions-item
         >
+        <el-descriptions-item
+          label="数据列表"
+          label-align="center"
+          align="center"
+        >
+          <el-link v-for="(item, index) in jsonData.visualDataItems" :key="index" @click="showVisualDataItems(index)">{{ item.name }}</el-link>
+        </el-descriptions-item
+        >
       </el-descriptions>
     </el-scrollbar>
   </el-card>
@@ -60,6 +68,7 @@
 
 <script>
 import mapboxgl from "mapbox-gl";
+import {useStore} from "vuex"
 
 import { ElMessage } from "element-plus";
 import { ElNotification } from "element-plus";
@@ -107,6 +116,7 @@ export default {
       },
       newShpInfo: {},
       tagList: [],
+      dataServer: useStore().getters.devIpAddress,
     };
   },
   watch: {
@@ -121,7 +131,7 @@ export default {
         map.removeSource(this.newShpInfo.name + "_" + this.newShpInfo.id);
       }
       this.newShpInfo = value;
-      this.addLayerToMap(value);
+      this.addLayerToMap(value,0);
       console.log(map);
       map.flyTo({
         center: [119.5, 31.5],
@@ -202,10 +212,10 @@ export default {
 
       let that = this;
       setTimeout(function () {
-        that.addLayerToMap(that.newShpInfo);
+        that.addLayerToMap(that.newShpInfo,0);
       }, 1500);
     },
-    addLayerToMap(data) {
+    addLayerToMap(data, index) {
       this.tagList = [];
       let normalTags = this.newShpInfo.normalTags.split(",");
       let problemTags = this.newShpInfo.problemTags.split(",");
@@ -225,7 +235,7 @@ export default {
       ) {
         map.addSource(newShpInfo.name + "_" + newShpInfo.id, {
           type: "geojson",
-          data: "http://172.21.212.63:8999" + newShpInfo.visualWebAddress,
+          data: this.dataServer + newShpInfo.visualDataItems[0].visualWebAddress,
         });
         let newLayer = {
           id: newShpInfo.id,
@@ -241,7 +251,7 @@ export default {
       ) {
         map.addSource(newShpInfo.name + "_" + newShpInfo.id, {
           type: "raster",
-          tiles: [newShpInfo.visualWebAddress],
+          tiles: [newShpInfo.visualDataItems[index].visualWebAddress],
           tileSize: 256, // 切片的最小展示尺寸（可选，单位：像素，默认值为 512，即 1024/2）
         });
         let newLayer = {
@@ -265,6 +275,12 @@ export default {
           duration: 5000,
         });
       }
+    },
+    showVisualDataItems(index){
+      map.removeLayer(this.newShpInfo.id);
+      map.removeSource(this.newShpInfo.name + "_" + this.newShpInfo.id);
+      let value = this.newShpInfo;
+      this.addLayerToMap(value,index);
     },
   },
 };

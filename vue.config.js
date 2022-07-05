@@ -69,7 +69,7 @@ module.exports = {
         proxy: {
             // 配置跨域
             '/back': {
-                target: "http://172.21.212.63:8999",
+                target: "http://localhost:8999",
                 ws: true,
                 timeout: 3600000,
                 changOrigin: true,
@@ -78,7 +78,7 @@ module.exports = {
                 },
             },
             "/back_backup": {
-                target: "http://172.21.213.222:9999",
+                target: "http://172.21.213.248:9999",
                 ws: true,
                 timeout: 3600000,
                 changOrigin: true,
@@ -87,7 +87,7 @@ module.exports = {
                 },
             },
             "/back_data": {
-                target: "http://172.21.213.222:8999",
+                target: "http://172.21.213.248:8999",
                 ws: true,
                 timeout: 3600000,
                 changOrigin: true,

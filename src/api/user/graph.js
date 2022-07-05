@@ -12,13 +12,13 @@ export default class {
     giveRecommend(knownName = []) {
         this.weight = new Array(relation.nodes.length).fill(0)
         let sourceNodes = []
-        for (let i in knownName) {
+        for (let i=0; i< knownName.length;i++) {
             let firstNode = relation.nodes.findIndex((elment) => {
                 return elment.name == knownName[i]
             })
             sourceNodes.push(firstNode)
         }
-        for (let i in sourceNodes) {
+        for (let i=0;i< sourceNodes.length;i++) {
             let willVisit = new Array(relation.nodes.length).fill(true)
             let sourceNode = sourceNodes[i]
             let nextNodeList = []
@@ -32,12 +32,12 @@ export default class {
                     let outEdge = this.allOutDegreeEdge[node]
                     let inEdge = this.allInDegreeEdge[node]
 
-                    for (let j in inEdge) {
+                    for (let j=0;j<inEdge.length;j++) {
                         if (this.edgeNode[inEdge[j]][1] == -1 || this.edgeNode[inEdge[j]][0] == -1) { continue }
                         nextNodeList.push(this.edgeNode[inEdge[j]][0])
                         relation.nodes[this.edgeNode[inEdge[j]][1]].weight += nowWeight
                     }
-                    for (let j in outEdge) {
+                    for (let j=0;j<outEdge.length;j++) {
                         if (this.edgeNode[outEdge[j]][1] == -1 || this.edgeNode[outEdge[j]][0] == -1) { continue }
                         nextNodeList.push(this.edgeNode[outEdge[j]][1])
                         // console.log(relation.nodes[this.edgeNode[outEdge[j]][1]])
@@ -55,7 +55,7 @@ export default class {
         }
         relation.nodes.sort((a, b) => { return b.weight - a.weight })
         let output = []
-        for (let i in relation.nodes) {
+        for (let i=0;i<relation.nodes.length;i++) {
             if (output.length >= 5) { break }
             if ("type" in relation.nodes[i]) {
                 output.push(relation.nodes[i])
@@ -73,7 +73,7 @@ export default class {
                 let modelList = res.data.modelList
                 let themeList = res.data.themeList
                 initRelation();
-                for (let i in personalData) {
+                for (let i=0; i<personalData.length;i++) {
                     let data = personalData[i];
 
                     if (personalData[i].problemTags[0] != "" && personalData[i].problemTags != []) {
@@ -92,11 +92,13 @@ export default class {
                     relation.links.push({
                         source: data.name.split(".")[0],
                         target: "私人",
+                        relation:"隐私"
                     });
                     if (data.problemTags.length == 0) {
                         relation.links.push({
                             source: data.name.split(".")[0],
                             target: "非面向问题类",
+                            relation:"问题归属"
                         });
                     } else {
                         for (let j in data.problemTags) {
@@ -104,6 +106,7 @@ export default class {
                             relation.links.push({
                                 source: data.name.split(".")[0],
                                 target: problem,
+                                relation:"问题归属"
                             });
                         }
                     }
@@ -128,11 +131,13 @@ export default class {
                     relation.links.push({
                         source: data.name.split(".")[0],
                         target: "公开",
+                        relation:"隐私"
                     });
                     if (data.problemTags.length == 0) {
                         relation.links.push({
                             source: data.name.split(".")[0],
                             target: "非面向问题类",
+                            relation:"问题归属"
                         });
                     } else {
                         for (let j in data.problemTags) {
@@ -140,6 +145,7 @@ export default class {
                             relation.links.push({
                                 source: data.name.split(".")[0],
                                 target: problem,
+                                relation:"问题归属"
                             });
                         }
                         for (let j in data.normalTags) {
@@ -147,6 +153,7 @@ export default class {
                             relation.links.push({
                                 source: data.name.split(".")[0],
                                 target: problem,
+                                relation:"问题归属"
                             });
                         }
                     }
@@ -165,11 +172,13 @@ export default class {
                     relation.links.push({
                         source: data.modelName,
                         target: "模型",
+                        relation:"类型"
                     });
                     for (let j in data.classifications) {
                         relation.links.push({
                             source: data.modelName,
                             target: data.classifications[j],
+                            relation:"归类"
                         });
 
                     }
@@ -204,6 +213,7 @@ export default class {
                             relation.links.push({
                                 source: acase.name+"案例",
                                 target: "案例",
+                                relation:"类型"
                             });
                         }
 
@@ -211,6 +221,7 @@ export default class {
                       relation.links.push({
                             source: acase.name+"案例",
                             target: data.name,
+                            relation:"问题归属"
                         });
                     }
 
@@ -229,11 +240,11 @@ export default class {
                 this.allInDegreeEdge = []
                 this.allOutDegreeEdge = []
                 this.edgeNode = new Array(relation.links.length).fill(-1).map(item => new Array(2).fill(-1))
-                for (let i in relation.nodes) {
+                for (let i=0 ; i<relation.nodes.length;i++) {
                     let outEdge = []
                     let inEdge = []
                     let node = relation.nodes[i]
-                    for (let j in relation.links) {
+                    for (let j=0 ;j< relation.links.length;j++) {
                         let link = relation.links[j]
                         if (node.name == link.source) {
                             outEdge.push(j)

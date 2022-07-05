@@ -1,6 +1,6 @@
 <template>
   <div ref="home_scroll_listen" style="overflow-x: hidden !important;">
-    <HomeView3 :show="show2" style="width: 100%; height: 100vh"></HomeView3>
+    <HomeView3 :show="show2" style="width: 100%; height: 100vh" @explore="explore()"></HomeView3>
     <HomeView1 :show="show1" style="width: 100%; height: 95.94vh"></HomeView1>
     <HomeView2 :show="show2" style="width: 100%; height: 98.08vh"></HomeView2>
     
@@ -46,7 +46,7 @@ const mousedown = () => {
   scrollTop.value = home_scroll_listen.value.scrollTop;
   if (
     scrollTop.value > standardizeHeight(10) &&
-    scrollTop.value < standardizeHeight(100)
+    scrollTop.value < standardizeHeight(1000)
   ) {
     emit("showTopbarBackground", true);
   }
@@ -68,9 +68,11 @@ setTimeout(() => {
   }
   suitable();
 }, 100);
-// setTimeout(() => {
-//   show.value = true;
-// }, 2000);
+const explore=()=>{
+  home_scroll_listen.value.scrollTop=980
+}
+  
+
 </script>
 
 <style lang="less" scoped>

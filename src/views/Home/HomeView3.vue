@@ -1,6 +1,6 @@
 <template>
   <div style="display:flex;flex-direction: column; align-items: center">
-    <video id="video" controls muted autoplay loading="lazy" preload="undefined" playsinline="playsinline">
+    <video id="video" muted autoplay loading="lazy" preload="undefined" playsinline="playsinline">
       <source  src="@/assets/introduce/introduce.mp4" type="video/mp4">
     </video>
   <el-button class="explore" @click="explore()">开始探索</el-button>
@@ -16,12 +16,14 @@ const store=useStore()//vuex直接用store.commit
 const route=useRoute()
 const userInfo=JSON.parse(localStorage.getItem("userInfo"))
 
+const emit=defineEmits(['explore'])
 const explore=()=>{
-if(userInfo!=undefined){
-  router.push('/user')
-}else{
-  router.push('/login')
-}
+  emit('explore')
+// if(userInfo!=undefined){
+//   router.push('/user')
+// }else{
+//   router.push('/login')
+// }
 }
 const showIntro=ref(false)
 

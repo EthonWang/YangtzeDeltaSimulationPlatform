@@ -1,0 +1,1169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="280"
+   height="528"
+   version="1.1"
+   id="svg3321"
+   sodipodi:docname="Zhejiang_treemap.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <metadata
+     id="metadata3327">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3325" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2560"
+     inkscape:window-height="1361"
+     id="namedview3323"
+     showgrid="false"
+     inkscape:zoom="3.1846589"
+     inkscape:cx="153.06514"
+     inkscape:cy="376.56461"
+     inkscape:window-x="3831"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g3319" />
+  <g
+     transform="translate(10,22)"
+     id="g3319">
+    <rect
+       x="0"
+       y="26"
+       width="81.08332541514591"
+       height="173.7756632784908"
+       style="stroke: grey; fill: rgb(102, 194, 165); opacity: 0.88;"
+       id="rect2977" />
+    <rect
+       x="84.08332541514591"
+       y="26"
+       width="73.05718980733653"
+       height="173.7756632784908"
+       style="stroke: grey; fill: rgb(102, 194, 165); opacity: 0.8485;"
+       id="rect2979" />
+    <rect
+       x="0"
+       y="202.7756632784908"
+       width="87.37633037308416"
+       height="39.61179472822812"
+       style="stroke: grey; fill: rgb(102, 194, 165); opacity: 0.613131;"
+       id="rect2981" />
+    <rect
+       x="90.37633037308416"
+       y="202.7756632784908"
+       width="58.83643657105756"
+       height="39.61179472822812"
+       style="stroke: grey; fill: rgb(102, 194, 165); opacity: 0.576768;"
+       id="rect2983" />
+    <rect
+       x="152.21276694414172"
+       y="202.7756632784908"
+       width="4.927748278340715"
+       height="22.567076836936877"
+       style="stroke: grey; fill: rgb(102, 194, 165); opacity: 0.50404;"
+       id="rect2985" />
+    <rect
+       x="152.21276694414172"
+       y="228.3427401154277"
+       width="4.927748278340715"
+       height="14.044717891291242"
+       style="stroke: grey; fill: rgb(102, 194, 165); opacity: 0.50202;"
+       id="rect2987" />
+    <rect
+       x="160.14051522248243"
+       y="26"
+       width="99.85948477751757"
+       height="81.73347929002018"
+       style="stroke: grey; fill: rgb(252, 141, 98); opacity: 0.7435;"
+       id="rect2989" />
+    <rect
+       x="160.14051522248243"
+       y="110.73347929002018"
+       width="57.29693935233789"
+       height="92.24305811668937"
+       style="stroke: grey; fill: rgb(252, 141, 98); opacity: 0.669697;"
+       id="rect2991" />
+    <rect
+       x="220.43745457482032"
+       y="110.73347929002018"
+       width="39.56254542517968"
+       height="92.24305811668937"
+       style="stroke: grey; fill: rgb(252, 141, 98); opacity: 0.619192;"
+       id="rect2993" />
+    <rect
+       x="160.14051522248243"
+       y="205.97653740670955"
+       width="94.7165105386417"
+       height="36.410920600009376"
+       style="stroke: grey; fill: rgb(252, 141, 98); opacity: 0.613131;"
+       id="rect2995" />
+    <rect
+       x="257.85702576112413"
+       y="205.97653740670955"
+       width="2.1429742388758655"
+       height="36.410920600009376"
+       style="stroke: grey; fill: rgb(252, 141, 98); opacity: 0.50404;"
+       id="rect2997" />
+    <rect
+       x="0"
+       y="258.38745800671893"
+       width="47.1228395777752"
+       height="59.67471011089839"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.605051;"
+       id="rect2999" />
+    <rect
+       x="50.1228395777752"
+       y="258.38745800671893"
+       width="51.85140934926343"
+       height="38.06274110714031"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.574747;"
+       id="rect3001" />
+    <rect
+       x="50.1228395777752"
+       y="299.45019911385924"
+       width="24.42570467463171"
+       height="7.805984501879038"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.508081;"
+       id="rect3003" />
+    <rect
+       x="50.1228395777752"
+       y="310.2561836157383"
+       width="24.42570467463171"
+       height="7.805984501879038"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.508081;"
+       id="rect3005" />
+    <rect
+       x="77.54854425240691"
+       y="299.45019911385924"
+       width="18.940563739705368"
+       height="7.805984501879038"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.506061;"
+       id="rect3007" />
+    <rect
+       x="77.54854425240691"
+       y="310.2561836157383"
+       width="18.940563739705368"
+       height="7.805984501879038"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.506061;"
+       id="rect3009" />
+    <rect
+       x="99.48910799211228"
+       y="299.45019911385924"
+       width="2.485140934926349"
+       height="18.611969003758077"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.50202;"
+       id="rect3011" />
+    <rect
+       x="0"
+       y="334.0621681176173"
+       width="69.05859460245871"
+       height="37.801265027384545"
+       style="stroke: grey; fill: rgb(231, 138, 195); opacity: 0.59697;"
+       id="rect3013" />
+    <rect
+       x="0"
+       y="374.86343314500186"
+       width="69.05859460245871"
+       height="23.64572409951643"
+       style="stroke: grey; fill: rgb(231, 138, 195); opacity: 0.562626;"
+       id="rect3015" />
+    <rect
+       x="72.05859460245871"
+       y="334.0621681176173"
+       width="13.45782716228996"
+       height="37.10361515653574"
+       style="stroke: grey; fill: rgb(231, 138, 195); opacity: 0.520202;"
+       id="rect3017" />
+    <rect
+       x="88.51642176474867"
+       y="334.0621681176173"
+       width="13.45782716228996"
+       height="37.10361515653574"
+       style="stroke: grey; fill: rgb(231, 138, 195); opacity: 0.520202;"
+       id="rect3019" />
+    <rect
+       x="72.05859460245871"
+       y="374.16578327415306"
+       width="29.91565432457992"
+       height="11.583132784194788"
+       style="stroke: grey; fill: rgb(231, 138, 195); opacity: 0.514141;"
+       id="rect3021" />
+    <rect
+       x="72.05859460245871"
+       y="388.74891605834785"
+       width="29.91565432457992"
+       height="9.760241186170447"
+       style="stroke: grey; fill: rgb(231, 138, 195); opacity: 0.512121;"
+       id="rect3023" />
+    <rect
+       x="0"
+       y="414.5091572445183"
+       width="50.588252948767966"
+       height="50.24080502400216"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.590909;"
+       id="rect3025" />
+    <rect
+       x="0"
+       y="467.74996226852045"
+       width="50.588252948767966"
+       height="28.25003773147955"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.552525;"
+       id="rect3027" />
+    <rect
+       x="53.588252948767966"
+       y="414.5091572445183"
+       width="23.351792809369563"
+       height="44.07346953519698"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.538384;"
+       id="rect3029" />
+    <rect
+       x="79.94004575813753"
+       y="414.5091572445183"
+       width="22.034203168901087"
+       height="44.07346953519698"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.536364;"
+       id="rect3031" />
+    <rect
+       x="53.588252948767966"
+       y="461.58262677971527"
+       width="35.12509379032985"
+       height="21.40263470888135"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.528283;"
+       id="rect3033" />
+    <rect
+       x="53.588252948767966"
+       y="485.9852614885966"
+       width="35.12509379032985"
+       height="10.01473851140338"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.514141;"
+       id="rect3035" />
+    <rect
+       x="91.71334673909782"
+       y="461.58262677971527"
+       width="10.260902187940815"
+       height="15.708686610142365"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.506061;"
+       id="rect3037" />
+    <rect
+       x="91.71334673909782"
+       y="480.29131338985763"
+       width="10.260902187940815"
+       height="15.708686610142365"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.506061;"
+       id="rect3039" />
+    <rect
+       x="104.97424892703863"
+       y="258.38745800671893"
+       width="41.23003358835605"
+       height="51.395409200547306"
+       style="stroke: grey; fill: rgb(255, 217, 47); opacity: 0.576768;"
+       id="rect3041" />
+    <rect
+       x="149.20428251539468"
+       y="258.38745800671893"
+       width="31.023102760273872"
+       height="51.395409200547306"
+       style="stroke: grey; fill: rgb(255, 217, 47); opacity: 0.558586;"
+       id="rect3043" />
+    <rect
+       x="104.97424892703863"
+       y="312.78286720726624"
+       width="63.74532217971374"
+       height="23.803534968385634"
+       style="stroke: grey; fill: rgb(255, 217, 47); opacity: 0.556566;"
+       id="rect3045" />
+    <rect
+       x="171.71957110675237"
+       y="312.78286720726624"
+       width="8.507814168916184"
+       height="23.803534968385634"
+       style="stroke: grey; fill: rgb(255, 217, 47); opacity: 0.508081;"
+       id="rect3047" />
+    <rect
+       x="183.22738527566855"
+       y="258.38745800671893"
+       width="26.629828326180245"
+       height="69.87084733109367"
+       style="stroke: grey; fill: rgb(229, 196, 148); opacity: 0.568687;"
+       id="rect3049" />
+    <rect
+       x="183.22738527566855"
+       y="331.2583053378126"
+       width="26.629828326180245"
+       height="5.328096837839269"
+       style="stroke: grey; fill: rgb(229, 196, 148); opacity: 0.506061;"
+       id="rect3051" />
+    <rect
+       x="212.8572136018488"
+       y="258.38745800671893"
+       width="47.1427863981512"
+       height="38.829759117329104"
+       style="stroke: grey; fill: rgb(102, 194, 165); opacity: 0.566667;"
+       id="rect3053" />
+    <rect
+       x="212.8572136018488"
+       y="300.21721712404803"
+       width="47.1427863981512"
+       height="17.914879558664552"
+       style="stroke: grey; fill: rgb(102, 194, 165); opacity: 0.532323;"
+       id="rect3055" />
+    <rect
+       x="212.8572136018488"
+       y="321.1320966827126"
+       width="47.1427863981512"
+       height="15.454305492939284"
+       style="stroke: grey; fill: rgb(102, 194, 165); opacity: 0.528283;"
+       id="rect3057" />
+    <rect
+       x="104.97424892703863"
+       y="352.58640217565187"
+       width="24.90878649247749"
+       height="50.99650367052385"
+       style="stroke: grey; fill: rgb(252, 141, 98); opacity: 0.548485;"
+       id="rect3059" />
+    <rect
+       x="132.88303541951612"
+       y="352.58640217565187"
+       width="23.79243503277837"
+       height="50.99650367052385"
+       style="stroke: grey; fill: rgb(252, 141, 98); opacity: 0.546465;"
+       id="rect3061" />
+    <rect
+       x="104.97424892703863"
+       y="406.5829058461757"
+       width="43.886761307362164"
+       height="12.427572477292529"
+       style="stroke: grey; fill: rgb(252, 141, 98); opacity: 0.522222;"
+       id="rect3063" />
+    <rect
+       x="151.8610102344008"
+       y="406.5829058461757"
+       width="4.814460217893696"
+       height="4.713786238646264"
+       style="stroke: grey; fill: rgb(252, 141, 98); opacity: 0.5;"
+       id="rect3065" />
+    <rect
+       x="151.8610102344008"
+       y="414.296692084822"
+       width="4.814460217893696"
+       height="4.713786238646264"
+       style="stroke: grey; fill: rgb(252, 141, 98); opacity: 0.5;"
+       id="rect3067" />
+    <rect
+       x="159.6754704522945"
+       y="352.58640217565187"
+       width="34.33575437438097"
+       height="34.13380817208781"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.544444;"
+       id="rect3069" />
+    <rect
+       x="159.6754704522945"
+       y="389.7202103477397"
+       width="34.33575437438097"
+       height="29.290267975728568"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.538384;"
+       id="rect3071" />
+    <rect
+       x="197.01122482667546"
+       y="352.58640217565187"
+       width="21.55396285519052"
+       height="36.279411504685584"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.530303;"
+       id="rect3073" />
+    <rect
+       x="221.56518768186598"
+       y="352.58640217565187"
+       width="21.55396285519052"
+       height="36.279411504685584"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.530303;"
+       id="rect3075" />
+    <rect
+       x="246.1191505370565"
+       y="352.58640217565187"
+       width="13.880849462943502"
+       height="36.279411504685584"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.520202;"
+       id="rect3077" />
+    <rect
+       x="197.01122482667546"
+       y="391.86581368033745"
+       width="30.994217513530828"
+       height="16.505371239672854"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.520202;"
+       id="rect3079" />
+    <rect
+       x="197.01122482667546"
+       y="411.3711849200103"
+       width="30.994217513530828"
+       height="7.639293403457941"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.510101;"
+       id="rect3081" />
+    <rect
+       x="231.0054423402063"
+       y="391.86581368033745"
+       width="20.995918244845285"
+       height="12.072332321565398"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.510101;"
+       id="rect3083" />
+    <rect
+       x="231.0054423402063"
+       y="406.93814600190285"
+       width="20.995918244845285"
+       height="12.072332321565398"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.510101;"
+       id="rect3085" />
+    <rect
+       x="255.00136058505157"
+       y="391.86581368033745"
+       width="4.998639414948428"
+       height="12.072332321565398"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.50202;"
+       id="rect3087" />
+    <rect
+       x="255.00136058505157"
+       y="406.93814600190285"
+       width="4.998639414948428"
+       height="12.072332321565398"
+       style="stroke: grey; fill: rgb(141, 160, 203); opacity: 0.50202;"
+       id="rect3089" />
+    <rect
+       x="104.97424892703863"
+       y="435.01047832346825"
+       width="50.96631041543945"
+       height="13.174976635317307"
+       style="stroke: grey; fill: rgb(231, 138, 195); opacity: 0.542424;"
+       id="rect3091" />
+    <rect
+       x="158.94055934247808"
+       y="435.01047832346825"
+       width="19.077126988134296"
+       height="13.174976635317307"
+       style="stroke: grey; fill: rgb(231, 138, 195); opacity: 0.516162;"
+       id="rect3093" />
+    <rect
+       x="181.01768633061238"
+       y="435.01047832346825"
+       width="9.265070548963507"
+       height="13.174976635317307"
+       style="stroke: grey; fill: rgb(231, 138, 195); opacity: 0.508081;"
+       id="rect3095" />
+    <rect
+       x="104.97424892703863"
+       y="464.18545495878556"
+       width="43.399385534383995"
+       height="14.968797440626815"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.530303;"
+       id="rect3097" />
+    <rect
+       x="104.97424892703863"
+       y="482.15425239941237"
+       width="43.399385534383995"
+       height="13.845747600587629"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.528283;"
+       id="rect3099" />
+    <rect
+       x="151.37363446142263"
+       y="464.18545495878556"
+       width="23.941578697384244"
+       height="16.34141391178582"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.518182;"
+       id="rect3101" />
+    <rect
+       x="151.37363446142263"
+       y="483.5268688705714"
+       width="23.941578697384244"
+       height="12.473131129428623"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.514141;"
+       id="rect3103" />
+    <rect
+       x="178.31521315880687"
+       y="464.18545495878556"
+       width="4.483771860384508"
+       height="17.888727024728666"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.50404;"
+       id="rect3105" />
+    <rect
+       x="185.79898501919138"
+       y="464.18545495878556"
+       width="4.483771860384508"
+       height="17.888727024728666"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.50404;"
+       id="rect3107" />
+    <rect
+       x="178.31521315880687"
+       y="485.0741819835142"
+       width="8.225657790576776"
+       height="6.283878677657185"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.50202;"
+       id="rect3109" />
+    <rect
+       x="178.31521315880687"
+       y="494.3580606611714"
+       width="8.225657790576776"
+       height="1.6419393388285926"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.5;"
+       id="rect3111" />
+    <rect
+       x="189.54087094938365"
+       y="485.0741819835142"
+       width="0.7418859301922396"
+       height="10.925818016485778"
+       style="stroke: grey; fill: rgb(166, 216, 84); opacity: 0.5;"
+       id="rect3113" />
+    <rect
+       x="193.28275687957589"
+       y="435.01047832346825"
+       width="29.53471345619792"
+       height="18.939264574810863"
+       style="stroke: grey; fill: rgb(255, 217, 47); opacity: 0.522222;"
+       id="rect3115" />
+    <rect
+       x="193.28275687957589"
+       y="456.9497428982791"
+       width="29.53471345619792"
+       height="18.939264574810863"
+       style="stroke: grey; fill: rgb(255, 217, 47); opacity: 0.522222;"
+       id="rect3117" />
+    <rect
+       x="193.28275687957589"
+       y="478.88900747309"
+       width="29.53471345619792"
+       height="17.110992526909968"
+       style="stroke: grey; fill: rgb(255, 217, 47); opacity: 0.520202;"
+       id="rect3119" />
+    <rect
+       x="225.8174703357738"
+       y="435.01047832346825"
+       width="17.450391315324396"
+       height="28.994760838265904"
+       style="stroke: grey; fill: rgb(255, 217, 47); opacity: 0.520202;"
+       id="rect3121" />
+    <rect
+       x="246.2678616510982"
+       y="435.01047832346825"
+       width="13.732138348901799"
+       height="28.994760838265904"
+       style="stroke: grey; fill: rgb(255, 217, 47); opacity: 0.516162;"
+       id="rect3123" />
+    <rect
+       x="225.8174703357738"
+       y="467.00523916173415"
+       width="23.027770764958348"
+       height="17.568060538885163"
+       style="stroke: grey; fill: rgb(255, 217, 47); opacity: 0.516162;"
+       id="rect3125" />
+    <rect
+       x="225.8174703357738"
+       y="487.5732997006193"
+       width="23.027770764958348"
+       height="8.426700299380684"
+       style="stroke: grey; fill: rgb(255, 217, 47); opacity: 0.508081;"
+       id="rect3127" />
+    <rect
+       x="251.84524110073215"
+       y="467.00523916173415"
+       width="8.154758899267847"
+       height="12.997380419132924"
+       style="stroke: grey; fill: rgb(255, 217, 47); opacity: 0.50404;"
+       id="rect3129" />
+    <rect
+       x="251.84524110073215"
+       y="483.0026195808671"
+       width="8.154758899267847"
+       height="7.664920279421949"
+       style="stroke: grey; fill: rgb(255, 217, 47); opacity: 0.50202;"
+       id="rect3131" />
+    <rect
+       x="251.84524110073215"
+       y="493.667539860289"
+       width="8.154758899267847"
+       height="2.3324601397109745"
+       style="stroke: grey; fill: rgb(255, 217, 47); opacity: 0.5;"
+       id="rect3133" />
+    <text
+       x="5"
+       y="36"
+       font-size="8px"
+       fill="grey"
+       id="text3135">Machine learning</text>
+    <text
+       x="5"
+       y="212.7756632784908"
+       font-size="8px"
+       fill="grey"
+       id="text3139">Computer graphics</text>
+    <text
+       x="93.201073"
+       y="212.77567"
+       font-size="8px"
+       id="text3141"
+       style="font-size:8px;fill:#808080">Modeling and</text>
+    <text
+       x="92.805573"
+       y="220.48793"
+       font-size="8px"
+       id="text4825"
+       style="font-size:8px;fill:#808080">simulation</text>
+    <text
+       x="165.14051522248243"
+       y="36"
+       font-size="8px"
+       fill="grey"
+       id="text3147">Information retrieval</text>
+    <text
+       x="164.02188"
+       y="121.85213"
+       font-size="8px"
+       id="text3149"
+       style="font-size:8px;fill:#808080">Information</text>
+    <text
+       x="163.46255"
+       y="129.68263"
+       font-size="8px"
+       style="font-size:8px;fill:#808080"
+       id="text4817">systems</text>
+    <text
+       x="163.46255"
+       y="138.63179"
+       font-size="8px"
+       style="font-size:8px;fill:#808080"
+       id="text4821">applications</text>
+    <text
+       x="-187.65514"
+       y="231.36212"
+       font-size="8px"
+       id="text3151"
+       style="font-size:8px;fill:#808080"
+       transform="rotate(-90)">Data management</text>
+    <text
+       x="-187.30357"
+       y="239.49217"
+       font-size="8px"
+       id="text4823"
+       style="font-size:8px;fill:#808080"
+       transform="rotate(-90)">systems</text>
+    <text
+       x="165.14051522248243"
+       y="215.97653740670955"
+       font-size="8px"
+       fill="grey"
+       id="text3153">World Wide Web</text>
+    <text
+       x="-314.22745"
+       y="9.8245897"
+       font-size="8px"
+       id="text3157"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       transform="rotate(-90)">Theory and</text>
+    <text
+       x="-314.56598"
+       y="18.760237"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4827"
+       transform="rotate(-90)">algorithms for</text>
+    <text
+       x="-314.56598"
+       y="27.699141"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4829"
+       transform="rotate(-90)">application</text>
+    <text
+       x="-314.57901"
+       y="37.256535"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       transform="rotate(-90)"
+       id="text4831">domains</text>
+    <text
+       x="52.177097"
+       y="267.20096"
+       font-size="8px"
+       id="text3159"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080">Design and</text>
+    <text
+       x="52.489597"
+       y="275.2489"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4833">analysis of</text>
+    <text
+       x="52.489597"
+       y="283.21872"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4835">algorithms</text>
+    <text
+       x="50.574585"
+       y="316.89444"
+       font-size="8px"
+       id="text3163"
+       style="font-size:8px;fill:#808080">Logic</text>
+    <text
+       x="2.2937315"
+       y="342.73746"
+       font-size="8px"
+       id="text3171"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080">Human computer</text>
+    <text
+       x="2.3751116"
+       y="352.5256"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4881">interaction (HCI)</text>
+    <text
+       x="2.2948639"
+       y="384.8291"
+       font-size="8px"
+       id="text3173"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080">Ubiquitous and</text>
+    <text
+       x="2.2720773"
+       y="391.54095"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4883">mobile computing</text>
+    <text
+       x="0.64854592"
+       y="425.34814"
+       font-size="8px"
+       id="text3183"
+       style="font-size:8px;fill:#808080">Network</text>
+    <text
+       x="1.1876085"
+       y="433.17865"
+       font-size="8px"
+       id="text4903"
+       style="font-size:8px;fill:#808080">types</text>
+    <text
+       x="0.77875429"
+       y="478.02963"
+       font-size="8px"
+       id="text3185"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080">Network</text>
+    <text
+       x="0.82758242"
+       y="485.30081"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4905">performance</text>
+    <text
+       x="1.0847439"
+       y="492.85165"
+       font-size="8px"
+       style="font-size:6.66666667px;fill:#808080;-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;"
+       id="text4907">evaluation</text>
+    <text
+       x="-456.99026"
+       y="61.225609"
+       font-size="8px"
+       id="text3187"
+       style="font-size:8px;fill:#808080"
+       transform="rotate(-90)">Network</text>
+    <text
+       x="-456.6387"
+       y="68.384605"
+       font-size="8px"
+       style="font-size:8px;fill:#808080"
+       id="text4909"
+       transform="rotate(-90)">services</text>
+    <text
+       x="-456.99026"
+       y="87.119865"
+       font-size="8px"
+       id="text3189"
+       style="font-size:8px;fill:#808080"
+       transform="rotate(-90)">Network</text>
+    <text
+       x="-456.93167"
+       y="94.201874"
+       font-size="8px"
+       id="text4911"
+       style="font-size:8px;fill:#808080"
+       transform="rotate(-90)">properties</text>
+    <text
+       x="-309.36356"
+       y="112.76241"
+       font-size="8px"
+       id="text3199"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       transform="rotate(-90)">Embedded and</text>
+    <text
+       x="-309.05432"
+       y="120.57388"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4837"
+       transform="rotate(-90)">cyber-physical</text>
+    <text
+       x="-309.07059"
+       y="128.89905"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4839"
+       transform="rotate(-90)">systems</text>
+    <text
+       x="109.97424892703863"
+       y="322.78286720726624"
+       font-size="8px"
+       fill="grey"
+       id="text3203">Architectures</text>
+    <text
+       x="-328.21921"
+       y="190.86815"
+       font-size="8px"
+       id="text3207"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       transform="rotate(-90)">Cross-computing</text>
+    <text
+       x="-328.04669"
+       y="199.16063"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4865"
+       transform="rotate(-90)">tools and techniques</text>
+    <text
+       x="214.69321"
+       y="269.17847"
+       font-size="8px"
+       id="text3211"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080">Software</text>
+    <text
+       x="214.78761"
+       y="276.87744"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4869">creation</text>
+    <text
+       x="214.79086"
+       y="284.98004"
+       font-size="8px"
+       id="text4867"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080">and</text>
+    <text
+       x="214.52719"
+       y="292.513"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4871">management</text>
+    <text
+       x="214.53452"
+       y="306.26224"
+       font-size="8px"
+       id="text3213"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333349px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080">Software</text>
+    <text
+       x="214.60744"
+       y="311.24231"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333349px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4875">organization</text>
+    <text
+       x="214.61264"
+       y="316.54526"
+       font-size="8px"
+       id="text4873"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333349px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080">and properties</text>
+    <text
+       x="213.62633"
+       y="326.38608"
+       font-size="8px"
+       id="text3215"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333349px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080">Software</text>
+    <text
+       x="213.49352"
+       y="330.67401"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333349px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4877">notations</text>
+    <text
+       x="213.70445"
+       y="335.28485"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333349px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4879">and tools</text>
+    <text
+       x="-402.41028"
+       y="114.23186"
+       font-size="8px"
+       id="text3217"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       transform="rotate(-90)">Discrete</text>
+    <text
+       x="-401.95618"
+       y="121.48582"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4885"
+       transform="rotate(-90)">mathematics</text>
+    <text
+       x="-402.16211"
+       y="140.43726"
+       font-size="8px"
+       id="text3219"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       transform="rotate(-90)">Mathematical</text>
+    <text
+       x="-401.84961"
+       y="147.34171"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4887"
+       transform="rotate(-90)">analysis</text>
+    <text
+       x="160.9182"
+       y="359.8179"
+       font-size="8px"
+       id="text3227"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr;text-anchor:start;fill:#808080;">Physical</text>
+    <text
+       x="161.21117"
+       y="366.87915"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr;text-anchor:start;fill:#808080;"
+       id="text4889">sciences</text>
+    <text
+       x="161.2307"
+       y="374.31146"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr;text-anchor:start;fill:#808080;"
+       id="text4891">and</text>
+    <text
+       x="161.22418"
+       y="381.37268"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr;text-anchor:start;fill:#808080;"
+       id="text4893">engineering</text>
+    <text
+       x="160.42749"
+       y="397.94046"
+       font-size="8px"
+       id="text3229"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080">Life and</text>
+    <text
+       x="160.47632"
+       y="404.04834"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4897">medical</text>
+    <text
+       x="160.72046"
+       y="410.00323"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4899">sciences</text>
+    <text
+       x="-388.88251"
+       y="204.24208"
+       font-size="8px"
+       id="text3231"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       transform="rotate(-90)">Electronic</text>
+    <text
+       x="-388.57327"
+       y="211.02171"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4895"
+       transform="rotate(-90)">commerce</text>
+    <text
+       x="-388.6058"
+       y="228.8322"
+       font-size="8px"
+       id="text3233"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       transform="rotate(-90)">Operations</text>
+    <text
+       x="-388.83368"
+       y="235.56194"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4901"
+       transform="rotate(-90)">research</text>
+    <text
+       x="197.82372"
+       y="398.78333"
+       font-size="8px"
+       id="text3237"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333349px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080">Education</text>
+    <text
+       x="105.22002"
+       y="442.21387"
+       font-size="8px"
+       id="text3249"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333349px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080">Professional topics</text>
+    <text
+       x="106.592"
+       y="488.65851"
+       font-size="8px"
+       id="text3257"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080">Power and</text>
+    <text
+       x="106.89799"
+       y="493.69241"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text4915">energy</text>
+    <text
+       x="194.3577"
+       y="466.16473"
+       font-size="8px"
+       id="text3275"
+       style="font-size:6.66666667px;fill:#808080;-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">Security</text>
+    <text
+       x="194.43582"
+       y="472.13083"
+       font-size="8px"
+       id="text4917"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66666651px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080">services</text>
+    <text
+       x="0"
+       y="22"
+       font-size="12px"
+       fill="#66c2a5"
+       id="text3293"
+       style="-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:10.66666667px;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">Computing methodologies</text>
+    <text
+       x="150.14052"
+       y="22"
+       font-size="12px"
+       id="text3295"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.66666698px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#fc8d62">Information systems</text>
+    <text
+       x="0"
+       y="254.38745800671893"
+       font-size="12px"
+       fill="#8da0cb"
+       id="text3297"
+       style="-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:9.33333333px;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">Theory of computation</text>
+    <text
+       x="-0.31400537"
+       y="326.60809"
+       font-size="12px"
+       id="text3299"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#e78ac3">Human-centered</text>
+    <text
+       x="-0.31400535"
+       y="332.88821"
+       font-size="12px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#e78ac3"
+       id="text4921">computing</text>
+    <text
+       x="0"
+       y="410.5091572445183"
+       font-size="12px"
+       fill="#a6d854"
+       id="text3301">Networks</text>
+    <text
+       x="104.03223"
+       y="256.27148"
+       font-size="12px"
+       id="text3303"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffd92f">Computer systems</text>
+    <text
+       x="180.08734"
+       y="250.93338"
+       font-size="12px"
+       id="text3305"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#e5c494">General</text>
+    <text
+       x="219.13733"
+       y="257.21347"
+       font-size="12px"
+       id="text3307"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#66c2a5">Software</text>
+    <text
+       x="104.97425"
+       y="348.5864"
+       font-size="12px"
+       id="text3309"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#fc8d62">Mathematics</text>
+    <text
+       x="172.86369"
+       y="348.27237"
+       font-size="12px"
+       id="text3311"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#8da0cb">Applied computing</text>
+    <text
+       x="104.97425"
+       y="431.01047"
+       font-size="12px"
+       id="text3313"
+       style="font-size:12px;fill:#e78ac3">Social</text>
+    <text
+       x="104.97424892703863"
+       y="460.18545495878556"
+       font-size="12px"
+       fill="#a6d854"
+       id="text3315">Hardware</text>
+    <text
+       x="164.39427"
+       y="430.06845"
+       font-size="12px"
+       id="text3317"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffd92f">Security and privacy</text>
+    <text
+       x="89.87397"
+       y="36.700188"
+       font-size="8px"
+       id="text1345"
+       style="font-size:8px;fill:#808080">Artificial</text>
+    <text
+       x="89.291939"
+       y="45.137531"
+       font-size="8px"
+       id="text1543"
+       style="font-size:8px;fill:#808080">intelligence</text>
+    <text
+       x="-308.52798"
+       y="155.8564"
+       font-size="8px"
+       id="text1415-4"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333349px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       transform="rotate(-90)">Dependable and</text>
+    <text
+       x="-308.18423"
+       y="162.12141"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333349px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text5338"
+       transform="rotate(-90)">fault-tolerant</text>
+    <text
+       x="-308.29361"
+       y="168.33432"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333349px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       id="text5340"
+       transform="rotate(-90)">systems and</text>
+    <text
+       x="-308.48892"
+       y="174.57329"
+       font-size="8px"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333349px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#808080"
+       transform="rotate(-90)"
+       id="text5342">networks</text>
+  </g>
+</svg>

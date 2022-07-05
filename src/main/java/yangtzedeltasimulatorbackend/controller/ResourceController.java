@@ -30,7 +30,7 @@ public class ResourceController {
     @ApiOperation(value = "保存资源中心数据")
     @PostMapping("/saveResourceData")
     public JsonResult saveResourceData(@RequestPart("info") CreateResourceDataDTO createResourceDataDTO,
-                                       @ApiParam @RequestPart(value = "visualFile",required = false) MultipartFile visualFile ,
+                                       @ApiParam @RequestPart(value = "visualFile",required = false) MultipartFile visualFile,
                                        @RequestPart("imgFile") MultipartFile imgFile){
         return resourceService.saveResourceData(createResourceDataDTO,visualFile,imgFile);
     }

@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ZipUtil;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +20,14 @@ import yangtzedeltasimulatorbackend.entity.dto.PageDTO;
 import yangtzedeltasimulatorbackend.entity.dto.resource.CreateResourceDataDTO;
 import yangtzedeltasimulatorbackend.entity.dto.resource.CreateResourceSmallFileDTO;
 import yangtzedeltasimulatorbackend.entity.dto.resource.ResourceDataPageDTO;
-import yangtzedeltasimulatorbackend.entity.po.DataItem;
-import yangtzedeltasimulatorbackend.entity.po.Folder;
-import yangtzedeltasimulatorbackend.entity.po.ResourceData;
-import yangtzedeltasimulatorbackend.entity.po.ResourceSmallFile;
+import yangtzedeltasimulatorbackend.entity.po.*;
+import yangtzedeltasimulatorbackend.utils.FileUtils;
 import yangtzedeltasimulatorbackend.utils.GeoServerUtils;
 import yangtzedeltasimulatorbackend.utils.ResultUtils;
 
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,31 +77,78 @@ public class ResourceService {
             resourceData.setFileWebAddress("/store/resourceData/"+createResourceDataDTO.getFileStoreName());
             resourceData.setFileRelativePath("/resourceData/"+createResourceDataDTO.getFileStoreName());
             FileUtil.del(srcFilePath); //删除大文件临时存在的位置
+            ArrayList<VisualDataItem> visualDataItems = resourceData.getVisualDataItems();
 
             if("tif".equals(resourceData.getVisualType())){
-                ZipUtil.unzip(resourceDataFolder+"/"+createResourceDataDTO.getFileStoreName(),resourceDataFolder);
-                String unzipTif=resourceDataFolder+"/"+FileUtil.mainName(createResourceDataDTO.getFileOriginName())+".tif";
-                GeoServerUtils.PublishTiff("yangtzeRiver",resourceData.getName(),unzipTif);
-                String geoServerUrl= MessageFormat.format("{0}/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A{1}&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857" +
-                        "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl,resourceData.getName());
-                resourceData.setVisualWebAddress(geoServerUrl);
-                FileUtil.del(unzipTif); //删除tif解压后的文件
+                List<JSONObject> fileInfo;
+                try {
+                    fileInfo = FileUtils.zipUncompress(
+                            resourceDataFolder+"/"+createResourceDataDTO.getFileStoreName(),
+                            resourceDataFolder+"/"+createResourceDataDTO.getFileStoreName().split(".zip")[0]);
+                } catch (Exception e) {
+                    return null;
+                }
+                //解压成功后把压缩包给删了
+//                FileUtils.deleteFile(basePath + "/" + workName + "." + suffix);
+                for (JSONObject item : fileInfo) {
+                    String fileName = item.getString("fileName");
+                    if (fileName.indexOf(".tif") != -1){
+                        VisualDataItem visualDataItem = new VisualDataItem();
+                        String path = item.getString("path");
+                        Long fileSize = item.getLong("fileSize");
+                        GeoServerUtils.PublishTiff("yangtzeRiver",fileName.split(".tif")[0],path);
+                        String geoServerUrl= MessageFormat.format("{0}/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A{1}&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857" +
+                                "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl,fileName.split(".tif")[0]);
+                        visualDataItem.setName(fileName);
+                        visualDataItem.setType("tif");
+                        visualDataItem.setSize(fileSize.toString());
+                        visualDataItem.setFileStoreName(resourceData.getFileStoreName());
+                        visualDataItem.setFileWebAddress(resourceData.getFileWebAddress());
+                        visualDataItem.setProblemTags(resourceData.getProblemTags());
+                        visualDataItem.setNormalTags(resourceData.getNormalTags());
+                        visualDataItem.setUserId(resourceData.getUserEmail());
+                        visualDataItem.setVisualWebAddress(geoServerUrl);
+                        visualDataItem.setPublicBoolean(true);
+                        visualDataItem.setVisualizationBoolean(true);
+                        visualDataItem.setVisualRelativePath(path.split(dataStoreDir)[1]);
+                        visualDataItems.add(visualDataItem);
+                    }
+                }
+            } else if("shp".equals(resourceData.getVisualType())){
+                List<JSONObject> fileInfo;
+                try {
+                    fileInfo = FileUtils.zipUncompress(resourceDataFolder+"/"+createResourceDataDTO.getFileStoreName(),resourceDataFolder);
+                } catch (Exception e) {
+                    return null;
+                }
+                //解压成功后把压缩包给删了
+//                FileUtils.deleteFile(basePath + "/" + workName + "." + suffix);
+                for (JSONObject item : fileInfo) {
+                    String fileName = item.getString("fileName");
+                    if (fileName.indexOf(".shp") != -1){
+                        VisualDataItem visualDataItem = new VisualDataItem();
+                        String path = item.getString("path");
+                        Long fileSize = item.getLong("fileSize");
+                        GeoServerUtils.PublishTiff("yangtzeRiver",fileName,path);
+                        String geoServerUrl= MessageFormat.format("{0}/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A{1}&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857" +
+                                "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl,resourceData.getName());
+                        visualDataItem.setName(fileName);
+                        visualDataItem.setType("shp");
+                        visualDataItem.setSize(fileSize.toString());
+                        visualDataItem.setFileStoreName(resourceData.getFileStoreName());
+                        visualDataItem.setFileWebAddress(resourceData.getFileWebAddress());
+                        visualDataItem.setProblemTags(resourceData.getProblemTags());
+                        visualDataItem.setNormalTags(resourceData.getNormalTags());
+                        visualDataItem.setUserId(resourceData.getUserEmail());
+                        visualDataItem.setVisualWebAddress(geoServerUrl);
+                        visualDataItem.setPublicBoolean(true);
+                        visualDataItem.setVisualizationBoolean(true);
+                        visualDataItem.setVisualRelativePath(path.split(dataStoreDir)[1]);
+                        visualDataItems.add(visualDataItem);
+                    }
+                }
             }
-
-            //可视化文件
-            if (visualFile!=null&&!visualFile.isEmpty()) {
-                //将文件保存到指定位置
-                String visualFileName = visualFile.getOriginalFilename(); //eg: XXX.js
-                String visualFileMainName= FileNameUtil.mainName(visualFileName); // XXX
-                String visualFileExtName = FileNameUtil.extName(visualFileName); //js
-                String fileNewName=IdUtil.objectId()+"."+visualFileExtName;
-                File saveVisualFile = new File(folder, fileNewName);//eg: E:\\TEMP\\1231231.js
-                visualFile.transferTo(saveVisualFile);
-                resourceData.setVisualStoreName(fileNewName);
-                resourceData.setVisualWebAddress("/store/resourceData/"+fileNewName);
-                resourceData.setVisualRelativePath("/resourceData/"+fileNewName);
-            }
-
+            resourceData.setVisualDataItems(visualDataItems);
 
             //图像
             if (imgFile.isEmpty()) {
@@ -118,7 +165,6 @@ public class ResourceService {
                 resourceData.setImgWebAddress("/store/resourceData/"+imgFileNewName);
                 resourceData.setImgRelativePath("/resourceData/"+imgFileNewName);
             }
-
             resourceData.setUserEmail("temp@xx.com");
             resourceDataDao.save(resourceData);
 
@@ -157,8 +203,11 @@ public class ResourceService {
             String filePath=resourceDataFolder+"/"+resourceData.getFileStoreName();
             FileUtil.del(filePath);
 
-            String visualFilePath=resourceDataFolder+"/"+resourceData.getVisualStoreName();
-            FileUtil.del(visualFilePath);
+            ArrayList<VisualDataItem> visualDataItems = resourceData.getVisualDataItems();
+            for(VisualDataItem item : visualDataItems){
+                String visualFilePath=resourceDataFolder+"/"+item.getVisualStoreName();
+                FileUtil.del(visualFilePath);
+            }
 
             String imgFilePath=resourceDataFolder+"/"+resourceData.getImgStoreName();
             FileUtil.del(imgFilePath);

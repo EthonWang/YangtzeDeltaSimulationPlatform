@@ -256,7 +256,7 @@ import { ElNotification,ElMessageBox,ElMessage} from "element-plus";
 import { useRouter } from "vue-router";
 import axios from "axios";
 const router = useRouter();
-const baseUrl = ref("http://172.21.212.63:8999/")
+const baseUrl = ref("http://172.21.213.248:8999")
 
 const mdOpenIcon = require("@/assets/img/icon/md-open.png")
 
@@ -434,6 +434,7 @@ const handleSuccess = (res,uploadFile) => {
   editingCase.thumbnail = res.data.imgWebPath;
   editingCase.imageName = uploadFile.name;
   editingCases.value = editingCase;
+  console.log("上传图片成功",res.data.imgWebPath)
 }
 const addImage = (key) => {
   tempKey.value = key;

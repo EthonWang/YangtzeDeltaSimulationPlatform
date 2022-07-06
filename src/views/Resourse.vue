@@ -153,6 +153,7 @@
 </template>
 
 <script>
+import {useStore} from "vuex";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import tagTree from "@/components/resource/tagTree.vue";
@@ -175,6 +176,8 @@ export default {
     let visualChecked = ref(false);
     let downloadChecked = ref(false);
     const restaurants = ref([]);
+    const store = useStore();
+    const dataServer = store.getters.devIpAddress;
     onMounted(() => {
       getAutocompleteList();
     });
@@ -189,7 +192,7 @@ export default {
         tagName: "",
       };
       axios({
-        url: "http://172.21.212.63:8999/getResourceDataList",
+        url: dataServer +  "/getResourceDataList",
         method: "post",
         //忽略contentType
         contentType: false,
@@ -249,7 +252,7 @@ export default {
         tagName: tagName,
       };
       axios({
-        url: "http://172.21.212.63:8999/getResourceDataList",
+        url: dataServer +  "/getResourceDataList",
         method: "post",
         //忽略contentType
         contentType: false,

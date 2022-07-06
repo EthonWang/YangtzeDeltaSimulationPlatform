@@ -4,7 +4,7 @@
       <el-card class="resListCard">
         <div class="imageBox">
           <el-image
-            :src="'http://172.21.212.63:8999/' + item.imgWebAddress"
+            :src="dataServer + item.imgWebAddress"
             class="image"
             :fit="contain"
           ></el-image>
@@ -31,7 +31,6 @@
           </div>
         </div>
       </el-card>
-
     </el-col>
   </el-row>
   <el-row class="resListPagination">
@@ -47,119 +46,119 @@
     <mapbox-card :jsonData="selectedRes"></mapbox-card>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="show_task = true;">添加到个人中心</el-button>
+        <el-button type="primary" @click="show_task = true"
+          >添加到个人中心</el-button
+        >
         <el-button @click="mapCardDialogVisible = false">取消</el-button>
       </span>
     </template>
   </el-dialog>
   <el-dialog
-      v-model="show_task"
-      title="选择已有实验"
-      width="30%"
-      :before-close="handleClose"
+    v-model="show_task"
+    title="添加到实验室"
+    width="30%"
+    :before-close="handleClose"
+  >
+    <h3 style="margin-bottom: 15px;">选择要添加的资源</h3>
+    <el-checkbox-group v-model="selectedVisualDataItems">
+      <el-checkbox :label="item.name" v-for="(item, index) in selectedRes.visualDataItems" :key="index"/>
+    </el-checkbox-group>
+    <el-divider border-style="dashed" />
+    <h3 style="margin-bottom: 15px;">选择要添加到的实验室</h3>
+    <el-button
+      v-for="task in task_list"
+      :key="task"
+      @click="addDataToTask(task)"
     >
-      <el-button
-        v-for="task in task_list"
-        :key="task"
-        @click="addDataToTask(task)"
-      >
-        <el-icon><Monitor /></el-icon> &nbsp; {{ task.name }}</el-button
-      >
-
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="show_task = false">取消</el-button>
-          <el-button type="primary" @click="show_task = false">完成</el-button>
-        </span>
-      </template>
-    </el-dialog>
+      <el-icon><Monitor /></el-icon> &nbsp; {{ task.name }}</el-button
+    >
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="show_task = false">取消</el-button>
+        <el-button type="primary" @click="show_task = false">完成</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
-import { onMounted, ref,defineProps } from "vue";
+import { onMounted, ref, defineProps } from "vue";
 import { ElMessageBox } from "element-plus";
 import MapboxCard from "../Mapbox/MapboxCard.vue";
 import { ElMessage } from "element-plus";
 import taskApi from "@/api/user/task";
+import { useStore } from "vuex";
 
-
+const store = useStore();
+const dataServer = store.getters.devIpAddress;
 const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 const task_api = new taskApi();
 const show_task = ref(false);
 const task_list = ref([]);
-const choosing_files=ref([])
+const selectedVisualDataItems = ref([]);
+const mapCardDialogVisible = ref(false);
+const selectedRes = ref({});
 task_api.getTaskList(userInfo.id).then((res) => {
   for (let i in res.data.data) {
     task_list.value.push(res.data.data[i]);
   }
 });
 
-  const props=defineProps({
-    resList: Array,
-  })
+const props = defineProps({
+  resList: Array,
+});
 const addDataToTask = (task) => {
-  console.log(task)
-  let dataList=[]
-  for (let i in choosing_files.value) {
+  console.log(task);
+  let dataList = [];
+  for (let i in selectedVisualDataItems.value) {
+    let dataName = selectedVisualDataItems.value[i];
+    for(let j in selectedRes.value.visualDataItems){
+      let data = selectedRes.value.visualDataItems[j];
+      if(dataName == data.name){
+        dataList.push(data);
+      }
+    }
     
-      let data=choosing_files.value[i]
-      dataList.push(data)
- 
   }
   task_api.addData(task, dataList);
   show_task.value = false;
 };
 
-
-    const mapCardDialogVisible = ref(false);
-    const selectedRes = ref({});
-    const handleClose = function (done) {
-      ElMessageBox.confirm("确定关闭此窗口?")
-        .then(() => {
-          done();
-        })
-        .catch(() => {
-          // catch error
-        });
-    };
-    const showMapCard = function (info) {
-      choosing_files.value=[]
-      choosing_files.value.push(info)
-      // if (info.visualizationBoolean) {
-      selectedRes.value = info;
-      mapCardDialogVisible.value = true;
-      // } else {
-      //   // this.$Message.warning("该资源未开放可视化权限，详情请联系网站管理员！");
-      //   ElMessage({
-      //     message: "该资源未开放可视化权限，详情请联系网站管理员！",
-      //     type: "warning",
-      //   });
-      // }
-    };
-    const downloadRes = function (item) {
-      if (item.publicBoolean) {
-        window.location.href =
-          "http://172.21.212.63:8999/" + item.fileWebAddress;
-      } else {
-        // this.$Message.warning("该资源未开放下载权限，详情请联系网站管理员！");
-        ElMessage({
-          message: "该资源未开放下载权限，详情请联系网站管理员！",
-          type: "warning",
-        });
-      }
-    };
-    const go2Model = function () {
-      location.href = "/model";
-    };
-    const filterSizeType = function (value) {
-      if (value === 0) return "0 B";
-      let k = 1024;
-      let sizes = ["B", "KB", "MB", "GB"];
-      let i = Math.floor(Math.log(value) / Math.log(k));
-      return (value / Math.pow(k, i)).toPrecision(4) + " " + sizes[i];
-    };
-
-   
+const handleClose = function (done) {
+  ElMessageBox.confirm("确定关闭此窗口?")
+    .then(() => {
+      done();
+    })
+    .catch(() => {
+      // catch error
+    });
+};
+const showMapCard = function (info) {
+  // if (info.visualizationBoolean) {
+  selectedRes.value = info;
+  mapCardDialogVisible.value = true;
+};
+const downloadRes = function (item) {
+  if (item.publicBoolean) {
+    window.location.href = dataServer + item.fileWebAddress;
+  } else {
+    // this.$Message.warning("该资源未开放下载权限，详情请联系网站管理员！");
+    ElMessage({
+      message: "该资源未开放下载权限，详情请联系网站管理员！",
+      type: "warning",
+    });
+  }
+};
+const go2Model = function () {
+  location.href = "/model";
+};
+const filterSizeType = function (value) {
+  if (value === 0) return "0 B";
+  let k = 1024;
+  let sizes = ["B", "KB", "MB", "GB"];
+  let i = Math.floor(Math.log(value) / Math.log(k));
+  return (value / Math.pow(k, i)).toPrecision(4) + " " + sizes[i];
+};
 </script>
 
 <style lang="less" scoped>

@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import {useStore} from "vuex";
 import { onMounted, ref } from "vue";
 import chartWithoutOptions from "./plugins/chartWithoutOptin.vue";
 import axios from "axios";
@@ -54,10 +55,12 @@ export default {
   emits: ["closeChart"],
   setup(props, ctx) {
     let chartOptions = ref({});
+    const store = useStore();
+    const dataServer = store.getters.devIpAddress;
     const getChartData = () => {
       axios
         .get(
-          "http://172.21.212.63:8999/store" +
+          dataServer + "/store" +
             props.data.path
         )
         .then((res) => {

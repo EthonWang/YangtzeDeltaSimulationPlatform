@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import {useStore} from "vuex";
 import axios from "axios";
 import E from "wangeditor";
 export default {
@@ -12,6 +13,7 @@ export default {
     return {
       editor: null,
       txtContent: "",
+      dataServer: useStore().getters.devIpAddress,
     };
   },
   props: ["txtInfo"],
@@ -22,7 +24,7 @@ export default {
   methods: {
     getTxtContent() {
       axios
-        .get("http://172.21.212.63:8999" + this.txtInfo.data.fileWebAddress)
+        .get(this.dataServer + this.txtInfo.data.fileWebAddress)
         .then((res) => {
           this.txtContent = res.data;
           this.init();

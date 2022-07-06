@@ -85,7 +85,7 @@
         @click="router.push('/user/data')"
         >选择并添加<strong>我的云端</strong>数据</el-button
       >
-      <el-upload
+      <!-- <el-upload
       v-if="!edit_task"
         style="float: left; margin-right: 5px"
         class="upload-demo"
@@ -101,7 +101,7 @@
         :file-list="fileList"
       >
         <el-button>选择并添加<strong>本地</strong>数据</el-button>
-      </el-upload>
+      </el-upload> -->
 
       <el-button
       v-if="!edit_task"

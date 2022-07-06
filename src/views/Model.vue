@@ -297,6 +297,7 @@ export default {
       newTask.dataList.push(this.recommendShowOne);
       localStorage.setItem("task", JSON.stringify(newTask));
       this.recommendVisible = false;
+      location.reload();
     },
     switchMap() {
       if (this.mapType == "mapBox") {

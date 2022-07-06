@@ -1,5 +1,5 @@
 <template>
-    <el-row style="height: 100%;padding:20px;overflow: hidden">
+    <el-row style="height: 100%;padding:20px 20px 15px 20px;overflow: hidden;min-width: 1735px">
       <el-col :span="8">
         <div class="box-left left1">
           <dv-border-box1 >
@@ -16,7 +16,7 @@
         <div class="box-left left3">
           <dv-border-box1 >
             <dv-decoration-7 class="box-title"><h3>创新产出</h3></dv-decoration-7>
-            <div id="leftChart3" class="chart"></div>
+            <div id="leftChart3" style="width: 100%;height: 90%;"></div>
           </dv-border-box1>
         </div>
       </el-col>
@@ -55,7 +55,7 @@
         <div class="box-right right1">
           <dv-border-box1 >
             <dv-decoration-7 class="box-title"><h3>重点城市创新概况</h3></dv-decoration-7>
-            <div id="rightChart1" style="width: 100%;height: 100%;"></div>
+            <div id="rightChart1" style="width: 100%;height: 90%;"></div>
           </dv-border-box1>
         </div>
         <div class="box-right right2">
@@ -74,6 +74,7 @@
         </div>
       </el-col>
     </el-row>
+  <p style="position:fixed;color: gray;bottom: 0;right: 20px;font-size: 0.75em">*本专题数据时间2019年</p>
 </template>
 
 <script setup>
@@ -94,24 +95,50 @@ midData.value = [
     value:'359141'
   },
 ]
+let leftChart1,leftChart2,leftChart3,rightChart1,rightChart2,rightChart3,midChart1,midChart3,midChart2,rightChart4,rightChart5,rightChart6;
 onMounted(()=>{
+  leftChart1 = echarts.init(document.getElementById('leftChart1'));
+  leftChart2 = echarts.init(document.getElementById('leftChart2'));
+  leftChart3 = echarts.init(document.getElementById('leftChart3'));
+  rightChart1 = echarts.init(document.getElementById('rightChart1'));
+  rightChart2 = echarts.init(document.getElementById('rightChart2'));
+  rightChart3 = echarts.init(document.getElementById('rightChart3'));
+  midChart1 = echarts.init(document.getElementById('midChart1'));
+  midChart3 = echarts.init(document.getElementById('midChart3'));
+  midChart2 = echarts.init(document.getElementById('midChart2'));
+  rightChart4= echarts.init(document.getElementById('rightChart4'));
+  rightChart5= echarts.init(document.getElementById('rightChart5'));
+  rightChart6= echarts.init(document.getElementById('rightChart6'));
   loadLeftChart1();
   loadLeftChart2();
   loadLeftChart3();
   loadRightChart1();
   loadRightChart2();
   loadRightChart3();
-  loadRightChart4('rightChart4',radarData[0].title,radarData[0].data);
-  loadRightChart4('rightChart5',radarData[1].title,radarData[1].data);
-  loadRightChart4('rightChart6',radarData[2].title,radarData[2].data);
+  loadRightChart4(rightChart4,radarData[0].title,radarData[0].data);
+  loadRightChart4(rightChart5,radarData[1].title,radarData[1].data);
+  loadRightChart4(rightChart6,radarData[2].title,radarData[2].data);
   loadMidChart1();
   loadMidChart2();
   loadMidChart3();
 })
+//使echarts高度宽度自动变化
+window.onresize = () =>{
+  leftChart1.resize();
+  leftChart2.resize();
+  leftChart3.resize();
+  rightChart1.resize();
+  rightChart2.resize();
+  rightChart3.resize();
+  midChart1.resize();
+  midChart3.resize();
+  midChart2.resize();
+  rightChart4.resize();
+  rightChart5.resize();
+  rightChart6.resize();
 
+}
 const loadLeftChart1 = () => {
-  let chartDom = document.getElementById('leftChart1');
-  let myChart = echarts.init(chartDom);
   let option;
 
   option = {
@@ -130,7 +157,7 @@ const loadLeftChart1 = () => {
     },
     legend: {
       data: ['R&D经费投入强度(%)', 'R&D人员(万人)'],
-      bottom:'15'
+      bottom:'20'
     },
     xAxis: {
       type: 'value'
@@ -172,13 +199,10 @@ const loadLeftChart1 = () => {
       }
     ]
   };
-  myChart.setOption(option);
+  leftChart1.setOption(option);
 }
 const loadLeftChart2 = () => {
-  let chartDom = document.getElementById('leftChart2');
-  let myChart = echarts.init(chartDom);
   let option;
-
   option = {
     tooltip: {
       trigger: 'item'
@@ -192,7 +216,7 @@ const loadLeftChart2 = () => {
     },
     title: {
       text:'高技术产业从业人员年平均数',
-      bottom:'10',
+      bottom:'20',
       left:'center',
       textStyle:{
         color:'#a5a8c8',
@@ -229,27 +253,24 @@ const loadLeftChart2 = () => {
       }
     ]
   };
-  myChart.setOption(option);
+  leftChart2.setOption(option);
 }
 const loadLeftChart3 = () => {
-  let chartDom = document.getElementById('leftChart3');
-  let myChart = echarts.init(chartDom);
   let option;
   option = {
     tooltip: {
       trigger: 'axis'
     },
     grid: {
-      top:'15%',
+      top:'20%',
       left: '5%',
       right: '15%',
       bottom: '15%',
       containLabel: true
     },
     legend: {
-      show:true,
       data: ['专利申请数(件)', '专利授权数(件)'],
-      bottom:15
+      bottom:'20'
     },
     calculable: true,
     xAxis: [
@@ -298,13 +319,10 @@ const loadLeftChart3 = () => {
       }
     ]
   };
-  myChart.setOption(option);
+  leftChart3.setOption(option);
 }
 const loadRightChart1 = () => {
-  let chartDom = document.getElementById('rightChart1');
-  let myChart = echarts.init(chartDom);
   let option;
-
   option = {
     tooltip: {
       trigger: 'axis',
@@ -324,7 +342,7 @@ const loadRightChart1 = () => {
     },
     color:['#4ac3bf','#4f8cd7','#88eadf','#70b0eb'],
     legend: {
-      bottom:"32",
+      bottom:"25",
       itemWidth:4,
       textStyle: {
         fontSize: 11,
@@ -414,11 +432,10 @@ const loadRightChart1 = () => {
       }
     ]
   };
-  myChart.setOption(option);
+  rightChart1.setOption(option);
 }
 const loadRightChart2 = () => {
-  let chartDom = document.getElementById('rightChart2');
-  let myChart = echarts.init(chartDom);
+
   let option;
 
   option = {
@@ -465,13 +482,10 @@ const loadRightChart2 = () => {
       }
     ]
   };
-  myChart.setOption(option)
+  rightChart2.setOption(option)
 }
 const loadRightChart3 = () => {
-  let chartDom = document.getElementById('rightChart3');
-  let myChart = echarts.init(chartDom);
   let option;
-
   option = {
     title: {
       text: '上海市',
@@ -548,7 +562,7 @@ const loadRightChart3 = () => {
       },
     ]
   };
-  myChart.setOption(option)
+  rightChart3.setOption(option)
 }
 let radarData = [
   {
@@ -564,11 +578,9 @@ let radarData = [
     data:[74,100,73,100,79,90,56,64,79,73]
   }
 ]
-const loadRightChart4 = (id,title,data) => {
-  let chartDom = document.getElementById(id);
-  let myChart = echarts.init(chartDom);
+const loadRightChart4 = (chart,title,data) => {
   let option = radarChartOption(title,data);
-  myChart.setOption(option);
+  chart.setOption(option);
 }
 const radarChartOption = (title,data) => {
   let option;
@@ -652,8 +664,6 @@ const radarChartOption = (title,data) => {
   return option;
 }
 const loadMidChart1 = () => {
-  var chartDom = document.getElementById('midChart1');
-  var myChart = echarts.init(chartDom);
   var option;
 
   const data = [
@@ -1238,11 +1248,10 @@ const loadMidChart1 = () => {
       }
     ]
   };
-  myChart.setOption(option)
+  midChart1.setOption(option)
 }
 const loadMidChart2 = () => {
-  let chartDom = document.getElementById('midChart2');
-  let myChart = echarts.init(chartDom);
+
   let option;
 
   const pathSymbols = {
@@ -1264,7 +1273,7 @@ const loadMidChart2 = () => {
     },
     grid: {
       right:60,
-      top:20,
+      top:0,
       bottom:20,
       containLabel: true,
       left: 20
@@ -1320,20 +1329,10 @@ const loadMidChart2 = () => {
       },
     ]
   };
-  myChart.setOption(option);
+  midChart2.setOption(option);
 }
 const loadMidChart3 = () => {
-  let chartDom = document.getElementById('midChart3');
-  let myChart = echarts.init(chartDom);
   let option;
-
-  const labelSetting = {
-    show: true,
-    position: 'inside',
-    offset: [0, 0],
-    fontSize: 16,
-    color:'white'
-  };
   option = {
     tooltip: {
       trigger: 'axis',
@@ -1348,8 +1347,76 @@ const loadMidChart3 = () => {
       containLabel: true,
       left: 20
     },
+    xAxis: {
+      splitLine: { show: false },
+      axisLine: { show: false },
+      axisLabel: { show: false },
+    },
     yAxis: {
-      data: ['上海市', '江苏省', '浙江省', '安徽省'],
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: {
+        margin: 30,
+        fontSize: 14
+      },
+      axisPointer: {
+        label: {
+          show: true,
+          margin: 30
+        }
+      },
+      data: ['安徽省','浙江省','江苏省','上海市' ]
+    },
+    animationEasing: 'elasticOut',
+    series: [
+      {
+        type: 'pictorialBar',
+        symbol: 'circle',
+        label:{
+          show: true,
+          position: 'inside',
+          offset: [0, 0],
+          fontSize: 16,
+          color:'white'
+        },
+        data: [
+          {
+            value: 1,
+            symbolRepeat: false,
+            symbolSize: [40, 40]
+          },{
+            value: 27,
+            symbolRepeat: false,
+            symbolSize: [40, 40]
+          },{
+            value: 19,
+            symbolRepeat: false,
+            symbolSize: [40, 40]
+          },{
+            value: 44,
+            symbolRepeat: false,
+            symbolSize: [40, 40]
+          },
+        ]
+      }
+    ]
+  };
+  let option2 = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      }
+    },
+    grid: {
+      right:60,
+      top:0,
+      bottom:20,
+      containLabel: true,
+      left: 20
+    },
+    yAxis: {
+      data: ['安徽省','浙江省','江苏省','上海市' ],
       inverse: true,
       axisLine: { show: false },
       axisTick: { show: false },
@@ -1374,18 +1441,13 @@ const loadMidChart3 = () => {
       {
         name: '独角兽企业数',
         type: 'pictorialBar',
-        label: labelSetting,
         symbolRepeat: true,
         symbolSize: ['80%', '80%'],
         z: 10,
         barCategoryGap: '1%',
         data: [
           {
-            value: 44,
-            symbol: 'circle'
-          },
-          {
-            value: 19,
+            value: 1,
             symbol: 'circle'
           },
           {
@@ -1393,14 +1455,18 @@ const loadMidChart3 = () => {
             symbol: 'circle'
           },
           {
-            value: 1,
+            value: 19,
+            symbol: 'circle'
+          },
+          {
+            value: 44,
             symbol: 'circle'
           },
         ]
       },
     ]
   };
-  myChart.setOption(option)
+  midChart3.setOption(option)
 }
 </script>
 
@@ -1418,32 +1484,32 @@ const loadMidChart3 = () => {
   justify-content: center;
 }
 .right1{
-  height: 30%;
+  height: 28vh;
 }
 .right2{
-  height: 65%;
+  height: 60vh;
 }
 .mid1{
 
 }
 .mid3{
-  height: 60%;
+  height: 55vh;
 }
 .mid4{
-  height: 25%;
+  height: 25vh;
 }
 .left1{
-  height: 30%;
+  height: 29vh;
 }
 .left2{
-  height: 30%;
+  height: 30vh;
 }
 .left3{
-  height: 35%;
+  height: 30vh;
 }
 .chart{
   width: 100%;
-  height: 100%;
+  height: 95%;
   padding: 0;
 }
 </style>

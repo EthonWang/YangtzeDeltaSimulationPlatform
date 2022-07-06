@@ -34,13 +34,7 @@ export const sciencePro =
           children: null
 
         },
-        {
-
-          name: '湿地保护',
-          path: 'assets/problem/湿地保护.png',
-          description: "我国长三角地区湿地资源面临的问题中最主要的是对湿地的盲目开垦、环境污染及生物资源的过度利用等。湿地环境污染是长三角湿地面临的最严重的威胁之一，包括工业废水、生活污水、农药、化肥。酷渔滥捕的现象也时有发生，导致湿地生物群落结构的改变以及多样性的降低。",
-          children: null
-        },
+        
         {
 
           name: '地质灾害',
@@ -151,7 +145,13 @@ export const sciencePro =
           description: "",
           children: null
         },
+        {
 
+          name: '湿地保护',
+          path: 'assets/problem/湿地保护.png',
+          description: "我国长三角地区湿地资源面临的问题中最主要的是对湿地的盲目开垦、环境污染及生物资源的过度利用等。湿地环境污染是长三角湿地面临的最严重的威胁之一，包括工业废水、生活污水、农药、化肥。酷渔滥捕的现象也时有发生，导致湿地生物群落结构的改变以及多样性的降低。",
+          children: null
+        },
         {
 
           name: '农业生态',

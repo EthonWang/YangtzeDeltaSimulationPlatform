@@ -1,14 +1,14 @@
 <template>
-  <div style="padding: 20px 20px 0 20px;display: flex;flex-direction: column;justify-content: space-around">
+  <div class="scientificPage">
     <el-row class="row">
       <el-col :span="13">
-        <div style="height:7vh;background-color: #ffffff;border: 1px solid #DCDCDC;display:flex;align-items:center;justify-content:center;">
+        <div style="height:7vh;background-color: #ffffff;border: 1px solid #DCDCDC;display:flex;align-items:center;justify-content:center;min-height: 60px">
           <p style="font-size: 2em;font-weight: bold; letter-spacing:3px;">
             长三角科学创新的空间格局仪表盘（ACM论文库）</p>
         </div>
       </el-col>
       <el-col :span="10" :offset="1">
-        <div style="height:7vh;margin-left:-20px;background-color: #ffffff;border: 1px solid #DCDCDC;">
+        <div style="height:7vh;margin-left:-20px;background-color: #ffffff;border: 1px solid #DCDCDC;min-height: 60px">
           <p class="blockTitle">地域选择工具栏</p>
           <div class="form-check" style="text-align: center">
             <el-radio-group v-model="radioArea" @change="checkRadio">
@@ -53,17 +53,17 @@
       <el-col :span="8" :offset="1">
         <div style="margin-top:0px;height:58vh;background-color: #ffffff;border: 1px solid #DCDCDC;">
           <p class="blockTitle"><span id="area-2" v-if="radioArea == 'YRD'">{{area}}</span><span id="area-2" v-else>{{area}}在长三角区域</span>内部合作形态</p>
-          <div id='map1' style="margin-top:0px;width: 100%;height: calc(58vh - 25px)"></div>
+          <div id='map1' style="margin-top:0px;width: 100%;height: calc(58vh - 32px)"></div>
         </div>
       </el-col>
       <el-col :span="10" :offset="1">
         <div style="height:27vh;background-color: #ffffff;border: 1px solid #DCDCDC;">
           <p class="blockTitle"><span id="area-3">{{area}}</span>与国内其它地区（不含港澳台）合作形态</p>
-          <div id='map2' style="margin-top:0px;width: 100%;height: calc(27vh - 25px)"></div>
+          <div id='map2' style="margin-top:0px;width: 100%;height: calc(27vh - 32px)"></div>
         </div>
         <div style="height:27vh;background-color: #ffffff;border: 1px solid #DCDCDC;margin-top:4vh;">
           <p class="blockTitle"><span id="area-4">{{area}}</span>与国际及港澳台地区合作形态</p>
-          <div id='map3' style="margin-top:0px;width: 100%;height: calc(27vh - 25px)"></div>
+          <div id='map3' style="margin-top:0px;width: 100%;height: calc(27vh - 32px)"></div>
         </div>
       </el-col>
     </el-row>
@@ -442,6 +442,15 @@ onMounted(()=>{
 </script>
 
 <style scoped>
+.scientificPage{
+  padding: 20px 20px 0 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  min-width: 1338px;
+  overflow: scroll;
+
+}
 .form-check-label {
   font-weight: normal;
   font-size: 14px;

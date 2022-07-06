@@ -576,6 +576,7 @@
 </template>
 
 <script>
+import {useStore} from "vuex";
 import { watch } from "vue";
 import mapboxgl from "mapbox-gl";
 import MapboxLanguage from "@mapbox/mapbox-gl-language";
@@ -682,6 +683,7 @@ export default {
         dataList: [],
       },
       taskInfo: JSON.parse(localStorage.getItem("task")),
+      dataServer: useStore().getters.devIpAddress,
     };
   },
 
@@ -845,7 +847,7 @@ export default {
         map.addSource(newShpInfo.name + "_" + newShpInfo.id, {
           type: "geojson",
           // data: "http://172.21.212.63:8999/model/getShpJsonData?shpJsonPath="+newShpInfo.path,
-          data: "http://172.21.212.63:8999" + newShpInfo.visualWebAddress,
+          data: this.dataServer + newShpInfo.visualWebAddress,
         });
         //添加layer
         let newLayer = {
@@ -959,6 +961,34 @@ export default {
       clipButtonObj.style.fontSize = "16px";
       drawBox.appendChild(clipButtonObj);
       clipButtonObj.addEventListener(
+        "click",
+        (e) => {
+          that.clipModalShow();
+        },
+        true
+      );
+      let intersetButtonObj = document.createElement("button");
+      intersetButtonObj.classList =
+        "mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_interset ivu-icon ivu-icon-logo-buffer";
+      intersetButtonObj.id = "mapbox-gl-draw_interset";
+      intersetButtonObj.title = "相交";
+      intersetButtonObj.style.fontSize = "16px";
+      drawBox.appendChild(intersetButtonObj);
+      intersetButtonObj.addEventListener(
+        "click",
+        (e) => {
+          that.clipModalShow();
+        },
+        true
+      );
+      let unionButtonObj = document.createElement("button");
+      unionButtonObj.classList =
+        "mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_union ivu-icon ivu-icon-md-square";
+      unionButtonObj.id = "mapbox-gl-draw_union";
+      unionButtonObj.title = "联合";
+      unionButtonObj.style.fontSize = "16px";
+      drawBox.appendChild(unionButtonObj);
+      unionButtonObj.addEventListener(
         "click",
         (e) => {
           that.clipModalShow();
@@ -1127,9 +1157,9 @@ export default {
     clipFormChange(name,type) {
       for(let i = 0 ; i < this.showLayerTableList.length ; i++){
         if (this.showLayerTableList[i].name == name && type == 'raster'){
-          this.clipForm.inputRaster = this.showLayerTableList[i].id;
+          this.clipForm.inputRaster = this.showLayerTableList[i].data.fileRelativePath;
         } else if (this.showLayerTableList[i].name == name && type == 'shp'){
-          this.clipForm.inputShp = this.showLayerTableList[i].id
+          this.clipForm.inputShp = this.showLayerTableList[i].data.fileRelativePath;
         }
       }
       console.log(this.clipForm);

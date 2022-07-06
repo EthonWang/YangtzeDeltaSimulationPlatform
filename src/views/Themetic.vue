@@ -719,6 +719,7 @@ thematicName.value = show_name.replace('\n','');
   animation: tracking-in-expand 0.7s cubic-bezier(0.215, 0.61, 0.355, 1) both;
   border-left: 8px solid #4ba0ff;
   padding: 0 15px;
+  margin-top: 24px;
   //color:#525C8E ;
 }
 

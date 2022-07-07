@@ -367,7 +367,7 @@ h1 {
 
 
 <script>
-import {useStore} from "vuex";
+import { useStore } from "vuex";
 import axios from "axios";
 import "./style.css";
 // import { get, post, del, put } from "@/axios";
@@ -588,14 +588,7 @@ export default {
         info.normalTags = this.formInline.tagList.toString();
         info.problemTags = this.formInline.problemTags.toString();
         info.publicBoolean = true;
-        if (
-          this.toUploadVisualFiles.length >= 1 ||
-          this.formInline.visualType == "tif"
-        ) {
-          info.visualizationBoolean = true;
-        } else {
-          info.visualizationBoolean = false;
-        }
+        info.visualizationBoolean = true;
         info.visualType = this.formInline.visualType;
         info.geoType = this.formInline.geoType;
         info.fileStoreName = uploaderRes.data.fileStoreName;
@@ -630,9 +623,7 @@ export default {
         confirm("Created project fail.");
       }
     },
-    commitProjectModel(){
-
-    },
+    commitProjectModel() {},
     //创建历史纪录的函数
     addHistoryEvent(scopeId) {
       let form = {};

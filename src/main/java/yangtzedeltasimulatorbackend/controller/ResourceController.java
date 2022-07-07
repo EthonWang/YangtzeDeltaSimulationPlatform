@@ -12,6 +12,8 @@ import yangtzedeltasimulatorbackend.entity.dto.resource.CreateResourceSmallFileD
 import yangtzedeltasimulatorbackend.entity.dto.resource.ResourcePageDTO;
 import yangtzedeltasimulatorbackend.service.ResourceService;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @Description
  * @Auther wyjq

@@ -52,7 +52,5 @@ public class UserData {
 
     //文件夹结构相关
     String parentId;
-
-    String visualType;
 }
 

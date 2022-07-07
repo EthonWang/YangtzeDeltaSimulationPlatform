@@ -9,13 +9,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import yangtzedeltasimulatorbackend.dao.DataItemDao;
 import yangtzedeltasimulatorbackend.dao.LabTaskDao;
+import yangtzedeltasimulatorbackend.dao.UserDataDao;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
 import yangtzedeltasimulatorbackend.entity.dto.PageDTO;
 import yangtzedeltasimulatorbackend.entity.dto.script.GDALClipDTO;
-import yangtzedeltasimulatorbackend.entity.po.DataItem;
 import yangtzedeltasimulatorbackend.entity.po.LabTask;
+import yangtzedeltasimulatorbackend.entity.po.UserData;
 import yangtzedeltasimulatorbackend.entity.po.VisualDataItem;
 import yangtzedeltasimulatorbackend.utils.ExecCmdUtils;
 import yangtzedeltasimulatorbackend.utils.GeoServerUtils;
@@ -50,7 +50,7 @@ public class ScriptExecService {
     private  String geoserverUrl;
 
     @Autowired
-    DataItemDao dataItemDao ;
+    UserDataDao userDataDao ;
 
     @Autowired
     LabTaskDao labTaskDao ;
@@ -100,25 +100,25 @@ public class ScriptExecService {
             if(re==0){
                 // 对裁剪成功的tif进行发布
                 File file = new File(scriptOutDir + "/" + outFileName);
-                DataItem dataItem = new DataItem();
+                UserData userData = new UserData();
                 String path = scriptOutDir + "/" + outFileName;
                 String fileName = file.getName();
                 Long fileSize = file.length();
                 GeoServerUtils.PublishTiff("yangtzeRiver",fileName.split(".tif")[0],path);
                 String geoServerUrl= MessageFormat.format("{0}/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A{1}&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857" +
                         "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl,fileName.split(".tif")[0]);
-                dataItem.setName(fileName);
-                dataItem.setType("file");
-                dataItem.setVisualType("tif");
-                dataItem.setSize(fileSize.toString());
-                dataItem.setFileStoreName(fileName);
-                dataItem.setFileWebAddress("/store/scriptOut/" + fileName);
-                dataItem.setFileRelativePath("/scriptOut/" + fileName);
-                dataItem.setVisualWebAddress(geoServerUrl);
-                dataItem.setPublicBoolean(true);
-                dataItem.setVisualizationBoolean(true);
-                dataItem.setParentId(labTaskId);
-                dataItemDao.save(dataItem);
+                userData.setName(fileName);
+                userData.setType("file");
+                userData.setVisualType("tif");
+                userData.setSize(fileSize.toString());
+                userData.setFileStoreName(fileName);
+                userData.setFileWebAddress("/store/scriptOut/" + fileName);
+                userData.setFileRelativePath("/scriptOut/" + fileName);
+                userData.setVisualWebAddress(geoServerUrl);
+                userData.setPublicBoolean(true);
+                userData.setVisualizationBoolean(true);
+                userData.setParentId(labTaskId);
+                userDataDao.save(userData);
                 //保存到labTask
                 Optional<LabTask> byId1 = labTaskDao.findById(labTaskId);
                 if (!byId1.isPresent()) { return ResultUtils.error("保存失败");}
@@ -140,7 +140,7 @@ public class ScriptExecService {
                 labTask.setDataList(dataList);
                 labTaskDao.save(labTask);
 
-                return  ResultUtils.success(dataItem);
+                return  ResultUtils.success(userData);
             }
             return ResultUtils.error();
         }catch (Exception e){

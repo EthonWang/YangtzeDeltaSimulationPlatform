@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Description
@@ -69,7 +70,7 @@ public class ResourceService {
     FolderDao folderDao ;
 
     @Autowired
-    DataItemDao dataItemDao ;
+    UserDataDao userDataDao;
 
     @Autowired
     LabTaskDao labTaskDao ;
@@ -355,7 +356,7 @@ public class ResourceService {
             labTaskFolder.setParentId(userId);
             folderDao.save(labTaskFolder);
         }
-        DataItem dataItem;
+        UserData userData;
         if(!"".equals(data)){
             //文件写入
 //            String uuid = IdUtil.objectId();
@@ -375,16 +376,16 @@ public class ResourceService {
                 e.printStackTrace();
             }
             //创建dataItem实体
-            dataItem = new DataItem();
-            dataItem.setName(fileName + ".json");
-            dataItem.setType("file");
-            dataItem.setSize(String.valueOf(file.length()));
-            dataItem.setFileStoreName(file.getName());
-            dataItem.setFileRelativePath("/data/"+file.getName());
-            dataItem.setFileWebAddress("/store/data/"+file.getName());
-            dataItem.setUserId(userId);
-            dataItem.setParentId(labTaskId);
-            dataItemDao.save(dataItem);
+            userData = new UserData();
+            userData.setName(fileName + ".json");
+            userData.setType("file");
+            userData.setSize(String.valueOf(file.length()));
+            userData.setFileStoreName(file.getName());
+            userData.setFileRelativePath("/data/"+file.getName());
+            userData.setFileWebAddress("/store/data/"+file.getName());
+            userData.setUserId(userId);
+            userData.setParentId(labTaskId);
+            userDataDao.save(userData);
             //保存到labTask
             Optional<LabTask> byId1 = labTaskDao.findById(labTaskId);
             if (!byId1.isPresent()) { return ResultUtils.error("保存失败");}
@@ -403,7 +404,7 @@ public class ResourceService {
             dataList.add(dataObject);
             labTask.setDataList(dataList);
             labTaskDao.save(labTask);
-            return ResultUtils.success(dataItem);
+            return ResultUtils.success(userData);
         }
         return ResultUtils.error("保存失败");
     }

@@ -84,5 +84,10 @@ public class ResourceController {
 //        return themeService.uploadThemeImg(uploadImg);
 //    }
 
+    @ApiOperation(value = "保存资源中心其他小数据")
+    @PostMapping("/saveLabGeoJsonFile")
+    public JsonResult saveLabGeoJsonFile(HttpServletRequest request){
+       return resourceService.saveLabGeoJsonFile(request);
+    }
 
 }

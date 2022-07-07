@@ -236,7 +236,8 @@ class YangtzeDeltaSimulatorBackendApplicationTests {
     @Test
     void file2Geoserver() throws MalformedURLException, FileNotFoundException {
 
-        GeoServerUtils.PublishTiff("yangtzeRiver","landuse_1983","E:\\TempWork\\javapyhton\\yangtzeRiver\\GDAL_test\\landuse_1983.tif");
+//        GeoServerUtils.PublishTiff("yangtzeRiver","landuse_1983","D:\\zym\\opengms\\yangtzeRiver\\GDAL_test\\landuse_1983.tif");
+        GeoServerUtils.PublishShape("yangtzeRiver","out2", "out2",null,"D:\\zym\\opengms\\yangtzeRiver\\geojson2shpTest\\out2.shp");
     }
 
     @Test

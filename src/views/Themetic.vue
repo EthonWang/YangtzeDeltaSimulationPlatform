@@ -38,9 +38,9 @@
           <div>
             <h3 class="typeName">相关案例</h3>
             <el-divider ></el-divider>
-            <div style="display: flex;align-items: center;">
+            <div style="display: flex;align-items: center;width:100%;flex-wrap: wrap">
               <template v-for="(item,key) in thematicItem.relatedCases" :key="key">
-                <el-card :body-style="{ padding: '0px'}" class="caseCard" >
+                <div  class="caseCard">
                   <div class="caseImageWrap">
                     <el-image class="caseImage" @click="toCase(item.path)"  :src="baseUrl+item.thumbnail" fit="fill"></el-image>
                     <div class="imageMask">
@@ -48,14 +48,14 @@
                       <span >打开案例</span>
                     </div>
                   </div>
-                  <div style="display: flex;justify-content: center;padding: 0.5rem">
+                  <div style="display: flex;justify-content: center;padding: 0.5rem;">
                     <el-tooltip effect="light"
                                 placement="bottom"
                                 content="查看案例详情">
-                      <h4 class="font-size-1" @click="goCaseInfo">{{item.name}}</h4>
+                      <h4 class="font-size-1" @click="goCaseInfo()">{{item.name}}</h4>
                     </el-tooltip>
                   </div>
-                </el-card>
+                </div>
               </template>
             </div>
             <div class="dataBlock">
@@ -637,7 +637,7 @@ thematicName.value = show_name.replace('\n','');
 .caseImage{
   height: 100px;
   width: 160px;
-  border-bottom: 1px lightgray solid;
+  border-bottom: 1px solid lightgray;
 }
 .imageMask{
   height: 100px;
@@ -669,7 +669,10 @@ thematicName.value = show_name.replace('\n','');
 
 .caseCard{
   margin-right: 20px;
+  margin-bottom: 20px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
+
 .editDialogRow{
   align-items: center;
   margin-bottom: 15px;
@@ -720,7 +723,6 @@ thematicName.value = show_name.replace('\n','');
   border-left: 8px solid #4ba0ff;
   padding: 0 15px;
   margin-top: 24px;
-  //color:#525C8E ;
 }
 
 @keyframes tracking-in-expand {

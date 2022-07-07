@@ -234,15 +234,17 @@ export default {
         newShpInfo.visualType == "shp"
       ) {
         map.addSource(newShpInfo.name + "_" + newShpInfo.id, {
-          type: "geojson",
-          data: this.dataServer + newShpInfo.visualDataItems[0].visualWebAddress,
+          type: "raster",
+          tiles: [newShpInfo.visualDataItems[index].visualWebAddress],
         });
         let newLayer = {
           id: newShpInfo.id,
           source: newShpInfo.name + "_" + newShpInfo.id,
-          type: newShpInfo.geoType,
-          paint: this.layerStyle[newShpInfo.geoType].paint,
+          type: "raster",
+          // paint: this.layerStyle["fill"].paint,
+          // "source-layer": newShpInfo.visualDataItems[index].name.split(".shp")[0],
         };
+        console.log(newLayer);
         map.addLayer(newLayer);
       } else if (
         newShpInfo.visualWebAddress != "" &&

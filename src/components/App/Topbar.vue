@@ -16,7 +16,7 @@
         style="
           transition: all 1s;
           height: 70%;
-          margin-left: 17%;
+          margin-left: 1.5vw;
           margin-top: 0px;
           color: white;
           position: relative;
@@ -82,11 +82,11 @@ const getRootPath = (whole) => {
 const searchIndexInRoutes = () => {
   let i = 0;
   if (getRootPath(route.path) != "") {
-    setTimeout(() => {
-      document.getElementsByClassName("user-topbar")[0].style.right = "2vw";
-      document.getElementById("logo").style.marginLeft = "2vw";
-      document.getElementsByClassName("topbar")[0].style.left = "5vw";
-    }, 150);
+    // setTimeout(() => {
+    //   document.getElementsByClassName("user-topbar")[0].style.right = "2vw";
+    //   document.getElementById("logo").style.marginLeft = "2vw";
+    //   document.getElementsByClassName("topbar")[0].style.left = "5vw";
+    // }, 150);
 
     pick.value = new Array(barList.length).fill(0);
   } else {
@@ -113,9 +113,9 @@ watch(
       }, 800);
       setTimeout(() => {
         pick.value = new Array(barList.length).fill(0);
-        document.getElementsByClassName("user-topbar")[0].style.right = "2vw";
-        document.getElementById("logo").style.marginLeft = "2vw";
-        document.getElementsByClassName("topbar")[0].style.left = "5vw";
+        // document.getElementsByClassName("user-topbar")[0].style.right = "2vw";
+        // document.getElementById("logo").style.marginLeft = "2vw";
+        // document.getElementsByClassName("topbar")[0].style.left = "5vw";
         for (let i in barList) {
           if (getRootPath(barList[i].path) == getRootPath(newValue)) {
             pickup(i);
@@ -145,12 +145,12 @@ const sendRouterToFather = (route1, index) => {
 
     return;
   }
-  setTimeout(() => {
-    document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
-    document.getElementById("logo").style.marginLeft = "17vw";
-    document.getElementsByClassName("topbar")[0].style.left =
-      "calc(17% + 50px)";
-  }, 1000);
+  // setTimeout(() => {
+  //   document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
+  //   document.getElementById("logo").style.marginLeft = "17vw";
+  //   document.getElementsByClassName("topbar")[0].style.left =
+  //     "calc(17% + 50px)";
+  // }, 1000);
 
   pickup(index);
   emit("RouterFromBar", route1);
@@ -184,7 +184,8 @@ setTimeout(searchIndexInRoutes, 100);
   // margin-left: 20px;
   width: 100%;
   position: absolute;
-  left: calc(17% + 50px);
+  // left: calc(17% + 50px);
+  left: 3.5vw;
   transition: all 1s;
 }
 

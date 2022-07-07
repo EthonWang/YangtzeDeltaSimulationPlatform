@@ -307,9 +307,15 @@ const handleClose = (tag) => {
 // p {
 //   width: calc(80% - 100px);
 // }
+ /deep/.el-form--label-left .el-form-item__label {
+    text-align: left;
+    overflow: hidden !important;
+}
 .data-list {
+ 
   transition: all 0.5s;
   /deep/ .el-form-item {
+    
     transition: all 0.5s;
     --font-size: 14px;
     margin-bottom: 0px;

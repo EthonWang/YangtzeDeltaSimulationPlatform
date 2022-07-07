@@ -215,14 +215,14 @@ overflow: hidden;
 
   100% {
     opacity: 0;
-    transform: scale(0.9);
+    // transform: scale(0.9);
     display: none;
   }
 }
 @keyframes show1 {
   0% {
     opacity: 0;
-    transform: scale(0.9);
+    // transform: scale(0.9);
     
     // transform: skew(30deg);
   }

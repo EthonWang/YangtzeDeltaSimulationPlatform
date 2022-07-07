@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResourceDataPageDTO  extends PageDTO {
+public class ResourcePageDTO extends PageDTO {
     @ApiModelProperty(value = "当前页数", example = "1")
     private Integer page = 1; //当前页数
     @ApiModelProperty(value = "每页数量", example = "10")

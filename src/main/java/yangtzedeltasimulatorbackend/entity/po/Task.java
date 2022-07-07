@@ -1,5 +1,7 @@
 package yangtzedeltasimulatorbackend.entity.po;
 
+import cn.hutool.core.util.IdUtil;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import yangtzedeltasimulatorbackend.entity.doo.base.MyId;
@@ -17,7 +19,10 @@ import java.util.UUID;
  * @Date 2022/5/5
  **/
 @Data
-public class Task extends MyId {
+public class Task {
+    @Id
+    @ApiModelProperty(value = "id",hidden = true)
+    String id= IdUtil.objectId();
     String taskId;
     String computableId;
     String computableName;

@@ -1,6 +1,8 @@
 package yangtzedeltasimulatorbackend.service;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileNameUtil;
+import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.jni.FileInfo;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import yangtzedeltasimulatorbackend.dao.BigFileInfoDao;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
+import yangtzedeltasimulatorbackend.entity.dto.dashboard.SortDTO;
 import yangtzedeltasimulatorbackend.entity.po.BigFileInfo;
 import yangtzedeltasimulatorbackend.entity.po.FileChunk;
 import yangtzedeltasimulatorbackend.utils.IFileUtils;
@@ -40,8 +43,11 @@ public class FileTransferService {
     @Value("${bigFileUploadDir}")
     private String bigFileUploadDir;
 
-    @Value("${dataStoreDir}"+"/otherFile")
+    @Value("${dataStoreDir}"+"/noClassFile")
     private String noClassFileDir;
+
+    @Value("${dataStoreDir}")
+    private String dataStoreDir;
 
     @Autowired
     BigFileInfoDao bigFileInfoDao;
@@ -151,13 +157,36 @@ public class FileTransferService {
 
     public JsonResult uploadNoClassFile(MultipartFile upFile, HttpServletResponse response) {
         try{
-            return ResultUtils.success("上传文件成功");
+            if(upFile.isEmpty()){
+                return ResultUtils.error("文件为空");
+            }
+
+            String fileName = upFile.getOriginalFilename(); //eg: XXX.js
+            String fileMainName= FileNameUtil.mainName(fileName); // XXX
+            String fileExtName = FileNameUtil.extName(fileName); //js
+            String fileNewName=IdUtil.objectId()+"."+fileExtName;
+            File saveFile = new File(noClassFileDir, fileNewName);//eg: E:\\TEMP\\XXX1231231.js
+            upFile.transferTo(saveFile);
+
+            JSONObject o=new JSONObject();
+            o.put("noClassFileName",fileNewName);
+            return ResultUtils.success(o);
         }catch (Exception e){
             log.error(e.getMessage());
             return  ResultUtils.error("上传文件失败");
         }
 
     }
+
+    public void getNoClassFile(String noClassFileName, HttpServletResponse response) {
+        try {
+            File file=new File(noClassFileDir,noClassFileName);
+            MyFileUtils.downloadFile(file,response);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+    }
+
 
 //    public JsonResult uploadFile(Chunk chunk, HttpServletResponse response) {
 //

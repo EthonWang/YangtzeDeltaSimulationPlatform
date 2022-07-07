@@ -11,11 +11,21 @@ spring:
      max-request-size: 10240MB
   web:
     resources:
-      static-locations: classpath:/META-INF/resources/,classpath:/resources/, classpath:/static/, classpath:/public/, file:E:/GitProject/YangtzeDataStore/models, file:E:/GitProject/YangtzeDataStore/data
+      static-locations: classpath:/META-INF/resources/,classpath:/resources/, classpath:/static/, classpath:/public/, file:${dataStoreDir}
   mvc:
     static-path-pattern: /store/**
 
-dataStoreDir: E:/GitProject/YangtzeDataStore
+#静态资源的映射地址前面部分
+staticFilePattern: /store
+
+dataStoreDir: E:/GitProject/YangtzeDataStoreNew
+bigFileUploadDir: ${dataStoreDir}/bigFileTemp
 
 dataContainerIpAndPort: geomodeling.njnu.edu.cn/dataTransferServer
 managerServerIpAndPort: 222.192.7.75:8084
+
+geoserverUrl: http://172.21.213.92:8089/geoserver
+geoserverUserName: admin
+geoserverPassword: geoserver
+
+

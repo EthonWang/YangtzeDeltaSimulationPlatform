@@ -21,7 +21,7 @@ import java.util.List;
 
 @Data
 @Document
-public class DataItem {
+public class UserData {
 
     @Id
     @ApiModelProperty(value = "id",hidden = true)
@@ -49,5 +49,7 @@ public class DataItem {
 
     //文件夹结构相关
     String parentId;
+
+    String visualType;
 }
 

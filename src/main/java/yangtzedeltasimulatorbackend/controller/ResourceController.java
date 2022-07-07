@@ -6,14 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
-import yangtzedeltasimulatorbackend.entity.dto.PageDTO;
 import yangtzedeltasimulatorbackend.entity.dto.resource.CreateResourceDataDTO;
+import yangtzedeltasimulatorbackend.entity.dto.resource.CreateResourceModelDTO;
 import yangtzedeltasimulatorbackend.entity.dto.resource.CreateResourceSmallFileDTO;
-import yangtzedeltasimulatorbackend.entity.dto.resource.ResourceDataPageDTO;
+import yangtzedeltasimulatorbackend.entity.dto.resource.ResourcePageDTO;
 import yangtzedeltasimulatorbackend.service.ResourceService;
-import yangtzedeltasimulatorbackend.utils.ResultUtils;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @Description
@@ -36,10 +33,10 @@ public class ResourceController {
     }
 
     //    @LoginRequired
-    @ApiOperation(value = "获取资源中心列表")
+    @ApiOperation(value = "获取资源中心数据列表")
     @PostMapping("/getResourceDataList")
-    public JsonResult getResourceDataList(@RequestBody ResourceDataPageDTO resourceDataPageDTO){
-        return resourceService.getResourceDataList(resourceDataPageDTO);
+    public JsonResult getResourceDataList(@RequestBody ResourcePageDTO resourcePageDTO){
+        return resourceService.getResourceDataList(resourcePageDTO);
     }
 
     @ApiOperation(value = "删除资源中心数据")
@@ -61,6 +58,25 @@ public class ResourceController {
     public JsonResult deleteResourceSmallFile(@PathVariable("resourceSmallFileId") String resourceSmallFileId ){
         return resourceService.deleteResourceSmallFile(resourceSmallFileId);
     }
+
+    @ApiOperation(value = "创建资源中心的模型条目")
+    @PostMapping("/createResourceModel")
+    public JsonResult createResourceModel(@RequestBody CreateResourceModelDTO createResourceModelDTO){
+        return resourceService.createResourceModel(createResourceModelDTO);
+    }
+
+    @ApiOperation(value = "获取资源中心模型列表")
+    @PostMapping("/getResourceModelList")
+    public JsonResult getResourceModelList(@RequestBody ResourcePageDTO resourcePageDTO){
+        return resourceService.getResourceModelList(resourcePageDTO);
+    }
+
+    @ApiOperation(value = "删除资源中心的模型条目")
+    @GetMapping("/deleteResourceModel/{resourceModelId}")
+    public JsonResult deleteResourceModel(@PathVariable("resourceModelId") String resourceModelId){
+        return resourceService.deleteResourceModel(resourceModelId);
+    }
+
 
 //    @ApiOperation(value = "专题页上传图片")
 //    @PostMapping("/uploadThemeImg")

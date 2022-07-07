@@ -1,5 +1,6 @@
 package yangtzedeltasimulatorbackend.entity.dto.script;
 
+import cn.hutool.json.JSONObject;
 import lombok.Data;
 
 /**
@@ -10,7 +11,9 @@ import lombok.Data;
 
 @Data
 public class GDALClipDTO {
-    String inputShp;
-    String inputRaster;
-    String outputTif;
+    String inputGeoJson;
+    String inputShpPath;
+    String inputRasterPath;
+    String outputTifName;
+    Boolean isShp;
 }

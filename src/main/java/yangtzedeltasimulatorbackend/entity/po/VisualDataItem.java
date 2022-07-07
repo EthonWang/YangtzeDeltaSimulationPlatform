@@ -38,6 +38,6 @@ public class VisualDataItem {
 
     String visualStoreName; //可视化文件名字
     String visualWebAddress; //可视化文件下载请求的地址
-    String visualRelativePath;
+    String fileRelativePath;
     String visualType;
 }

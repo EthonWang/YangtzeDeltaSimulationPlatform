@@ -13,8 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import yangtzedeltasimulatorbackend.dao.ResourceDataDao;
-import yangtzedeltasimulatorbackend.dao.ResourceSmallFileDao;
+import yangtzedeltasimulatorbackend.dao.*;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
 import yangtzedeltasimulatorbackend.entity.dto.PageDTO;
 import yangtzedeltasimulatorbackend.entity.dto.resource.CreateResourceDataDTO;
@@ -25,7 +24,10 @@ import yangtzedeltasimulatorbackend.utils.FileUtils;
 import yangtzedeltasimulatorbackend.utils.GeoServerUtils;
 import yangtzedeltasimulatorbackend.utils.ResultUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,11 +54,23 @@ public class ResourceService {
     @Value("${geoserverUrl}")
     String geoserverUrl;
 
+    @Value("${geoserverUrl_SHP}")
+    String geoserverUrl_SHP;
+
     @Autowired
     ResourceDataDao resourceDataDao;
 
     @Autowired
     ResourceSmallFileDao resourceSmallFileDao ;
+
+    @Autowired
+    FolderDao folderDao ;
+
+    @Autowired
+    DataItemDao dataItemDao ;
+
+    @Autowired
+    LabTaskDao labTaskDao ;
 
     @Autowired
     CommonService commonService;
@@ -101,6 +115,7 @@ public class ResourceService {
                                 "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl,fileName.split(".tif")[0]);
                         visualDataItem.setName(fileName);
                         visualDataItem.setType("tif");
+                        visualDataItem.setVisualType("tif");
                         visualDataItem.setSize(fileSize.toString());
                         visualDataItem.setFileStoreName(resourceData.getFileStoreName());
                         visualDataItem.setFileWebAddress(resourceData.getFileWebAddress());
@@ -110,14 +125,16 @@ public class ResourceService {
                         visualDataItem.setVisualWebAddress(geoServerUrl);
                         visualDataItem.setPublicBoolean(true);
                         visualDataItem.setVisualizationBoolean(true);
-                        visualDataItem.setVisualRelativePath(path.split(dataStoreDir)[1]);
+                        visualDataItem.setFileRelativePath(path.split(dataStoreDir)[1]);
                         visualDataItems.add(visualDataItem);
                     }
                 }
             } else if("shp".equals(resourceData.getVisualType())){
                 List<JSONObject> fileInfo;
                 try {
-                    fileInfo = FileUtils.zipUncompress(resourceDataFolder+"/"+createResourceDataDTO.getFileStoreName(),resourceDataFolder);
+                    fileInfo = FileUtils.zipUncompress(
+                            resourceDataFolder+"/"+createResourceDataDTO.getFileStoreName(),
+                            resourceDataFolder+"/"+createResourceDataDTO.getFileStoreName().split(".zip")[0]);
                 } catch (Exception e) {
                     return null;
                 }
@@ -129,11 +146,12 @@ public class ResourceService {
                         VisualDataItem visualDataItem = new VisualDataItem();
                         String path = item.getString("path");
                         Long fileSize = item.getLong("fileSize");
-                        GeoServerUtils.PublishTiff("yangtzeRiver",fileName,path);
+                        GeoServerUtils.PublishShape("yangtzeRiver",fileName.split(".shp")[0], fileName.split(".shp")[0], null,path);
                         String geoServerUrl= MessageFormat.format("{0}/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A{1}&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857" +
-                                "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl,resourceData.getName());
+                                "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl_SHP,fileName.split(".shp")[0]);
                         visualDataItem.setName(fileName);
                         visualDataItem.setType("shp");
+                        visualDataItem.setVisualType("shp");
                         visualDataItem.setSize(fileSize.toString());
                         visualDataItem.setFileStoreName(resourceData.getFileStoreName());
                         visualDataItem.setFileWebAddress(resourceData.getFileWebAddress());
@@ -143,7 +161,7 @@ public class ResourceService {
                         visualDataItem.setVisualWebAddress(geoServerUrl);
                         visualDataItem.setPublicBoolean(true);
                         visualDataItem.setVisualizationBoolean(true);
-                        visualDataItem.setVisualRelativePath(path.split(dataStoreDir)[1]);
+                        visualDataItem.setFileRelativePath(path.split(dataStoreDir)[1]);
                         visualDataItems.add(visualDataItem);
                     }
                 }
@@ -270,6 +288,76 @@ public class ResourceService {
             log.error(e.getMessage());
             return ResultUtils.error("删除资源小文件失败！");
         }
+    }
+
+    public JsonResult saveLabGeoJsonFile(HttpServletRequest req){
+        //读取请求中的资源
+        String data = req.getParameter("sourceData");
+        String fileName = req.getParameter("name");
+        String labTaskId = req.getParameter("labTaskId");
+        String labTaskName = req.getParameter("labTaskName");
+        String userId = req.getParameter("userId");
+        // 检查个人资源中是否已经存在该项目的文件夹
+        Optional<Folder> byId = folderDao.findById(labTaskId);
+        if (!byId.isPresent()) {
+            Folder labTaskFolder = new Folder();
+            labTaskFolder.setId(labTaskId);
+            labTaskFolder.setName(labTaskName);
+            labTaskFolder.setUserId(userId);
+            labTaskFolder.setParentId(userId);
+            folderDao.save(labTaskFolder);
+        }
+        DataItem dataItem;
+        if(!"".equals(data)){
+            //文件写入
+//            String uuid = IdUtil.objectId();
+            String fileDir = dataStoreDir + "/data/" + fileName + ".json";
+            File file = new File(fileDir);
+            //如果文件不存在，创建文件
+            try {
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+                //创建FileWriter对象
+                FileOutputStream fos = new FileOutputStream(file);
+                //向文件中写入内容
+                fos.write(data.getBytes());
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //创建dataItem实体
+            dataItem = new DataItem();
+            dataItem.setName(fileName + ".json");
+            dataItem.setType("file");
+            dataItem.setSize(String.valueOf(file.length()));
+            dataItem.setFileStoreName(file.getName());
+            dataItem.setFileRelativePath("/data/"+file.getName());
+            dataItem.setFileWebAddress("/store/data/"+file.getName());
+            dataItem.setUserId(userId);
+            dataItem.setParentId(labTaskId);
+            dataItemDao.save(dataItem);
+            //保存到labTask
+            Optional<LabTask> byId1 = labTaskDao.findById(labTaskId);
+            if (!byId1.isPresent()) { return ResultUtils.error("保存失败");}
+            LabTask labTask = byId1.get();
+            List<cn.hutool.json.JSONObject> dataList = labTask.getDataList();
+            cn.hutool.json.JSONObject dataObject = new cn.hutool.json.JSONObject();
+            dataObject.set("id", IdUtil.objectId());
+            dataObject.set("name", fileName + ".json");
+            dataObject.set("type","fill");
+            dataObject.set("visualType","geojson");
+            dataObject.set("size",String.valueOf(file.length()));
+            dataObject.set("fileStoreName",file.getName());
+            dataObject.set("fileRelativePath","/data/"+file.getName());
+            dataObject.set("fileWebAddress","/store/data/"+file.getName());
+            dataObject.set("userId",userId);
+            dataList.add(dataObject);
+            labTask.setDataList(dataList);
+            labTaskDao.save(labTask);
+            return ResultUtils.success(dataItem);
+        }
+        return ResultUtils.error("保存失败");
     }
 
 }

@@ -3,7 +3,7 @@ import { createStore } from "vuex";
 export default createStore({
   state: {
     // devIpAddress:"http://172.21.213.248:8999",//wyj
-    devIpAddress:"http://localhost:8999",
+    devIpAddress:"http://172.21.213.44:8999",
   },
   mutations: {},
   actions: {},

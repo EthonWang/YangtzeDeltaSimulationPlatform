@@ -2,6 +2,7 @@ package yangtzedeltasimulatorbackend;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileReader;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ZipUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -26,6 +27,7 @@ import java.io.*;
 import java.lang.reflect.Member;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -240,9 +242,9 @@ class YangtzeDeltaSimulatorBackendApplicationTests {
 
     @Test
     void filezip(){
-//        File unzip = ZipUtil.unzip("E:\\del\\aaa\\aab4e3f3-d984-4fc8-a2a9-e25b617de2d5.zip","E:\\del\\aaa");
-        File file=new File("E:\\del\\aaa\\aab4e3f3-d984-4fc8-a2a9-e25b617de2d5.zip");
-        FileUtil.rename(file,"aaa",true,true);
+        File unzip = ZipUtil.unzip("E:\\del\\ccc.zip","E:\\del\\ccc");
+//        File file=new File("E:\\del\\aaa\\aab4e3f3-d984-4fc8-a2a9-e25b617de2d5.zip");
+//        FileUtil.rename(file,"aaa",true,true);
     }
 
 

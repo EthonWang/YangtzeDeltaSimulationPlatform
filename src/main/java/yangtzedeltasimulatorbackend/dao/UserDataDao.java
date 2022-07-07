@@ -2,8 +2,7 @@ package yangtzedeltasimulatorbackend.dao;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-import yangtzedeltasimulatorbackend.entity.po.DataItem;
-import yangtzedeltasimulatorbackend.entity.po.Folder;
+import yangtzedeltasimulatorbackend.entity.po.UserData;
 
 import java.util.List;
 
@@ -13,11 +12,11 @@ import java.util.List;
  * @Date 2022/4/6
  **/
 @Repository
-public interface DataItemDao extends MongoRepository<DataItem, String> {
+public interface UserDataDao extends MongoRepository<UserData, String> {
 
     void deleteAllByParentId(String folderId);
 
-    List<DataItem> findAllByParentId(String parentId);
+    List<UserData> findAllByParentId(String parentId);
 
-    List<DataItem> findAllByUserId(String userId);
+    List<UserData> findAllByUserId(String userId);
 }

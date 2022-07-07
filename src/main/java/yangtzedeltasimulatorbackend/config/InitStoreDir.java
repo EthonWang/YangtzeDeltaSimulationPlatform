@@ -25,7 +25,7 @@ public class InitStoreDir implements ApplicationListener<ContextRefreshedEvent> 
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        String []folderNames={"bigFileTemp","data","models","resourceData","scriptOut","themeImg","aaa"};
+        String []folderNames={"bigFileTemp","data","models","resourceData","scriptOut","themeImg","noClassFile"};
 
         for(int i=0;i<folderNames.length;i++){
             File file=new File(dataStoreDir,folderNames[i]);

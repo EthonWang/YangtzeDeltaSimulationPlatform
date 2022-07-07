@@ -4,10 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-import yangtzedeltasimulatorbackend.entity.po.DataItem;
 import yangtzedeltasimulatorbackend.entity.po.ResourceData;
-
-import java.util.List;
 
 /**
  * @Description

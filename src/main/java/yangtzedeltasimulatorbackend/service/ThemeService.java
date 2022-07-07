@@ -1,9 +1,7 @@
 package yangtzedeltasimulatorbackend.service;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.IdUtil;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -11,23 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import yangtzedeltasimulatorbackend.dao.DataItemDao;
-import yangtzedeltasimulatorbackend.dao.FolderDao;
 import yangtzedeltasimulatorbackend.dao.ThemeDao;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
-import yangtzedeltasimulatorbackend.entity.dto.DataItemDTO;
 import yangtzedeltasimulatorbackend.entity.dto.theme.ThemeDTO;
-import yangtzedeltasimulatorbackend.entity.dto.theme.UpdateThemeDTO;
-import yangtzedeltasimulatorbackend.entity.po.DataItem;
-import yangtzedeltasimulatorbackend.entity.po.Folder;
 import yangtzedeltasimulatorbackend.entity.po.Theme;
-import yangtzedeltasimulatorbackend.utils.MyFileUtils;
 import yangtzedeltasimulatorbackend.utils.ResultUtils;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * @Description

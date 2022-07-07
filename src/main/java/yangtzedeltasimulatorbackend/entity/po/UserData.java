@@ -22,7 +22,7 @@ import java.util.List;
 
 @Data
 @Document
-public class DataItem {
+public class UserData {
 
     @Id
     @ApiModelProperty(value = "id",hidden = true)

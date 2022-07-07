@@ -1,8 +1,5 @@
 package yangtzedeltasimulatorbackend.service;
 
-import ch.qos.logback.classic.Logger;
-import cn.hutool.core.io.FileTypeUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSONArray;
@@ -24,7 +21,6 @@ import yangtzedeltasimulatorbackend.utils.ResultUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +34,7 @@ import java.util.Optional;
 public class UserResourceService {
 
     @Autowired
-    DataItemDao dataItemDao;
+    UserDataDao userDataDao;
 
     @Autowired
     FolderDao folderDao;
@@ -64,9 +60,9 @@ public class UserResourceService {
                 return ResultUtils.error("file is empty!!!");
             }
 
-            DataItem dataItem=new DataItem();
+            UserData userData =new UserData();
 //            BeanUtils.copyProperties(dataItemDTO,dataItem,"multipartFile");
-            BeanUtils.copyProperties(dataItemDTO,dataItem);
+            BeanUtils.copyProperties(dataItemDTO, userData);
 
 
             File folder = new File(dataFolder);
@@ -83,16 +79,16 @@ public class UserResourceService {
 
             upFile.transferTo(saveFile);
 
-            dataItem.setUserId(userId);
-            dataItem.setFileRelativePath("/data/"+fileNewName);
-            dataItem.setFileWebAddress("/store/data/"+fileNewName);
-            dataItem.setFileStoreName(fileNewName);
+            userData.setUserId(userId);
+            userData.setFileRelativePath("/data/"+fileNewName);
+            userData.setFileWebAddress("/store/data/"+fileNewName);
+            userData.setFileStoreName(fileNewName);
 //            dataItem.setType(FileTypeUtil.getType(saveFile));
-            dataItem.setType("file");
-            dataItem.setSize(String.format("%.3f",saveFile.length() / 1048576.0) + " MB");
+            userData.setType("file");
+            userData.setSize(String.format("%.3f",saveFile.length() / 1048576.0) + " MB");
 
 
-            dataItemDao.save(dataItem);
+            userDataDao.save(userData);
             return ResultUtils.success("上传文件成功");
         }catch (Exception e){
             log.error(e.getMessage());
@@ -133,9 +129,9 @@ public class UserResourceService {
             }
 
 //            List<DataItem> dataItems=dataItemDao.findAllByUserEmailAndParentId(userEmail,parentId);
-            List<DataItem> dataItems = dataItemDao.findAllByParentId(parentId);
-            for(int i=0;i<dataItems.size();i++){
-                jsonArray.add(dataItems.get(i));
+            List<UserData> userData = userDataDao.findAllByParentId(parentId);
+            for(int i = 0; i< userData.size(); i++){
+                jsonArray.add(userData.get(i));
             }
 
             return ResultUtils.success(jsonArray);
@@ -162,7 +158,7 @@ public class UserResourceService {
     public boolean deleteFolderCascade(String folderId) {
         try {
             folderDao.deleteById(folderId);
-            dataItemDao.deleteAllByParentId(folderId);
+            userDataDao.deleteAllByParentId(folderId);
             List<Folder> childFolders = folderDao.findAllByParentId(folderId);
             for (int i = 0; i < childFolders.size(); i++) {
                 return deleteFolderCascade(childFolders.get(i).getId());
@@ -181,7 +177,7 @@ public class UserResourceService {
             deleteFolders.add(folderId);
             for(int i=0;i<deleteFolders.size();i++){
                 folderDao.deleteById(deleteFolders.getString(i));
-                dataItemDao.deleteAllByParentId(deleteFolders.getString(i));
+                userDataDao.deleteAllByParentId(deleteFolders.getString(i));
                 List<Folder> childFolders = folderDao.findAllByParentId(deleteFolders.getString(i));
                 deleteFolders.addAll(childFolders);
             }
@@ -194,15 +190,15 @@ public class UserResourceService {
 
     public JsonResult deleteDataItem(String dataItemId) {
         try{
-            Optional<DataItem> dataItemDB=dataItemDao.findById(dataItemId);
-            DataItem dataItem=dataItemDB.get();
+            Optional<UserData> dataItemDB= userDataDao.findById(dataItemId);
+            UserData userData =dataItemDB.get();
 
-            File file=new File(dataFolder,dataItem.getFileStoreName());
+            File file=new File(dataFolder, userData.getFileStoreName());
             if(file.exists()){
                 file.delete();
             }
 
-            dataItemDao.deleteById(dataItemId);
+            userDataDao.deleteById(dataItemId);
 
             return ResultUtils.success("删除数据成功");
         }catch (Exception e){
@@ -213,8 +209,8 @@ public class UserResourceService {
 
     public void downloadDataItem(String dataItemId, HttpServletResponse response) {
         try{
-            DataItem dataItem=dataItemDao.findById(dataItemId).get();
-            File file=new File(dataFolder,dataItem.getFileStoreName());
+            UserData userData = userDataDao.findById(dataItemId).get();
+            File file=new File(dataFolder, userData.getFileStoreName());
             MyFileUtils.downloadFile(file,response);
 
         }catch (Exception e){
@@ -224,9 +220,9 @@ public class UserResourceService {
 
     public JsonResult updateDataItem(UpdateDataItem updateDataItem) {
         try {
-            DataItem dataItem=dataItemDao.findById(updateDataItem.getId()).get();
-            BeanUtils.copyProperties(updateDataItem,dataItem);
-            dataItemDao.save(dataItem);
+            UserData userData = userDataDao.findById(updateDataItem.getId()).get();
+            BeanUtils.copyProperties(updateDataItem, userData);
+            userDataDao.save(userData);
 
             return ResultUtils.success("更新数据成功");
         }catch (Exception e){
@@ -240,7 +236,7 @@ public class UserResourceService {
             JSONObject o=new JSONObject();
 
 //            JSONArray personalDataArray=new JSONArray();
-            List<DataItem> personalDataList = dataItemDao.findAllByUserId(userId);
+            List<UserData> personalDataList = userDataDao.findAllByUserId(userId);
 //            for(int i=0;i<dataItems.size();i++){
 //                personalDataArray.add(dataItems.get(i));
 //            }

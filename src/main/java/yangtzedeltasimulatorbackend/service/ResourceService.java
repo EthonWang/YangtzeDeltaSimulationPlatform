@@ -13,12 +13,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import yangtzedeltasimulatorbackend.dao.ResourceDataDao;
+import yangtzedeltasimulatorbackend.dao.ResourceModelDao;
+import yangtzedeltasimulatorbackend.dao.ResourceSmallFileDao;
 import yangtzedeltasimulatorbackend.dao.*;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
-import yangtzedeltasimulatorbackend.entity.dto.PageDTO;
 import yangtzedeltasimulatorbackend.entity.dto.resource.CreateResourceDataDTO;
+import yangtzedeltasimulatorbackend.entity.dto.resource.CreateResourceModelDTO;
 import yangtzedeltasimulatorbackend.entity.dto.resource.CreateResourceSmallFileDTO;
-import yangtzedeltasimulatorbackend.entity.dto.resource.ResourceDataPageDTO;
+import yangtzedeltasimulatorbackend.entity.dto.resource.ResourcePageDTO;
 import yangtzedeltasimulatorbackend.entity.po.*;
 import yangtzedeltasimulatorbackend.utils.FileUtils;
 import yangtzedeltasimulatorbackend.utils.GeoServerUtils;
@@ -67,13 +70,16 @@ public class ResourceService {
     FolderDao folderDao ;
 
     @Autowired
-    DataItemDao dataItemDao ;
+    UserDataDao userDataDao;
 
     @Autowired
     LabTaskDao labTaskDao ;
 
     @Autowired
     CommonService commonService;
+
+    @Autowired
+    ResourceModelDao resourceModelDao;
 
     public JsonResult saveResourceData(CreateResourceDataDTO createResourceDataDTO, MultipartFile visualFile, MultipartFile imgFile) {
         try{
@@ -193,16 +199,16 @@ public class ResourceService {
         }
     }
 
-    public JsonResult getResourceDataList(ResourceDataPageDTO resourceDataPageDTO) {
+    public JsonResult getResourceDataList(ResourcePageDTO resourcePageDTO) {
         try{
-            Pageable pageable = commonService.getPageable(resourceDataPageDTO);
-            String tagClass= resourceDataPageDTO.getTagClass();
+            Pageable pageable = commonService.getPageable(resourcePageDTO);
+            String tagClass= resourcePageDTO.getTagClass();
 
             if(tagClass.equals("problemTags")){
-                Page<ResourceData> re = resourceDataDao.findAllByNameLikeIgnoreCaseAndProblemTagsLikeIgnoreCase(resourceDataPageDTO.getSearchText(),resourceDataPageDTO.getTagName(),pageable);
+                Page<ResourceData> re = resourceDataDao.findAllByNameLikeIgnoreCaseAndProblemTagsLikeIgnoreCase(resourcePageDTO.getSearchText(), resourcePageDTO.getTagName(),pageable);
                 return ResultUtils.success(re);
             }else if(tagClass.equals("normalTags")){
-                Page<ResourceData> re = resourceDataDao.findAllByNameLikeIgnoreCaseAndNormalTagsLikeIgnoreCase(resourceDataPageDTO.getSearchText(),resourceDataPageDTO.getTagName(),pageable);
+                Page<ResourceData> re = resourceDataDao.findAllByNameLikeIgnoreCaseAndNormalTagsLikeIgnoreCase(resourcePageDTO.getSearchText(), resourcePageDTO.getTagName(),pageable);
                 return ResultUtils.success(re);
             }else {
                 return ResultUtils.error("数据类别不正确，problemTags或normalTags");
@@ -290,6 +296,49 @@ public class ResourceService {
         }
     }
 
+    public JsonResult createResourceModel(CreateResourceModelDTO createResourceModelDTO) {
+        try{
+            ResourceModel resourceModel=new ResourceModel();
+            BeanUtils.copyProperties(createResourceModelDTO,resourceModel);
+            resourceModelDao.save(resourceModel);
+            return ResultUtils.success("创建模型条目成功！");
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("创建模型条目失败！");
+        }
+    }
+
+
+
+    public JsonResult deleteResourceModel(String resourceModelId) {
+        try{
+            resourceModelDao.deleteById(resourceModelId);
+            return ResultUtils.success("删除模型条目成功！");
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("删除模型条目失败！");
+        }
+    }
+
+    public JsonResult getResourceModelList(ResourcePageDTO resourcePageDTO) {
+        try{
+            Pageable pageable = commonService.getPageable(resourcePageDTO);
+            String tagClass= resourcePageDTO.getTagClass();
+
+            if(tagClass.equals("problemTags")){
+                Page<ResourceModel> re = resourceModelDao.findAllByNameLikeIgnoreCaseAndProblemTagsLikeIgnoreCase(resourcePageDTO.getSearchText(), resourcePageDTO.getTagName(),pageable);
+                return ResultUtils.success(re);
+            }else if(tagClass.equals("normalTags")){
+                Page<ResourceModel> re = resourceModelDao.findAllByNameLikeIgnoreCaseAndNormalTagsLikeIgnoreCase(resourcePageDTO.getSearchText(), resourcePageDTO.getTagName(),pageable);
+                return ResultUtils.success(re);
+            }else {
+                return ResultUtils.error("数据类别不正确，problemTags或normalTags");
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("保存资源数据失败！");
+        }
+    }
     public JsonResult saveLabGeoJsonFile(HttpServletRequest req){
         //读取请求中的资源
         String data = req.getParameter("sourceData");
@@ -307,7 +356,7 @@ public class ResourceService {
             labTaskFolder.setParentId(userId);
             folderDao.save(labTaskFolder);
         }
-        DataItem dataItem;
+        UserData userData;
         if(!"".equals(data)){
             //文件写入
 //            String uuid = IdUtil.objectId();
@@ -327,16 +376,16 @@ public class ResourceService {
                 e.printStackTrace();
             }
             //创建dataItem实体
-            dataItem = new DataItem();
-            dataItem.setName(fileName + ".json");
-            dataItem.setType("file");
-            dataItem.setSize(String.valueOf(file.length()));
-            dataItem.setFileStoreName(file.getName());
-            dataItem.setFileRelativePath("/data/"+file.getName());
-            dataItem.setFileWebAddress("/store/data/"+file.getName());
-            dataItem.setUserId(userId);
-            dataItem.setParentId(labTaskId);
-            dataItemDao.save(dataItem);
+            userData = new UserData();
+            userData.setName(fileName + ".json");
+            userData.setType("file");
+            userData.setSize(String.valueOf(file.length()));
+            userData.setFileStoreName(file.getName());
+            userData.setFileRelativePath("/data/"+file.getName());
+            userData.setFileWebAddress("/store/data/"+file.getName());
+            userData.setUserId(userId);
+            userData.setParentId(labTaskId);
+            userDataDao.save(userData);
             //保存到labTask
             Optional<LabTask> byId1 = labTaskDao.findById(labTaskId);
             if (!byId1.isPresent()) { return ResultUtils.error("保存失败");}
@@ -355,7 +404,7 @@ public class ResourceService {
             dataList.add(dataObject);
             labTask.setDataList(dataList);
             labTaskDao.save(labTask);
-            return ResultUtils.success(dataItem);
+            return ResultUtils.success(userData);
         }
         return ResultUtils.error("保存失败");
     }

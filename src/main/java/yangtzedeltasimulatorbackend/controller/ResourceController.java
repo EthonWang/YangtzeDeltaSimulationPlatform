@@ -74,6 +74,4 @@ public class ResourceController {
        return resourceService.saveLabGeoJsonFile(request);
     }
 
-
-
 }

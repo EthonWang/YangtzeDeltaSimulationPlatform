@@ -125,7 +125,7 @@ public class ResourceService {
                         visualDataItem.setVisualWebAddress(geoServerUrl);
                         visualDataItem.setPublicBoolean(true);
                         visualDataItem.setVisualizationBoolean(true);
-                        visualDataItem.setVisualRelativePath(path.split(dataStoreDir)[1]);
+                        visualDataItem.setFileRelativePath(path.split(dataStoreDir)[1]);
                         visualDataItems.add(visualDataItem);
                     }
                 }
@@ -161,7 +161,7 @@ public class ResourceService {
                         visualDataItem.setVisualWebAddress(geoServerUrl);
                         visualDataItem.setPublicBoolean(true);
                         visualDataItem.setVisualizationBoolean(true);
-                        visualDataItem.setVisualRelativePath(path.split(dataStoreDir)[1]);
+                        visualDataItem.setFileRelativePath(path.split(dataStoreDir)[1]);
                         visualDataItems.add(visualDataItem);
                     }
                 }

@@ -45,6 +45,8 @@ public class DataItem {
     String problemTags="";  //地理问题标签
     String normalTags=""; //地理数据常规标签
 
+    String visualType;
+    String visualWebAddress;
     boolean publicBoolean=false;  //是否公开,默认是私有
     boolean visualizationBoolean=false; // 是否可以可视化,默认false
 

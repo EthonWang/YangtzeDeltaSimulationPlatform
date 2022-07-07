@@ -1,5 +1,6 @@
 package yangtzedeltasimulatorbackend.service;
 
+import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -32,8 +33,8 @@ public class ScriptExecService {
     @Value("${dataStoreDir}"+"/scriptOut")
     private  String scriptOutDir;
 
-    @Value("${dataStoreDir}"+"/resourceData")
-    private  String resourceDataFolder;
+    @Value("${dataStoreDir}")
+    private  String dataResourceDir;
 
     public void execTest(HttpServletResponse response) {
         try{
@@ -56,23 +57,27 @@ public class ScriptExecService {
 
     public JsonResult gdalClip(GDALClipDTO gdalClipDTO) {
         try{
-
-//            String inputShpPath=resourceDataFolder+"/"+gdalClipDTO.getInputShp();
-//            String inputRasterPath=resourceDataFolder+"/"+gdalClipDTO.getInputRaster();
-//            String outFilePath=scriptOutDir+"/"+gdalClipDTO.getOutputTif();
-
-            String inputShpPath=gdalClipDTO.getInputShp();
-            String inputRasterPath=gdalClipDTO.getInputRaster();
-            String outFilePath=gdalClipDTO.getOutputTif();
-
+            Boolean isShp = gdalClipDTO.getIsShp();
+            String inputPath;
+            if(isShp){
+                inputPath = gdalClipDTO.getInputShpPath();
+            } else {
+                inputPath=gdalClipDTO.getInputGeoJson();
+            }
+            String inputRasterPath = gdalClipDTO.getInputRasterPath();
+            String outFileName = gdalClipDTO.getOutputTifName();
 
             List<String> argvList=new ArrayList<>();
-            argvList.add(inputShpPath);
-            argvList.add(inputRasterPath);
-            argvList.add(outFilePath);
+            argvList.add(dataResourceDir + inputPath);
+            argvList.add(dataResourceDir + inputRasterPath);
+            argvList.add(scriptOutDir + "/" + outFileName);
 
-            int re= ExecCmdUtils.execPython("GDAL_clip.py",argvList);
-
+            int re = 0;
+            if(isShp){
+                re= ExecCmdUtils.execPython("GDAL_clip.py",argvList);
+            } else {
+                re= ExecCmdUtils.execPython("GDAL_clip_GeoJson.py",argvList);
+            }
             if(re==0){
                 return  ResultUtils.success();
             }

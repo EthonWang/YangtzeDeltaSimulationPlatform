@@ -38,7 +38,6 @@ public class ScriptExecController {
     @ApiOperation(value = "GDAL_clip")
     @PostMapping("/gdalClip")
     public JsonResult gdalClip(@RequestBody GDALClipDTO gdalClipDTO){
-
         return  scriptExecService.gdalClip(gdalClipDTO);
     }
 

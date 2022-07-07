@@ -85,7 +85,7 @@ public class GeoServerUtils {
      */
     public static boolean PublishShape(String workSpace, String storeName, String layerName, String styleName, String shapePath) {
         /**Geoserver 连接配置**/
-        String url = "http://localhost:8050/geoserver";
+        String url = "http://172.21.213.44:8088/geoserver";
         String username = "admin";
         String passWord = "geoserver";
         /**Geoserver 连接配置**/
@@ -132,8 +132,9 @@ public class GeoServerUtils {
                 gsFeatureTypeEncoder.setSRS(GeoServerRESTPublisher.DEFAULT_CRS);
 
                 GSLayerEncoder gsLayerEncoder = new GSLayerEncoder();
-
-                gsLayerEncoder.setDefaultStyle(workSpace, styleName);
+                if(styleName != null){
+                    gsLayerEncoder.setDefaultStyle(workSpace, styleName);
+                }
 
                 boolean layer = publisher.publishDBLayer(workSpace, storeName, gsFeatureTypeEncoder, gsLayerEncoder);
                 if (layer) {

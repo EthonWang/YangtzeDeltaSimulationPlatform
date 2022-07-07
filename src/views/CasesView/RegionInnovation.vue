@@ -1,79 +1,81 @@
 <template>
-    <el-row style="height: 100%;padding:20px 20px 15px 20px;overflow: hidden;min-width: 1735px">
-      <el-col :span="8">
-        <div class="box-left left1">
-          <dv-border-box1 >
-            <dv-decoration-7 class="box-title"><h3>创新投入</h3></dv-decoration-7>
-            <div id="leftChart1" class="chart"></div>
-          </dv-border-box1>
-        </div>
-        <div class="box-left left2">
-          <dv-border-box1 >
-            <dv-decoration-7 class="box-title"><h3>创新环境</h3></dv-decoration-7>
-            <div id="leftChart2" class="chart"></div>
-          </dv-border-box1>
-        </div>
-        <div class="box-left left3">
-          <dv-border-box1 >
-            <dv-decoration-7 class="box-title"><h3>创新产出</h3></dv-decoration-7>
-            <div id="leftChart3" style="width: 100%;height: 90%;"></div>
-          </dv-border-box1>
-        </div>
-      </el-col>
-      <el-col :span="8">
-        <div class="box-mid mid1"><h1>长三角区域创新专题</h1></div>
-        <div class="box-mid mid2">
-          <dv-decoration-5 :dur="3" style="width:100%;height:40px;" />
-        </div>
-        <div class="box-mid mid3">
-          <dv-border-box1>
-            <el-row>
-              <template v-for="(item,key) in midData" :key="key">
-                <el-col :span="8" style="display: flex;flex-direction: column;align-items: center;margin-top: 30px">
-                  <h3>{{item.name}}</h3>
-                  <h1 style="color:#4786d4 ">{{item.value}}</h1>
-                </el-col>
-              </template>
-            </el-row>
-            <div id="midChart1" style="height:75%;width:95%;padding: 0 15px 0 15px"></div>
-          </dv-border-box1>
-        </div>
-        <div class="box-mid mid4">
-          <dv-border-box1>
-            <div style="width: 100%;height: 30px;display: flex">
-              <dv-decoration-7 style="margin-left:calc(calc(100% - 360px)/2);width:180px;height:30px;"><h3>瞪羚企业数</h3></dv-decoration-7>
-              <dv-decoration-7 style="margin-left:calc(calc(100% - 480px)/2);width:180px;height:30px;"><h3>独角兽企业数</h3></dv-decoration-7>
-            </div>
-            <div style="width: 100%;height: 100%;display: flex">
-              <div id="midChart2" style="width: 70%;height: 90%;"></div>
-              <div id="midChart3" style="width: 30%;height: 90%;"></div>
-            </div>
-          </dv-border-box1>
-        </div>
-      </el-col>
-      <el-col :span="8">
-        <div class="box-right right1">
-          <dv-border-box1 >
-            <dv-decoration-7 class="box-title"><h3>重点城市创新概况</h3></dv-decoration-7>
-            <div id="rightChart1" style="width: 100%;height: 90%;"></div>
-          </dv-border-box1>
-        </div>
-        <div class="box-right right2">
-          <dv-border-box1 >
-            <dv-decoration-7 class="box-title"><h3>创新综合评价结果</h3></dv-decoration-7>
-            <div style="width: 100%;height: 60%;display: flex">
-              <div id="rightChart2" style="width: 50%;height: 100%;"></div>
-              <div id="rightChart3" style="width: 50%;height: 100%;"></div>
-            </div>
-            <div style="width: 100%;height: 40%;display: flex">
-              <div id="rightChart4" style="width: 100%;height: 100%;"></div>
-              <div id="rightChart5" style="width: 100%;height: 100%;"></div>
-              <div id="rightChart6" style="width: 100%;height: 100%;"></div>
-            </div>
-          </dv-border-box1>
-        </div>
-      </el-col>
-    </el-row>
+    <el-scrollbar>
+      <el-row style="height: 92.54vh;padding:20px 20px 15px 20px;overflow: scroll;min-width: 1735px">
+        <el-col :span="8">
+          <div class="box-left left1">
+            <dv-border-box1 >
+              <dv-decoration-7 class="box-title"><h3>创新投入</h3></dv-decoration-7>
+              <div id="leftChart1" class="chart"></div>
+            </dv-border-box1>
+          </div>
+          <div class="box-left left2">
+            <dv-border-box1 >
+              <dv-decoration-7 class="box-title"><h3>创新环境</h3></dv-decoration-7>
+              <div id="leftChart2" class="chart"></div>
+            </dv-border-box1>
+          </div>
+          <div class="box-left left3">
+            <dv-border-box1 >
+              <dv-decoration-7 class="box-title"><h3>创新产出</h3></dv-decoration-7>
+              <div id="leftChart3" style="width: 100%;height: 90%;"></div>
+            </dv-border-box1>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <div class="box-mid mid1"><h1>长三角区域创新专题</h1></div>
+          <div class="box-mid mid2">
+            <dv-decoration-5 :dur="3" style="width:100%;height:40px;" />
+          </div>
+          <div class="box-mid mid3">
+            <dv-border-box1>
+              <el-row>
+                <template v-for="(item,key) in midData" :key="key">
+                  <el-col :span="8" style="display: flex;flex-direction: column;align-items: center;margin-top: 30px">
+                    <h3>{{item.name}}</h3>
+                    <h1 style="color:#4786d4 ">{{item.value}}</h1>
+                  </el-col>
+                </template>
+              </el-row>
+              <div id="midChart1" style="height:75%;width:95%;padding: 0 15px 0 15px"></div>
+            </dv-border-box1>
+          </div>
+          <div class="box-mid mid4">
+            <dv-border-box1>
+              <div style="width: 100%;height: 30px;display: flex">
+                <dv-decoration-7 style="margin-left:calc(calc(100% - 360px)/2);width:180px;height:30px;"><h3>瞪羚企业数</h3></dv-decoration-7>
+                <dv-decoration-7 style="margin-left:calc(calc(100% - 480px)/2);width:180px;height:30px;"><h3>独角兽企业数</h3></dv-decoration-7>
+              </div>
+              <div style="width: 100%;height: 100%;display: flex">
+                <div id="midChart2" style="width: 70%;height: 90%;"></div>
+                <div id="midChart3" style="width: 30%;height: 90%;"></div>
+              </div>
+            </dv-border-box1>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <div class="box-right right1">
+            <dv-border-box1 >
+              <dv-decoration-7 class="box-title"><h3>重点城市创新概况</h3></dv-decoration-7>
+              <div id="rightChart1" style="width: 100%;height: 90%;"></div>
+            </dv-border-box1>
+          </div>
+          <div class="box-right right2">
+            <dv-border-box1 >
+              <dv-decoration-7 class="box-title"><h3>创新综合评价结果</h3></dv-decoration-7>
+              <div style="width: 100%;height: 60%;display: flex">
+                <div id="rightChart2" style="width: 50%;height: 100%;"></div>
+                <div id="rightChart3" style="width: 50%;height: 100%;"></div>
+              </div>
+              <div style="width: 100%;height: 40%;display: flex">
+                <div id="rightChart4" style="width: 100%;height: 100%;"></div>
+                <div id="rightChart5" style="width: 100%;height: 100%;"></div>
+                <div id="rightChart6" style="width: 100%;height: 100%;"></div>
+              </div>
+            </dv-border-box1>
+          </div>
+        </el-col>
+      </el-row>
+    </el-scrollbar>
   <p style="position:fixed;color: gray;bottom: 0;right: 20px;font-size: 0.75em">*本专题数据时间2019年</p>
 </template>
 

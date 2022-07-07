@@ -1,81 +1,81 @@
 <template>
-  <el-row class="row">
-    <el-col :span="7">
-      <div style="height:10vh;background-color: #ffffff;border: 1px solid #DCDCDC;display:flex;align-items:center;justify-content:center;min-height: 94px">
-        <p style="font-size: 2em;font-weight: bold; letter-spacing:3px;">
-          江苏省工业创新环境仪表盘(2018年)</p>
-      </div>
-    </el-col>
-    <el-col :span="6">
-      <div style="height:10vh;margin-left:2vw;background-color: #ffffff;border: 1px solid #DCDCDC;min-height: 94px;min-width: 227px;">
-        <p class="blockTitle">活力因子选择框</p>
-        <div class="form-check" style="height:calc(10vh - 25px);display: flex;align-items: center;width: 100%;justify-content: center;min-width: 227px;">
-          <el-radio-group v-model="radioCate" @change="checkRadio">
-            <el-radio label="enco">经济活力</el-radio>
-            <el-radio label="soci">社会活力</el-radio>
-            <el-radio label="envi">环境活力</el-radio>
-            <el-radio label="tech">科技活力</el-radio>
-          </el-radio-group>
-        </div>
-      </div>
-    </el-col>
-    <el-col :span="11">
-      <div style="height:10vh;margin-left:2vw;background-color: #ffffff;border: 1px solid #DCDCDC;min-height: 94px;">
-        <p class="blockTitle">地级市高亮选择框</p>
-        <div id="cityGroup" style="display: flex;height:10vh;overflow: scroll;">
-          <el-checkbox
-              v-model="checkAll"
-              :indeterminate="isIndeterminate"
-              @change="handleCheckAllChange"
-          >全选</el-checkbox>
-          <el-checkbox-group
-              v-model="checkedCities"
-              @change="handleCheckedCitiesChange"
-          >
-            <el-checkbox v-for="city in cities" :key="city" :label="city">{{
-                city
-              }}</el-checkbox>
-          </el-checkbox-group>
-        </div>
-      </div>
-    </el-col>
-  </el-row>
-  <el-row class="row">
-    <el-col :span="10">
-      <div style="height:72vh;background-color: #ffffff;border: 1px solid #DCDCDC;min-height: calc(385px + 30vh);">
-        <p class="blockTitle">工业创新环境综合指标分布图</p>
-        <div id='map' style="width: 100%;height:90%;"></div>
-        <el-image :src="legendImagePath" style="margin-left:10px;height: 150px;margin-top: -150px;"></el-image>
-      </div>
-    </el-col>
-    <el-col :span="14">
-      <el-row style="margin-left: 45px">
-        <el-col :span="8">
-          <div style="height:39vh;background-color: #ffffff;border: 1px solid #DCDCDC;min-height: 355px;min-width: 256px">
-            <p class="blockTitle">江苏省<span id="cate1">{{cateName}}</span>总值</p>
-            <div id="valueGroup"></div>
+      <el-row class="row">
+        <el-col :span="7">
+          <div style="height:10vh;background-color: #ffffff;border: 1px solid #DCDCDC;display:flex;align-items:center;justify-content:center;min-height: 94px">
+            <p style="font-size: 2em;font-weight: bold; letter-spacing:3px;">
+              江苏省工业创新环境仪表盘(2018年)</p>
           </div>
         </el-col>
-        <el-col :span="16">
-          <div style="margin-left:30px;height:39vh;background-color: #ffffff;border: 1px solid #DCDCDC;min-height: 355px">
-            <p class="blockTitle"><span id="cate2">{{cateName}}</span>相关性概览图</p>
-            <div style="display: flex;justify-content: center">
-              <el-image :src=imagePath style="height: calc(38vh - 25px);margin-left: 0px;min-height: 320px"></el-image>
-              <img src="/case/industrialInnovation/legend.png" style="width:50px;height: calc(38vh - 25px)">
+        <el-col :span="6">
+          <div style="height:10vh;margin-left:2vw;background-color: #ffffff;border: 1px solid #DCDCDC;min-height: 94px;min-width: 227px;">
+            <p class="blockTitle">活力因子选择框</p>
+            <div class="form-check" style="height:calc(10vh - 25px);display: flex;align-items: center;width: 100%;justify-content: center;min-width: 227px;">
+              <el-radio-group v-model="radioCate" @change="checkRadio">
+                <el-radio label="enco">经济活力</el-radio>
+                <el-radio label="soci">社会活力</el-radio>
+                <el-radio label="envi">环境活力</el-radio>
+                <el-radio label="tech">科技活力</el-radio>
+              </el-radio-group>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="11">
+          <div style="height:10vh;margin-left:2vw;background-color: #ffffff;border: 1px solid #DCDCDC;min-height: 94px;">
+            <p class="blockTitle">地级市高亮选择框</p>
+            <div id="cityGroup" style="display: flex;height:9vh;overflow: scroll;">
+              <el-checkbox
+                  v-model="checkAll"
+                  :indeterminate="isIndeterminate"
+                  @change="handleCheckAllChange"
+              >全选</el-checkbox>
+              <el-checkbox-group
+                  v-model="checkedCities"
+                  @change="handleCheckedCitiesChange"
+              >
+                <el-checkbox v-for="city in cities" :key="city" :label="city">{{
+                    city
+                  }}</el-checkbox>
+              </el-checkbox-group>
             </div>
           </div>
         </el-col>
       </el-row>
-      <el-row style="margin-top: 30px;margin-left: 45px">
-        <el-col :span="24">
-          <div style="height: 30vh;background-color: #ffffff;border: 1px solid #DCDCDC;">
-            <p class="blockTitle">各市<span id="cate3">{{cateName}}</span>对比图</p>
-            <div id="contrastChart" style="height: 30vh"></div>
+      <el-row class="row">
+        <el-col :span="10">
+          <div style="height:72vh;background-color: #ffffff;border: 1px solid #DCDCDC;min-height: calc(385px + 30vh);">
+            <p class="blockTitle">工业创新环境综合指标分布图</p>
+            <div id='map' style="width: 100%;height:90%;"></div>
+            <el-image :src="legendImagePath" style="margin-left:10px;height: 150px;margin-top: -150px;"></el-image>
           </div>
         </el-col>
+        <el-col :span="14">
+          <el-row style="margin-left: 45px">
+            <el-col :span="8">
+              <div style="height:39vh;background-color: #ffffff;border: 1px solid #DCDCDC;min-height: 355px;min-width: 256px">
+                <p class="blockTitle">江苏省<span id="cate1">{{cateName}}</span>总值</p>
+                <div id="valueGroup"></div>
+              </div>
+            </el-col>
+            <el-col :span="16">
+              <div style="margin-left:30px;height:39vh;background-color: #ffffff;border: 1px solid #DCDCDC;min-height: 355px">
+                <p class="blockTitle"><span id="cate2">{{cateName}}</span>相关性概览图</p>
+                <div style="display: flex;justify-content: center">
+                  <el-image :src=imagePath style="height: calc(38vh - 25px);margin-left: 0px;min-height: 320px"></el-image>
+                  <img src="/case/industrialInnovation/legend.png" style="width:50px;height: calc(38vh - 25px)">
+                </div>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row style="margin-top: 30px;margin-left: 45px">
+            <el-col :span="24">
+              <div style="height: 30vh;background-color: #ffffff;border: 1px solid #DCDCDC;">
+                <p class="blockTitle">各市<span id="cate3">{{cateName}}</span>对比图</p>
+                <div id="contrastChart" style="height: 30vh"></div>
+              </div>
+            </el-col>
+          </el-row>
+        </el-col>
       </el-row>
-    </el-col>
-  </el-row>
 </template>
 
 <script setup>

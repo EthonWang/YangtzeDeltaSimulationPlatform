@@ -40,7 +40,7 @@ const store = useStore(); //vuex直接用store.commit
 .cases-page {
   position: absolute;
   top: 7.46vh;
-  left: 8px;
+  left: 0px;
   height: calc(100vh - $top);
   width: calc(100% - $left);
   background-color: white;

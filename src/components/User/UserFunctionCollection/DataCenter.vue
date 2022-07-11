@@ -194,23 +194,25 @@ const addToTask = () => {
   show_task.value = true;
 };
 const addDataToTask = (task) => {
-  console.log(task)
-  let dataList=[]
+  console.log(task);
+  let dataList = [];
   for (let i in choosing_files) {
-    
+    if (choosing_files[i].type != "folder") {
       let data = {
         name: choosing_files[i].name,
         id: choosing_files[i].id,
         source: "cloud",
-        type:"data",
-        "fill-color":"red",
-        visualizationBoolean:false,
-        visualWebAddress:"",
-        visualType: choosing_files[i].name.split('.')[1],
+        type: "data",
+        visualizationBoolean: false,
+        visualWebAddress: choosing_files[i].visualWebAddress,
+        visualType: choosing_files[i].name.split(".")[1],
         geoType: "line",
+        fileRelativePath: choosing_files[i].fileRelativePath,
+        fileWebAddress: choosing_files[i].fileWebAddress,
+        fileStoreName: choosing_files[i].fileStoreName,
       };
-      dataList.push(data)
- 
+      dataList.push(data);
+    }
   }
   task_api.addData(task, dataList);
   show_task.value = false;
@@ -356,8 +358,7 @@ const refresh = () => {
   });
   setTimeout(() => {
     api.getAllFile(now_id.value).then((res) => {
-      console.log(res)
-      
+      console.log(res);
     });
   }, 500);
 };

@@ -7,6 +7,7 @@
       :shpShowList="shpList"
       @openTxtEditor="openTxtEditor"
       v-show="mapType == 'mapBox'"
+      ref="mapBoxView"
     ></mapbox-view>
     <cesium
       :tifList="tifList"
@@ -30,9 +31,8 @@
     draggable
     sticky
     scrollable
+    :closable="false"
     :mask="false"
-    @on-ok="ok"
-    @on-cancel="cancel"
     :width="1000"
     v-if="txtEditorModal"
   >
@@ -43,7 +43,11 @@
         txtInfo.name
       }}</span>
     </template>
-    <txt-editor :txtInfo="txtInfo"></txt-editor>
+    <txt-editor :txtInfo="txtInfo" @saveTxtHtml="saveTxtHtml"></txt-editor>
+    <template #footer>
+      <Button @click="txtEditorModal = false">取消</Button>
+      <Button type="primary" @click="handleTxtEditorClose">确认</Button>
+    </template>
   </Modal>
   <!-- <el-card class="recommend">
     <div
@@ -96,6 +100,7 @@
 <!--<script setup>-->
 <script>
 //采用vue2写法的话把setup去掉，
+import axios from "axios";
 import { reactive, computed, ref } from "vue";
 import { toRaw } from "@vue/reactivity";
 import { useRouter } from "vue-router";
@@ -106,6 +111,7 @@ import chartTemplate from "../components/chartPlugin/chartTemplate.vue";
 // import ModelTree from "components/App/ModelTree";
 import txtEditor from "../components/Mapbox/labUtils/wangEditorBox.vue";
 import taskApi from "@/api/user/task";
+import { ElMessageBox, ElMessage } from "element-plus";
 
 export default {
   components: {
@@ -235,6 +241,8 @@ export default {
       jsonList: [],
       txtEditorModal: false,
       txtData: "",
+      isTxtContent: false,
+      dataServer: useStore().state.devIpAddress,
     };
   },
   mounted() {
@@ -355,12 +363,57 @@ export default {
       this.txtInfo = info;
       this.txtEditorModal = !this.txtEditorModal;
     },
-    saveTxtHtml(html) {
-      // console.log(html);
-      this.txtData = html;
+    saveTxtHtml(html, isTxtContent) {
+      let tempTxt = html;
+      tempTxt = tempTxt.toString().replace(/<\/.*?>/g, "\r\n");
+      tempTxt = tempTxt.toString().replace(/<.*?>/g, "");
+      this.txtData = tempTxt;
+      this.isTxtContent = isTxtContent;
+    },
+    handleTxtEditorClose() {
+      if (this.isTxtContent) {
+        ElMessageBox.confirm("是否保存更改?", "文本编辑器", {
+          confirmButtonText: "保存",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+          .then(() => {
+            this.commitTxtChange();
+            this.txtEditorModal = false;
+          })
+          .catch(() => {
+            this.txtEditorModal = false;
+          });
+      } else {
+        this.txtEditorModal = false;
+      }
+    },
+    confirmUpdateTxtFile() {
+      this.confirmUpdateTxtFileModal = true;
+      // this.commitTxtChange();
     },
     commitTxtChange() {
-      console.log(this.txtData);
+      let formData = new FormData();
+      formData.append("txtData", this.txtData);
+      formData.append("fileRelativePath", this.txtInfo.data.fileRelativePath);
+      formData.append("visualType", this.txtInfo.data.visualType);
+      formData.append("fileStoreName", this.txtInfo.data.fileStoreName);
+      formData.append("id", this.txtInfo.data.id);
+      formData.append("taskId", JSON.parse(localStorage.getItem("task")).id);
+      axios
+        .post(this.dataServer + "/LabTask/updateLabTxtFile", formData)
+        .then((res) => {
+          console.log(res.data.data);
+          localStorage.setItem("task", JSON.stringify(res.data.data));
+          this.$refs.mapBoxView.updateTxtInfo(res.data.data);
+          ElMessage({
+            type: "success",
+            message: "修改成功！",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

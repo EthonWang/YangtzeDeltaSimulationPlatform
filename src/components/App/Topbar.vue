@@ -105,6 +105,7 @@ const searchIndexInRoutes = () => {
 watch(
   () => route.path,
   (newValue, oldValue) => {
+    
     if (getRootPath(newValue) != "") {
       setTimeout(() => {
         document.getElementsByClassName("bg")[0].style.opacity = "0";
@@ -144,9 +145,9 @@ const sendRouterToFather = (route1, index) => {
     //     pickup(index);
     //   }
     setTimeout(()=>{
-      location.reload();
-      return;
-    },500)
+      // location.reload();
+      console.log(router.options);
+    },300)
     
   }
   // setTimeout(() => {

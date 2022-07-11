@@ -141,9 +141,21 @@ option1 = {
   title: {
     text: '资源分布情况'
   },
+  toolbox: {
+    // y: 'bottom',
+    feature: {
+      magicType: {
+        type: ['stack']
+      },
+      dataView: {},
+      saveAsImage: {
+        pixelRatio: 2
+      }
+    }
+  },
   angleAxis: {
     type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    data: ['灾害', '环境', '城市', '流域']
   },
   radiusAxis: {},
   polar: {},
@@ -151,7 +163,7 @@ option1 = {
   series: [
     {
       type: 'bar',
-      data: [1, 2, 3, 4, 3, 5, 1],
+      data: [1, 2, 3, 4],
       coordinateSystem: 'polar',
       name: '模型',
       stack: 'a',
@@ -161,7 +173,7 @@ option1 = {
     },
     {
       type: 'bar',
-      data: [2, 4, 6, 1, 3, 2, 1],
+      data: [2, 5, 1, 5],
       coordinateSystem: 'polar',
       name: '数据',
       stack: 'a',

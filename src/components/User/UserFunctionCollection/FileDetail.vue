@@ -105,7 +105,7 @@
             v-model="form.name"
             placeholder=""
             clearable
-            maxlength="50"
+            maxlength="100"
             show-word-limit
           />
         </el-form-item>

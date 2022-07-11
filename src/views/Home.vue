@@ -59,6 +59,9 @@ const mousedown = () => {
   }
   else if(document.getElementsByClassName("container")[0].style.width=="35vw"){
     document.getElementsByClassName("container")[0].style.width="100vw"
+    setTimeout(()=>{
+    document.getElementsByClassName("bg")[0].style.opacity="1"
+  },500)
   }
 };
 
@@ -83,6 +86,10 @@ setTimeout(() => {
 const explore=()=>{
   home_scroll_listen.value.scrollTop=window.innerHeight
   document.getElementsByClassName("container")[0].style.width="35vw"
+  setTimeout(()=>{
+    document.getElementsByClassName("bg")[0].style.opacity="0"
+  },500)
+  
 }
   
 

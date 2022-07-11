@@ -122,6 +122,7 @@ watch(
           }
         }
       }, 201);
+      
     }
   }
 );
@@ -142,8 +143,11 @@ const sendRouterToFather = (route1, index) => {
     // if (index != -1) {
     //     pickup(index);
     //   }
-
-    return;
+    setTimeout(()=>{
+      location.reload();
+      return;
+    },500)
+    
   }
   // setTimeout(() => {
   //   document.getElementsByClassName("user-topbar")[0].style.right = "20vw";

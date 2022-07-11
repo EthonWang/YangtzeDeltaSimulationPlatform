@@ -1,7 +1,7 @@
 <template>
   <div ref="home_scroll_listen" style="overflow-x: hidden !important;">
     <HomeView3 :show="show2" style="width: 100%; height: 100vh" @explore="explore()"></HomeView3>
-    <HomeView1 :show="show1" style="width: 100%; height: 95.94vh"></HomeView1>
+    <HomeView1 :show="show1" style="width: 100%; height: 96.04vh" @to-sci="toSci()"></HomeView1>
     <HomeView2 :show="show2" style="width: 100%; height: 98.08vh"></HomeView2>
     
   </div>
@@ -29,7 +29,7 @@ const show1 = computed(() => {
   //计算属性只能监听ref而非reactive，因为ref有包装便于script属性之间响应式交互
   return scrollTop.value < standardizeHeight(260+x);
 });
-const x=980
+const x=window.innerHeight
 const show2 = computed(() => {
   return (
     scrollTop.value > standardizeHeight(330+x) &&
@@ -53,7 +53,22 @@ const mousedown = () => {
   if (scrollTop.value < standardizeHeight(10)) {
     emit("showTopbarBackground", false);
   }
+  if(scrollTop.value>0.9*window.innerHeight&&scrollTop.value<1.1*window.innerHeight){
+    explore()
+    
+  }
+  else if(document.getElementsByClassName("container")[0].style.width=="35vw"){
+    document.getElementsByClassName("container")[0].style.width="100vw"
+    setTimeout(()=>{
+    document.getElementsByClassName("bg")[0].style.opacity="1"
+  },500)
+  }
 };
+
+const toSci=()=>{
+  home_scroll_listen.value.scrollTop=window.innerHeight*1.96
+}
+
 const suitable = () => {
   let compare = window.innerWidth / 1920;
   document.getElementsByClassName("earth")[0].style.transform =
@@ -69,7 +84,12 @@ setTimeout(() => {
   suitable();
 }, 100);
 const explore=()=>{
-  home_scroll_listen.value.scrollTop=980
+  home_scroll_listen.value.scrollTop=window.innerHeight
+  document.getElementsByClassName("container")[0].style.width="35vw"
+  setTimeout(()=>{
+    document.getElementsByClassName("bg")[0].style.opacity="0"
+  },500)
+  
 }
   
 

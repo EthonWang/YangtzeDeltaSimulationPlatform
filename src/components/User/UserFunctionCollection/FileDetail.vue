@@ -2,7 +2,7 @@
   <div class="about">
     <div class="file-detail">
       <h3 style="width: 50%">数据详情</h3>
-      <span style="width: 50%; position: absolute; top: 22px; right: 0%"
+      <span style="width: 50%; position: absolute; top: 15px; right: 0%"
         >已选中{{ props.num }}个数据</span
       >
 
@@ -105,7 +105,7 @@
             v-model="form.name"
             placeholder=""
             clearable
-            maxlength="50"
+            maxlength="100"
             show-word-limit
           />
         </el-form-item>
@@ -254,7 +254,7 @@ const changeData = () => {
   z-index:20000 !important
 }
 .file-detail {
-  padding: 0 5% 0 5%;
+  padding: 15px 5% 0 5%;
   text-align: left;
   height: 100%;
 }

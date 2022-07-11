@@ -1,18 +1,14 @@
 <template>
   <div ref="home1" class="home1">
     <div class="container">
-
-      <h1 style=" margin-top: 3%;position: relative;z-index: 2;"><span class="border-box">长三角综合模拟器</span></h1>
-      <el-button size="large" style="position: absolute;width: 10vw;height: 5vh;left:25vw ;" class="border-box">灾害响应与治理</el-button>
       <div
         class="desContainer"
         :class="{ show_ani: props.show, hide_ani: !props.show }"
       >
-        <el-divider style="margin: 5px 0 5px 0;"></el-divider>
+        <h1>长三角综合模拟器</h1>
         <p>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长三角模拟器汇聚了大量长江三角洲区域的地理模型和数据资源，用以揭示区域水循环及其内部驱动机理的水循环，阐明全球气候变化条件下区域环境演化规律，以及长三角城市化与人地关系相互作用的互动互馈机制的综合集成模型，实现区域灾害的快速响应与治理，服务于长三角高质量一体化发展国家战略。
         </p>
-        <el-divider style="margin: 15px 0 -5px 0;"></el-divider>
         <div class="login">
           <!-- <el-input
             v-model="input"
@@ -20,16 +16,14 @@
             placeholder="邮件地址"
             show-password
           /> -->
-          <el-button @click="toSci()" style="margin-top: 3vh;width: 100%;" type="primary">探索科学问题</el-button>
+          <el-button style="margin-top: 3vh;width: 100%;" type="success">登录</el-button>
         </div>
       </div>
-      <div class="data-charts"></div>
       <div class="merge-earth"></div>
       <MapCharts
         class="earth"
-       
+        :class="{ show_ani: props.show, hide_ani: !props.show }"
       ></MapCharts>
-      <img class="triangle" src="@/assets/triangle.png" alt="">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -68,7 +62,7 @@
 
 <script setup>
 //采用vue2写法的话把setup去掉，
-import { reactive, computed, ref, onMounted, defineProps,defineEmits } from "vue";
+import { reactive, computed, ref, onMounted, defineProps } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import MapCharts from "components/Home/MapCharts.vue";
@@ -78,17 +72,11 @@ const store = useStore(); //vuex直接用store.commit
 const props = defineProps({
   show: Boolean,
 });
-const emit=defineEmits(['toSci'])
-
 const toModel = () => {
   router.push("/model");
 };
 
 const home1 = ref();
-
-const toSci=()=>{
-emit("toSci")
-}
 
 // setTimeout(() => {
 //   show.value = true;
@@ -96,32 +84,7 @@ emit("toSci")
 </script>
 
 <style lang="less" scoped>
-
-@beside-bg:rgba(59, 59, 59, 0.5);
 .container {
-  .triangle{
-    position: absolute;
-    left: 41vw;
-    bottom: 34.8vh;
-    width: 6.5vw;
-    transform: rotate(15deg);
-  }
-  .data-charts{
-    position: absolute;
-    height: 65vh;
-    width: 22vw;
-    background: @beside-bg;
-    right: 3vw;
-    top: 25vh;
-    z-index: 2;
-      transform: scale(1) perspective(1200px) rotateY(-15deg);
-
-  }
-    h1 {
-    color: white;
-    font-size: 3vw;
-    text-align: center;
-  }
   position: absolute;
   height: 100%;
   width: 100%;
@@ -141,38 +104,32 @@ emit("toSci")
   }
 }
 .container .desContainer {
-  background: @beside-bg;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   position: absolute;
-  z-index: 2;
-  left: 3%;
-  top: 25vh;
-  width: 22.55vw;
-  height: fit-content;
+  left: 13%;
+  top: 18%;
+  width: 35.55vw;
+  height: 42.64vh;
   transition: all 1s;
   padding: 20px 20px;
-  transform: scale(1) perspective(1200px) rotateY(15deg);
   h1 {
     color: white;
     font-size: 3.75vw;
     margin-top: -10px;
     margin-bottom: 10px;
-    text-align: center;
   }
   p {
     // margin-top: -10px;
     font-size: 1.458vw;
     color: white;
     line-height: 170%;
-    width: 100%;
   }
   /deep/ .login {
     display: flex;
     align-items: center;
-    width: 100%;
-    opacity: 1;
+    width: 30vw;
     .el-button--success {
       font-size: 0.94vw;
       // width: 6.25vw;
@@ -190,28 +147,26 @@ emit("toSci")
 }
 .container .merge-earth {
   position: absolute;
-  left: 10vw;
-  top: 20%;
+  right: 12%;
+  top: 8%;
   // bottom: 50px;
-  width: 84vw;
+  width: 39.06vw;
   height: $width;
   z-index: 1;
-  
 }
 @value:100vw / 100px;
 .container .earth {
   position: absolute;
-  left: 10vw;
-  top: 20%;
+  right: 12%;
+  top: 5%;
   // bottom: 50px;
   // width: 39.06vw;
-  width: 84vw;
+  width: 800px;
   height: $width;
   z-index: 0;
   // background-color: red;
   transition: all 1s;
   transform-origin: 100% 0;
-
   // transform: scale(e(replace("@{value}", vw, '')));
   // &:hover {
   // transform: translate(-50px,50px) scale(1.35);
@@ -226,7 +181,6 @@ emit("toSci")
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden;
   // animation: gradients 6s linear infinite alternate;
   // https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg1.jiemian.com%2F101%2Foriginal%2F20200925%2F160101930086874400.jpg&refer=http%3A%2F%2Fimg1.jiemian.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653721526&t=987f7aabf97094519e7403f41e361028
   // background: url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.xhby.net%2Findex%2F202110%2FW020211014807713025533.jpg&refer=http%3A%2F%2Fwww.xhby.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653806992&t=cfa997108f4a23626f2251cf239cc2cd");
@@ -293,7 +247,7 @@ emit("toSci")
 @keyframes show1 {
   0% {
     opacity: 0;
-    // transform: scale(0.9);
+    transform: scale(0.9);
     display: none;
     // transform: skew(30deg);
   }
@@ -305,59 +259,14 @@ emit("toSci")
 }
 @keyframes hide1 {
   0% {
-    // transform: scale(1);
+    transform: scale(1);
   }
 
   100% {
     opacity: 0;
-    // transform: scale(0.9);
+    transform: scale(0.9);
     display: none;
   }
 }
-
- .border-box{
-  color: white;
-            position: relative;
-            // margin:300px auto;
-            // width:400px;
-            // height:300px;
-            padding:5px 15px 5px 15px;
-            // background: rgba(1, 19, 67, 0.8);
-            // border: 2px solid #00a1ff;
-            background: rgba(73, 73, 73, 0.8);
-            border: 2px solid #ffffff;
-            border-radius: 8px;
-        }
-        .border-box::before {
-            position: absolute;
-            top: -2px;
-            bottom: -2px;
-            left: 30px;
-            width: calc(100% - 60px);
-            content: "";
-            // border-top: 2px solid #016886;
-            // border-bottom: 2px solid #016886;
-             border-top: 2px solid #707070;
-            border-bottom: 2px solid #818181;
-            z-index: 0;
-        }
-        .border-box::after {
-            position: absolute;
-            top: 30px;
-            right: -2px;
-            left: -2px;
-            height: calc(100% - 60px);
-            content: "";
-            // border-right: 2px solid #016886;
-            // border-left: 2px solid #016886;
-            border-right: 2px solid #8b8b8b;
-            border-left: 2px solid #8d8d8d;
-            z-index: 0;
-        }
-        .border-box p{
-            line-height:100px;
-            text-align: center;
-            color:#00a1ff;
-        }
 </style>
 

@@ -511,7 +511,14 @@
               </el-table-column>
             </el-table>
           </el-collapse-item>
-          <el-collapse-item title="模型列表" name="model"> </el-collapse-item>
+          <el-collapse-item title="模型列表" name="model">
+            <el-table
+                style="width: 100%"
+            >
+              <el-table-column label="名称"  width="200" />
+              <el-table-column label="操作"  width="100" />
+            </el-table>
+          </el-collapse-item>
         </el-collapse>
       </div>
     </transition-group>

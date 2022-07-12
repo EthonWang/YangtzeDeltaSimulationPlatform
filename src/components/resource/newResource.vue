@@ -349,8 +349,16 @@ h1 {
                 >取消</Button
               >
               <Button
+                  v-if="formInline.resType == 'data'"
+                  type="success"
+                  @click="validateCreateProject('formInline')"
+                  style="margin-left: 15px; width: 150px"
+              >保存</Button
+              >
+              <Button
+                v-if="formInline.resType == 'model'"
                 type="success"
-                @click="validateCreateProject('formInline')"
+                @click="commitProjectModel()"
                 style="margin-left: 15px; width: 150px"
                 >保存</Button
               >
@@ -623,7 +631,33 @@ export default {
         confirm("Created project fail.");
       }
     },
-    commitProjectModel() {},
+    commitProjectModel() {
+      let info = {};
+      info.name = this.formInline.workName;
+      info.normalTags = "";
+      info.overview = "";
+      info.problemTags = "";
+      info.mdl = "";
+      info.md5 = "";
+      info.mdlJson = {};
+      info.authorShips = [];
+      info.imgWebAddress = this.pictureUrl;
+      // axios.post(this.dataServer+"/createResourceModel",info).then(res=>{
+      //   console.log("提交模型",res)
+      // })
+      let searchInfo = {
+        asc:false,
+        page:1,
+        pageSize:10,
+        searchText:"",
+        sortField:"createTime",
+        tagClass:"problemTags",
+        tagName:""
+      }
+      // axios.post(this.dataServer+"/getResourceModelList",searchInfo).then(res=>{
+      //   console.log("查询结果",res)
+      // })
+    },
     //创建历史纪录的函数
     addHistoryEvent(scopeId) {
       let form = {};

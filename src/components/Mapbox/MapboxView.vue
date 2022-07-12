@@ -614,12 +614,27 @@
       </div>
     </RadioGroup>
   </Modal>
+   <Modal
+    v-model="analysisModal"
+    draggable
+    sticky
+    scrollable
+    :mask="false"
+    @on-ok="ok"
+    @on-cancel="cancel"
+  >
+    <template #header>
+      <Icon type="md-buffer" size="18" />
+      <span style="margin-left: 5px; font-size: 18px">数据分析</span>
+    </template>
+    
+  </Modal>
 </template>
 
 <script>
 import { useStore } from "vuex";
 import mapboxgl from "mapbox-gl";
-import { ElNotification } from "element-plus";
+import { ElNotification, ElMessage } from "element-plus";
 import { get, post } from "@/request/request";
 import axios from "axios";
 import MapboxLanguage from "@mapbox/mapbox-gl-language";
@@ -717,6 +732,7 @@ export default {
         inputShp: "",
         outputFeaturesName: "",
       },
+      analysisModal: false,
 
       activeNames: "data",
       resList: {
@@ -858,7 +874,7 @@ export default {
       // this.resList = this.data_list;
     },
     initShpShowList() {
-      console.log(this.resList);
+      // console.log(this.resList);
       for (let i = 0; i < this.resList.dataList.length; i++) {
         if (
           this.resList.dataList[i].visualType == "shp" ||
@@ -1027,17 +1043,17 @@ export default {
         },
         true
       );
-      let intersetButtonObj = document.createElement("button");
-      intersetButtonObj.classList =
-        "mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_interset ivu-icon ivu-icon-logo-buffer";
-      intersetButtonObj.id = "mapbox-gl-draw_interset";
-      intersetButtonObj.title = "相交";
-      intersetButtonObj.style.fontSize = "16px";
-      drawBox.appendChild(intersetButtonObj);
-      intersetButtonObj.addEventListener(
+      let analysisButtonObj = document.createElement("button");
+      analysisButtonObj.classList =
+        "mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_analysis ivu-icon ivu-icon-logo-buffer";
+      analysisButtonObj.id = "mapbox-gl-draw_analysis";
+      analysisButtonObj.title = "数据分析";
+      analysisButtonObj.style.fontSize = "16px";
+      drawBox.appendChild(analysisButtonObj);
+      analysisButtonObj.addEventListener(
         "click",
         (e) => {
-          that.clipModalShow();
+          that.analysisModalShow();
         },
         true
       );
@@ -1249,15 +1265,16 @@ export default {
       for (let i = 0; i < this.showLayerTableList.length; i++) {
         if (this.showLayerTableList[i].name == name && type == "raster") {
           this.clipForm.inputRaster =
-            this.showLayerTableList[i].data.visualRelativePath;
+            this.showLayerTableList[i].data.fileRelativePath;
         } else if (this.showLayerTableList[i].name == name && type == "shp") {
           if (
-            this.showLayerTableList[i].data.visualRelativePath != undefined &&
-            this.showLayerTableList[i].data.visualRelativePath != null &&
-            this.showLayerTableList[i].data.visualRelativePath != ""
+            this.showLayerTableList[i].data.fileRelativePath != undefined &&
+            this.showLayerTableList[i].data.fileRelativePath != null &&
+            this.showLayerTableList[i].data.fileRelativePath != "" &&
+            this.showLayerTableList[i].data.visualType == "shp"
           ) {
             this.clipForm.inputShp =
-              this.showLayerTableList[i].data.visualRelativePath;
+              this.showLayerTableList[i].data.fileRelativePath;
             this.clipForm.isShp = true;
           } else {
             this.clipForm.jsonInfo = this.showLayerTableList[i];
@@ -1265,7 +1282,7 @@ export default {
           }
         }
       }
-      console.log(this.clipForm);
+      // console.log(this.clipForm);
     },
     commitClip() {
       let res = {};
@@ -1291,21 +1308,60 @@ export default {
         GDALClipDTO.outputTifName = GDALClipDTO.outputTifName + ".tif";
       }
       GDALClipDTO.isShp = this.clipForm.isShp;
+      ElMessage({
+        type: "info",
+        message: "裁剪中，请稍等！",
+      });
       axios({
         url: this.dataServer + "/script/gdalClip/" + this.taskInfo.id,
         method: "post",
         data: GDALClipDTO,
       }).then(
         (res) => {
-          console.log(res.data);
+          // console.log(res.data);
+          if (res.data.code == 0) {
+            localStorage.setItem("task", JSON.stringify(res.data.data));
+            ElMessage({
+              type: "success",
+              message: "裁剪成功，正在加载数据...",
+            });
+            location.reload();
+          }
         },
         (err) => {
+          ElMessage({
+            type: "error",
+            message: "裁剪失败，请重试！",
+          });
           console.log(err);
         }
       );
     },
     openTxtEditor(info) {
       this.$emit("openTxtEditor", info);
+    },
+    updateTxtInfo(res) {
+      for (let i = 0; i < res.dataList.length; i++) {
+        if (
+          res.dataList[i].visualType == "txt" &&
+          res.dataList[i].id == this.showLayerTableList[i].id
+        ) {
+          let newTxtLayer = {
+            show: true,
+            name: res.dataList[i].name,
+            id: res.dataList[i].id,
+            type: res.dataList[i].type,
+            visualType: res.dataList[i].visualType,
+            filter: ["all"],
+            data: res.dataList[i],
+            // "source-layer": "default"
+          };
+          this.showLayerTableList.splice(i, 1, newTxtLayer);
+        }
+      }
+    },
+    analysisModalShow(){
+      this.analysisModal = true;
     },
   },
 };

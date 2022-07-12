@@ -105,6 +105,7 @@ const searchIndexInRoutes = () => {
 watch(
   () => route.path,
   (newValue, oldValue) => {
+    
     if (getRootPath(newValue) != "") {
       setTimeout(() => {
         document.getElementsByClassName("bg")[0].style.opacity = "0";
@@ -122,6 +123,7 @@ watch(
           }
         }
       }, 201);
+      
     }
   }
 );
@@ -142,8 +144,11 @@ const sendRouterToFather = (route1, index) => {
     // if (index != -1) {
     //     pickup(index);
     //   }
-
-    return;
+    setTimeout(()=>{
+      // location.reload();
+      console.log(router.options);
+    },300)
+    
   }
   // setTimeout(() => {
   //   document.getElementsByClassName("user-topbar")[0].style.right = "20vw";

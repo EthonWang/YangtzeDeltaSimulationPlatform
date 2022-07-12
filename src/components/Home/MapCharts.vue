@@ -22,26 +22,26 @@ function init() {
     return Math.ceil(Math.random() * echarts_data.airports.length);
   };
   const new_data = [];
-  const creatData = () => {
-    for (let i = 0; i < 2; i++) {
-      for (let j = 0; j < 1; j++) {
-        let rd = randNum();
-        let data_item = [Math.ceil(Math.random() * 5) - 1, city[i], rd];
-        new_data.push(data_item);
-      }
-      for (let j = 0; j < 1; j++) {
-        let rd = randNum();
-        let data_item = [Math.ceil(Math.random() * 5) - 1, rd, city[i]];
-        new_data.push(data_item);
-      }
-    }
-  };
+  // const creatData = () => {
+  //   for (let i = 0; i < 2; i++) {
+  //     for (let j = 0; j < 1; j++) {
+  //       let rd = randNum();
+  //       let data_item = [Math.ceil(Math.random() * 5) - 1, city[i], rd];
+  //       new_data.push(data_item);
+  //     }
+  //     for (let j = 0; j < 1; j++) {
+  //       let rd = randNum();
+  //       let data_item = [Math.ceil(Math.random() * 5) - 1, rd, city[i]];
+  //       new_data.push(data_item);
+  //     }
+  //   }
+  // };
   const myChart = echarts.init(earthchart.value);
   function getAirportCoord(idx) {
     // console.log(idx+':'+data.airports[idx][1])
     return [data.airports[idx][3], data.airports[idx][4]];
   }
-  creatData();
+  // creatData();
   console.log(new_data);
   var routes = new_data.map(function (airline) {
     return [getAirportCoord(airline[1]), getAirportCoord(airline[2])];
@@ -79,12 +79,13 @@ function init() {
         },
       },
       viewControl: {
-        autoRotate: false,
+        autoRotate: true,
         zoomSensitivity: 0,
+        autoRotateSpeed:2,
         animation: true,
         animationDurationUpdate: 1000,
-        // animationEasingUpdate: cubicInOut,
-        targetCoord: [125.46, -2.92],
+        animationEasingUpdate: "cubicInOut",
+        targetCoord: [116.46, 4.92],
       },
       light: {
         ambient: {
@@ -109,24 +110,24 @@ function init() {
       ],
     },
     series: {
-      type: "lines3D",
-      coordinateSystem: "globe",
-      blendMode: "lighter",
-      effect: {
-        show: true,
-        trailWidth: 5,
-        trailOpacity: 1,
-        trailLength: 1,
-        period : 10,
-        // constantSpeed: 40,
-      },
-      lineStyle: {
-        width: 2,
-        // color:"",
-        color: "hsl(200,100%,50%)",
-        opacity: 0.2,
-      },
-      data: routes,
+      // type: "lines3D",
+      // coordinateSystem: "globe",
+      // blendMode: "lighter",
+      // effect: {
+      //   show: true,
+      //   trailWidth: 5,
+      //   trailOpacity: 1,
+      //   trailLength: 1,
+      //   period : 10,
+      //   // constantSpeed: 40,
+      // },
+      // lineStyle: {
+      //   width: 2,
+      //   // color:"",
+      //   color: "hsl(200,100%,50%)",
+      //   opacity: 0.2,
+      // },
+      // data: routes,
     },
   };
   option && myChart.setOption(option);

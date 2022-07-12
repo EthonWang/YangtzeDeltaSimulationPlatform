@@ -1,18 +1,47 @@
 <template>
   <div ref="home1" class="home1">
     <div class="container">
+      <h1 style="margin-top: 3.75%; position: relative; z-index: 2">
+        <span style="background: transparent" class="border-box"
+          >长三角综合模拟器</span
+        >
+      </h1>
+      <div
+        style="
+          position: absolute;
+          width: 95vw;
+          height: 5vh;
+          left: 5vw;
+          top: 17vh;
+          z-index:2;
+        "
+      >
+        <el-button size="large" class="border-box flowbtn"
+          >灾害响应与治理</el-button
+        >
+        <el-button size="large" class="border-box flowbtn"
+          >全球变化与区域环境演化</el-button
+        >
+        <el-button size="large" class="border-box flowbtn"
+          >城市化与人地关系协调发展</el-button
+        >
+        <el-button
+          size="large"
+          class="border-box flowbtn"
+          style="margin-right: 0 !important"
+          >流域水循环及驱动机制</el-button
+        >
+      </div>
 
-      <h1 style=" margin-top: 3%;position: relative;z-index: 2;"><span class="border-box">长三角综合模拟器</span></h1>
-      <el-button size="large" style="position: absolute;width: 10vw;height: 5vh;left:25vw ;" class="border-box">灾害响应与治理</el-button>
       <div
         class="desContainer"
         :class="{ show_ani: props.show, hide_ani: !props.show }"
       >
-        <el-divider style="margin: 5px 0 5px 0;"></el-divider>
+        <el-divider style="margin: 5px 0 5px 0"></el-divider>
         <p>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长三角模拟器汇聚了大量长江三角洲区域的地理模型和数据资源，用以揭示区域水循环及其内部驱动机理的水循环，阐明全球气候变化条件下区域环境演化规律，以及长三角城市化与人地关系相互作用的互动互馈机制的综合集成模型，实现区域灾害的快速响应与治理，服务于长三角高质量一体化发展国家战略。
         </p>
-        <el-divider style="margin: 15px 0 -5px 0;"></el-divider>
+        <el-divider style="margin: 15px 0 -5px 0"></el-divider>
         <div class="login">
           <!-- <el-input
             v-model="input"
@@ -20,16 +49,22 @@
             placeholder="邮件地址"
             show-password
           /> -->
-          <el-button @click="toSci()" style="margin-top: 3vh;width: 100%;" type="primary">探索科学问题</el-button>
+          <el-button
+            @click="toSci()"
+            style="margin-top: 3vh; width: 100%"
+            type="primary"
+            ><el-icon><Bottom /></el-icon>&nbsp;探索科学问题</el-button
+          >
         </div>
       </div>
-      <div class="data-charts"></div>
+      <div class="data-charts">
+        <div id="main1"></div>
+                <div id="main2"></div>
+
+      </div>
       <div class="merge-earth"></div>
-      <MapCharts
-        class="earth"
-       
-      ></MapCharts>
-      <img class="triangle" src="@/assets/triangle.png" alt="">
+      <MapCharts class="earth"></MapCharts>
+      <img class="triangle" src="@/assets/triangle.png" alt="" />
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -68,17 +103,25 @@
 
 <script setup>
 //采用vue2写法的话把setup去掉，
-import { reactive, computed, ref, onMounted, defineProps,defineEmits } from "vue";
+import {
+  reactive,
+  computed,
+  ref,
+  onMounted,
+  defineProps,
+  defineEmits,
+} from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import MapCharts from "components/Home/MapCharts.vue";
+import * as echarts from 'echarts';
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const props = defineProps({
   show: Boolean,
 });
-const emit=defineEmits(['toSci'])
+const emit = defineEmits(["toSci"]);
 
 const toModel = () => {
   router.push("/model");
@@ -86,40 +129,177 @@ const toModel = () => {
 
 const home1 = ref();
 
-const toSci=()=>{
-emit("toSci")
-}
+const toSci = () => {
+  emit("toSci");
+};
 
-// setTimeout(() => {
-//   show.value = true;
-// }, 2000);
+setTimeout(() => {
+  var chartDom1 = document.getElementById('main1');
+var myChart1 = echarts.init(chartDom1, 'dark');
+var option1;
+option1 = {
+  title: {
+    text: '资源分布情况'
+  },
+  toolbox: {
+    // y: 'bottom',
+    feature: {
+      magicType: {
+        type: ['stack']
+      },
+      dataView: {},
+      saveAsImage: {
+        pixelRatio: 2
+      }
+    }
+  },
+  angleAxis: {
+    type: 'category',
+    data: ['灾害', '环境', '城市', '流域']
+  },
+  radiusAxis: {},
+  polar: {},
+  backgroundColor:"transparent",
+  series: [
+    {
+      type: 'bar',
+      data: [1, 2, 3, 4],
+      coordinateSystem: 'polar',
+      name: '模型',
+      stack: 'a',
+      emphasis: {
+        focus: 'series'
+      }
+    },
+    {
+      type: 'bar',
+      data: [2, 5, 1, 5],
+      coordinateSystem: 'polar',
+      name: '数据',
+      stack: 'a',
+      emphasis: {
+        focus: 'series'
+      }
+    },
+  ],
+  legend: {
+    show: true,
+    data: ['模型', '数据']
+  }
+};
+
+option1 && myChart1.setOption(option1);
+
+
+var chartDom2 = document.getElementById('main2');
+var myChart2 = echarts.init(chartDom2, 'dark');
+var option2;
+var xAxisData = [];
+var data1 = [];
+var data2 = [];
+for (var i = 0; i < 100; i++) {
+  xAxisData.push('A' + i);
+  data1.push((Math.sin(i / 5) * (i / 5 - 10) + i / 6) * 5);
+  data2.push((Math.cos(i / 5) * (i / 5 - 10) + i / 6) * 5);
+}
+option2 = {
+  title: {
+    text: '资源使用情况'
+  },
+  backgroundColor:"transparent",
+  legend: {
+    data: ['模型', '数据']
+  },
+  toolbox: {
+    // y: 'bottom',
+    feature: {
+      magicType: {
+        type: ['stack']
+      },
+      dataView: {},
+      saveAsImage: {
+        pixelRatio: 2
+      }
+    }
+  },
+  tooltip: {},
+  xAxis: {
+    data: xAxisData,
+    splitLine: {
+      show: false
+    }
+  },
+  yAxis: {},
+  series: [
+    {
+      name: '模型',
+      type: 'bar',
+      data: data1,
+      emphasis: {
+        focus: 'series'
+      },
+      animationDelay: function (idx) {
+        return idx * 10;
+      }
+    },
+    {
+      name: '数据',
+      type: 'bar',
+      data: data2,
+      emphasis: {
+        focus: 'series'
+      },
+      animationDelay: function (idx) {
+        return idx * 10 + 100;
+      }
+    }
+  ],
+  animationEasing: 'elasticOut',
+  animationDelayUpdate: function (idx) {
+    return idx * 5;
+  }
+};
+option2 && myChart2.setOption(option2);
+}, 2000);
 </script>
 
 <style lang="less" scoped>
-
-@beside-bg:rgba(59, 59, 59, 0.5);
+@beside-bg: rgba(40, 40, 40, 0.5);
 .container {
-  .triangle{
-    position: absolute;
-    left: 41vw;
-    bottom: 34.8vh;
-    width: 6.5vw;
-    transform: rotate(15deg);
+  backdrop-filter: blur(5px);
+  .flowbtn {
+    height: 5vh;
+    width: 20%;
+    margin-right: 4.5%;
+    font-size: 1.4vw;
   }
-  .data-charts{
+  .triangle {
+    position: absolute;
+    left: 33vw;
+    bottom: 9.8vh;
+    width: 32.5vw;
+    z-index: 2;
+    // background: rgba(68, 68, 68, 0.5);
+    // backdrop-filter: blur(5px);
+    border-radius: 5%;
+    // opacity: 0.8;
+    // transform: perspective(1200px) rotateY(-25deg);
+  }
+  .data-charts {
     position: absolute;
     height: 65vh;
     width: 22vw;
     background: @beside-bg;
-    right: 3vw;
+    right: 1vw;
     top: 25vh;
+    padding:10px;
     z-index: 2;
-      transform: scale(1) perspective(1200px) rotateY(-15deg);
-
+    border-radius: 5%;
+    transform: scale(1) perspective(1200px) rotateY(-15deg);
   }
-    h1 {
+  h1 {
     color: white;
-    font-size: 3vw;
+    font-size: 2.24vw;
     text-align: center;
   }
   position: absolute;
@@ -147,12 +327,13 @@ emit("toSci")
   align-items: flex-start;
   position: absolute;
   z-index: 2;
-  left: 3%;
+  left: 1vw;
   top: 25vh;
-  width: 22.55vw;
-  height: fit-content;
+  width: 18.55vw;
+  height: 65vh;
   transition: all 1s;
   padding: 20px 20px;
+    border-radius: 5%;
   transform: scale(1) perspective(1200px) rotateY(15deg);
   h1 {
     color: white;
@@ -163,7 +344,7 @@ emit("toSci")
   }
   p {
     // margin-top: -10px;
-    font-size: 1.458vw;
+    font-size: 1.1vw;
     color: white;
     line-height: 170%;
     width: 100%;
@@ -173,10 +354,10 @@ emit("toSci")
     align-items: center;
     width: 100%;
     opacity: 1;
-    .el-button--success {
-      font-size: 0.94vw;
+    .el-button--primary {
+      font-size: 1.15vw;
       // width: 6.25vw;
-      height: 4.26vh;
+      height: 4.5vh;
     }
     .el-input__inner {
       font-size: 0.94vw;
@@ -196,21 +377,21 @@ emit("toSci")
   width: 84vw;
   height: $width;
   z-index: 1;
-  
+  backdrop-filter: blur(2px);
 }
 @value:100vw / 100px;
 .container .earth {
   position: absolute;
-  left: 10vw;
-  top: 20%;
+  left: 5vw;
+  top: 5%;
   // bottom: 50px;
   // width: 39.06vw;
-  width: 84vw;
+  width: 90vw;
   height: $width;
   z-index: 0;
   // background-color: red;
   transition: all 1s;
-  transform-origin: 100% 0;
+  transform-origin: 50% 0%;
 
   // transform: scale(e(replace("@{value}", vw, '')));
   // &:hover {
@@ -315,49 +496,57 @@ emit("toSci")
   }
 }
 
- .border-box{
+#main1{
+  width: 100%;
+  height: 50%;
+}
+#main2{
+  width: 100%;
+  height: 50%;
+}
+.border-box {
   color: white;
-            position: relative;
-            // margin:300px auto;
-            // width:400px;
-            // height:300px;
-            padding:5px 15px 5px 15px;
-            // background: rgba(1, 19, 67, 0.8);
-            // border: 2px solid #00a1ff;
-            background: rgba(73, 73, 73, 0.8);
-            border: 2px solid #ffffff;
-            border-radius: 8px;
-        }
-        .border-box::before {
-            position: absolute;
-            top: -2px;
-            bottom: -2px;
-            left: 30px;
-            width: calc(100% - 60px);
-            content: "";
-            // border-top: 2px solid #016886;
-            // border-bottom: 2px solid #016886;
-             border-top: 2px solid #707070;
-            border-bottom: 2px solid #818181;
-            z-index: 0;
-        }
-        .border-box::after {
-            position: absolute;
-            top: 30px;
-            right: -2px;
-            left: -2px;
-            height: calc(100% - 60px);
-            content: "";
-            // border-right: 2px solid #016886;
-            // border-left: 2px solid #016886;
-            border-right: 2px solid #8b8b8b;
-            border-left: 2px solid #8d8d8d;
-            z-index: 0;
-        }
-        .border-box p{
-            line-height:100px;
-            text-align: center;
-            color:#00a1ff;
-        }
+  position: relative;
+  // margin:300px auto;
+  // width:400px;
+  // height:300px;
+  padding: 5px 15px 5px 15px;
+  // background: rgba(1, 19, 67, 0.8);
+  // border: 2px solid #00a1ff;
+  background: rgba(73, 73, 73, 0.8);
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+}
+.border-box::before {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: 30px;
+  width: calc(100% - 60px);
+  content: "";
+  // border-top: 2px solid #016886;
+  // border-bottom: 2px solid #016886;
+  border-top: 2px solid #707070;
+  border-bottom: 2px solid #818181;
+  z-index: 0;
+}
+.border-box::after {
+  position: absolute;
+  top: 15px;
+  right: -2px;
+  left: -2px;
+  height: calc(100% - 30px);
+  content: "";
+  // border-right: 2px solid #016886;
+  // border-left: 2px solid #016886;
+  border-right: 2px solid #8b8b8b;
+  border-left: 2px solid #8d8d8d;
+  z-index: 0;
+}
+.border-box p {
+  line-height: 100px;
+  text-align: center;
+  color: #00a1ff;
+}
 </style>
 

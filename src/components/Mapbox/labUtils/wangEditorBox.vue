@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useStore } from "vuex";
 import axios from "axios";
 import E from "wangeditor";
 export default {
@@ -13,6 +13,7 @@ export default {
     return {
       editor: null,
       txtContent: "",
+      originalContent: "",
       dataServer: useStore().getters.devIpAddress,
     };
   },
@@ -59,11 +60,21 @@ export default {
       this.editor.config.pasteFilterStyle = false; // 去除复制过来文本的默认样式
       this.editor.create(); // 创建富文本实例
       let txtData = this.txtContent.toString();
-      // txtData = txtData.replace(/(\r\n)|(\n)/g,'<br>');
       this.editor.txt.html(txtData);
+      //获取原始内容，以判断是否修改
+      let txtElemId = this.editor.textElemId;
+      let txtElemBox = document.getElementById(txtElemId);
+      // console.log(txtElemBox.childNodes[0].innerHTML);
+      this.originalContent = txtElemBox.childNodes[0].innerHTML;
       this.editor.config.onchange = (html) => {
-        // console.log(html);
-        this.$emit("saveTxtHtml",html);
+        if (
+          this.originalContent != txtElemBox.childNodes[0].innerHTML ||
+          txtElemBox.childNodes.length > 1
+        ) {
+          this.$emit("saveTxtHtml", html, true);
+        } else {
+          this.$emit("saveTxtHtml", html, false);
+        }
       };
     },
   },

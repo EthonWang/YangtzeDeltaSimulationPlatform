@@ -108,7 +108,7 @@ const props = defineProps({
   resList: Array,
 });
 const addDataToTask = (task) => {
-  console.log(task);
+  // console.log(task);
   let dataList = [];
   for (let i in selectedVisualDataItems.value) {
     let dataName = selectedVisualDataItems.value[i];

@@ -8,13 +8,13 @@
         v-if="!editBoardShow"
         size="small"
         @click="handleEditBoardShow(1)"
-        >打开编辑框
+        ><el-icon><ArrowDownBold /></el-icon>&nbsp;打开编辑框
       </el-button>
       <el-button
         v-if="editBoardShow"
         size="small"
         @click="handleEditBoardShow(0)"
-        >收起编辑框
+        ><el-icon><ArrowUpBold /></el-icon>&nbsp;收起编辑框
       </el-button>
     </div>
 
@@ -607,7 +607,7 @@
       </div>
     </RadioGroup>
   </Modal>
-   <Modal
+  <Modal
     v-model="analysisModal"
     draggable
     sticky
@@ -620,7 +620,6 @@
       <Icon type="md-buffer" size="18" />
       <span style="margin-left: 5px; font-size: 18px">数据分析</span>
     </template>
-    
   </Modal>
 </template>
 
@@ -1353,7 +1352,7 @@ export default {
         }
       }
     },
-    analysisModalShow(){
+    analysisModalShow() {
       this.analysisModal = true;
     },
   },

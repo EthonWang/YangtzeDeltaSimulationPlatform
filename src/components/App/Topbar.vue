@@ -59,7 +59,7 @@ const user_info = JSON.parse(localStorage.getItem("userInfo"));
 const graphapi = new graphAPI();
 if(user_info!=undefined){
   graphapi.initGraph(user_info.id).then((res) => {
-  console.log("推薦",graphapi.giveRecommend(["公开"]));
+  console.log(res);
 });
 
 }
@@ -190,12 +190,12 @@ setTimeout(searchIndexInRoutes, 100);
   width: 100%;
   position: absolute;
   // left: calc(17% + 50px);
-  left: 3.5vw;
+  left: 4vw;
   transition: all 1s;
 }
 
 .pickup {
-  border: hsl(54, 94%, 75%) 1px solid;
+  border: hsl(201, 100%, 65%) 2px solid;
   border-top: 0;
   border-left: 0;
   border-right: 0;

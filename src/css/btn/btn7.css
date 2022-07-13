@@ -13,7 +13,7 @@
 #set_7_button1 {
     stroke-width: 1px;
     fill: transparent;
-    stroke: hsla(58, 80%, 80%,0.2);
+    stroke: rgba(163, 205, 245, 0.2);
     stroke-dasharray: 85 400;
     stroke-dashoffset: -205%;
     transition: 1s all ease
@@ -24,7 +24,7 @@
     stroke-width: 2px;
     stroke-dashoffset: 0;
     /* stroke: rgb(63, 194, 255); */
-    stroke: hsl(56, 100%, 80%);
+    stroke: hsl(187, 100%, 80%);
 }
 
 #set_7_text {

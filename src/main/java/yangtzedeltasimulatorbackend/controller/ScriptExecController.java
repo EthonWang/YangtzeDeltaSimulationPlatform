@@ -1,17 +1,14 @@
 package yangtzedeltasimulatorbackend.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
-import yangtzedeltasimulatorbackend.entity.dto.dashboard.SortDTO;
 import yangtzedeltasimulatorbackend.entity.dto.script.GDALClipDTO;
+import yangtzedeltasimulatorbackend.entity.dto.script.TxtAnalysisDTO;
 import yangtzedeltasimulatorbackend.service.ScriptExecService;
-import yangtzedeltasimulatorbackend.utils.ResultUtils;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
 
 /**
  * @Description
@@ -36,6 +33,12 @@ public class ScriptExecController {
     @PostMapping("/gdalClip/{labTaskId}")
     public JsonResult gdalClip(@RequestBody GDALClipDTO gdalClipDTO,  @PathVariable String labTaskId){
         return  scriptExecService.gdalClip(gdalClipDTO,labTaskId);
+    }
+
+    @ApiOperation(value = "txt_analysis")
+    @PostMapping("/txtAnalysis/{labTaskId}")
+    public JsonResult txtAnalysis(@RequestBody TxtAnalysisDTO txtAnalysisDTO, @PathVariable String labTaskId){
+        return  scriptExecService.txtAnalysis(txtAnalysisDTO,labTaskId);
     }
 
 }

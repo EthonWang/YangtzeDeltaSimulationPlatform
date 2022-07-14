@@ -1,0 +1,39 @@
+{
+  "tooltip": {
+    "trigger": "item"
+  },
+  "toolbox": {
+    "show": true,
+    "feature": {
+      "mark": {
+        "show": true
+      },
+      "dataView": {
+        "show": true,
+        "readOnly": false
+      },
+      "saveAsImage": {
+        "show": true
+      }
+    }
+  },
+  "legend": {
+    "orient": "vertical",
+    "left": "left"
+  },
+  "series": [
+    {
+      "name": "",
+      "type": "pie",
+      "radius": "50%",
+      "data": [],
+      "emphasis": {
+        "itemStyle": {
+          "shadowBlur": 10,
+          "shadowOffsetX": 0,
+          "shadowColor": "rgba(0, 0, 0, 0.5)"
+        }
+      }
+    }
+  ]
+}

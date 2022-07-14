@@ -1,0 +1,29 @@
+{
+  "tooltip": {
+    "trigger": "axis"
+  },
+  "toolbox": {
+    "show": true,
+    "feature": {
+      "mark": {
+        "show": true
+      },
+      "dataView": {
+        "show": true,
+        "readOnly": false
+      },
+      "saveAsImage": {
+        "show": true
+      }
+    }
+  },
+  "xAxis": {},
+  "yAxis": {},
+  "series": [
+    {
+      "symbolSize": 20,
+      "data": [],
+      "type": "scatter"
+    }
+  ]
+}

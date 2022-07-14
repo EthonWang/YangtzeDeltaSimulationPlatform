@@ -25,7 +25,7 @@ public class LabTask {
     boolean publicBoolean;
     List<String> problemTags;  //地理问题标签
     List<JSONObject> dataList;
-    List<JSONObject> modelList;
+    List<ResourceModel> modelList;
 
     String userId;
 

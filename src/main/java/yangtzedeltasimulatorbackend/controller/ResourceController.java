@@ -26,7 +26,7 @@ public class ResourceController {
     ResourceService resourceService;
 
 //    @LoginRequired
-    @ApiOperation(value = "保存资源中心数据")
+    @ApiOperation(value = "数据---创建资源中心数据")
     @PostMapping("/saveResourceData")
     public JsonResult saveResourceData(@RequestPart("info") CreateResourceDataDTO createResourceDataDTO,
                                        @ApiParam @RequestPart(value = "visualFile",required = false) MultipartFile visualFile,
@@ -35,19 +35,19 @@ public class ResourceController {
     }
 
     //    @LoginRequired
-    @ApiOperation(value = "获取资源中心数据列表")
+    @ApiOperation(value = "数据---获取资源中心数据列表")
     @PostMapping("/getResourceDataList")
     public JsonResult getResourceDataList(@RequestBody ResourcePageDTO resourcePageDTO){
         return resourceService.getResourceDataList(resourcePageDTO);
     }
 
-    @ApiOperation(value = "删除资源中心数据")
+    @ApiOperation(value = "数据---删除资源中心数据")
     @GetMapping("/deleteResourceData/{resourceDataId}")
     public JsonResult deleteResourceData(@PathVariable("resourceDataId") String resourceDataId ){
         return resourceService.deleteResourceData(resourceDataId);
     }
 
-    @ApiOperation(value = "保存资源中心其他小数据")
+    @ApiOperation(value = "数据---保存资源中心其他小数据")
     @PostMapping("/saveResourceSmallFile")
     public JsonResult saveResourceSmallFile(@RequestPart("info") CreateResourceSmallFileDTO createResourceSmallFileDTO,
                                        @RequestPart("smallFile") MultipartFile smallFile){
@@ -55,25 +55,32 @@ public class ResourceController {
     }
 
 
-    @ApiOperation(value = "删除资源中心其他小数据")
+    @ApiOperation(value = "数据---删除资源中心其他小数据")
     @GetMapping("/deleteResourceSmall/{resourceSmallFileId}")
     public JsonResult deleteResourceSmallFile(@PathVariable("resourceSmallFileId") String resourceSmallFileId ){
         return resourceService.deleteResourceSmallFile(resourceSmallFileId);
     }
 
-    @ApiOperation(value = "创建资源中心的模型条目")
+    @ApiOperation(value = "模型---创建资源中心的模型条目")
     @PostMapping("/createResourceModel")
-    public JsonResult createResourceModel(@RequestBody CreateResourceModelDTO createResourceModelDTO){
-        return resourceService.createResourceModel(createResourceModelDTO);
+    public JsonResult createResourceModel(@RequestPart("info") CreateResourceModelDTO createResourceModelDTO,
+                                          @RequestPart("imgFile") MultipartFile imgFile){
+        return resourceService.createResourceModel(createResourceModelDTO,imgFile);
     }
 
-    @ApiOperation(value = "获取资源中心模型列表")
+    @ApiOperation(value = "模型---获取资源中心模型列表")
     @PostMapping("/getResourceModelList")
     public JsonResult getResourceModelList(@RequestBody ResourcePageDTO resourcePageDTO){
         return resourceService.getResourceModelList(resourcePageDTO);
     }
 
-    @ApiOperation(value = "删除资源中心的模型条目")
+    @ApiOperation(value = "模型---获取资源中心模型根据id")
+    @PostMapping("/getResourceModelById/{resourceModelId}")
+    public JsonResult getResourceModelById(@PathVariable("resourceModelId") String resourceModelId){
+        return resourceService.getResourceModelById(resourceModelId);
+    }
+
+    @ApiOperation(value = "模型---删除资源中心的模型条目")
     @GetMapping("/deleteResourceModel/{resourceModelId}")
     public JsonResult deleteResourceModel(@PathVariable("resourceModelId") String resourceModelId){
         return resourceService.deleteResourceModel(resourceModelId);
@@ -86,7 +93,7 @@ public class ResourceController {
 //        return themeService.uploadThemeImg(uploadImg);
 //    }
 
-    @ApiOperation(value = "保存资源中心其他小数据")
+    @ApiOperation(value = "实验室---保存实验室的geojson")
     @PostMapping("/saveLabGeoJsonFile")
     public JsonResult saveLabGeoJsonFile(HttpServletRequest request){
        return resourceService.saveLabGeoJsonFile(request);

@@ -46,7 +46,9 @@ public class UserResourceService {
     ThemeDao themeDao;
 
     @Autowired
-    ModelItemDao  modelItemDao;
+    ResourceModelDao  resourceModelDao;
+
+
 
 
     @Value("${dataStoreDir}"+"/data")
@@ -248,7 +250,7 @@ public class UserResourceService {
             List<Theme> themeList=themeDao.findAll();
             o.put("themeList",themeList);
 
-            List<ModelItem> modelItemList=modelItemDao.findAll();
+            List<ResourceModel> modelItemList=resourceModelDao.findAll();
             o.put("modelList",modelItemList);
 
             return ResultUtils.success(o);

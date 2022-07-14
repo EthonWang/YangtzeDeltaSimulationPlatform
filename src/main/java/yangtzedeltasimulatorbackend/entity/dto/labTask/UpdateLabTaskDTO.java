@@ -2,6 +2,7 @@ package yangtzedeltasimulatorbackend.entity.dto.labTask;
 
 import cn.hutool.json.JSONObject;
 import lombok.Data;
+import yangtzedeltasimulatorbackend.entity.po.ResourceModel;
 
 import java.util.List;
 
@@ -19,6 +20,6 @@ public class UpdateLabTaskDTO {
     boolean publicBoolean;
     String problemTags="";  //地理问题标签
     List<JSONObject> dataList;
-    List<JSONObject> modelList;
+    List<ResourceModel> modelList;
 
 }

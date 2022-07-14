@@ -296,18 +296,41 @@ public class ResourceService {
         }
     }
 
-    public JsonResult createResourceModel(CreateResourceModelDTO createResourceModelDTO) {
+    public JsonResult createResourceModel(CreateResourceModelDTO createResourceModelDTO, MultipartFile imgFile) {
         try{
+            File folder = new File(resourceDataFolder);
+            if (!folder.isDirectory()) {
+                folder.mkdirs();
+            }
+
             ResourceModel resourceModel=new ResourceModel();
             BeanUtils.copyProperties(createResourceModelDTO,resourceModel);
+
+
+            //图像
+            if (imgFile.isEmpty()) {
+                resourceModel.setImgWebAddress("");
+            }else {
+                //将文件保存到指定位置
+                String imgFileName = imgFile.getOriginalFilename(); //eg: XXX.js
+                String imgFileMainName= FileNameUtil.mainName(imgFileName); // XXX
+                String imgFileExtName = FileNameUtil.extName(imgFileName); //js
+                String imgFileNewName=IdUtil.objectId()+"."+imgFileExtName;
+                File saveImgFile = new File(folder, imgFileNewName);//eg: E:\\TEMP\\1231231.js
+                imgFile.transferTo(saveImgFile);
+                resourceModel.setImgStoreName(imgFileNewName);
+                resourceModel.setImgWebAddress("/store/resourceData/"+imgFileNewName);
+                resourceModel.setImgRelativePath("/resourceData/"+imgFileNewName);
+            }
+
             resourceModelDao.save(resourceModel);
+
             return ResultUtils.success("创建模型条目成功！");
         }catch (Exception e){
             log.error(e.getMessage());
             return ResultUtils.error("创建模型条目失败！");
         }
     }
-
 
 
     public JsonResult deleteResourceModel(String resourceModelId) {
@@ -409,4 +432,14 @@ public class ResourceService {
         return ResultUtils.error("保存失败");
     }
 
+    public JsonResult getResourceModelById(String resourceModelId) {
+        try {
+            ResourceModel resourceModel=resourceModelDao.findById(resourceModelId).get();
+            return ResultUtils.success(resourceModel);
+
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("获取模型信息失败");
+        }
+    }
 }

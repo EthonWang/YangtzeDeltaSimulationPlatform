@@ -1,0 +1,51 @@
+{
+  "tooltip": {
+    "trigger": "axis"
+  },
+  "toolbox": {
+    "feature": {
+      "dataZoom": {
+        "yAxisIndex": "none"
+      },
+      "restore": {},
+      "saveAsImage": {},
+      "dataView": {
+        "show": true,
+        "readOnly": false
+      }
+    }
+  },
+  "xAxis": {
+    "type": "category",
+    "boundaryGap": false,
+    "data": []
+  },
+  "yAxis": {
+    "type": "value",
+    "boundaryGap": [
+      0,
+      "100%"
+    ]
+  },
+  "dataZoom": [
+    {
+      "type": "inside",
+      "start": 0,
+      "end": 20
+    },
+    {
+      "start": 0,
+      "end": 20
+    }
+  ],
+  "series": [
+    {
+      "name": "",
+      "type": "line",
+      "smooth": true,
+      "symbol": "none",
+      "areaStyle": {},
+      "data": []
+    }
+  ]
+}

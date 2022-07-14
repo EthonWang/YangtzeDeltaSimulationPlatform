@@ -1,0 +1,60 @@
+{
+  "tooltip": {
+    "trigger": "axis"
+  },
+  "legend": {
+    "data": ["Max temperature", "Min temperature"]
+  },
+  "grid": {
+    "left": "3%",
+    "right": "4%",
+    "bottom": "12%",
+    "containLabel": true
+  },
+  "toolbox": {
+    "feature": {
+      "dataZoom": {
+        "yAxisIndex": "none"
+      },
+      "restore": {},
+      "saveAsImage": {},
+      "dataView": {
+        "show": true,
+        "readOnly": false
+      }
+    }
+  },
+  "dataZoom": [
+    {
+      "type": "inside",
+      "start": 0,
+      "end": 20
+    },
+    {
+      "start": 0,
+      "end": 20
+    }
+  ],
+  "xAxis": {
+    "type": "category",
+    "boundaryGap": false,
+    "data": []
+  },
+  "yAxis": {
+    "type": "value"
+  },
+  "series": [
+    {
+      "name": "Max temperature",
+      "type": "line",
+      "stack": "Total",
+      "data": []
+    },
+    {
+      "name": "Min temperature",
+      "type": "line",
+      "stack": "Total",
+      "data": []
+    }
+  ]
+}

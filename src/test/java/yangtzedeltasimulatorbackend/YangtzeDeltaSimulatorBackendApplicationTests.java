@@ -104,7 +104,6 @@ class YangtzeDeltaSimulatorBackendApplicationTests {
             treeList.add(questionObj);
         }
         System.out.println(treeList);
-
     }
 
 
@@ -177,8 +176,6 @@ class YangtzeDeltaSimulatorBackendApplicationTests {
 
         List<String> list=new ArrayList<>();
         list.add(a);
-
-
     }
 
     @Test

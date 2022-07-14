@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import springfox.documentation.spring.web.json.Json;
-import yangtzedeltasimulatorbackend.entity.doo.base.MyId;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,6 +38,10 @@ public class ResourceModel{
     List<JSONObject> testDataList = new ArrayList<>(); //模型绑定的测试数据
 
 //    List<JSONObject>
+
+    String imgStoreName; //图像文件名字
+    String imgWebAddress; //图像文件下载请求的地址
+    String imgRelativePath;
 
     @ApiModelProperty(value = "创建时间",hidden = true)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")

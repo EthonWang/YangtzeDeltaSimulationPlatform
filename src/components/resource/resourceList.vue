@@ -21,7 +21,7 @@
           <el-button class="downloadButton" @click="downloadRes(item)"
             >下载</el-button
           >
-          <div class="fontSet" style="margin: 5px 0" v-if="('fileSize' in item)">
+          <div class="fontSet" style="margin: 5px 0" v-if="'fileSize' in item">
             <span>{{ filterSizeType(item.fileSize) }}</span
             ><br />
             <span>{{ item.userEmail }}</span>
@@ -59,12 +59,16 @@
     width="30%"
     :before-close="handleClose"
   >
-    <h3 style="margin-bottom: 15px;">选择要添加的资源</h3>
+    <h3 style="margin-bottom: 15px">选择要添加的资源</h3>
     <el-checkbox-group v-model="selectedVisualDataItems">
-      <el-checkbox :label="item.name" v-for="(item, index) in selectedRes.visualDataItems" :key="index"/>
+      <el-checkbox
+        :label="item.name"
+        v-for="(item, index) in selectedRes.visualDataItems"
+        :key="index"
+      />
     </el-checkbox-group>
     <el-divider border-style="dashed" />
-    <h3 style="margin-bottom: 15px;">选择要添加到的实验室</h3>
+    <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
     <el-button
       v-for="task in task_list"
       :key="task"
@@ -112,13 +116,18 @@ const addDataToTask = (task) => {
   let dataList = [];
   for (let i in selectedVisualDataItems.value) {
     let dataName = selectedVisualDataItems.value[i];
-    for(let j in selectedRes.value.visualDataItems){
+    for (let j in selectedRes.value.visualDataItems) {
       let data = selectedRes.value.visualDataItems[j];
-      if(dataName == data.name){
-        dataList.push(data);
+      if (dataName == data.name) {
+        if ("fileSize" in data) {
+          data["simularTrait"]="data"
+          dataList.push(data);
+        } else {
+          data["simularTrait"]="model"
+          dataList.push(data);
+        }
       }
     }
-    
   }
   task_api.addData(task, dataList);
   show_task.value = false;

@@ -136,6 +136,38 @@
           ></el-button>
         </el-form-item>
       </el-form>
+      <el-form
+        :inline="true"
+        :label-position="labelPosition"
+        label-width="200px"
+        :model="task_data"
+        style="max-width: 80%"
+        class="data-list demo-form-inline"
+      >
+        <h4>模型配置：</h4>
+        <el-form-item
+          v-for="(data, index) in props.task.dataList.filter((item)=>{return item.simularTrait=='model'})"
+          :key="data"
+          :label="data.name"
+        >
+          <el-button
+            type="success"
+            v-if="!edit_task"
+            disabled
+            circle
+            size="small"
+            ><el-icon><Check /></el-icon
+          ></el-button>
+          <el-button
+            type="danger"
+            v-if="edit_task"
+            circle
+            size="small"
+            @click="deleteData(index)"
+            ><el-icon><Close /></el-icon
+          ></el-button>
+        </el-form-item>
+      </el-form>
       <el-button
         type="primary"
         class="btn_view"

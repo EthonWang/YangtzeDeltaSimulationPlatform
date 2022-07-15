@@ -351,6 +351,9 @@ const refresh = () => {
       }
     }
     file_data.value = res.data;
+    choose_num.value=0;
+    choosing_files = [];
+    choosing_files_index = [];
     ElMessage({
       type: "success",
       message: "数据获取成功",

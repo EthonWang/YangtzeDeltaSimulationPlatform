@@ -8,13 +8,13 @@
         v-if="!editBoardShow"
         size="small"
         @click="handleEditBoardShow(1)"
-        >打开编辑框
+        ><el-icon><ArrowDownBold /></el-icon>&nbsp;打开编辑框
       </el-button>
       <el-button
         v-if="editBoardShow"
         size="small"
         @click="handleEditBoardShow(0)"
-        >收起编辑框
+        ><el-icon><ArrowUpBold /></el-icon>&nbsp;收起编辑框
       </el-button>
     </div>
 
@@ -652,6 +652,8 @@
   </Modal>
   <Modal
     v-model="analysisSelectFeaturesModal"
+  <Modal
+    v-model="analysisModal"
     draggable
     sticky
     scrollable

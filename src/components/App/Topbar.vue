@@ -57,11 +57,10 @@ const user_info = JSON.parse(localStorage.getItem("userInfo"));
 // const dataapi=new dataApi()
 
 const graphapi = new graphAPI();
-if(user_info!=undefined){
+if (user_info != undefined) {
   graphapi.initGraph(user_info.id).then((res) => {
-  console.log("推薦",graphapi.giveRecommend(["公开"]));
-});
-
+    console.log(res);
+  });
 }
 
 const props = defineProps({
@@ -105,13 +104,12 @@ const searchIndexInRoutes = () => {
 watch(
   () => route.path,
   (newValue, oldValue) => {
-    
     if (getRootPath(newValue) != "") {
       setTimeout(() => {
         document.getElementsByClassName("bg")[0].style.opacity = "0";
         document.getElementsByClassName("container")[0].style.background =
           "#24292f3b";
-      }, 800);
+      }, 500);
       setTimeout(() => {
         pick.value = new Array(barList.length).fill(0);
         // document.getElementsByClassName("user-topbar")[0].style.right = "2vw";
@@ -123,7 +121,14 @@ watch(
           }
         }
       }, 201);
-      
+      let fromHome = localStorage.getItem("fromHome");
+      console.log(fromHome);
+      if (fromHome=='true') {
+        setTimeout(() => {
+          localStorage.setItem("fromHome", 'false');
+          location.reload();
+        }, 600);
+      }
     }
   }
 );
@@ -144,11 +149,10 @@ const sendRouterToFather = (route1, index) => {
     // if (index != -1) {
     //     pickup(index);
     //   }
-    setTimeout(()=>{
+    setTimeout(() => {
       // location.reload();
       console.log(router.options);
-    },300)
-    
+    }, 300);
   }
   // setTimeout(() => {
   //   document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
@@ -190,12 +194,12 @@ setTimeout(searchIndexInRoutes, 100);
   width: 100%;
   position: absolute;
   // left: calc(17% + 50px);
-  left: 3.5vw;
+  left: 4vw;
   transition: all 1s;
 }
 
 .pickup {
-  border: hsl(54, 94%, 75%) 1px solid;
+  border: hsl(201, 100%, 65%) 2px solid;
   border-top: 0;
   border-left: 0;
   border-right: 0;

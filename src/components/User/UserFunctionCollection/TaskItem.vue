@@ -3,7 +3,7 @@
     <div class="task-item">
       <h3 v-if="!edit_task">{{ props.task.name }}实验</h3>
       <el-input
-        style="width: 40%; font-size: 18px !important; padding: 10px"
+        style="width: 40%; font-size: 18px !important; padding: 10px;margin-left: -12px;"
         v-if="edit_task"
         v-model="task_data.name"
         placeholder="请输入标题"
@@ -14,13 +14,7 @@
       <span class="task-public task-private" v-if="!props.task.publicBoolean"
         ><el-icon><Lock /></el-icon>私密</span
       >
-      <el-button
-        type="danger"
-        v-if="edit_task"
-        class="btn_delete"
-        @click="centerDialogVisible = true"
-        ><el-icon><CloseBold /></el-icon>&nbsp; 删除本实验</el-button
-      >
+      <br>
       <el-form
         :label-position="labelPosition"
         label-width="100px"
@@ -142,11 +136,51 @@
           ></el-button>
         </el-form-item>
       </el-form>
+      <el-form
+        :inline="true"
+        :label-position="labelPosition"
+        label-width="200px"
+        :model="task_data"
+        style="max-width: 80%"
+        class="data-list demo-form-inline"
+      >
+        <h4>模型配置：</h4>
+        <el-form-item
+          v-for="(data, index) in props.task.dataList.filter((item)=>{return item.simularTrait=='model'})"
+          :key="data"
+          :label="data.name"
+        >
+          <el-button
+            type="success"
+            v-if="!edit_task"
+            disabled
+            circle
+            size="small"
+            ><el-icon><Check /></el-icon
+          ></el-button>
+          <el-button
+            type="danger"
+            v-if="edit_task"
+            circle
+            size="small"
+            @click="deleteData(index)"
+            ><el-icon><Close /></el-icon
+          ></el-button>
+        </el-form-item>
+      </el-form>
       <el-button
         type="primary"
         class="btn_view"
         @click="gotoLiboratory(props.task)"
+        v-if="!edit_task"
         ><el-icon><Checked /></el-icon>&nbsp;进入实验室</el-button
+      >
+      <el-button
+        type="danger"
+        v-if="edit_task"
+        class="btn_delete"
+        @click="centerDialogVisible = true"
+        ><el-icon><CloseBold /></el-icon>&nbsp; 删除本实验</el-button
       >
     </div>
     <el-dialog
@@ -288,7 +322,7 @@ const handleClose = (tag) => {
 .btn_delete {
   position: absolute;
   right: 5%;
-  top: 60px;
+  bottom: 35px;
   // background: rgb(231, 231, 231);
   font-weight: 800;
 }

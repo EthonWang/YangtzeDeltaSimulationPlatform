@@ -607,20 +607,115 @@
       </div>
     </RadioGroup>
   </Modal>
-   <Modal
-    v-model="analysisModal"
+  <Modal v-model="analysisModal" draggable sticky scrollable :mask="false">
+    <template #header>
+      <Icon type="logo-buffer" size="18" />
+      <span style="margin-left: 5px; font-size: 18px">数据分析</span>
+    </template>
+    <Form :model="analysisForm" label-position="top">
+      <FormItem label="分析方法">
+        <RadioGroup v-model="analysisForm.type">
+          <Radio label="charts">趋势分析</Radio>
+          <Radio label="raster">统计分析</Radio>
+          <Radio label="other">其他</Radio>
+        </RadioGroup>
+      </FormItem>
+      <FormItem label="输入要素">
+        <Input
+          v-model="analysisForm.inputFeaturesName"
+          style="width: 90%"
+          readonly
+        ></Input>
+        <Button
+          :size="buttonSize"
+          icon="ios-folder-open"
+          style="margin-left: 15px"
+          @click="selectAnalysisFeatures(analysisForm.type)"
+        ></Button>
+      </FormItem>
+      <FormItem label="输出形式" v-if="analysisForm.type == 'charts'">
+        <RadioGroup v-model="analysisForm.chartsType">
+          <Radio label="line">折线图</Radio>
+          <Radio label="bar">柱状图</Radio>
+          <Radio label="pie">饼图</Radio>
+          <Radio label="scatter">散点图</Radio>
+        </RadioGroup>
+      </FormItem>
+      <FormItem label="统计时间" v-if="analysisForm.type == 'raster'">
+        <Input v-model="analysisForm.dateNum" style="width: 90%"></Input>
+      </FormItem>
+    </Form>
+    <template #footer>
+      <Button @click="analysisModal = false">取消</Button>
+      <Button type="primary" @click="commitAnalysis()">开始分析</Button>
+    </template>
+  </Modal>
+  <Modal
+    v-model="analysisSelectFeaturesModal"
     draggable
     sticky
     scrollable
     :mask="false"
-    @on-ok="ok"
-    @on-cancel="cancel"
+    :closable="false"
   >
     <template #header>
-      <Icon type="md-buffer" size="18" />
-      <span style="margin-left: 5px; font-size: 18px">数据分析</span>
+      <Icon type="logo-buffer" size="18" />
+      <span style="margin-left: 5px; font-size: 18px">数据分析 - 选择数据</span>
     </template>
-    
+    <Alert
+      type="warning"
+      show-icon
+      closable
+      v-if="analysisForm.type == 'charts'"
+    >
+      A success prompt
+      <template #desc
+        >Content of prompt. Content of prompt. Content of prompt. Content of
+        prompt.
+      </template>
+    </Alert>
+    <RadioGroup
+      v-model="analysisForm.inputFeaturesName"
+      vertical
+      v-if="analysisForm.type == 'charts'"
+      :on-change="analysisFormChange(analysisForm.inputFeaturesName, 'charts')"
+    >
+      <div v-for="(item, index) in showLayerTableList" :key="index">
+        <Radio :label="item.name" v-if="item.visualType == 'txt'">
+          <span>{{ item.name }}</span>
+        </Radio>
+      </div>
+    </RadioGroup>
+    <Alert
+      type="warning"
+      show-icon
+      closable
+      v-if="analysisForm.type == 'raster'"
+    >
+      A success prompt
+      <template #desc
+        >Content of prompt. Content of prompt. Content of prompt. Content of
+        prompt.
+      </template>
+    </Alert>
+    <RadioGroup
+      v-model="analysisForm.inputFeaturesName"
+      vertical
+      v-if="analysisForm.type == 'raster'"
+      :on-change="analysisFormChange(analysisForm.inputFeaturesName, 'raster')"
+    >
+      <div v-for="(item, index) in showLayerTableList" :key="index">
+        <Radio :label="item.name" v-if="item.visualType == 'nc'">
+          <span>{{ item.name }}</span>
+        </Radio>
+      </div>
+    </RadioGroup>
+    <template #footer>
+      <Button @click="analysisSelectFeaturesModal = false">取消</Button>
+      <Button type="primary" @click="analysisSelectFeaturesModal = false"
+        >确定</Button
+      >
+    </template>
   </Modal>
 </template>
 
@@ -726,6 +821,14 @@ export default {
         outputFeaturesName: "",
       },
       analysisModal: false,
+      analysisSelectFeaturesModal: false,
+      analysisForm: {
+        inputFeaturesName: "",
+        inputTxtPath: "",
+        type: "charts",
+        chartsType: "line",
+        dateNum: "",
+      },
 
       activeNames: "data",
       resList: {
@@ -1353,8 +1456,83 @@ export default {
         }
       }
     },
-    analysisModalShow(){
+    analysisModalShow() {
       this.analysisModal = true;
+    },
+    selectAnalysisFeatures(type) {
+      this.analysisSelectFeaturesModal = true;
+    },
+    analysisFormChange(name, type) {
+      for (let i = 0; i < this.showLayerTableList.length; i++) {
+        if (this.showLayerTableList[i].name == name && type == "charts") {
+          this.analysisForm.inputTxtPath =
+            this.showLayerTableList[i].data.fileRelativePath;
+        } else if (
+          this.showLayerTableList[i].name == name &&
+          type == "raster"
+        ) {
+          this.analysisForm.inputTxtPath =
+            this.showLayerTableList[i].data.fileRelativePath;
+        }
+      }
+      console.log(this.analysisForm);
+    },
+    commitAnalysis() {
+      if (this.analysisForm.inputTxtPath != "") {
+        ElMessage({
+          type: "info",
+          message: "正在统计分析中，请稍等！",
+        });
+        axios({
+          url: this.dataServer + "/script/txtAnalysis/" + this.taskInfo.id,
+          method: "post",
+          data: this.analysisForm,
+        }).then(
+          (res) => {
+            if (res.data.code == 0) {
+              // localStorage.setItem("task", JSON.stringify(res.data.data));
+              // location.reload();
+              if (this.analysisForm.type == "charts") {
+                let chartInfo = {};
+                chartInfo.options = res.data.data;
+                chartInfo.name = this.analysisForm.inputFeaturesName;
+                chartInfo.id = this.analysisForm.inputTxtPath.substring(
+                  this.analysisForm.inputTxtPath.length - 28,
+                  this.analysisForm.inputTxtPath.length - 4
+                );
+                chartInfo.mapDataType = "chart";
+                chartInfo.chartsType = this.analysisForm.chartsType;
+                this.$emit("getCheckChart", chartInfo);
+                this.analysisModal = false;
+              } else if(this.analysisForm.type == "raster"){
+                let chartInfo = {};
+                chartInfo.options = res.data.data;
+                chartInfo.name = this.analysisForm.inputFeaturesName;
+                chartInfo.id = this.analysisForm.inputTxtPath.substring(
+                  this.analysisForm.inputTxtPath.length - 28,
+                  this.analysisForm.inputTxtPath.length - 4
+                );
+                chartInfo.mapDataType = "raster";
+                chartInfo.dateNum = this.analysisForm.dateNum;
+                this.$emit("getCheckChart", chartInfo);
+                this.analysisModal = false;
+              }
+            }
+          },
+          (err) => {
+            ElMessage({
+              type: "error",
+              message: "分析失败，请重试！",
+            });
+            console.log(err);
+          }
+        );
+      } else {
+        ElMessage({
+          type: "error",
+          message: "提交失败，请检查数据并重试！",
+        });
+      }
     },
   },
 };

@@ -10,7 +10,8 @@
       <span>{{ data.description }} </span><br />
     </div>
     <el-button
-      style="width: 88%; margin: 0.8vh; background-color: hsl(0, 0%, 97%)"
+    type="primary"
+      style="width: 88%; margin: 0.8vh;"
       >编辑信息</el-button
     >
     <div class="otherSpan">

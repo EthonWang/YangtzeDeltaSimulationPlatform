@@ -184,14 +184,15 @@ export default class {
                             publicData[i].visualDataItems[j].normalTags = data.normalTags.split(",");
                         }
                         
+    
                         data['category']=0
                         data['weight']=0
                         data['symbolSize']=10
                         data['value']=data.description
                         data['type']="data"
-                       
+                       let data1=JSON.parse(JSON.stringify(data))
                       
-                        relation.nodes.push(data);
+                        relation.nodes.push(data1);
                         relation.links.push({
                             source: data.name,
                             target: "公开",

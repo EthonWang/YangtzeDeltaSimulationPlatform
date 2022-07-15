@@ -16,7 +16,7 @@ const graph = relation;
 // onMounted(() => {
 //   init();
 // });
-setTimeout(init, 500);
+setTimeout(init, 1000);
 function init() {
   const myChart = echarts.init(relationship.value);
 
@@ -59,7 +59,7 @@ function init() {
           curveness: 0.3,
         },
         force: {
-          repulsion: 1500
+          repulsion: 3000
         },
         emphasis: {
           focus: 'adjacency',

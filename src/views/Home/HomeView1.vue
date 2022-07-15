@@ -17,8 +17,7 @@
         "
       >
         <el-button size="large" class="border-box flowbtn"
-          >灾害响应与治理</el-button
-        >
+          >灾害响应与治理</el-button>
         <el-button size="large" class="border-box flowbtn"
           >全球变化与区域环境演化</el-button
         >

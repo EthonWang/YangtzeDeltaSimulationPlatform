@@ -52,7 +52,7 @@
                     <el-tooltip effect="light"
                                 placement="bottom"
                                 content="查看案例详情">
-                      <h4 class="font-size-1" @click="goCaseInfo()">{{item.name}}</h4>
+                      <h4 class="font-size-1" style="cursor: pointer" @click="goCaseInfo()">{{item.name}}</h4>
                     </el-tooltip>
                   </div>
                 </div>
@@ -99,14 +99,20 @@
           <div>
             <h3 class="typeName">相关数据</h3>
             <el-divider ></el-divider>
-            <div style="display: flex;align-items: center;">
-              <template v-for="(item,key) in thematicItem.relatedData" :key="key">
-                <el-card :body-style="{ padding: '0px'}" class="caseCard hvr-grow">
-                  <el-image class="caseImage"  :src="item.thumbnail" fit="fill"></el-image>
-                  <div style="display: flex;justify-content: center;">
-                    <span>{{item.name}}</span>
+            <div style="display: flex;align-items: center;width:100%;flex-wrap: wrap">
+              <template v-for="(item,key) in relatedData" :key="key">
+                <div  class="caseCard">
+                  <div class="caseImageWrap">
+                    <el-image class="caseImage" @click="startSearch(item.name)"  :src="dataServer+item.imgWebAddress" fit="fill"></el-image>
+                    <div class="imageMask">
+                      <img :src="mdOpenIcon" class="caseIcon">
+                      <span >查看数据</span>
+                    </div>
                   </div>
-                </el-card>
+                  <div style="display: flex;justify-content: center;padding: 0.5rem;">
+                    <h4 class="font-size-1">{{item.name}}</h4>
+                  </div>
+                </div>
               </template>
             </div>
             <div class="dataBlock">
@@ -250,12 +256,15 @@
 </template>
 
 <script  setup>
-import {ref,onMounted} from 'vue'
+import {ref,onMounted} from 'vue';
+import {useStore} from "vuex";
 import {Plus,Edit,Upload,Delete,Select} from '@element-plus/icons-vue'
 import { ElNotification,ElMessageBox,ElMessage} from "element-plus";
 import { useRouter } from "vue-router";
 import axios from "axios";
 const router = useRouter();
+const store = useStore();
+const dataServer = store.getters.devIpAddress;
 const baseUrl = ref("http://172.21.213.248:8999")
 
 const mdOpenIcon = require("@/assets/img/icon/md-open.png")
@@ -267,10 +276,19 @@ onMounted(()=>{
 const thematicName = ref("");
 const thematicItem = ref({});
 const editThemeItem = ref({});
+const relatedData = ref([]);
+
+const startSearch = function (searchValue) {
+  router.push({
+    path:"/resourse",
+    query:{searchValue}
+  })
+};
 
 const getThemeInfo = (thematicName) => {
   axios.get("/back/getTheme/"+thematicName).then(res=>{
     let themeInfo = res.data.data;
+    console.log("themeInfo",themeInfo)
     if(themeInfo != null){
       thematicItem.value = themeInfo;
     }else {
@@ -280,6 +298,35 @@ const getThemeInfo = (thematicName) => {
     }
   });
 
+  let tagClass = "problemTags";
+  let tagName = "";
+  let DTO = {
+    asc: false,
+    page: 1,
+    pageSize: 16,
+    searchText: "",
+    sortField: "createTime",
+    tagClass: tagClass,
+    tagName: tagName,
+  };
+  axios({
+    url: dataServer +  "/getResourceDataList",
+    method: "post",
+    //忽略contentType
+    contentType: false,
+    //取消序列换 formData本来就是序列化好的
+    processData: false,
+    dataType: "json",
+    data: DTO,
+  }).then(
+      (res) => {
+        relatedData.value =  res.data.data.content;
+        console.log("caseValue",relatedData.value)
+      },
+      (err) => {
+        console.log(err);
+      }
+  );
 }
 const toCase = (path) => {
   router.push("/case/" + path + "/");
@@ -663,8 +710,7 @@ thematicName.value = show_name.replace('\n','');
 }
 .font-size-1{
   line-height: 1.5;
-  font-size: 0.9375rem;
-  cursor: pointer;
+  font-size: 0.8rem;
 }
 
 .caseCard{

@@ -50,7 +50,7 @@
               "
               v-if="!config.edit_des"
               @click="config.edit_des = !config.edit_des"
-              ><el-icon><EditPen /></el-icon>&nbsp;描述</el-button
+              ><el-icon><EditPen /></el-icon>&nbsp;刷新</el-button
             >
             <el-button
               style="
@@ -144,40 +144,41 @@ const props = defineProps({
   picture: [],
 });
 const fill = ref("fill");
-
+const allResourceNum=JSON.parse(localStorage.getItem("allResourceNum"))
 const edit_des = ref(false);
 const configs = reactive([
   {
-    tittle: "数据总量",
-    des: "您在各个科学问题的研究中储存的数据",
+    tittle: "我的数据总量",
+    des: "我的各个科学问题的研究中储存的数据",
     edit_des: false,
-    all: 0,
+    all: allResourceNum.privateDataNum,
     q1: 0,
     q2: 0,
     q3: 0,
     q4: 0,
   },
   {
-    tittle: "模型总量",
-    des: "您在各个科学问题的研究中储存与收藏的模型",
+    tittle: "公共资源模型总量",
+    des: "平台上可供使用的模型",
     edit_des: false,
-    all: 0,
+    all: allResourceNum.modelNum,
     q1: 0,
     q2: 0,
     q3: 0,
     q4: 0,
   },
   {
-    tittle: "任务总量",
-    des: "您在各个科学问题的研究中执行的任务",
+    tittle: "我的实验总量",
+    des: "我在各个科学问题的研究中执行的实验",
     edit_des: false,
-    all: 0,
+    all: allResourceNum.themeNum,
     q1: 0,
     q2: 0,
     q3: 0,
     q4: 0,
   },
 ]);
+
 </script>
 
 <style lang="less" scoped>

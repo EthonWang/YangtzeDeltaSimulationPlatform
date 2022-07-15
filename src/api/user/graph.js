@@ -51,7 +51,7 @@ export default class {
                         }
                     }
                 }
-                
+
                 if (nowNodeList.length == 0) {
                     for (let k = 0; k < nextNodeList.length; k++) {
                         nowNodeList.push(nextNodeList[k])
@@ -78,7 +78,11 @@ export default class {
     getKnowledgeSorce(user_id) {
         return new Promise((resolve, reject) => {
             post("/resource/getUserAllResource?userId=" + user_id,).then((res) => {
-                localStorage.setItem("allResource", JSON.stringify(res.data))
+                localStorage.setItem("allResourceNum", JSON.stringify({ 
+                    privateDataNum: res.data.personalData.length,
+                    modelNum:res.data.modelList.length,
+                    themeNum:res.data.themeList.length
+                }))
                 let personalData = res.data.personalData
                 let publicData = res.data.publicData
                 let modelList = res.data.modelList
@@ -91,12 +95,12 @@ export default class {
                         personalData[i].problemTags = data.problemTags.split(",");
 
                     }
-                    data['category']=0
-                    data['weight']=0
-                    data['symbolSize']=10
-                    data['value']=data.description
-                    data['type']="data"
-                    
+                    data['category'] = 0
+                    data['weight'] = 0
+                    data['symbolSize'] = 10
+                    data['value'] = data.description
+                    data['type'] = "data"
+
                     relation.nodes.push(data);
                     relation.links.push({
                         source: data.name,
@@ -183,15 +187,15 @@ export default class {
                         if (publicData[i].visualDataItems[j].normalTags[0] != "" && publicData[i].visualDataItems[j].normalTags != []) {
                             publicData[i].visualDataItems[j].normalTags = data.normalTags.split(",");
                         }
-                        
-    
-                        data['category']=0
-                        data['weight']=0
-                        data['symbolSize']=10
-                        data['value']=data.description
-                        data['type']="data"
-                       let data1=JSON.parse(JSON.stringify(data))
-                      
+
+
+                        data['category'] = 0
+                        data['weight'] = 0
+                        data['symbolSize'] = 10
+                        data['value'] = data.description
+                        data['type'] = "data"
+                        let data1 = JSON.parse(JSON.stringify(data))
+
                         relation.nodes.push(data1);
                         relation.links.push({
                             source: data.name,

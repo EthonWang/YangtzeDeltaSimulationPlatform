@@ -79,7 +79,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="show_task = false">取消</el-button>
-        <el-button type="primary" @click="show_task = false">完成</el-button>
+        <!-- <el-button type="primary" @click="show_task = false">完成</el-button> -->
       </span>
     </template>
   </el-dialog>
@@ -114,15 +114,19 @@ const props = defineProps({
 const addDataToTask = (task) => {
   // console.log(task);
   let dataList = [];
+  console.log(selectedVisualDataItems.value);
   for (let i in selectedVisualDataItems.value) {
     let dataName = selectedVisualDataItems.value[i];
     for (let j in selectedRes.value.visualDataItems) {
       let data = selectedRes.value.visualDataItems[j];
       if (dataName == data.name) {
-        if ("fileSize" in data) {
+        console.log(data);
+        if ("size" in data) {
+          console.log(1);
           data["simularTrait"]="data"
           dataList.push(data);
         } else {
+          console.log(2);
           data["simularTrait"]="model"
           dataList.push(data);
         }

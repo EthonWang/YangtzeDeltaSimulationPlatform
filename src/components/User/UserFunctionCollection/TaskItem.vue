@@ -116,7 +116,7 @@
         <el-form-item
           v-for="(data, index) in props.task.dataList"
           :key="data"
-          :label="data.name"
+          :label="data.name.slice(0,25)"
         >
           <el-button
             type="success"

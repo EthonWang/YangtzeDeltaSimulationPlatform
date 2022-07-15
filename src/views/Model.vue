@@ -1,5 +1,11 @@
 <template>
   <div class="about">
+    <ModelTree style="width: 30vw;"
+      @getCheckData="getCheckData"
+      @getCheckChart="getCheckChart"
+      @getCheckTif="getCheckTif"
+      @getCheckJson="getCheckJson"
+    ></ModelTree>
     <el-button size="small" @click="switchMap" class="mapSwitchButton"
       ><el-icon><Camera /></el-icon>&nbsp;2D/3D
     </el-button>
@@ -120,7 +126,7 @@ import { useStore } from "vuex";
 import MapboxView from "../components/Mapbox/MapboxView";
 import Cesium from "../components/cesium/cesium.vue";
 import chartTemplate from "../components/chartPlugin/chartTemplate.vue";
-// import ModelTree from "components/App/ModelTree";
+import ModelTree from "components/App/ModelTree";
 import txtEditor from "../components/Mapbox/labUtils/wangEditorBox.vue";
 import taskApi from "@/api/user/task";
 import { ElMessageBox, ElMessage } from "element-plus";
@@ -128,7 +134,7 @@ import graphAPI from "@/api/user/graph";
 
 export default {
   components: {
-    // ModelTree,
+    ModelTree,
     MapboxView,
     Cesium,
     chartTemplate,

@@ -69,7 +69,7 @@ module.exports = {
         proxy: {
             // 配置跨域
             '/back': {
-                target: "http://172.21.213.248:8999",
+                target: "http://172.21.213.44:8999",
                 ws: true,
                 timeout: 3600000,
                 changOrigin: true,
@@ -107,13 +107,13 @@ module.exports = {
         }, // 设置代理
         // before: (app) => { },
     },
-    
+
 pluginOptions: {
     'style-resources-loader': {
       preProcessor: 'less',
               patterns: []
     }
   }
-    
+
 
 };

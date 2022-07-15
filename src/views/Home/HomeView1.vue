@@ -1,35 +1,34 @@
 <template>
   <div ref="home1" class="home1">
     <div class="container">
-      <h1 style="margin-top: 3.75%; position: relative; z-index: 2">
-        <span style="background: transparent" class="border-box"
-          >长三角综合模拟器</span
-        >
+      <h1 style="margin-top: 3.75%; position: relative; z-index: 2;display:flex;justify-content: center;">
+<!--        <span style="background: transparent" class="border-box">长三角综合模拟器</span>-->
+        <dv-border-box8 dur="3" style="width: 20%;padding: 3px">长三角综合模拟器</dv-border-box8>
       </h1>
       <div
         style="
           position: absolute;
-          width: 95vw;
+          width: 100vw;
           height: 5vh;
-          left: 5vw;
           top: 17vh;
           z-index:2;
+          display: flex;
+          justify-content: space-around;
         "
       >
-        <el-button size="large" class="border-box flowbtn"
-          >灾害响应与治理</el-button
+        <div size="large" class="border-box flowbtn"
+          >灾害响应与治理</div>
+        <div size="large" class="border-box flowbtn"
+          >全球变化与区域环境演化</div
         >
-        <el-button size="large" class="border-box flowbtn"
-          >全球变化与区域环境演化</el-button
+        <div size="large" class="border-box flowbtn"
+          >城市化与人地关系协调发展</div
         >
-        <el-button size="large" class="border-box flowbtn"
-          >城市化与人地关系协调发展</el-button
-        >
-        <el-button
+        <div
           size="large"
           class="border-box flowbtn"
           style="margin-right: 0 !important"
-          >流域水循环及驱动机制</el-button
+          >流域水循环及驱动机制</div
         >
       </div>
 
@@ -49,11 +48,13 @@
             placeholder="邮件地址"
             show-password
           /> -->
-          <el-button
+
+          <button
             @click="toSci()"
+            class="button-87"
             style="margin-top: 3vh; width: 100%"
             type="primary"
-            ><el-icon><Bottom /></el-icon>&nbsp;探索科学问题</el-button
+           ><el-icon><Bottom /></el-icon>&nbsp;探索科学问题</button
           >
         </div>
       </div>
@@ -265,18 +266,56 @@ option2 && myChart2.setOption(option2);
 
 <style lang="less" scoped>
 @beside-bg: rgba(40, 40, 40, 0.5);
+
+
+
+ /* CSS */
+.button-87 {
+ margin: 10px;
+ padding: 10px 10px;
+ text-align: center;
+ text-transform: uppercase;
+ transition: 0.5s;
+ background-size: 200% auto;
+ color: white;
+ border-radius: 10px;
+ display: block;
+ border: 0px;
+ font-weight: 700;
+ box-shadow: 0px 0px 14px -7px #0093E9;
+ background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+ cursor: pointer;
+ user-select: none;
+ -webkit-user-select: none;
+ touch-action: manipulation;
+}
+
+
+.button-87:hover {
+  background-position: right center;
+  /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.button-87:active {
+  transform: scale(0.95);
+}
 .container {
   backdrop-filter: blur(5px);
   .flowbtn {
     height: 5vh;
-    width: 20%;
+    width: 16%;
     margin-right: 4.5%;
-    font-size: 1.4vw;
+    font-size: 1.1vw;
+    display: flex;
+    justify-content: center;
+    cursor:text;
   }
   .triangle {
     position: absolute;
     left: 33vw;
-    bottom: 9.8vh;
+    bottom: 7vh;
     width: 32.5vw;
     z-index: 2;
     // background: rgba(68, 68, 68, 0.5);
@@ -513,8 +552,8 @@ option2 && myChart2.setOption(option2);
   padding: 5px 15px 5px 15px;
   // background: rgba(1, 19, 67, 0.8);
   // border: 2px solid #00a1ff;
-  background: rgba(73, 73, 73, 0.8);
-  border: 2px solid #ffffff;
+  background: rgba(1, 19, 67, 0.5);
+  border: 2px solid rgba(100, 207, 220);
   border-radius: 8px;
 }
 .border-box::before {
@@ -526,8 +565,8 @@ option2 && myChart2.setOption(option2);
   content: "";
   // border-top: 2px solid #016886;
   // border-bottom: 2px solid #016886;
-  border-top: 2px solid #707070;
-  border-bottom: 2px solid #818181;
+  border-top: 2px solid #016886;
+  border-bottom: 2px solid #016886;
   z-index: 0;
 }
 .border-box::after {
@@ -539,8 +578,8 @@ option2 && myChart2.setOption(option2);
   content: "";
   // border-right: 2px solid #016886;
   // border-left: 2px solid #016886;
-  border-right: 2px solid #8b8b8b;
-  border-left: 2px solid #8d8d8d;
+  border-right: 2px solid #016886;
+  border-left: 2px solid #016886;
   z-index: 0;
 }
 .border-box p {

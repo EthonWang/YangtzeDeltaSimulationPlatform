@@ -8,13 +8,13 @@
         v-if="!editBoardShow"
         size="small"
         @click="handleEditBoardShow(1)"
-        >打开编辑框
+        ><el-icon><ArrowDownBold /></el-icon>&nbsp;打开编辑框
       </el-button>
       <el-button
         v-if="editBoardShow"
         size="small"
         @click="handleEditBoardShow(0)"
-        >收起编辑框
+        ><el-icon><ArrowUpBold /></el-icon>&nbsp;收起编辑框
       </el-button>
     </div>
 
@@ -511,15 +511,7 @@
               </el-table-column>
             </el-table>
           </el-collapse-item>
-          <el-collapse-item title="模型列表" name="model">
-            <el-table
-                :data="modelTableList"
-                style="width: 100%"
-            >
-              <el-table-column label="名称"  width="200" />
-              <el-table-column label="操作"  width="100" />
-            </el-table>
-          </el-collapse-item>
+          <el-collapse-item title="模型列表" name="model"> </el-collapse-item>
         </el-collapse>
       </div>
     </transition-group>
@@ -615,7 +607,7 @@
       </div>
     </RadioGroup>
   </Modal>
-   <Modal
+  <Modal
     v-model="analysisModal"
     draggable
     sticky
@@ -628,7 +620,6 @@
       <Icon type="md-buffer" size="18" />
       <span style="margin-left: 5px; font-size: 18px">数据分析</span>
     </template>
-
   </Modal>
 </template>
 
@@ -707,7 +698,6 @@ export default {
       },
 
       showLayerTableList: [],
-      modelTableList:[],
 
       predefineColors: [
         "#ff4500",
@@ -1362,7 +1352,7 @@ export default {
         }
       }
     },
-    analysisModalShow(){
+    analysisModalShow() {
       this.analysisModal = true;
     },
   },

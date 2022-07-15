@@ -5,399 +5,399 @@
         "symbolSize": 20,
         "value": "科学问题大类",
         "category": 3,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "台风与风暴湖",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 3,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "洪涝水环境灾害",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 3,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "地质灾害",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 3,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "大气污染",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 3,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "全球与区域变化",
         "symbolSize": 20,
         "value": "科学问题大类",
         "category": 4,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "海岸带变迁",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 4,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "河口河岸水动力",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 4,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "湖泊碳循环",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 4,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "土壤碳氮循环",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 4,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "土壤氮转化过程与环境效应",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 4,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "流域水循环及其驱动机制",
         "symbolSize": 20,
         "value": "科学问题大类",
         "category": 5,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "流域生态环境演变",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 5,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "流域碳水耦合循环",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 5,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "地表地下水耦合",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 5,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "湖泊水环境监测",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 5,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "长三角城市化与人地关系协调发展",
         "symbolSize": 20,
         "value": "科学问题大类",
         "category": 6,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "湿地保护",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 6,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "城市扩张",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 6,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "农业生态",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 6,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "人地关系",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 6,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "城市水问题",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 6,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "自然遗产",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 6,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "城市群发展",
         "symbolSize": 15,
         "value": "科学问题",
         "category": 6,
-        "weight":-100
+        "weight":0
       },
       {
         "name": "非面向问题类",
         "symbolSize": 20,
         "value": "科学问题",
         "category": 7,
-        "weight":-100
+        "weight":0
       },
       {
         "name":"数据",
         "symbolSize":40,
         "category":8,
         "value": "我的实验数据",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"模型",
         "symbolSize":40,
         "category":8,
         "value": "我的实验模型",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"实验",
         "symbolSize":40,
         "category":8,
         "value": "我的实验",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"科学问题",
         "symbolSize":25,
         "category":8,
         "value": "科学问题汇总",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"长江三角洲",
         "symbolSize":100,
         "category":8,
-        "value": "模拟器知识网络",
-        "weight":-100
+        "value": "模拟器关系网络",
+        "weight":0
       },
       {
         "name":"私人",
         "symbolSize":30,
         "category":8,
         "value": "私人数据",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"公开",
         "symbolSize":30,
         "category":8,
         "value": "公开数据",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"基础地理",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"土地利用/覆盖",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"人口",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"社会经济",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"地形",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"地貌",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"土壤",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"湖泊",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"植被",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"生态系统",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"灾害",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"环境",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"气候",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"水文",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"农业",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"沿海",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"海洋",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"人类",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"河流",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"GIS & RS",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"陆地",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"矢量",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"地质",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"栅格",
         "symbolSize":15,
         "category":9,
         "value": "",
-        "weight":-100
+        "weight":0
       },
       {
         "name":"案例",
         "symbolSize":15,
         "category":8,
         "value": "",
-        "weight":-100
+        "weight":0
       }
       ,
       {
@@ -405,7 +405,7 @@
         "symbolSize":25,
         "category":8,
         "value": "",
-        "weight":-100
+        "weight":0
       }
     ],
     "links": [
@@ -659,5 +659,9 @@
       {
         "name": "地理领域"
       }
-    ]
+    ],
+    "allOutDegreeEdge":[],
+    "allInDegreeEdge":[],
+    "edgeNode":[],
+    "weight":[]
   }

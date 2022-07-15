@@ -1,7 +1,13 @@
 <template>
   <div class="about">
     <el-button size="small" @click="switchMap" class="mapSwitchButton"
-      >2D/3D
+      ><el-icon><Camera /></el-icon>&nbsp;2D/3D
+    </el-button>
+    <el-button
+      size="small"
+      @click="this.router.push('/user/task')"
+      class="backButton"
+      ><el-icon><ArrowLeftBold /></el-icon>&nbsp;返回
     </el-button>
     <mapbox-view
       :shpShowList="shpList"
@@ -73,7 +79,11 @@
     size="small"
     @click="showRecommend"
     style="position: absolute; right: 50px; top: 8vh"
-    ><span v-if="recommendList">收起</span> <span v-else>展开</span
+    ><span v-if="recommendList"
+      ><el-icon><ArrowUpBold /></el-icon>&nbsp;收起</span
+    >
+    <span v-else
+      ><el-icon><ArrowDownBold /></el-icon>&nbsp;展开</span
     ><strong style="color: hsl(200, 100%, 45%)">数据推荐</strong>
   </el-button>
   <div class="levels">
@@ -83,7 +93,9 @@
       :key="data"
       @click="recommendShow(data)"
     >
-      <div class="content">{{ data.name }}</div>
+      <div class="content">
+        {{ data.name.slice(0, 18) + "\n" + data.name.slice(18) }}
+      </div>
     </div>
   </div>
   <el-dialog v-model="recommendVisible" title="推荐数据" width="30%">
@@ -112,6 +124,7 @@ import chartTemplate from "../components/chartPlugin/chartTemplate.vue";
 import txtEditor from "../components/Mapbox/labUtils/wangEditorBox.vue";
 import taskApi from "@/api/user/task";
 import { ElMessageBox, ElMessage } from "element-plus";
+import graphAPI from "@/api/user/graph";
 
 export default {
   components: {
@@ -243,9 +256,27 @@ export default {
       txtData: "",
       isTxtContent: false,
       dataServer: useStore().state.devIpAddress,
+      graphapi: new graphAPI(),
+      user_info: JSON.parse(localStorage.getItem("userInfo")),
+      router: useRouter(),
     };
   },
   mounted() {
+    if (this.user_info != undefined) {
+      setTimeout(() => {
+        // this.graphapi.initGraph(this.user_info.id).then((res) => {
+        let haveData = [];
+        for (let i = 0; i < this.res_list.length; i++) {
+          let name = this.res_list[i].name;
+          haveData.push(name);
+        }
+        console.log(haveData);
+        this.dataRecommend = this.graphapi.giveRecommend(haveData);
+        console.log("推荐", this.dataRecommend);
+        // });
+      }, 800);
+    }
+
     let mapType = this.getURLParameter("mapType");
     if (mapType != null) {
       if (mapType == "cesium") {
@@ -302,6 +333,8 @@ export default {
     },
     addtoLab() {
       let newTask = JSON.parse(localStorage.getItem("task"));
+
+      this.task_api.addData(newTask, [this.recommendShowOne]);
       newTask.dataList.push(this.recommendShowOne);
       localStorage.setItem("task", JSON.stringify(newTask));
       this.recommendVisible = false;
@@ -430,10 +463,15 @@ const store = useStore(); //vuex直接用store.commit
 .mapSwitchButton {
   position: absolute;
   top: 75px;
-  left: 40px;
+  left: 215px;
   z-index: 1000;
 }
-
+.backButton {
+  position: absolute;
+  top: 75px;
+  left: 29px;
+  z-index: 1000;
+}
 .recommend {
   position: fixed;
   right: 100px;
@@ -464,12 +502,12 @@ const store = useStore(); //vuex直接用store.commit
 <style lang="css">
 :root {
   --fontColor: #ffffff;
-  --one1: #bd7be8;
-  --one2: #8063e1;
+  --three1: #bd7be8;
+  --three2: #8063e1;
   --two1: #7f94fc;
   --two2: #3f58e3;
-  --three1: #21bbfe;
-  --three2: #2c6fd1;
+  --one1: #21bbfe;
+  --one2: #2c6fd1;
   --four1: #415197;
   --four2: #352f64;
   --levelShadow: #22325480;
@@ -484,12 +522,14 @@ const store = useStore(); //vuex直接用store.commit
   user-select: none;
 }
 .levels .level {
+  filter: brightness(120%);
+  /* filter:  */
   display: flex;
   justify-content: center;
   align-items: flex-end;
   justify-items: center;
   width: 140px;
-  min-height: 55px;
+  min-height: 60px;
   padding: 5%;
   border-radius: 5px;
   color: var(--fontColor);
@@ -498,6 +538,9 @@ const store = useStore(); //vuex直接用store.commit
   transform: rotateX(45deg) rotateY(-15deg) rotate(25deg);
   opacity: 0.95;
   margin-top: -25px;
+  table-layout: fixed;
+  word-wrap: break-all;
+  word-break: normal;
 }
 .levels .level:nth-child(4n + 1) {
   background: linear-gradient(135deg, var(--one1), var(--one2));
@@ -532,12 +575,20 @@ const store = useStore(); //vuex直接用store.commit
   /* top: 22px; */
 
   /* left: 15px; */
+  line-height: 100%;
   font-size: 14px;
   text-align: center;
   font-weight: bold;
+  width: 100%;
+  table-layout: fixed;
+  word-wrap: break-all;
+  word-break: normal;
+  filter: brightness(200%);
+  overflow-x: hidden;
 }
 .levels .level:hover {
-  transform: rotateX(30deg) rotateY(0deg) rotate(0deg) translate(-30px, 10px);
+  filter: brightness(160%);
+  transform: rotateX(30deg) rotateY(0deg) rotate(0deg) translate(-40px, 10px);
   z-index: 100;
   opacity: 1;
 }

@@ -632,6 +632,7 @@ export default {
       }
     },
     commitProjectModel() {
+      let formData = new FormData();
       let info = {};
       info.name = this.formInline.workName;
       info.normalTags = "";
@@ -641,10 +642,29 @@ export default {
       info.md5 = "";
       info.mdlJson = {};
       info.authorShips = [];
-      info.imgWebAddress = this.pictureUrl;
-      // axios.post(this.dataServer+"/createResourceModel",info).then(res=>{
-      //   console.log("提交模型",res)
-      // })
+      formData.append("imgFile", this.imageFile);
+      formData.append(
+          "info",
+          new Blob([JSON.stringify(info)], { type: "application/json" })
+      );
+      axios({
+        url: this.dataServer + "/createResourceModel",
+        method: "post",
+        //忽略contentType
+        contentType: false,
+        //取消序列换 formData本来就是序列化好的
+        processData: false,
+        dataType: "json",
+        data: formData,
+      }).then(
+          (res) => {
+            console.log(res.data);
+            this.$router.go(-1);
+          },
+          (err) => {
+            console.log(err);
+          }
+      );
       let searchInfo = {
         asc:false,
         page:1,

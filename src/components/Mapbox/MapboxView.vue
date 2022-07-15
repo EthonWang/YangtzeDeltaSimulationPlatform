@@ -513,6 +513,7 @@
           </el-collapse-item>
           <el-collapse-item title="模型列表" name="model">
             <el-table
+                :data="modelTableList"
                 style="width: 100%"
             >
               <el-table-column label="名称"  width="200" />
@@ -627,7 +628,7 @@
       <Icon type="md-buffer" size="18" />
       <span style="margin-left: 5px; font-size: 18px">数据分析</span>
     </template>
-    
+
   </Modal>
 </template>
 
@@ -706,6 +707,7 @@ export default {
       },
 
       showLayerTableList: [],
+      modelTableList:[],
 
       predefineColors: [
         "#ff4500",

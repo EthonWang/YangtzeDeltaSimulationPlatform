@@ -1,19 +1,19 @@
 <template>
   <div ref="home1" class="home1">
     <div class="container">
-      <h1 style="margin-top: 3.75%; position: relative; z-index: 2">
-        <span style="background: transparent" class="border-box"
-          >长三角综合模拟器</span
-        >
+      <h1 style="margin-top: 3.75%; position: relative; z-index: 2;display:flex;justify-content: center;">
+<!--        <span style="background: transparent" class="border-box">长三角综合模拟器</span>-->
+        <dv-border-box8 dur="3" style="width: 20%;padding: 3px">长三角综合模拟器</dv-border-box8>
       </h1>
       <div
         style="
           position: absolute;
-          width: 95vw;
+          width: 100vw;
           height: 5vh;
-          left: 5vw;
           top: 17vh;
           z-index:2;
+          display: flex;
+          justify-content: space-around;
         "
       >
         <el-button size="large" class="border-box flowbtn"
@@ -269,9 +269,9 @@ option2 && myChart2.setOption(option2);
   backdrop-filter: blur(5px);
   .flowbtn {
     height: 5vh;
-    width: 20%;
+    width: 16%;
     margin-right: 4.5%;
-    font-size: 1.4vw;
+    font-size: 1.1vw;
   }
   .triangle {
     position: absolute;

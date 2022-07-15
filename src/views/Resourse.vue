@@ -144,6 +144,8 @@
           <el-row>
             <div class="resourceList">
               <resource-list :resList="resList"></resource-list>
+              <el-divider></el-divider>
+              <resource-list :resList="modelList"></resource-list>
             </div>
           </el-row>
         </el-col>
@@ -171,8 +173,10 @@ export default {
     let selectedTag = ref([]);
     let questionsSelectValue = ref("");
     let resList = ref([]);
+    let modelList=ref([]);
     let sortField = ref("relativity"); //默认相关，共有relativity、timeUp、timeDown、sizeUp、sizeDown五类
     let dataNum = ref(0);
+    let modelNum=ref(0);
     let visualChecked = ref(false);
     let downloadChecked = ref(false);
     const restaurants = ref([]);
@@ -214,7 +218,6 @@ export default {
           console.log(err);
         }
       );
-
     };
     const querySearch = (queryString, cb) => {
       const results = queryString
@@ -232,7 +235,6 @@ export default {
       };
     };
     let startSearch = function () {
-      resList.value = [] ;
       let tagClass = "problemTags";
       let tagName = "";
       if (selectedTag.value.length == 0) {
@@ -265,11 +267,7 @@ export default {
       }).then(
         (res) => {
           searchPage.value = false;
-          let dataList = res.data.data.content;
-          dataList.map(item=>{
-            resList.value.push(item)
-          })
-          // resList.value = res.data.data.content;
+          resList.value = res.data.data.content;
           dataNum.value = res.data.data.totalElements;
         },
         (err) => {
@@ -286,19 +284,15 @@ export default {
         dataType: "json",
         data: DTO,
       }).then(
-          (res) => {
-            searchPage.value = false;
-            let dataList = res.data.data.content;
-            dataList.map(item=>{
-              resList.value.push(item)
-            })
-            // dataNum.value = res.data.data.totalElements;
-          },
-          (err) => {
-            console.log(err);
-          }
+        (res) => {
+          searchPage.value = false;
+          modelList.value = res.data.data.content;
+          modelNum.value = res.data.data.totalElements;
+        },
+        (err) => {
+          console.log(err);
+        }
       );
-
     };
     const clearSearch = function () {
       searchValue.value = "";
@@ -343,6 +337,8 @@ export default {
       sortField,
       sortByField,
       resList,
+      modelList,
+      modelNum,
       visualChecked,
       downloadChecked,
       clearSearch,

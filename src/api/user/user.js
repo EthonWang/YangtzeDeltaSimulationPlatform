@@ -11,7 +11,7 @@ export default class{
         return post('/user/login',{email:email,password:password})
     }
     editUserInfo(user){
-        return post('/user/login',user)
+        return post('/user/updateUserInfo',user)
     }
     // editPassword(){}
     // editAvator(){}

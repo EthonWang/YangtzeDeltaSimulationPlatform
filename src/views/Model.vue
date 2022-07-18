@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <ModelTree style="width: 30vw;"
+    <ModelTree style=""
       @getCheckData="getCheckData"
       @getCheckChart="getCheckChart"
       @getCheckTif="getCheckTif"

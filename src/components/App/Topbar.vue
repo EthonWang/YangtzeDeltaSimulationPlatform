@@ -2,7 +2,7 @@
   <div class="container">
     <span
       class="bg"
-      style="position: absolute; z-index: 2; transition: all 1s"
+      style="position: absolute; z-index: 2; transition: all .5s"
       :class="{
         background_show: background_show,
         background_hide: !background_show,
@@ -109,7 +109,7 @@ watch(
         document.getElementsByClassName("bg")[0].style.opacity = "0";
         document.getElementsByClassName("container")[0].style.background =
           "#24292f3b";
-      }, 500);
+      }, 100);
       setTimeout(() => {
         pick.value = new Array(barList.length).fill(0);
         // document.getElementsByClassName("user-topbar")[0].style.right = "2vw";

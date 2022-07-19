@@ -15,14 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
-import yangtzedeltasimulatorbackend.dao.ModelItemDao;
-import yangtzedeltasimulatorbackend.dao.QuestionDao;
-import yangtzedeltasimulatorbackend.dao.TaskDao;
+import yangtzedeltasimulatorbackend.dao.*;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
 import yangtzedeltasimulatorbackend.entity.doo.support.TaskData;
-import yangtzedeltasimulatorbackend.entity.po.ModelItem;
-import yangtzedeltasimulatorbackend.entity.po.QuestionItem;
-import yangtzedeltasimulatorbackend.entity.po.Task;
+import yangtzedeltasimulatorbackend.entity.po.*;
 import yangtzedeltasimulatorbackend.utils.ResultUtils;
 import yangtzedeltasimulatorbackend.utils.Utils;
 
@@ -50,8 +46,18 @@ public class ModelItemService {
     @Autowired
     TaskDao taskDao;
 
+    @Autowired
+    ResourceModelDao resourceModelDao;
+
+    @Autowired
+    UserDataDao userDataDao;
+
+
     @Value("${dataStoreDir}"+"/models")
     private  String modelsFolder;
+
+    @Value("${dataStoreDir}")
+    private  String dataStoreDir;
 
     //远程数据容器地址
     @Value("${dataContainerIpAndPort}")
@@ -59,6 +65,8 @@ public class ModelItemService {
 
     @Value("${managerServerIpAndPort}")
     String managerServerIpAndPort;
+
+
 
     public JsonResult saveModelItem(ModelItem modelItem){
         try{
@@ -451,6 +459,53 @@ public class ModelItemService {
 
     }
 
+    public JsonResult getMdlById(String modelId) {
+        try{
+            ResourceModel resourceModel= resourceModelDao.findById(modelId).get();
+            String mdlString=resourceModel.getMdl();
+            JSONObject mdl= Utils.convertMdl(mdlString);
+            return ResultUtils.success(mdl);
+        }catch (Exception e){
+            return ResultUtils.error(e.getMessage());
+        }
+    }
+
+
+    public JsonResult upToDataContainer(String userDataId, String dataRelativePath) {
+        try {
+
+            File file = new File(dataStoreDir,dataRelativePath);
+            if(!file.exists()){
+                return ResultUtils.error("文件不存在");
+            }
+            FileInputStream fileInputStream = new FileInputStream(file);
+            MultipartFile multipartFile = new MockMultipartFile(file.getName(), file.getName(),
+                    ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
+
+            MultiValueMap<String, Object> part = new LinkedMultiValueMap<>();
+            part.add("datafile",multipartFile.getResource());
+            part.add("userId","371252847@qq.com");
+            part.add("serverNode","China");
+            part.add("origination","YangzeDelta");
+            JSONObject uploadResult=Utils.uploadDataToDataServer(dataContainerIpAndPort,part);
+            if(uploadResult.getIntValue("code")==1){
+                String dataUrl="http://"+ dataContainerIpAndPort +"/data/"+uploadResult.getJSONObject("data").getString("id");
+
+                UserData u=userDataDao.findById(userDataId).get();
+                u.setDataContainerUrl(dataUrl);
+                userDataDao.save(u);
+
+                return ResultUtils.success(dataUrl);
+            }else{
+                log.error(uploadResult.getString("message"));
+                return ResultUtils.error("上传数据容器失败");
+            }
+
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("上传数据容器失败");
+        }
+    }
 
 
     //以下三个数据请求不用了

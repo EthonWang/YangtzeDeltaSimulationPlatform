@@ -1,62 +1,74 @@
 <template>
-   <el-tree
-        ref="treeRef"
-        :data="modelTreeData"
-        :props="defaultProps"
-        @node-click="handleNodeClick"
-        :default-expand-all='true'
-        :expand-on-click-node="false"
-        style="">
-      <template class="custom-tree-node" v-slot="{ node, data }" >
-            <span v-if="data.type == 'dataSet'">
-              {{ node.label }}
-            </span>
-            <span v-else-if="data.type == 'problem'">
-                      {{ node.label }}
-            </span>
-            <span v-else-if="data.type == 'data'">
-              <el-checkbox :key="data.dataSourceId" @change="checked=>getCheckedNodes(checked,data)">{{ node.label }}</el-checkbox>
-            </span>
-            <span v-else>{{ node.label }}</span>
-            <span style="margin-left: 50px" v-show="data.type == 'model'">
-                    <el-button
-                        type="primary"
-                        size="mini"
-                        @click="openModelConfig(data.label,data.modelId)" plain>
-                      Config
-                    </el-button>
-                    <el-button
-                        type="info"
-                        size="mini"
-                        @click="drawer = true" plain>
-                      Info
-                    </el-button>
-            </span>
-      </template>
-    </el-tree>
-  <el-drawer
-      v-model="drawer"
-      :title="drawerTitle"
-      direction="rtl"
-      size="35%"
-      @open="handleOpenDraw"
-
+<div class="model-tree">
+<h3>模型列表</h3>
+  <el-tree
+    ref="treeRef"
+    :data="modelTreeData"
+    :props="defaultProps"
+    @node-click="handleNodeClick"
+    :default-expand-all="true"
+    :expand-on-click-node="false"
+    style=""
   >
-    <ModelConfig :modelId = "modelId" ref="refModelConfig"></ModelConfig>
+    <template class="custom-tree-node" v-slot="{ node, data }">
+      <span v-if="data.type == 'dataSet'">
+        {{ node.label }}
+      </span>
+      <span v-else-if="data.type == 'problem'">
+        {{ node.label }}
+      </span>
+      <span v-else-if="data.type == 'data'">
+        <el-checkbox
+          :key="data.dataSourceId"
+          @change="(checked) => getCheckedNodes(checked, data)"
+          >{{ node.label }}</el-checkbox
+        >
+      </span>
+      <span v-else>{{ node.label.toUpperCase() }}</span>
+      <span style="position: absolute;right: 20px;;margin-left: 50px" v-show="data.type == 'model'">
+        <el-button
+          style=""
+          type="primary"
+          size="mini"
+          @click="openModelConfig(data.label, data.modelId)"
+          plain
+        >
+          配置
+        </el-button>
+        <!-- <el-button type="info" size="mini" @click="drawer = true" plain>
+          Info
+        </el-button> -->
+      </span>
+    </template>
+  </el-tree>
+  <el-drawer
+    v-model="drawer"
+    :title="drawerTitle"
+    direction="rtl"
+    size="35%"
+    @open="handleOpenDraw"
+  >
+    <ModelConfig
+      :modelId="modelId"
+      :model="model"
+      ref="refModelConfig"
+    ></ModelConfig>
     <template #footer>
       <div style="flex: auto">
-        <el-button type="primary" @click="btnLoadTestData">Load TestData</el-button>
+        <el-button type="primary" @click="btnLoadTestData"
+          >Load TestData</el-button
+        >
         <el-button type="primary" @click="InvokeModel">Invoke</el-button>
       </div>
     </template>
   </el-drawer>
-    <el-dialog
-        custom-class="dialog_config"
-        v-model="modelConfigDialog"
-        title="模型配置"
-        width="32%"
-        draggable
-    >
+  <el-dialog
+    custom-class="dialog_config"
+    v-model="modelConfigDialog"
+    title="模型配置"
+    width="32%"
+    draggable
+  >
     <el-card class="config-card" shadow="hover">
       <el-row>
         <template
@@ -156,6 +168,7 @@
       </span>
     </template>
   </el-dialog>
+  </div>
 </template>
 
 <script setup>
@@ -165,10 +178,10 @@ import { toRaw } from "@vue/reactivity";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { Upload, Download, Setting, Document } from "@element-plus/icons-vue";
-import ModelConfig from "components/App/ModelConfig"
+import ModelConfig from "components/App/ModelConfig";
 
 import axios from "axios";
-const emit = defineEmits(["getCheckData","getCheckChart"]);
+const emit = defineEmits(["getCheckData", "getCheckChart"]);
 const props = defineProps({
   checkedData: {},
 });
@@ -176,36 +189,45 @@ const props = defineProps({
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 
-const drawer = ref(false)
+const drawer = ref(false);
 const drawerTitle = ref("");
-const modelId = ref("");
-let tempModelId = ""
-const refModelConfig = ref()
-const openModelConfig = (modelName,dataModelId) => {
+const modelId = ref("62d0167ca5c5e9a1ecf975fa");
+const model = ref({});
+model.value=JSON.parse(localStorage.getItem('task')).dataList[1]
+let tempModelId = "";
+const refModelConfig = ref();
+const openModelConfig = (modelName, dataModelId) => {
   drawer.value = true;
   drawerTitle.value = modelName + " Configure Execution";
   tempModelId = dataModelId;
-}
+};
 const handleOpenDraw = () => {
   modelId.value = tempModelId;
-}
+  console.log("model id update :", modelId.value);
+};
 
 // 加载测试数据函数
 const btnLoadTestData = () => {
   refModelConfig.value.handleLoadTestData();
-}
+};
 
 //调用模型代码
 const InvokeModel = () => {
   refModelConfig.value.handleInvoke();
-}
+};
 const modelTreeData = ref([]);
 
 const getTreeData = () => {
-  axios.get("/back/model/getModelTree").then((res) => {
-    console.log("模型目录树", res.data.data);
-    modelTreeData.value = res.data.data;
-  });
+  modelTreeData.value = [
+    {
+      label: "swat",
+      type: "model",
+      id: "62d0167ca5c5e9a1ecf975fa",
+      modelId: "62d0167ca5c5e9a1ecf975fa",
+      mdl: "787878",
+      children: [],
+    },
+  ];
 };
 getTreeData();
 
@@ -228,7 +250,7 @@ const getCheckedNodes = (checked, data) => {
       }
     }
     emit("getCheckData", dataList);
-  } else if (data.mapDataType == "tif"){
+  } else if (data.mapDataType == "tif") {
     // tif数据的处理
     if (checked == true) {
       tifList.push(toRaw(data));
@@ -379,18 +401,28 @@ const options = [
 }
 
 .el-tree {
-  position: absolute;
-  z-index: 88;
-  top: 100px;
-  left: 60px;
-  background-color: rgba(255, 255, 255, 1);
-  border-radius: 5px !important;
-  padding: 8px 13px 8px 8px;
-  height: 80vh;
+ 
+  width: 100%;
+  margin-left: -8px;
+  margin-top: 8px;
+  background-color: rgba(255, 255, 255, 0);
+  // border-radius: 5px !important;
+  // padding: 8px 8px 8px 8px;
+  height: auto;
   overflow: scroll;
 }
-
-
+.model-tree{
+   position: absolute;
+  z-index: 88;
+  top: 110px;
+  left: 400px;
+  width: 12vw;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 5px !important;
+  padding: 22px 8px 8px 8px;
+  transform-origin: 100% 20%;
+  transition: all 0.5s;
+}
 </style>
 
 

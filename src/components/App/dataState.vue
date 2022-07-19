@@ -158,7 +158,7 @@ export default {
     checkPersonData(){
       console.log(this.fileList)
     },
-
+    
     // 选择并上传数据，直接上传，不要加上配置文件
     onSelectChange(file, event){
       let formData = new FormData();

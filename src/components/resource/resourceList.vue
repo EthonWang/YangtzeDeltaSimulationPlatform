@@ -112,29 +112,30 @@ const props = defineProps({
   resList: Array,
 });
 const addDataToTask = (task) => {
-  // console.log(task);
-  let dataList = [];
-  console.log(selectedVisualDataItems.value);
-  for (let i in selectedVisualDataItems.value) {
-    let dataName = selectedVisualDataItems.value[i];
-    for (let j in selectedRes.value.visualDataItems) {
-      let data = selectedRes.value.visualDataItems[j];
-      if (dataName == data.name) {
-        console.log(data);
-        if ("size" in data) {
+  console.log(selectedRes.value);
+  if ('mdl' in selectedRes.value) {
+    console.log(234);
+    let data=selectedRes.value
+    data["simularTrait"] = "model";
+    task_api.addData(task, [data]);
+  } else {
+    let dataList = [];
+    console.log(selectedVisualDataItems.value);
+    for (let i in selectedVisualDataItems.value) {
+      let dataName = selectedVisualDataItems.value[i];
+      for (let j in selectedRes.value.visualDataItems) {
+        let data = selectedRes.value.visualDataItems[j];
+        if (dataName == data.name) {
           console.log(1);
-          data["simularTrait"]="data"
-          dataList.push(data);
-        } else {
-          console.log(2);
-          data["simularTrait"]="model"
+          data["simularTrait"] = "data";
           dataList.push(data);
         }
       }
     }
+    task_api.addData(task, dataList);
   }
-  task_api.addData(task, dataList);
   show_task.value = false;
+  mapCardDialogVisible.value = false;
 };
 
 const handleClose = function (done) {

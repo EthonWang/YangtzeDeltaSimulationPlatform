@@ -3,7 +3,12 @@
     <div class="task-item">
       <h3 v-if="!edit_task">{{ props.task.name }}实验</h3>
       <el-input
-        style="width: 40%; font-size: 18px !important; padding: 10px;margin-left: -12px;"
+        style="
+          width: 40%;
+          font-size: 18px !important;
+          padding: 10px;
+          margin-left: -12px;
+        "
         v-if="edit_task"
         v-model="task_data.name"
         placeholder="请输入标题"
@@ -14,7 +19,7 @@
       <span class="task-public task-private" v-if="!props.task.publicBoolean"
         ><el-icon><Lock /></el-icon>私密</span
       >
-      <br>
+      <br />
       <el-form
         :label-position="labelPosition"
         label-width="100px"
@@ -74,7 +79,7 @@
       <el-divider></el-divider>
 
       <el-button
-      v-if="!edit_task"
+        v-if="!edit_task"
         style="float: left; margin-right: 5px"
         @click="router.push('/user/data')"
         >选择并添加<strong>我的云端</strong>数据</el-button
@@ -98,7 +103,7 @@
       </el-upload> -->
 
       <el-button
-      v-if="!edit_task"
+        v-if="!edit_task"
         @click="router.push('/resourse')"
         style="float: left; margin-right: 5px"
         >选择并添加<strong>公共资源</strong></el-button
@@ -113,28 +118,29 @@
         class="data-list demo-form-inline"
       >
         <h4>数据配置：</h4>
-        <el-form-item
-          v-for="(data, index) in props.task.dataList"
-          :key="data"
-          :label="data.name.slice(0,25)"
-        >
-          <el-button
-            type="success"
-            v-if="!edit_task"
-            disabled
-            circle
-            size="small"
-            ><el-icon><Check /></el-icon
-          ></el-button>
-          <el-button
-            type="danger"
-            v-if="edit_task"
-            circle
-            size="small"
-            @click="deleteData(index)"
-            ><el-icon><Close /></el-icon
-          ></el-button>
-        </el-form-item>
+        <template v-for="(data, index) in props.task.dataList" :key="data">
+          <el-form-item
+            :label="data.name.slice(0, 25)"
+            v-if="data.simularTrait != 'model'"
+          >
+            <el-button
+              type="success"
+              v-if="!edit_task"
+              disabled
+              circle
+              size="small"
+              ><el-icon><Check /></el-icon
+            ></el-button>
+            <el-button
+              type="danger"
+              v-if="edit_task"
+              circle
+              size="small"
+              @click="deleteData(index)"
+              ><el-icon><Close /></el-icon
+            ></el-button>
+          </el-form-item>
+        </template>
       </el-form>
       <el-form
         :inline="true"
@@ -145,28 +151,26 @@
         class="data-list demo-form-inline"
       >
         <h4>模型配置：</h4>
-        <el-form-item
-          v-for="(data, index) in props.task.dataList.filter((item)=>{return item.simularTrait=='model'})"
-          :key="data"
-          :label="data.name"
-        >
-          <el-button
-            type="success"
-            v-if="!edit_task"
-            disabled
-            circle
-            size="small"
-            ><el-icon><Check /></el-icon
-          ></el-button>
-          <el-button
-            type="danger"
-            v-if="edit_task"
-            circle
-            size="small"
-            @click="deleteData(index)"
-            ><el-icon><Close /></el-icon
-          ></el-button>
-        </el-form-item>
+        <template v-for="(data, index) in props.task.dataList" :key="data">
+          <el-form-item :label="data.name" v-if="data.simularTrait == 'model'">
+            <el-button
+              type="success"
+              v-if="!edit_task"
+              disabled
+              circle
+              size="small"
+              ><el-icon><Check /></el-icon
+            ></el-button>
+            <el-button
+              type="danger"
+              v-if="edit_task"
+              circle
+              size="small"
+              @click="deleteData(index)"
+              ><el-icon><Close /></el-icon
+            ></el-button>
+          </el-form-item>
+        </template>
       </el-form>
       <el-button
         type="primary"
@@ -193,9 +197,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="centerDialogVisible = false">取消</el-button>
-          <el-button type="danger" @click="deleteTask()"
-            >确定</el-button
-          >
+          <el-button type="danger" @click="deleteTask()">确定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -217,7 +219,7 @@ const props = defineProps({
   task: reactive(Object),
 });
 const centerDialogVisible = ref(false);
-const emit = defineEmits(["update:task","deleteTask"]);
+const emit = defineEmits(["update:task", "deleteTask"]);
 const task_data = ref(props.task);
 const edit_task = ref(false);
 watch(task_data, (newValue, oldValue) => {
@@ -235,23 +237,23 @@ const labelPosition = ref("left");
 const deleteData = (index) => {
   task_data.value.dataList.splice(index, 1);
 };
-const handleChange = (file,fileList) => {
-let path=document.getElementsByClassName("el-upload__input")[0].value
-task_data.value.dataList.push({
-  id:path,
-  source:"local",
-  name:file.name
-})
+const handleChange = (file, fileList) => {
+  let path = document.getElementsByClassName("el-upload__input")[0].value;
+  task_data.value.dataList.push({
+    id: path,
+    source: "local",
+    name: file.name,
+  });
 };
 
-const beforeUpload=(rawFile)=>{
-  return false
-}
+const beforeUpload = (rawFile) => {
+  return false;
+};
 
-const confirmEdit=()=>{
-  edit_task.value = !edit_task.value
-  task_api.editTask(task_data.value)
-}
+const confirmEdit = () => {
+  edit_task.value = !edit_task.value;
+  task_api.editTask(task_data.value);
+};
 
 const options = Array.from({ length: sciencePro.length }).map((_, idx) => {
   const label = idx;
@@ -266,10 +268,10 @@ const options = Array.from({ length: sciencePro.length }).map((_, idx) => {
     ),
   };
 });
-const deleteTask=()=>{
-  centerDialogVisible.value = false
-  emit("deleteTask",props.task)
-}
+const deleteTask = () => {
+  centerDialogVisible.value = false;
+  emit("deleteTask", props.task);
+};
 const handleClose = (tag) => {
   task_data.value.problemTags.splice(
     task_data.value.problemTags.indexOf(tag),
@@ -302,8 +304,7 @@ const handleClose = (tag) => {
   padding: 2% 5% 35px 5%;
   transition: all 0.5s;
   &:hover {
-    border: .5px solid rgba(81, 113, 255, 0.5);
-    
+    border: 0.5px solid rgba(81, 113, 255, 0.5);
   }
   strong {
     color: hsl(210, 100%, 60%);
@@ -341,26 +342,24 @@ const handleClose = (tag) => {
 // p {
 //   width: calc(80% - 100px);
 // }
- /deep/.el-form--label-left .el-form-item__label {
-    text-align: left;
-    overflow: hidden !important;
+/deep/.el-form--label-left .el-form-item__label {
+  text-align: left;
+  overflow: hidden !important;
 }
 .data-list {
- 
   transition: all 0.5s;
   /deep/ .el-form-item {
-    
     transition: all 0.5s;
     --font-size: 14px;
     margin-bottom: 0px;
     margin-right: 10%;
     animation: come 1s linear 1;
     @keyframes come {
-      0%{
+      0% {
         transform: translateX(-300px);
         opacity: 0.1;
       }
-      100%{
+      100% {
         transform: translateX(0);
         opacity: 1;
       }

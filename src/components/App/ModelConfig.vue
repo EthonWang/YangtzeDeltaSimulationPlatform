@@ -33,13 +33,52 @@ const props = defineProps({
     type:String,
     default:''
   },
+  model:{
+    type:Object,
+  }
 });
 watch(props,(props,prevProps)=>{
   getMDL();
 })
 
 const getMDL = () => {
-  axios.get("http://172.21.212.63:8999/model/getMdlById/"+props.modelId).then(res=>{
+  // let states = props.model.mdlJson.ModelClass[0].Behavior[0].StateGroup[0].States[0].State;
+  //   console.log("state is :",states);
+  //   for (let i = 0; i < states.length; i++) {
+  //     let state = states[i];
+  //     for (let j = 0; j < state.Event.length; j++) {
+  //       if (state.Event[j].data != undefined && state.Event[j].type == "response") {
+  //         let nodes = state.Event[j].data[0].nodes;
+  //         let refName = state.Event[j].data[0].text.toLowerCase();
+  //         if (state.Event[j].data[0].externalId != undefined) {
+  //           state.Event[j].externalId = state.Event[j].data[0].externalId;
+  //         }
+
+  //         if (nodes != undefined && refName != "grid" && refName != "table" && refName != "shapes") {
+  //           let children = [];
+  //           for (let k = 0; k < nodes.length; k++) {
+  //             let node = nodes[k];
+  //             let child = {};
+  //             child.eventId = node.text;
+  //             child.eventName = node.text;
+  //             child.eventDesc = node.desc;
+  //             child.eventType = node.dataType;
+
+  //             child.child = true;
+  //             children.push(child);
+  //           }
+  //           states[i].Event[j].children = children;
+  //         }
+  //         else {
+  //           states[i].Event[j].data[0].nodes = undefined;
+  //         }
+
+  //       }
+  //     }
+  //   }
+  //   MDLStatesInfo.value = states
+
+  axios.get("http://172.21.213.248:8999/model/getMdlById/"+props.model.id).then(res=>{
     //对拿到的states再进行一下处理
     let states = res.data.data.mdl.states;
     for (let i = 0; i < states.length; i++) {

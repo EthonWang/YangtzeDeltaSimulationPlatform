@@ -23,7 +23,6 @@ public class ModelController {
     @Autowired
     ModelItemService modelItemService;
 
-
     @ApiOperation(value = "上传模型条目，带参数id视为更新")
     @PostMapping ("/addModelItem")
     public JsonResult saveModelItem(@RequestBody ModelItem modelItem){

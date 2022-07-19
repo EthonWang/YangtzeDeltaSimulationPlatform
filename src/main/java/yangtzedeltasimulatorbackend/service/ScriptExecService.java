@@ -175,6 +175,7 @@ public class ScriptExecService {
             }
             // 对ArrayList中存储的字符串进行处理
             options = getChartOptionsByArrayList(arrayList, chartsType);
+            return ResultUtils.success(options);
 //            options.getJSONObject("title").put("text",name);
             //2.根据图表类型，组织成相应的options数据返回
         } else if (type.equals("raster")) {
@@ -195,6 +196,15 @@ public class ScriptExecService {
             //2.将图片添加到个人空间的实验室文件夹下(单独的接口)
         }
         return ResultUtils.error();
+    }
+
+    public void downloadPic(String path, HttpServletResponse response) {
+        try{
+            File file=new File(scriptOutDir + "/" + path);
+            MyFileUtils.downloadFile(file,response);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
     }
 
     public JSONObject getChartOptionsByArrayList(ArrayList<String> arrayList, String chartsType) {

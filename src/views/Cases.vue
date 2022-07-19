@@ -2,7 +2,7 @@
   <div class="about">
     <!-- <span class="color-change"></span> -->
     <div class="cases-page">
-        <router-view style="width: 100%; height: 97.5%"></router-view>
+        <router-view style="width: 100%; height: 100%"></router-view>
     </div>
   </div>
 </template>

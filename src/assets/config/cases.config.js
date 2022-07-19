@@ -31,6 +31,11 @@ export const cases_config = [
         problem:"长三角工业创新环境",
         path: "IndustrialInnovation",
         component:() => import("views/CasesView/IndustrialInnovation.vue")
+    },
+    {
+        problem:"小流域山洪灾害在线模拟",
+        path: "watershedFlood",
+        component:() => import("views/CasesView/watershedFlood.vue")
     }
     // {
     //     problem:"湖泊水环境监测",

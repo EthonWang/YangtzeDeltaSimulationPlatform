@@ -38,11 +38,6 @@
           <div><el-button  class="rightButton hvr-shutter-out-horizontal" plain><span>查看案例</span><ArrowDown style="width: 1em"/></el-button></div>
         </div>
         <div>
-          <h3 class="authorInfo">贡献者</h3>
-          <p class="font-size-1">
-           {{caseInfo.caseAuthor.name}}
-          </p>
-
           <h3 class="authorInfo">作者</h3>
           <p class="font-size-1">
             作者：{{caseInfo.caseAuthor.name}}
@@ -75,6 +70,7 @@ caseInfo.value = {
   name:"SWMM",
   thumbnail:"/store/themeImg/swmm.62c2a75e443cecf9144a6fb0.png",
   path:"SWMM",
+  problem:["洪涝水环境灾害","地表地下水耦合"],
   description:["SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。"],
   dataList:[
     {

@@ -26,9 +26,12 @@
         <el-card style="padding-bottom: 40px">
           <el-row style="align-items: center;justify-content: space-between">
             <h2 class="thematicName">{{thematicName}}</h2>
-            <el-icon :size="40" color="#246abd" style="cursor: pointer">
+            <el-icon :size="60" color="#246abd" style="cursor: pointer;margin-right: 15px">
               <el-tooltip content="编辑专题" placement="top" effect="light">
-                <Edit @click="editThematic"/>
+                <Edit @click="editThematic">编辑专题</Edit>
+              </el-tooltip>
+              <el-tooltip content="添加案例" placement="top" effect="light">
+                <CirclePlus @click="outNewCases"/>
               </el-tooltip>
             </el-icon>
           </el-row>
@@ -42,7 +45,7 @@
               <template v-for="(item,key) in thematicItem.relatedCases" :key="key">
                 <div  class="caseCard">
                   <div class="caseImageWrap">
-                    <el-image class="caseImage" @click="toCase(item.path)"  :src="baseUrl+item.thumbnail" fit="fill"></el-image>
+                    <el-image class="caseImage" @click="toCase(item.path)"  :src="'/back'+item.thumbnail" fit="fill"></el-image>
                     <div class="imageMask">
                       <img :src="mdOpenIcon" class="caseIcon">
                       <span >打开案例</span>
@@ -138,7 +141,7 @@
                   {{ item.value }}
                 </p>
                 <div class="imageBlock">
-                  <el-image v-if="item.type == 'image'" :src="baseUrl+item.value"></el-image>
+                  <el-image v-if="item.type == 'image'" :src="'/back'+item.value"></el-image>
                 </div>
               </template>
             </div>
@@ -159,7 +162,7 @@
         <div style="display: flex;align-items: center;flex-wrap: wrap;margin-bottom: 10px">
           <template v-for="(item,key) in relatedCases" :key="key">
             <el-card :body-style="{ padding: '0px'}" style="margin-left: 10px" >
-              <el-image class="caseImage"  :src="baseUrl+item.thumbnail" fit="fill"></el-image>
+              <el-image class="caseImage"  :src="'/back'+item.thumbnail" fit="fill"></el-image>
               <div style="display: flex;flex-direction: column;align-items: flex-start;padding:0 10px 10px 10px">
                 <p style="line-height: 2">{{item.name}}</p>
                 <div style="">
@@ -258,14 +261,13 @@
 <script  setup>
 import {ref,onMounted} from 'vue';
 import {useStore} from "vuex";
-import {Plus,Edit,Upload,Delete,Select} from '@element-plus/icons-vue'
+import {Plus,Edit,Upload,Delete,Select,CirclePlus} from '@element-plus/icons-vue'
 import { ElNotification,ElMessageBox,ElMessage} from "element-plus";
 import { useRouter } from "vue-router";
 import axios from "axios";
 const router = useRouter();
 const store = useStore();
 const dataServer = store.getters.devIpAddress;
-const baseUrl = ref("http://172.21.213.248:8999")
 
 const mdOpenIcon = require("@/assets/img/icon/md-open.png")
 

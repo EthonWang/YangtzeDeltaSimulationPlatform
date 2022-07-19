@@ -23,19 +23,20 @@ public class ModelController {
     @Autowired
     ModelItemService modelItemService;
 
-    @ApiOperation(value = "上传模型条目，带参数id视为更新")
-    @PostMapping ("/addModelItem")
-    public JsonResult saveModelItem(@RequestBody ModelItem modelItem){
-        return modelItemService.saveModelItem(modelItem);
-    }
+
+//    @ApiOperation(value = "上传模型条目，带参数id视为更新")
+//    @PostMapping ("/addModelItem")
+//    public JsonResult saveModelItem(@RequestBody ModelItem modelItem){
+//        return modelItemService.saveModelItem(modelItem);
+//    }
 
 
-    @ApiOperation(value = "上传模型数据文件，文件名重复会覆盖原有文件")
-    @PostMapping ("/addModelZipFile")
-    public JsonResult saveModelFile(@RequestPart("modelZipFile") MultipartFile modelZipFile,
-                                    @RequestParam("modelId") String modelId){
-        return modelItemService.saveModelZipFile(modelZipFile,modelId);
-    }
+//    @ApiOperation(value = "上传模型数据文件，文件名重复会覆盖原有文件")
+//    @PostMapping ("/addModelZipFile")
+//    public JsonResult saveModelFile(@RequestPart("modelZipFile") MultipartFile modelZipFile,
+//                                    @RequestParam("modelId") String modelId){
+//        return modelItemService.saveModelZipFile(modelZipFile,modelId);
+//    }
 
 
     //同时接受文件和json，如果前端发送不过来，则使用接受文件和json字符串的方式
@@ -72,25 +73,25 @@ public class ModelController {
 //    }
 
 
-    @ApiOperation(value = "获取模型列表")
-    @GetMapping ("/getModelItemList")
-    public JsonResult getModelItemList(){
-        return modelItemService.getModelItemList();
-    }
+//    @ApiOperation(value = "获取模型列表")
+//    @GetMapping ("/getModelItemList")
+//    public JsonResult getModelItemList(){
+//        return modelItemService.getModelItemList();
+//    }
 
 
-    @ApiOperation(value = "问题模型数据目录树")
-    @GetMapping ("/getModelTree")
-    public JsonResult getModelTree(){
-        return modelItemService.getModelTree();
-    }
+//    @ApiOperation(value = "问题模型数据目录树")
+//    @GetMapping ("/getModelTree")
+//    public JsonResult getModelTree(){
+//        return modelItemService.getModelTree();
+//    }
 
 
-    @ApiOperation(value = "获取模型的mdlJSON")
-    @GetMapping ("/getMdlById/{modelId}")
-    public JsonResult getMdlById(@PathVariable("modelId") String modelId ){
-        return modelItemService.getMdlJson(modelId);
-    }
+//    @ApiOperation(value = "获取模型的mdlJSON")
+//    @GetMapping ("/getMdlById/{modelId}")
+//    public JsonResult getMdlById(@PathVariable("modelId") String modelId ){
+//        return modelItemService.getMdlJson(modelId);
+//    }
 
 
 //    @ApiOperation(value = "图表类可视化数据")
@@ -116,10 +117,16 @@ public class ModelController {
 
 
 
-    @ApiOperation(value = "获取模型的测试数据集")
-    @GetMapping ("/getModelTestDataSet/{modelId}")
-    public Object getInputDataSet(@PathVariable("modelId") String modelId){
-        return modelItemService.getInputDataSet(modelId);
+//    @ApiOperation(value = "获取模型的测试数据集")
+//    @GetMapping ("/getModelTestDataSet/{modelId}")
+//    public Object getInputDataSet(@PathVariable("modelId") String modelId){
+//        return modelItemService.getInputDataSet(modelId);
+//    }
+
+    @ApiOperation(value = "获取处理后模型的mdlJSON")
+    @GetMapping ("/getMdlById/{modelId}")
+    public JsonResult getMdlById(@PathVariable("modelId") String modelId ){
+        return modelItemService.getMdlById(modelId);
     }
 
     @ApiOperation(value = "调用模型 lists中的oid就是computableModel的id")
@@ -129,14 +136,20 @@ public class ModelController {
         return modelItemService.handleInvoke(lists, email);
     }
 
-
-
-    //添加大类问题，就一个方法不至于新写一个controller了
-    @ApiOperation(value = "添加问题条目")
-    @PostMapping("/addQuestionItem")
-    public JsonResult addQuestionItem(@RequestBody QuestionItem questionItem){
-        return modelItemService.addQuestionItem(questionItem);
+    @ApiOperation(value = "上传数据到数据容器")
+    @GetMapping ("/upToDataContainer")
+    public JsonResult upToDataContainer(@RequestParam("userDataId") String userDataId,
+                                        @RequestParam("dataRelativePath") String dataRelativePath ){
+        return modelItemService.upToDataContainer(userDataId,dataRelativePath);
     }
+
+
+//    //添加大类问题，就一个方法不至于新写一个controller了
+//    @ApiOperation(value = "添加问题条目")
+//    @PostMapping("/addQuestionItem")
+//    public JsonResult addQuestionItem(@RequestBody QuestionItem questionItem){
+//        return modelItemService.addQuestionItem(questionItem);
+//    }
 
 
 }

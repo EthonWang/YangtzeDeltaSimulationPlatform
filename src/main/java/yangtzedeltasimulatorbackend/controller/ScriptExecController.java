@@ -3,12 +3,16 @@ package yangtzedeltasimulatorbackend.controller;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import yangtzedeltasimulatorbackend.component.LoginRequired;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
 import yangtzedeltasimulatorbackend.entity.dto.script.GDALClipDTO;
 import yangtzedeltasimulatorbackend.entity.dto.script.TxtAnalysisDTO;
+import yangtzedeltasimulatorbackend.entity.po.UserData;
 import yangtzedeltasimulatorbackend.service.ScriptExecService;
+import yangtzedeltasimulatorbackend.utils.MyFileUtils;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 
 /**
  * @Description
@@ -39,6 +43,12 @@ public class ScriptExecController {
     @PostMapping("/txtAnalysis/{labTaskId}")
     public JsonResult txtAnalysis(@RequestBody TxtAnalysisDTO txtAnalysisDTO, @PathVariable String labTaskId){
         return  scriptExecService.txtAnalysis(txtAnalysisDTO,labTaskId);
+    }
+    
+    @ApiOperation(value = "下载数据")
+    @GetMapping("/downloadPic/{path}")
+    public void downloadDataItem(@PathVariable("path") String path, HttpServletResponse response) {
+        scriptExecService.downloadPic(path, response);
     }
 
 }

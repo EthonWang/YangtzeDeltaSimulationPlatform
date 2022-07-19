@@ -285,10 +285,11 @@ const startSearch = function (searchValue) {
   })
 };
 
-const getThemeInfo = (thematicName) => {
+let tagClass = "problemTags";
+
+const getThemeInfo = (thematicName,tagName) => {
   axios.get("/back/getTheme/"+thematicName).then(res=>{
     let themeInfo = res.data.data;
-    console.log("themeInfo",themeInfo)
     if(themeInfo != null){
       thematicItem.value = themeInfo;
     }else {
@@ -298,8 +299,6 @@ const getThemeInfo = (thematicName) => {
     }
   });
 
-  let tagClass = "problemTags";
-  let tagName = "";
   let DTO = {
     asc: false,
     page: 1,
@@ -333,10 +332,6 @@ const toCase = (path) => {
 }
 const goCaseInfo = () => {
   router.push("/caseinfo/")
-}
-const getCurrentNode = (checked,data) => {
-  thematicName.value = data.label;
-  getThemeInfo(thematicName.value);
 }
 const editDialogVisible = ref(false);
 const editThematic = () => {
@@ -523,16 +518,21 @@ const editCancel = () => {
 const modelTreeData = ref([]);
 modelTreeData.value = [
   {
-    label:"流域水循环及驱动机制",
+    label:"流域水循环及其驱动机制",
+    type:"problem",
     children:[
       {
         label:"流域生态环境演变",
+        type:"subProblem",
       }, {
         label:"流域碳水耦合循环",
+        type:"subProblem",
       },{
         label:"地表地下水耦合",
+        type:"subProblem",
       },{
         label:"湖泊水环境监测",
+        type:"subProblem",
       },
     ]
   },
@@ -541,14 +541,19 @@ modelTreeData.value = [
     children:[
       {
         label:"海岸带变迁",
+        type:"subProblem",
       }, {
         label:"河口海岸水动力",
+        type:"subProblem",
       },{
         label:"湖泊碳循环",
+        type:"subProblem",
       },{
         label:"土壤碳氮循环",
+        type:"subProblem",
       },{
         label:"土壤氮转化过程及其环境效应",
+        type:"subProblem",
       },
     ]
   },
@@ -557,17 +562,23 @@ modelTreeData.value = [
     children:[
       {
         label:"台风与风暴潮",
+        type:"subProblem",
       }, {
         label:"洪涝水环境灾害",
+        type:"subProblem",
       },{
         label:"湿地保护",
+        type:"subProblem",
       },{
         label:"地质灾害",
+        type:"subProblem",
       },{
         label:"大气污染",
+        type:"subProblem",
       },
       {
         label: "湖泊水环境监测",
+        type:"subProblem",
       },
     ],
   },
@@ -576,20 +587,43 @@ modelTreeData.value = [
     children:[
       {
         label:"城市扩张",
+        type:"subProblem",
       }, {
         label:"农业生态",
+        type:"subProblem",
       },{
         label:"人地关系",
+        type:"subProblem",
       },{
         label:"城市水问题",
+        type:"subProblem",
       },{
         label:"自然遗产",
+        type:"subProblem",
       },
     ]
   }
 ]
-const handleNodeClick = () => {
 
+const getCurrentNode = (checked,data) => {
+  // thematicName.value = data.label;
+  //
+  // console.log("currentNode",data)
+  // getThemeInfo(thematicName.value);
+}
+const treeRef = ref()
+const handleNodeClick = (node,node2) => {
+  let tagName = "";
+  if(node.type == 'subProblem'){
+    console.log("subProblem",node)
+    tagName = node2.parent.data.label;
+    thematicName.value = node.label;
+    getThemeInfo(node.label,tagName);
+
+    console.log("node2",node2.parent.data.label);
+  }else {
+    console.log("problem",node)
+  }
 }
 
 
@@ -657,11 +691,11 @@ allThematic.value = [
     ]
   }
 ]
-setTimeout(()=>{
-  const show_name=localStorage.getItem("show_themetic")
-thematicName.value = show_name.replace('\n','');
-  getThemeInfo(show_name);
-},600)
+// setTimeout(()=>{
+//   const show_name=localStorage.getItem("show_themetic")
+// thematicName.value = show_name.replace('\n','');
+//   getThemeInfo(show_name);
+// },600)
 
 
 </script>

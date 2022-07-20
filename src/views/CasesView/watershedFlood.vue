@@ -1,7 +1,9 @@
 <template>
-    <video autoplay controls width="1000vw" height="100%">
+  <div class="watershedPage" >
+    <video class="videoBox" loop autoplay controlsList="nodownload" controls width="1200" >
       <source :src="videoPath" type="video/mp4">
     </video>
+  </div>
 </template>
 
 <script setup>
@@ -12,5 +14,16 @@ videoPath.value = "/back/store/themeImg/watershedFlood.62d6c5ad443c3b60743a51bd.
 </script>
 
 <style scoped>
+.watershedPage{
+  width: 100vw;
+  height: 92.54vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #76BA99;
+}
 
+.videoBox{
+  box-shadow: rgba(40, 122, 172, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
 </style>

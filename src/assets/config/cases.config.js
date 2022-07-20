@@ -36,6 +36,21 @@ export const cases_config = [
         problem:"小流域山洪灾害在线模拟",
         path: "watershedFlood",
         component:() => import("views/CasesView/watershedFlood.vue")
+    },
+    {
+        problem:"滇池三维水动力模拟系统",
+        path: "Dianchi",
+        component:() => import("views/CasesView/Dianchi.vue")
+    },
+    {
+        problem:"太湖水污染扩散模拟",
+        path: "Taihu",
+        component:() => import("views/CasesView/Taihu.vue")
+    },
+    {
+        problem:"夹江水污染扩散模拟",
+        path: "Jiajiang",
+        component:() => import("views/CasesView/Jiajiang.vue")
     }
     // {
     //     problem:"湖泊水环境监测",

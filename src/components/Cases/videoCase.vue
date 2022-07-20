@@ -51,7 +51,7 @@ const props = defineProps({
   display: flex;
   justify-content: space-around;
   align-items: center;
-  background-color: #76BA99;
+  background-color: #3BACB6;
 }
 .titleBox{
   padding: 10px;

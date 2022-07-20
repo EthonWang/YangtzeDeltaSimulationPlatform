@@ -569,17 +569,10 @@ modelTreeData.value = [
         label:"洪涝水环境灾害",
         type:"subProblem",
       },{
-        label:"湿地保护",
-        type:"subProblem",
-      },{
         label:"地质灾害",
         type:"subProblem",
       },{
         label:"大气污染",
-        type:"subProblem",
-      },
-      {
-        label: "湖泊水环境监测",
         type:"subProblem",
       },
     ],
@@ -591,6 +584,9 @@ modelTreeData.value = [
         label:"城市扩张",
         type:"subProblem",
       }, {
+        label:"湿地保护",
+        type:"subProblem",
+      },{
         label:"农业生态",
         type:"subProblem",
       },{

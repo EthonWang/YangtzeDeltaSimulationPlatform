@@ -51,6 +51,16 @@ export const cases_config = [
         problem:"夹江水污染扩散模拟",
         path: "Jiajiang",
         component:() => import("views/CasesView/Jiajiang.vue")
+    },
+    {
+        problem:"长三角经济运行",
+        path: "EconomicRun",
+        component:() => import("views/CasesView/EconomicRun.vue")
+    },
+    {
+        problem:"长三角新冠疫情",
+        path: "Covid19",
+        component:() => import("views/CasesView/Covid19.vue")
     }
     // {
     //     problem:"湖泊水环境监测",

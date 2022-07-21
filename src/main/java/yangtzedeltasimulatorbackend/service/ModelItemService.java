@@ -3,6 +3,7 @@ package yangtzedeltasimulatorbackend.service;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.file.FileReader;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ZipUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -51,6 +52,9 @@ public class ModelItemService {
 
     @Autowired
     UserDataDao userDataDao;
+
+    @Value("${dataStoreDir}"+"/temp")
+    private  String tempDir;
 
 
     @Value("${dataStoreDir}"+"/models")
@@ -495,6 +499,45 @@ public class ModelItemService {
                 u.setDataContainerUrl(dataUrl);
                 userDataDao.save(u);
 
+                return ResultUtils.success(dataUrl);
+            }else{
+                log.error(uploadResult.getString("message"));
+                return ResultUtils.error("上传数据容器失败");
+            }
+
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("上传数据容器失败");
+        }
+    }
+
+    public JsonResult upXMLToDataContainer(MultipartFile upFile) {
+        try {
+
+            if (upFile.isEmpty()){
+                return ResultUtils.error("文件为空");
+            }
+
+            String fileName = upFile.getOriginalFilename(); //eg: XXX.js
+            String fileMainName= FileNameUtil.mainName(fileName); // XXX
+            String fileExtName = FileNameUtil.extName(fileName); //js
+            String fileNewName=IdUtil.objectId()+"."+fileExtName;
+            File file = new File(tempDir,fileNewName);
+            upFile.transferTo(file);
+
+            FileInputStream fileInputStream = new FileInputStream(file);
+            MultipartFile multipartFile = new MockMultipartFile(file.getName(), file.getName(),
+                    ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
+
+            MultiValueMap<String, Object> part = new LinkedMultiValueMap<>();
+            part.add("datafile",multipartFile.getResource());
+            part.add("userId","371252847@qq.com");
+            part.add("serverNode","China");
+            part.add("origination","YangzeDelta");
+            JSONObject uploadResult=Utils.uploadDataToDataServer(dataContainerIpAndPort,part);
+            file.delete();
+            if(uploadResult.getIntValue("code")==1){
+                String dataUrl="http://"+ dataContainerIpAndPort +"/data/"+uploadResult.getJSONObject("data").getString("id");
                 return ResultUtils.success(dataUrl);
             }else{
                 log.error(uploadResult.getString("message"));

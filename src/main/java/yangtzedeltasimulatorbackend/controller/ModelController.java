@@ -143,8 +143,15 @@ public class ModelController {
         return modelItemService.upToDataContainer(userDataId,dataRelativePath);
     }
 
+    @ApiOperation(value = "上传xml到数据容器")
+    @PostMapping(value = "/upXMLToDataContainer")
+    public JsonResult upXMLToDataContainer(@RequestPart MultipartFile  upFile) {
+//        String email="371252847@qq.com";
+        return modelItemService.upXMLToDataContainer(upFile);
+    }
 
-//    //添加大类问题，就一个方法不至于新写一个controller了
+
+    //添加大类问题，就一个方法不至于新写一个controller了
 //    @ApiOperation(value = "添加问题条目")
 //    @PostMapping("/addQuestionItem")
 //    public JsonResult addQuestionItem(@RequestBody QuestionItem questionItem){

@@ -516,7 +516,7 @@
           <!-- <el-collapse-item title="模型列表" name="model">
             <el-table
               :data="
-                showLayerTableList.filter((item) => item.simularType == 'model')
+                showLayerTableList.filter((item) => item.simularTrait == 'model')
               "
               ref="shpLayerTable"
               row-key="nameId"
@@ -825,7 +825,10 @@ export default {
     let that = this;
     setTimeout(function () {
       that.filterResList();
-      that.initShpShowList();
+      setTimeout(()=>{
+        that.initShpShowList();
+      },500)
+      
     }, 500);
   },
 

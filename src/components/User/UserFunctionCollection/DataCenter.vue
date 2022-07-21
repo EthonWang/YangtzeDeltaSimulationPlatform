@@ -106,6 +106,7 @@
           append-to-body
         >
           <el-upload
+          v-model:file-list="fileList"
             class="upload-demo"
             action="/back/resource/saveDataItem"
             :headers="upload_header"
@@ -190,6 +191,8 @@ task_api.getTaskList(userInfo.id).then((res) => {
     task_list.value.push(res.data.data[i]);
   }
 });
+const fileList = ref([
+])
 const addToTask = () => {
   show_task.value = true;
 };
@@ -217,17 +220,17 @@ const addDataToTask = (task) => {
   task_api.addData(task, dataList);
   show_task.value = false;
 };
-var upload_file = reactive({
+var upload_file = ref({
   name: "",
   description: "",
   problemTags: [],
   publicBoolean: false,
   problemTagsString: computed(() => {
-    return upload_file.problemTags.toString();
+    return upload_file.value.problemTags.toString();
   }),
   normalTags: [],
   normalTagsString: computed(() => {
-    return upload_file.normalTags.toString();
+    return upload_file.value.normalTags.toString();
   }),
 });
 const data_des_width = "100px";
@@ -269,19 +272,21 @@ setTimeout(() => {
 }, 320);
 const successUpload = () => {
   innerVisible.value = false;
-  upload_file = reactive({
+  dialogVisible.value=false;
+  fileList.value=[]
+  upload_file.value = {
     name: "",
     description: "",
     problemTags: [],
     publicBoolean: false,
     problemTagsString: computed(() => {
-      return upload_file.problemTags.toString();
+      return upload_file.value.problemTags.toString();
     }),
     normalTags: [],
     normalTagsString: computed(() => {
-      return upload_file.normalTags.toString();
+      return upload_file.value.normalTags.toString();
     }),
-  });
+  };
   refresh();
 };
 const now_id = ref(userInfo.id);
@@ -329,7 +334,7 @@ const beforeUpload = (rawFile) => {
       return false;
     }
   }
-  upload_file.name = rawFile.name;
+  upload_file.value.name = rawFile.name;
   return true;
 };
 const uploadFile = (file_artribute, file_data) => {

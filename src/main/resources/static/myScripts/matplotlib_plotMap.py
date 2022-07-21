@@ -388,7 +388,7 @@ if __name__ == '__main__':
 
     plt.xlabel("lon")
     plt.ylabel("lat")
-    # plt.title("date = ", fontsize=16)
+    plt.title("date = " + str(DataSet.date.data).split("T")[0], fontsize=16)
     # cmap1 = copy.copy(mpl.cm.viridis)
     # norm1 = mpl.colors.Normalize(vmin=np.min(z), vmax=np.max(z))
     # im1 = mpl.cm.ScalarMappable(norm=norm1, cmap=cmap1)

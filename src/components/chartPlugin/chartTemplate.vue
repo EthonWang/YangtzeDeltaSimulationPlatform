@@ -23,6 +23,7 @@
         <chart-with-png
           :imgPath="dataServer + '/store/scriptOut/' + chartOptions"
           :chartId="data.id + data.dateNum"
+          @downloadPic="downloadPic"
           v-if="data.mapDataType == 'raster'"
         />
         <!-- <timeline-chart v-if="data.chartType == 'singleWithTimeline'"/>
@@ -40,7 +41,7 @@ import { useStore } from "vuex";
 import { onMounted, ref } from "vue";
 import chartWithoutOptions from "./plugins/chartWithoutOptin.vue";
 import chartWithPng from "./plugins/chartWithPng.vue";
-import axios from "axios";
+import { get, post } from "@/request/request";
 // import timelineChart from "./plugins/timelineChart.vue";
 // import rainfallAndFlowRelationshipChart from "./plugins/rainfallAndFlowRelationshipChart.vue";
 // import stackedLine from "./plugins/stackedLine.vue";
@@ -53,7 +54,7 @@ export default {
   },
   components: {
     chartWithoutOptions,
-    chartWithPng
+    chartWithPng,
     // timelineChart,
     // rainfallAndFlowRelationshipChart,
     // stackedLine,
@@ -65,22 +66,27 @@ export default {
     const store = useStore();
     const dataServer = store.state.devIpAddress;
     const getChartData = () => {
-        // console.log(JSON.stringify(props.data.options));
-        if(props.data.mapDataType == "chart"){
-          chartOptions.value = JSON.parse(JSON.stringify(props.data.options));
-        } else if (props.data.mapDataType == "raster"){
-          chartOptions.value = props.data.options;
-        }
+      // console.log(JSON.stringify(props.data.options));
+      if (props.data.mapDataType == "chart") {
+        chartOptions.value = JSON.parse(JSON.stringify(props.data.options));
+      } else if (props.data.mapDataType == "raster") {
+        chartOptions.value = props.data.options;
+      }
     };
     getChartData();
     onMounted(() => {});
     const closeWindow = function () {
       ctx.emit("closeChart", props.data.id);
     };
+    const downloadPic = (path) => {
+      window.location.href =
+        dataServer + "/script/downloadPic/" + path.split("/scriptOut/")[1];
+    };
     return {
       closeWindow,
       chartOptions,
-      dataServer
+      dataServer,
+      downloadPic,
     };
   },
 };
@@ -89,7 +95,7 @@ export default {
 <style>
 .window {
   width: 600px;
-  height: 400px;
+  height: 450px;
   border: 1px solid #747474;
   border-radius: 1%;
   position: absolute;
@@ -116,7 +122,7 @@ export default {
   width: 20px;
 }
 .window-body {
-  height: 370px;
+  height: 420px;
   width: 600px;
 }
 </style>

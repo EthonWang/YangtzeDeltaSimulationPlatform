@@ -652,8 +652,6 @@
   </Modal>
   <Modal
     v-model="analysisSelectFeaturesModal"
-  <Modal
-    v-model="analysisModal"
     draggable
     sticky
     scrollable

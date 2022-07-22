@@ -107,13 +107,13 @@ module.exports = {
         }, // 设置代理
         // before: (app) => { },
     },
-    
+
 pluginOptions: {
     'style-resources-loader': {
       preProcessor: 'less',
               patterns: []
     }
   }
-    
+
 
 };

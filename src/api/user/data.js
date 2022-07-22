@@ -55,4 +55,10 @@ export default class {
     editFile(data) {
         return post('/respurce/updateDataItem',data)
     }
+    sendDataToContainer(fileRelativePath,userDataId ){
+        return get('/model/upToDataContainer?dataRelativePath='+fileRelativePath+'&userDataId='+userDataId)
+    }
+    sendXMLToContainer(configFile ){
+        return post('/model/upXMLToDataContainer',configFile)
+    }
 }

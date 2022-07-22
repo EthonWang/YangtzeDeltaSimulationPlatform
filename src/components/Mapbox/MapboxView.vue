@@ -1,5 +1,7 @@
 <template>
   <div class="mapbox-page">
+    <!-- <ModelConfig :modelId="modelId" ref="refModelConfig"> </ModelConfig> -->
+
     <el-tag class="map-zoom-lnglat" type="info">
       Zoom:{{ zoom }} &nbsp; LngLat:{{ showCenter }}
     </el-tag>
@@ -511,7 +513,48 @@
               </el-table-column>
             </el-table>
           </el-collapse-item>
-          <el-collapse-item title="模型列表" name="model"> </el-collapse-item>
+          <!-- <el-collapse-item title="模型列表" name="model">
+            <el-table
+              :data="
+                showLayerTableList.filter((item) => item.simularTrait == 'model')
+              "
+              ref="shpLayerTable"
+              row-key="nameId"
+              size="small"
+              @cell-click="handleLayerClick"
+              style="width: 100%"
+            >
+              <el-table-column width="50">
+                <template #default="scope">
+                  <el-switch
+                    :width="30"
+                    v-model="scope.row.show"
+                    @change="handleLayerShowSwitchChange($event, scope.row)"
+                  >
+                  </el-switch>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="类型"
+                prop="visualType"
+                min-width="50"
+                show-overflow-tooltip
+              >
+              </el-table-column>
+              <el-table-column
+                label="名称"
+                prop="name"
+                min-width="130"
+                show-overflow-tooltip
+              >
+              </el-table-column>
+              <el-table-column label="操作" min-width="90">
+                <template>
+                  <el-button>使用</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-collapse-item> -->
         </el-collapse>
       </div>
     </transition-group>
@@ -720,6 +763,7 @@
 </template>
 
 <script>
+import { ref } from "vue";
 import { useStore } from "vuex";
 import mapboxgl from "mapbox-gl";
 import { ElNotification, ElMessage } from "element-plus";
@@ -733,6 +777,8 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { toRaw } from "@vue/reactivity";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
+import ModelConfig from "../App/ModelConfig.vue";
+
 var map = null;
 
 export default {
@@ -741,6 +787,8 @@ export default {
 
   data() {
     return {
+      modelId: ref("7887988"),
+      refModelConfig: ref(),
       showCenter: "-90,17",
       zoom: 6,
       editBoardShow: true,
@@ -881,7 +929,10 @@ export default {
     let that = this;
     setTimeout(function () {
       that.filterResList();
-      that.initShpShowList();
+      setTimeout(()=>{
+        that.initShpShowList();
+      },500)
+      
     }, 500);
   },
 
@@ -972,6 +1023,10 @@ export default {
     initShpShowList() {
       // console.log(this.resList);
       for (let i = 0; i < this.resList.dataList.length; i++) {
+        console.log('simular :',this.resList.dataList[i]);
+        if(this.resList.dataList[i].mdl!=undefined){
+          continue
+        }
         if (
           this.resList.dataList[i].visualType == "shp" ||
           this.resList.dataList[i].visualType == "tif" ||
@@ -1082,8 +1137,12 @@ export default {
     handleEditBoardShow(val) {
       if (val) {
         this.editBoardShow = true;
+        document.getElementsByClassName("model-tree")[0].style.opacity='1'
+        document.getElementsByClassName("model-tree")[0].style.transform='';
       } else {
         this.editBoardShow = false;
+        document.getElementsByClassName("model-tree")[0].style.opacity='0'
+        document.getElementsByClassName("model-tree")[0].style.transform='scaleY(0.1)';
       }
     },
 
@@ -1570,7 +1629,7 @@ export default {
   z-index: 99;
   background-color: white;
   width: 350px;
-  height: 80vh;
+  height: auto;
   border-radius: 4px;
   border: 1px solid #ebeef5;
   box-shadow: 0 3.2px 7.2px 0 rgb(0 0 0 / 13%), 0 0.6px 1.8px 0 rgb(0 0 0 / 11%);
@@ -1587,12 +1646,20 @@ export default {
   margin-top: 3.5%;
 }
 
+/deep/.el-collapse-item__header.is-active {
+    border-bottom-color: transparent;
+    font-size: 16px;
+    font-weight: 900;
+}
+
 .lyric-enter-from,
 .lyric-leave-to {
   opacity: 0.1;
-  transform: translateY(-39px) translateX(70px);
-  height: 10%;
-  width: 84px;
+  transform-origin: 100% 0;
+  transform: scaleY(0.1);
+  
+  // height: 10px;
+  // width: 84px;
 }
 .lyric-enter-to,
 .lyric-leave-from {

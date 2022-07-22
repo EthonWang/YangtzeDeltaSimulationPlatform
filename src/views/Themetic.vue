@@ -26,9 +26,12 @@
         <el-card style="padding-bottom: 40px">
           <el-row style="align-items: center;justify-content: space-between">
             <h2 class="thematicName">{{thematicName}}</h2>
-            <el-icon :size="40" color="#246abd" style="cursor: pointer">
+            <el-icon :size="60" color="#246abd" style="cursor: pointer;margin-right: 15px">
               <el-tooltip content="编辑专题" placement="top" effect="light">
-                <Edit @click="editThematic"/>
+                <Edit @click="editThematic">编辑专题</Edit>
+              </el-tooltip>
+              <el-tooltip content="添加案例" placement="top" effect="light">
+                <CirclePlus @click="outNewCases"/>
               </el-tooltip>
             </el-icon>
           </el-row>
@@ -42,7 +45,7 @@
               <template v-for="(item,key) in thematicItem.relatedCases" :key="key">
                 <div  class="caseCard">
                   <div class="caseImageWrap">
-                    <el-image class="caseImage" @click="toCase(item.path)"  :src="baseUrl+item.thumbnail" fit="fill"></el-image>
+                    <el-image class="caseImage" @click="toCase(item.path)"  :src="'/back'+item.thumbnail" fit="fill"></el-image>
                     <div class="imageMask">
                       <img :src="mdOpenIcon" class="caseIcon">
                       <span >打开案例</span>
@@ -52,7 +55,7 @@
                     <el-tooltip effect="light"
                                 placement="bottom"
                                 content="查看案例详情">
-                      <h4 class="font-size-1" @click="goCaseInfo()">{{item.name}}</h4>
+                      <h4 class="font-size-1" style="cursor: pointer" @click="goCaseInfo()">{{item.name}}</h4>
                     </el-tooltip>
                   </div>
                 </div>
@@ -99,14 +102,20 @@
           <div>
             <h3 class="typeName">相关数据</h3>
             <el-divider ></el-divider>
-            <div style="display: flex;align-items: center;">
-              <template v-for="(item,key) in thematicItem.relatedData" :key="key">
-                <el-card :body-style="{ padding: '0px'}" class="caseCard hvr-grow">
-                  <el-image class="caseImage"  :src="item.thumbnail" fit="fill"></el-image>
-                  <div style="display: flex;justify-content: center;">
-                    <span>{{item.name}}</span>
+            <div style="display: flex;align-items: center;width:100%;flex-wrap: wrap">
+              <template v-for="(item,key) in relatedData" :key="key">
+                <div  class="caseCard">
+                  <div class="caseImageWrap">
+                    <el-image class="caseImage" @click="startSearch(item.name)"  :src="dataServer+item.imgWebAddress" fit="fill"></el-image>
+                    <div class="imageMask">
+                      <img :src="mdOpenIcon" class="caseIcon">
+                      <span >查看数据</span>
+                    </div>
                   </div>
-                </el-card>
+                  <div style="display: flex;justify-content: center;padding: 0.5rem;">
+                    <h4 class="font-size-1">{{item.name}}</h4>
+                  </div>
+                </div>
               </template>
             </div>
             <div class="dataBlock">
@@ -132,7 +141,7 @@
                   {{ item.value }}
                 </p>
                 <div class="imageBlock">
-                  <el-image v-if="item.type == 'image'" :src="baseUrl+item.value"></el-image>
+                  <el-image v-if="item.type == 'image'" :src="'/back'+item.value"></el-image>
                 </div>
               </template>
             </div>
@@ -153,7 +162,7 @@
         <div style="display: flex;align-items: center;flex-wrap: wrap;margin-bottom: 10px">
           <template v-for="(item,key) in relatedCases" :key="key">
             <el-card :body-style="{ padding: '0px'}" style="margin-left: 10px" >
-              <el-image class="caseImage"  :src="baseUrl+item.thumbnail" fit="fill"></el-image>
+              <el-image class="caseImage"  :src="'/back'+item.thumbnail" fit="fill"></el-image>
               <div style="display: flex;flex-direction: column;align-items: flex-start;padding:0 10px 10px 10px">
                 <p style="line-height: 2">{{item.name}}</p>
                 <div style="">
@@ -250,13 +259,15 @@
 </template>
 
 <script  setup>
-import {ref,onMounted} from 'vue'
-import {Plus,Edit,Upload,Delete,Select} from '@element-plus/icons-vue'
+import {ref,onMounted} from 'vue';
+import {useStore} from "vuex";
+import {Plus,Edit,Upload,Delete,Select,CirclePlus} from '@element-plus/icons-vue'
 import { ElNotification,ElMessageBox,ElMessage} from "element-plus";
 import { useRouter } from "vue-router";
 import axios from "axios";
 const router = useRouter();
-const baseUrl = ref("http://172.21.213.248:8999")
+const store = useStore();
+const dataServer = store.getters.devIpAddress;
 
 const mdOpenIcon = require("@/assets/img/icon/md-open.png")
 
@@ -267,8 +278,18 @@ onMounted(()=>{
 const thematicName = ref("");
 const thematicItem = ref({});
 const editThemeItem = ref({});
+const relatedData = ref([]);
 
-const getThemeInfo = (thematicName) => {
+const startSearch = function (searchValue) {
+  router.push({
+    path:"/resourse",
+    query:{searchValue}
+  })
+};
+
+let tagClass = "problemTags";
+
+const getThemeInfo = (thematicName,tagName) => {
   axios.get("/back/getTheme/"+thematicName).then(res=>{
     let themeInfo = res.data.data;
     if(themeInfo != null){
@@ -280,16 +301,39 @@ const getThemeInfo = (thematicName) => {
     }
   });
 
+  let DTO = {
+    asc: false,
+    page: 1,
+    pageSize: 16,
+    searchText: "",
+    sortField: "createTime",
+    tagClass: tagClass,
+    tagName: tagName,
+  };
+  axios({
+    url: dataServer +  "/getResourceDataList",
+    method: "post",
+    //忽略contentType
+    contentType: false,
+    //取消序列换 formData本来就是序列化好的
+    processData: false,
+    dataType: "json",
+    data: DTO,
+  }).then(
+      (res) => {
+        relatedData.value =  res.data.data.content;
+        console.log("caseValue",relatedData.value)
+      },
+      (err) => {
+        console.log(err);
+      }
+  );
 }
 const toCase = (path) => {
   router.push("/case/" + path + "/");
 }
 const goCaseInfo = () => {
   router.push("/caseinfo/")
-}
-const getCurrentNode = (checked,data) => {
-  thematicName.value = data.label;
-  getThemeInfo(thematicName.value);
 }
 const editDialogVisible = ref(false);
 const editThematic = () => {
@@ -476,16 +520,21 @@ const editCancel = () => {
 const modelTreeData = ref([]);
 modelTreeData.value = [
   {
-    label:"流域水循环及驱动机制",
+    label:"流域水循环及其驱动机制",
+    type:"problem",
     children:[
       {
         label:"流域生态环境演变",
+        type:"subProblem",
       }, {
         label:"流域碳水耦合循环",
+        type:"subProblem",
       },{
         label:"地表地下水耦合",
+        type:"subProblem",
       },{
         label:"湖泊水环境监测",
+        type:"subProblem",
       },
     ]
   },
@@ -494,14 +543,19 @@ modelTreeData.value = [
     children:[
       {
         label:"海岸带变迁",
+        type:"subProblem",
       }, {
         label:"河口海岸水动力",
+        type:"subProblem",
       },{
         label:"湖泊碳循环",
+        type:"subProblem",
       },{
         label:"土壤碳氮循环",
+        type:"subProblem",
       },{
         label:"土壤氮转化过程及其环境效应",
+        type:"subProblem",
       },
     ]
   },
@@ -510,17 +564,16 @@ modelTreeData.value = [
     children:[
       {
         label:"台风与风暴潮",
+        type:"subProblem",
       }, {
         label:"洪涝水环境灾害",
-      },{
-        label:"湿地保护",
+        type:"subProblem",
       },{
         label:"地质灾害",
+        type:"subProblem",
       },{
         label:"大气污染",
-      },
-      {
-        label: "湖泊水环境监测",
+        type:"subProblem",
       },
     ],
   },
@@ -529,20 +582,46 @@ modelTreeData.value = [
     children:[
       {
         label:"城市扩张",
+        type:"subProblem",
       }, {
+        label:"湿地保护",
+        type:"subProblem",
+      },{
         label:"农业生态",
+        type:"subProblem",
       },{
         label:"人地关系",
+        type:"subProblem",
       },{
         label:"城市水问题",
+        type:"subProblem",
       },{
         label:"自然遗产",
+        type:"subProblem",
       },
     ]
   }
 ]
-const handleNodeClick = () => {
 
+const getCurrentNode = (checked,data) => {
+  // thematicName.value = data.label;
+  //
+  // console.log("currentNode",data)
+  // getThemeInfo(thematicName.value);
+}
+const treeRef = ref()
+const handleNodeClick = (node,node2) => {
+  let tagName = "";
+  if(node.type == 'subProblem'){
+    console.log("subProblem",node)
+    tagName = node2.parent.data.label;
+    thematicName.value = node.label;
+    getThemeInfo(node.label,tagName);
+
+    console.log("node2",node2.parent.data.label);
+  }else {
+    console.log("problem",node)
+  }
 }
 
 
@@ -610,11 +689,11 @@ allThematic.value = [
     ]
   }
 ]
-setTimeout(()=>{
-  const show_name=localStorage.getItem("show_themetic")
-thematicName.value = show_name.replace('\n','');
-  getThemeInfo(show_name);
-},600)
+// setTimeout(()=>{
+//   const show_name=localStorage.getItem("show_themetic")
+// thematicName.value = show_name.replace('\n','');
+//   getThemeInfo(show_name);
+// },600)
 
 
 </script>
@@ -663,8 +742,7 @@ thematicName.value = show_name.replace('\n','');
 }
 .font-size-1{
   line-height: 1.5;
-  font-size: 0.9375rem;
-  cursor: pointer;
+  font-size: 0.8rem;
 }
 
 .caseCard{

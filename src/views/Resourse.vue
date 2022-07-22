@@ -156,6 +156,7 @@
 
 <script>
 import {useStore} from "vuex";
+import { useRouter } from "vue-router";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import tagTree from "@/components/resource/tagTree.vue";
@@ -168,6 +169,7 @@ export default {
     resourceList,
   },
   setup(props, ctx) {
+    const router = useRouter();
     let searchPage = ref(true);
     let searchValue = ref("");
     let selectedTag = ref([]);
@@ -183,8 +185,16 @@ export default {
     const store = useStore();
     const dataServer = store.getters.devIpAddress;
     onMounted(() => {
+      getRouteValue();
       getAutocompleteList();
     });
+    const getRouteValue = () => {
+      let routerValue = router.currentRoute.value.query.searchValue;
+      if(routerValue != undefined){
+        searchValue.value = routerValue;
+        startSearch();
+      }
+    }
     let getAutocompleteList = function () {
       let DTO = {
         asc: false,

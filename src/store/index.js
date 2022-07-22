@@ -13,5 +13,4 @@ export default createStore({
       return state.devIpAddress
     }
   }
-
 });

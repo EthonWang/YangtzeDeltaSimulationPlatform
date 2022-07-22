@@ -13,13 +13,11 @@ export default class {
         relation.weight = new Array(relation.nodes.length).fill(0)
         let sourceNodes = []
         for (let i = 0; i < knownName.length; i++) {
-            console.log(relation.nodes);
             let firstNode = relation.nodes.findIndex((elment) => {
                 return elment.name == knownName[i]
             })
             sourceNodes.push(firstNode)
         }
-        console.log(sourceNodes);
 
         for (let i = 0; i < sourceNodes.length; i++) {
             let willVisit = new Array(relation.nodes.length).fill(true)

@@ -2,7 +2,7 @@
   <el-row
     class="modelConfigBox"
     v-loading="loading"
-    element-loading-text="The Model is Running..."
+    element-loading-text="模型运行中...（Esc返回）"
     element-loading-background="rgba(122, 122, 122, 0.8)"
   >
     <el-col :span="22" :offset="1">
@@ -22,10 +22,12 @@ import { ElMessage, ElNotification } from "element-plus";
 import axios from "axios";
 import DataState from "components/App/dataState";
 import dataAPI from "@/api/user/data";
+import taskAPI from "@/api/user/task";
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const dataApi = new dataAPI();
+const taskApi = new taskAPI();
 const loading = ref(false);
 
 const MDLStatesInfo = ref([]);
@@ -272,6 +274,8 @@ const handleInvoke = () => {
   });
 };
 const handleInvokeNext = () => {
+  let task = JSON.parse(localStorage.getItem("task"));
+  taskApi.editTask(task).then((res) => {});
   prepared = true;
   if (prepared) {
     //loading部分代码
@@ -336,6 +340,7 @@ const handleInvokeNext = () => {
       return;
     }
     //请求接口调用模型
+    loading.value = true;
     console.log("json is :", json);
     axios.post("http://172.21.213.44:8999/model/invoke", json).then((res) => {
       console.log("模型运行结果", res.data);
@@ -359,7 +364,7 @@ const handleInvokeNext = () => {
         return;
       }
       if (data != null) {
-        loading.value = true;
+        
         let taskBody = {
           ip: "172.21.213.105",
           port: "8061",
@@ -374,6 +379,7 @@ const handleInvokeNext = () => {
               let msg = res.data.data.data.msg;
               console.log("status", data.status, res.data.data);
               if (code === -1) {
+                loading.value = false;
                 clearInterval(interval);
                 ElNotification({
                   title: "Error",
@@ -382,6 +388,7 @@ const handleInvokeNext = () => {
                 });
               }
               if (data.status === -1) {
+                loading.value = false;
                 clearInterval(interval);
                 ElNotification({
                   title: "Error",
@@ -392,11 +399,11 @@ const handleInvokeNext = () => {
                 clearInterval(interval);
                 ElNotification({
                   title: "Success",
-                  message: "The model has run successfully!",
+                  message: "模型运行成功",
                   type: "success",
                   duration: 10000,
                 });
-                loading.value=false
+                loading.value = false;
                 let outputs = data.outputdata;
 
                 outputs.forEach((el) => {
@@ -417,6 +424,7 @@ const handleInvokeNext = () => {
                 });
               } else {
                 console.log("");
+                loading.value = false;
               }
             });
         }, 5000);
@@ -452,7 +460,7 @@ defineExpose({ handleLoadTestData, handleInvoke });
   position: fixed;
   z-index: 1001;
   top: 48%;
-  left: 35%;
+  left: 0%;
   //.circular{
   //  top:45vh;
   //  position: fixed;
@@ -462,6 +470,18 @@ defineExpose({ handleLoadTestData, handleInvoke });
   //  position: fixed;
   //  right: 12%;
   //}
+}
+/deep/.el-loading-mask {
+  position: fixed;
+  z-index: 2000;
+  background-color: var(--el-mask-color);
+  margin: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100vh;
+  transition: opacity var(--el-transition-duration);
 }
 </style>
 

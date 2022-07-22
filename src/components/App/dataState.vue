@@ -55,7 +55,6 @@
                     <el-button
                       round
                       type="success"
-                     
                       size="mini"
                       :icon="Upload"
                       @click="chooseConfig(modelInEvent)"
@@ -64,7 +63,6 @@
                     <el-button
                       round
                       type="warning"
-                      
                       size="mini"
                       :icon="Download"
                       v-show="modelInEvent.tag != undefined"
@@ -88,7 +86,11 @@
                 <el-table-column prop="eventDesc" label="Description" />
                 <el-table-column label="Data Type" width="150px">
                   <template v-slot="scope">
-                    <el-tag type="info" effect="dark" :disable-transitions="true">
+                    <el-tag
+                      type="info"
+                      effect="dark"
+                      :disable-transitions="true"
+                    >
                       {{ scope.row.eventType }}
                     </el-tag>
                   </template>
@@ -211,8 +213,9 @@ export default {
   props: ["state"],
   data() {
     return {
-      nowChooseConfig:null,
-      mdlStatesList:JSON.parse(localStorage.getItem('mdlStatesList')),
+      task: JSON.parse(localStorage.getItem("task")),
+      nowChooseConfig: null,
+      mdlStatesList: JSON.parse(localStorage.getItem("mdlStatesList")),
       loading: false,
       fileList: [],
       Upload,
@@ -225,14 +228,14 @@ export default {
     };
   },
   methods: {
-    chooseConfig(modelInEvent){
-      this.dialogDataChoose = true
-      this.nowChooseConfig=modelInEvent
+    chooseConfig(modelInEvent) {
+      this.dialogDataChoose = true;
+      this.nowChooseConfig = modelInEvent;
     },
     chooseOneData(data) {
       if (data.fileRelativePath == undefined || data.id == undefined) {
         this.dialogDataChoose = false;
-        ElMessage.error("加入数据失败")
+        ElMessage.error("加入数据失败");
         return;
       }
 
@@ -241,25 +244,45 @@ export default {
         text: "Loading",
         background: "rgba(0, 0, 0, 0.7)",
       });
-   
-      this.dataApi
-        .sendDataToContainer(data.fileRelativePath, data.id)
-        .then((res) => {
-          console.log(res.data.data);
-          this.nowChooseConfig.tag=data.name.split('.')[0]
-          this.nowChooseConfig.suffix=data.name.split('.')[1]
-          this.nowChooseConfig.url=res.data.data
-          // localStorage.setItem()
-          loading_data.close();
-          ElMessage({
-            type: "success",
-            message: "成功加入数据",
-          });
-          this.dialogDataChoose = false;
-        }).catch((err)=>{
-          ElMessage.error("使用数据失败")
-          loading_data.close();
+      console.log("have url=",data.dataContainerUrl);
+      if (data.dataContainerUrl != null && data.dataContainerUrl != undefined) {
+        this.nowChooseConfig.url = data.dataContainerUrl;
+        this.nowChooseConfig.tag = data.name.split(".")[0];
+        this.nowChooseConfig.suffix = data.name.split(".")[1];
+        loading_data.close();
+        ElMessage({
+          type: "success",
+          message: "成功加入数据！",
         });
+        this.dialogDataChoose = false;
+      } else {
+        this.dataApi
+          .sendDataToContainer(data.fileRelativePath, data.id)
+          .then((res) => {
+            console.log(res.data.data);
+            this.nowChooseConfig.tag = data.name.split(".")[0];
+            this.nowChooseConfig.suffix = data.name.split(".")[1];
+            this.nowChooseConfig.url = res.data.data;
+            data.dataContainerUrl = res.data.data;
+            for (let i = 0; i < this.task.dataList.length; i++) {
+              if (this.task.dataList[i].id == data.id) {
+                this.task.dataList[i].dataContainerUrl = res.data.data;
+                break;
+              }
+            }
+            localStorage.setItem("task",JSON.stringify(this.task))
+            loading_data.close();
+            ElMessage({
+              type: "success",
+              message: "成功加入数据",
+            });
+            this.dialogDataChoose = false;
+          })
+          .catch((err) => {
+            ElMessage.error("使用数据失败");
+            loading_data.close();
+          });
+      }
     },
     inEventList(state) {
       return state.event.filter((value) => {
@@ -330,7 +353,7 @@ export default {
       console.log(event.url);
       if (event.url != undefined) {
         this.eventChoosing = event;
-        
+
         window.open(this.eventChoosing.url);
       } else {
         this.$message.error("No data can be downloaded.");

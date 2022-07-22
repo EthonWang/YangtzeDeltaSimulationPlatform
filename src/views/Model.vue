@@ -1,11 +1,11 @@
 <template>
   <div class="about">
-    <ModelTree style=""
+    <!-- <ModelTree style=""
       @getCheckData="getCheckData"
       @getCheckChart="getCheckChart"
       @getCheckTif="getCheckTif"
       @getCheckJson="getCheckJson"
-    ></ModelTree>
+    ></ModelTree> -->
     <el-button size="small" @click="switchMap" class="mapSwitchButton"
       ><el-icon><Camera /></el-icon>&nbsp;2D/3D
     </el-button>
@@ -20,6 +20,10 @@
       @openTxtEditor="openTxtEditor"
       v-show="mapType == 'mapBox'"
       ref="mapBoxView"
+      @getCheckData="getCheckData"
+      @getCheckChart="getCheckChart"
+      @getCheckTif="getCheckTif"
+      @getCheckJson="getCheckJson"
     ></mapbox-view>
     <cesium
       :tifList="tifList"
@@ -134,7 +138,7 @@ import graphAPI from "@/api/user/graph";
 
 export default {
   components: {
-    ModelTree,
+    // ModelTree,
     MapboxView,
     Cesium,
     chartTemplate,

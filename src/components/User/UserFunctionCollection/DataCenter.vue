@@ -364,11 +364,7 @@ const refresh = () => {
       message: "数据获取成功",
     });
   });
-  setTimeout(() => {
-    api.getAllFile(now_id.value).then((res) => {
-      console.log(res);
-    });
-  }, 500);
+
 };
 const comeIn = (file) => {
   console.log(file);
@@ -394,12 +390,13 @@ const downloadData = () => {
     let file = choosing_files[i];
     console.log(file);
     if (file.type == "folder") {
-      api.downloadFolder(file).then(() => {
-        ElMessage({
-          message: "下载成功",
-          type: "success",
-        });
-      });
+      ElMessage.error('无法下载文件夹')
+      // api.downloadFolder(file).then(() => {
+      //   ElMessage({
+      //     message: "下载成功",
+      //     type: "success",
+      //   });
+      // });
     }
     api.downloadFile(file).then(() => {
       ElMessage({

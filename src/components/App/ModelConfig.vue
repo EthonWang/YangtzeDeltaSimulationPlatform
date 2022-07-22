@@ -370,6 +370,10 @@ const handleInvokeNext = () => {
           port: "8061",
           tid: data.tid,
         };
+        task.dataList.push({
+          'trait':'task',
+          'taskBody':taskBody
+        })
         let interval = setInterval(() => {
           axios
             .post("http://172.21.213.44:8999/task/taskResult", taskBody)

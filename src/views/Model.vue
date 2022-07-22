@@ -18,7 +18,6 @@
     <mapbox-view
       :shpShowList="shpList"
       @openTxtEditor="openTxtEditor"
-      @getCheckChart="getCheckChart"
       v-show="mapType == 'mapBox'"
       ref="mapBoxView"
       @getCheckData="getCheckData"
@@ -168,6 +167,7 @@ export default {
       graphapi: new graphAPI(),
       user_info: JSON.parse(localStorage.getItem("userInfo")),
       router: useRouter(),
+      dataRecommend: [],
     };
   },
   mounted() {
@@ -241,6 +241,11 @@ export default {
       this.recommendList = !this.recommendList;
     },
     addtoLab() {
+      if ("id_backup" in this.recommendShowOne) {
+        this.recommendShowOne["id"] = this.recommendShowOne["id_backup"];
+        delete this.recommendShowOne["id_backup"];
+      }
+
       let newTask = JSON.parse(localStorage.getItem("task"));
 
       this.task_api.addData(newTask, [this.recommendShowOne]);
@@ -496,10 +501,11 @@ const store = useStore(); //vuex直接用store.commit
   overflow-x: hidden;
 }
 .levels .level:hover {
-  filter: brightness(160%);
+  filter: brightness(130%);
   transform: rotateX(30deg) rotateY(0deg) rotate(0deg) translate(-40px, 10px);
   z-index: 100;
   opacity: 1;
+  border:5px solid rgb(153, 153, 153)
 }
 .levels .level:hover:after {
   transform: translateX(100%);

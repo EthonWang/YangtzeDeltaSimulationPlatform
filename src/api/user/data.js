@@ -1,5 +1,7 @@
 import { get, post } from "@/request/request"
+import { useStore } from "vuex"
 
+const dataServer = "http://172.21.213.44:8999";
 // 上传文件
 export default class {
     getAllFile(user_id){
@@ -16,7 +18,7 @@ export default class {
         // return service.get('/file/download', {params: data})
         return new Promise((resolve, reject) => {
             try {
-                window.location.href = '/back/resource/downloadDataItem/' + data.id
+                window.location.href =dataServer+ '/resource/downloadDataItem/' + data.id
                 resolve()
             } catch (error) {
                 reject(error)
@@ -27,7 +29,7 @@ export default class {
         // return service.get('/file/download', {params: data})
         return new Promise((resolve, reject) => {
             try {
-                window.location.href = '/back/resource/downloadDataItem/' + data.id
+                window.location.href =dataServer+ '/resource/downloadDataItem/' + data.id
                 resolve()
             } catch (error) {
                 reject(error)
@@ -54,5 +56,11 @@ export default class {
     moveFile() { }
     editFile(data) {
         return post('/respurce/updateDataItem',data)
+    }
+    sendDataToContainer(fileRelativePath,userDataId ){
+        return get('/model/upToDataContainer?dataRelativePath='+fileRelativePath+'&userDataId='+userDataId)
+    }
+    sendXMLToContainer(configFile ){
+        return post('/model/upXMLToDataContainer',configFile)
     }
 }

@@ -1,6 +1,9 @@
 <template>
-  <div>
+  <div style="background-color: red;">
     <h1>This is an about page</h1>
+    <!-- <div v-for="data in dataList" :key="data" >
+    {{data.name}}
+    </div> -->
   </div>
 </template>
 
@@ -13,11 +16,11 @@ import FileItemVue from "../User/UserFunctionCollection/FileItem.vue";
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
-const dataList = JSON.parse(localStorage.getItem("task")).dataList.filter(
-  (item) => item.simularType != "model"
-);
-
-
+// const dataList = reactive(JSON.parse(localStorage.getItem("task")).dataList.filter(
+//   (item) => item.simularTrait != "model"
+// ));
+// console.log(dataList);
+console.log('zzzzzzz');
 </script>
 
 <style lang="less" scoped>

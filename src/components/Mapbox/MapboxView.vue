@@ -22,7 +22,7 @@
 
     <transition-group name="lyric">
       <div class="edit-board" v-if="editBoardShow">
-        <el-collapse v-model="activeNames" @change="handleChange">
+        <el-collapse v-model="activeNames" @change="handleChange" style="position: relative;z-index: 1005;">
           <el-collapse-item title="数据列表" name="data">
             <el-table
               :data="showLayerTableList"
@@ -513,10 +513,20 @@
               </el-table-column>
             </el-table>
           </el-collapse-item>
-          <!-- <el-collapse-item title="模型列表" name="model">
-            <el-table
+          <el-collapse-item title="模型列表" name="model" style="position: relative;z-index: 1005;">
+           
+            <ModelTree
+              style="width: 100%;height: 100%;position: relative;z-index: 1005;"
+              @getCheckData="getCheckData"
+              @getCheckChart="getCheckChart"
+              @getCheckTif="getCheckTif"
+              @getCheckJson="getCheckJson"
+            ></ModelTree>
+           
+            
+            <!-- <el-table
               :data="
-                showLayerTableList.filter((item) => item.simularType == 'model')
+                showLayerTableList.filter((item) => item.simularTrait == 'model')
               "
               ref="shpLayerTable"
               row-key="nameId"
@@ -553,8 +563,8 @@
                   <el-button>使用</el-button>
                 </template>
               </el-table-column>
-            </el-table>
-          </el-collapse-item> -->
+            </el-table> -->
+          </el-collapse-item>
         </el-collapse>
       </div>
     </transition-group>
@@ -650,18 +660,114 @@
       </div>
     </RadioGroup>
   </Modal>
+  <Modal v-model="analysisModal" draggable sticky scrollable :mask="false">
+    <template #header>
+      <Icon type="logo-buffer" size="18" />
+      <span style="margin-left: 5px; font-size: 18px">数据分析</span>
+    </template>
+    <Form :model="analysisForm" label-position="top">
+      <FormItem label="分析方法">
+        <RadioGroup v-model="analysisForm.type">
+          <Radio label="charts">趋势分析</Radio>
+          <Radio label="raster">统计分析</Radio>
+          <Radio label="other">其他</Radio>
+        </RadioGroup>
+      </FormItem>
+      <FormItem label="输入要素">
+        <Input
+          v-model="analysisForm.inputFeaturesName"
+          style="width: 90%"
+          readonly
+        ></Input>
+        <Button
+          :size="buttonSize"
+          icon="ios-folder-open"
+          style="margin-left: 15px"
+          @click="selectAnalysisFeatures(analysisForm.type)"
+        ></Button>
+      </FormItem>
+      <FormItem label="输出形式" v-if="analysisForm.type == 'charts'">
+        <RadioGroup v-model="analysisForm.chartsType">
+          <Radio label="line">折线图</Radio>
+          <Radio label="bar">柱状图</Radio>
+          <Radio label="pie">饼图</Radio>
+          <Radio label="scatter">散点图</Radio>
+        </RadioGroup>
+      </FormItem>
+      <FormItem label="统计时间" v-if="analysisForm.type == 'raster'">
+        <Input v-model="analysisForm.dateNum" style="width: 90%"></Input>
+      </FormItem>
+    </Form>
+    <template #footer>
+      <Button @click="analysisModal = false">取消</Button>
+      <Button type="primary" @click="commitAnalysis()">开始分析</Button>
+    </template>
+  </Modal>
   <Modal
-    v-model="analysisModal"
+    v-model="analysisSelectFeaturesModal"
     draggable
     sticky
     scrollable
     :mask="false"
-    @on-ok="ok"
-    @on-cancel="cancel"
+    :closable="false"
   >
     <template #header>
-      <Icon type="md-buffer" size="18" />
-      <span style="margin-left: 5px; font-size: 18px">数据分析</span>
+      <Icon type="logo-buffer" size="18" />
+      <span style="margin-left: 5px; font-size: 18px">数据分析 - 选择数据</span>
+    </template>
+    <Alert
+      type="warning"
+      show-icon
+      closable
+      v-if="analysisForm.type == 'charts'"
+    >
+      A success prompt
+      <template #desc
+        >Content of prompt. Content of prompt. Content of prompt. Content of
+        prompt.
+      </template>
+    </Alert>
+    <RadioGroup
+      v-model="analysisForm.inputFeaturesName"
+      vertical
+      v-if="analysisForm.type == 'charts'"
+      :on-change="analysisFormChange(analysisForm.inputFeaturesName, 'charts')"
+    >
+      <div v-for="(item, index) in showLayerTableList" :key="index">
+        <Radio :label="item.name" v-if="item.visualType == 'txt'">
+          <span>{{ item.name }}</span>
+        </Radio>
+      </div>
+    </RadioGroup>
+    <Alert
+      type="warning"
+      show-icon
+      closable
+      v-if="analysisForm.type == 'raster'"
+    >
+      A success prompt
+      <template #desc
+        >Content of prompt. Content of prompt. Content of prompt. Content of
+        prompt.
+      </template>
+    </Alert>
+    <RadioGroup
+      v-model="analysisForm.inputFeaturesName"
+      vertical
+      v-if="analysisForm.type == 'raster'"
+      :on-change="analysisFormChange(analysisForm.inputFeaturesName, 'raster')"
+    >
+      <div v-for="(item, index) in showLayerTableList" :key="index">
+        <Radio :label="item.name" v-if="item.visualType == 'nc'">
+          <span>{{ item.name }}</span>
+        </Radio>
+      </div>
+    </RadioGroup>
+    <template #footer>
+      <Button @click="analysisSelectFeaturesModal = false">取消</Button>
+      <Button type="primary" @click="analysisSelectFeaturesModal = false"
+        >确定</Button
+      >
     </template>
   </Modal>
 </template>
@@ -682,13 +788,16 @@ import { toRaw } from "@vue/reactivity";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import ModelConfig from "../App/ModelConfig.vue";
+import ModelTree from "../App/ModelTree.vue";
 
 var map = null;
 
 export default {
   name: "MapboxView",
   props: ["shpShowList"], //shpShowList为前端勾选的要展示在地图上的shp，格式为[{name:"",type:"",nameId:""}]
-
+  components: {
+    ModelTree,
+  },
   data() {
     return {
       modelId: ref("7887988"),
@@ -773,8 +882,16 @@ export default {
         outputFeaturesName: "",
       },
       analysisModal: false,
+      analysisSelectFeaturesModal: false,
+      analysisForm: {
+        inputFeaturesName: "",
+        inputTxtPath: "",
+        type: "charts",
+        chartsType: "line",
+        dateNum: "",
+      },
 
-      activeNames: "data",
+      activeNames: ["data","model"],
       resList: {
         modelList: [],
         dataList: [],
@@ -825,7 +942,9 @@ export default {
     let that = this;
     setTimeout(function () {
       that.filterResList();
-      that.initShpShowList();
+      setTimeout(() => {
+        that.initShpShowList();
+      }, 500);
     }, 500);
   },
 
@@ -916,9 +1035,9 @@ export default {
     initShpShowList() {
       // console.log(this.resList);
       for (let i = 0; i < this.resList.dataList.length; i++) {
-        console.log('simular :',this.resList.dataList[i]);
-        if(this.resList.dataList[i].mdl!=undefined){
-          continue
+        console.log("simular :", this.resList.dataList[i]);
+        if (this.resList.dataList[i].mdl != undefined) {
+          continue;
         }
         if (
           this.resList.dataList[i].visualType == "shp" ||
@@ -1030,12 +1149,13 @@ export default {
     handleEditBoardShow(val) {
       if (val) {
         this.editBoardShow = true;
-        document.getElementsByClassName("model-tree")[0].style.opacity='1'
-        document.getElementsByClassName("model-tree")[0].style.transform='';
+        document.getElementsByClassName("model-tree")[0].style.opacity = "1";
+        document.getElementsByClassName("model-tree")[0].style.transform = "";
       } else {
         this.editBoardShow = false;
-        document.getElementsByClassName("model-tree")[0].style.opacity='0'
-        document.getElementsByClassName("model-tree")[0].style.transform='scaleY(0.1)';
+        document.getElementsByClassName("model-tree")[0].style.opacity = "0";
+        document.getElementsByClassName("model-tree")[0].style.transform =
+          "scaleY(0.1)";
       }
     },
 
@@ -1388,6 +1508,18 @@ export default {
     openTxtEditor(info) {
       this.$emit("openTxtEditor", info);
     },
+    getCheckData(data){
+      this.$emit("getCheckData", data);
+    },
+    getCheckTif(data){
+      this.$emit("getCheckTif", data);
+    },
+    getCheckChart(data){
+      this.$emit("getCheckChart", data);
+    },
+    getCheckJson(data){
+      this.$emit("getCheckJson", data);
+    },
     updateTxtInfo(res) {
       for (let i = 0; i < res.dataList.length; i++) {
         if (
@@ -1410,6 +1542,81 @@ export default {
     },
     analysisModalShow() {
       this.analysisModal = true;
+    },
+    selectAnalysisFeatures(type) {
+      this.analysisSelectFeaturesModal = true;
+    },
+    analysisFormChange(name, type) {
+      for (let i = 0; i < this.showLayerTableList.length; i++) {
+        if (this.showLayerTableList[i].name == name && type == "charts") {
+          this.analysisForm.inputTxtPath =
+            this.showLayerTableList[i].data.fileRelativePath;
+        } else if (
+          this.showLayerTableList[i].name == name &&
+          type == "raster"
+        ) {
+          this.analysisForm.inputTxtPath =
+            this.showLayerTableList[i].data.fileRelativePath;
+        }
+      }
+      console.log(this.analysisForm);
+    },
+    commitAnalysis() {
+      if (this.analysisForm.inputTxtPath != "") {
+        ElMessage({
+          type: "info",
+          message: "正在统计分析中，请稍等！",
+        });
+        axios({
+          url: this.dataServer + "/script/txtAnalysis/" + this.taskInfo.id,
+          method: "post",
+          data: this.analysisForm,
+        }).then(
+          (res) => {
+            if (res.data.code == 0) {
+              // localStorage.setItem("task", JSON.stringify(res.data.data));
+              // location.reload();
+              if (this.analysisForm.type == "charts") {
+                let chartInfo = {};
+                chartInfo.options = res.data.data;
+                chartInfo.name = this.analysisForm.inputFeaturesName;
+                chartInfo.id = this.analysisForm.inputTxtPath.substring(
+                  this.analysisForm.inputTxtPath.length - 28,
+                  this.analysisForm.inputTxtPath.length - 4
+                );
+                chartInfo.mapDataType = "chart";
+                chartInfo.chartsType = this.analysisForm.chartsType;
+                this.$emit("getCheckChart", chartInfo);
+                this.analysisModal = false;
+              } else if(this.analysisForm.type == "raster"){
+                let chartInfo = {};
+                chartInfo.options = res.data.data;
+                chartInfo.name = this.analysisForm.inputFeaturesName;
+                chartInfo.id = this.analysisForm.inputTxtPath.substring(
+                  this.analysisForm.inputTxtPath.length - 28,
+                  this.analysisForm.inputTxtPath.length - 4
+                );
+                chartInfo.mapDataType = "raster";
+                chartInfo.dateNum = this.analysisForm.dateNum;
+                this.$emit("getCheckChart", chartInfo);
+                this.analysisModal = false;
+              }
+            }
+          },
+          (err) => {
+            ElMessage({
+              type: "error",
+              message: "分析失败，请重试！",
+            });
+            console.log(err);
+          }
+        );
+      } else {
+        ElMessage({
+          type: "error",
+          message: "提交失败，请检查数据并重试！",
+        });
+      }
     },
   },
 };
@@ -1444,7 +1651,7 @@ export default {
   position: absolute;
   top: 110px;
   left: 40px;
-  z-index: 99;
+  z-index: 1009;
   background-color: white;
   width: 350px;
   height: auto;
@@ -1465,17 +1672,21 @@ export default {
 }
 
 /deep/.el-collapse-item__header.is-active {
-    border-bottom-color: transparent;
-    font-size: 16px;
-    font-weight: 900;
+  border-bottom-color: transparent;
+  font-size: 16px;
+  font-weight: 900;
 }
-
+/deep/.el-collapse-item__content{
+  padding-bottom:0;
+  position: relative;
+  z-index: 1002;
+}
 .lyric-enter-from,
 .lyric-leave-to {
   opacity: 0.1;
   transform-origin: 100% 0;
   transform: scaleY(0.1);
-  
+
   // height: 10px;
   // width: 84px;
 }

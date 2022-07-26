@@ -9,9 +9,7 @@ import { onMounted } from "vue";
 export default {
   name: "chartWithoutOptions",
   props: {
-    chartOptions: {
-        type: Object
-    },
+    chartOptions: Object,
     chartId: String,
   },
   setup(props, ctx) {

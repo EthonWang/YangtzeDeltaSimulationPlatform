@@ -1,11 +1,11 @@
 <template>
   <div class="about">
-    <ModelTree style=""
+    <!-- <ModelTree style=""
       @getCheckData="getCheckData"
       @getCheckChart="getCheckChart"
       @getCheckTif="getCheckTif"
       @getCheckJson="getCheckJson"
-    ></ModelTree>
+    ></ModelTree> -->
     <el-button size="small" @click="switchMap" class="mapSwitchButton"
       ><el-icon><Camera /></el-icon>&nbsp;2D/3D
     </el-button>
@@ -20,6 +20,10 @@
       @openTxtEditor="openTxtEditor"
       v-show="mapType == 'mapBox'"
       ref="mapBoxView"
+      @getCheckData="getCheckData"
+      @getCheckChart="getCheckChart"
+      @getCheckTif="getCheckTif"
+      @getCheckJson="getCheckJson"
     ></mapbox-view>
     <cesium
       :tifList="tifList"
@@ -28,10 +32,10 @@
     />
 
     <!-- echarts图表 -->
-    <div v-for="item in chartList" :key="item.dataSourceId">
+    <div v-for="item in chartList" :key="item.id">
       <chart-template
         style="z-index: 1000"
-        v-if="item.mapDataType == 'chart'"
+        v-if="item.mapDataType == 'chart' || item.mapDataType == 'raster'"
         :data="item"
         @closeChart="closeChart"
       />
@@ -134,7 +138,7 @@ import graphAPI from "@/api/user/graph";
 
 export default {
   components: {
-    ModelTree,
+    // ModelTree,
     MapboxView,
     Cesium,
     chartTemplate,
@@ -146,108 +150,6 @@ export default {
       recommendShowOne: {},
       recommendList: true,
       recommendVisible: false,
-      dataRecommend: reactive([
-        {
-          name: "长三角DEM数据.jpgdfdfdf",
-          createTime: "2022-06-27 17:12:02",
-          description: "lianshui_tmpdc",
-          fileRelativePath:
-            "/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
-          fileSize: "180751",
-          fileStoreName: "c33bc621-ba01-410a-8799-f36f9f54b859.txt",
-          fileWebAddress:
-            "/store/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
-          geoType: "circle",
-          id: "62b974624aa65fa32ff1be791",
-          imgRelativePath: "/resourceData/62b974624aa65fa32ff1be7a.png",
-          imgStoreName: "62b974624aa65fa32ff1be7a.png",
-          imgWebAddress: "/store/resourceData/62b974624aa65fa32ff1be7a.png",
-          normalTags: "水文",
-          problemTags: "流域水循环及其驱动机制,全球变化与区域环境演化",
-          publicBoolean: true,
-          type: "data",
-          userEmail: "temp@xx.com",
-          visualRelativePath: "",
-          visualType: "txt",
-          visualWebAddress: "",
-          visualizationBoolean: false,
-        },
-        {
-          name: "长三角区划数据",
-          createTime: "2022-06-27 17:12:02",
-          description: "lianshui_tmpdc",
-          fileRelativePath:
-            "/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
-          fileSize: "180751",
-          fileStoreName: "c33bc621-ba01-410a-8799-f36f9f54b859.txt",
-          fileWebAddress:
-            "/store/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
-          geoType: "circle",
-          id: "62b974624aa65fa32ff1be79581",
-          imgRelativePath: "/resourceData/62b974624aa65fa32ff1be7a.png",
-          imgStoreName: "62b974624aa65fa32ff1be7a.png",
-          imgWebAddress: "/store/resourceData/62b974624aa65fa32ff1be7a.png",
-          normalTags: "水文",
-          problemTags: "流域水循环及其驱动机制,全球变化与区域环境演化",
-          publicBoolean: true,
-          type: "data",
-          userEmail: "temp@xx.com",
-          visualRelativePath: "",
-          visualType: "txt",
-          visualWebAddress: "",
-          visualizationBoolean: false,
-        },
-        {
-          name: "上海市信令大数据",
-          createTime: "2022-06-27 17:12:02",
-          description: "lianshui_tmpdc",
-          fileRelativePath:
-            "/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
-          fileSize: "180751",
-          fileStoreName: "c33bc621-ba01-410a-8799-f36f9f54b859.txt",
-          fileWebAddress:
-            "/store/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
-          geoType: "circle",
-          id: "62b974624aa65fa32ff411be791",
-          imgRelativePath: "/resourceData/62b974624aa65fa32ff1be7a.png",
-          imgStoreName: "62b974624aa65fa32ff1be7a.png",
-          imgWebAddress: "/store/resourceData/62b974624aa65fa32ff1be7a.png",
-          normalTags: "水文",
-          problemTags: "流域水循环及其驱动机制,全球变化与区域环境演化",
-          publicBoolean: true,
-          type: "data",
-          userEmail: "temp@xx.com",
-          visualRelativePath: "",
-          visualType: "txt",
-          visualWebAddress: "",
-          visualizationBoolean: false,
-        },
-        {
-          name: "南京市社交大数据",
-          createTime: "2022-06-27 17:12:02",
-          description: "lianshui_tmpdc",
-          fileRelativePath:
-            "/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
-          fileSize: "180751",
-          fileStoreName: "c33bc621-ba01-410a-8799-f36f9f54b859.txt",
-          fileWebAddress:
-            "/store/resourceData/c33bc621-ba01-410a-8799-f36f9f54b859.txt",
-          geoType: "circle",
-          id: "62b974624aa65f74a32ff1be791",
-          imgRelativePath: "/resourceData/62b974624aa65fa32ff1be7a.png",
-          imgStoreName: "62b974624aa65fa32ff1be7a.png",
-          imgWebAddress: "/store/resourceData/62b974624aa65fa32ff1be7a.png",
-          normalTags: "水文",
-          problemTags: "流域水循环及其驱动机制,全球变化与区域环境演化",
-          publicBoolean: true,
-          type: "data",
-          userEmail: "temp@xx.com",
-          visualRelativePath: "",
-          visualType: "txt",
-          visualWebAddress: "",
-          visualizationBoolean: false,
-        },
-      ]),
       res_list: JSON.parse(localStorage.getItem("task")).dataList,
       mapType: "mapBox",
       //使用mapbox-view组件需要传递的参数
@@ -265,6 +167,7 @@ export default {
       graphapi: new graphAPI(),
       user_info: JSON.parse(localStorage.getItem("userInfo")),
       router: useRouter(),
+      dataRecommend: [],
     };
   },
   mounted() {
@@ -338,6 +241,11 @@ export default {
       this.recommendList = !this.recommendList;
     },
     addtoLab() {
+      if ("id_backup" in this.recommendShowOne) {
+        this.recommendShowOne["id"] = this.recommendShowOne["id_backup"];
+        delete this.recommendShowOne["id_backup"];
+      }
+
       let newTask = JSON.parse(localStorage.getItem("task"));
 
       this.task_api.addData(newTask, [this.recommendShowOne]);
@@ -357,7 +265,7 @@ export default {
     },
     closeChart(value) {
       for (let i = 0; i < this.chartList.length; i++) {
-        if (this.chartList[i].dataSourceId == value) {
+        if (this.chartList[i].id == value) {
           this.chartList.splice(i, 1);
           // 与modelTree组件通讯，修改check
         }
@@ -378,7 +286,7 @@ export default {
       console.log("this.tifList: ", toRaw(this.tifList));
     },
     getCheckChart(data) {
-      this.chartList = JSON.parse(JSON.stringify(data));
+      this.chartList.push(data);
       console.log("this.chartList: ", toRaw(this.chartList));
     },
     getCheckJson(data) {
@@ -593,10 +501,11 @@ const store = useStore(); //vuex直接用store.commit
   overflow-x: hidden;
 }
 .levels .level:hover {
-  filter: brightness(160%);
+  filter: brightness(130%);
   transform: rotateX(30deg) rotateY(0deg) rotate(0deg) translate(-40px, 10px);
   z-index: 100;
   opacity: 1;
+  border:5px solid rgb(153, 153, 153)
 }
 .levels .level:hover:after {
   transform: translateX(100%);

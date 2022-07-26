@@ -10,6 +10,7 @@
 
     <router-view @showTopbarBackground="showTopbarBackground" class="main"></router-view>
     <!-- </el-scrollbar> -->
+    <!-- <div> OPENGMS</div> -->
   </div>
 </template>
 <script setup>
@@ -36,7 +37,7 @@ const routerGo = (router) => {
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  height: 100%;
+  height: fit-content;
   overflow: hidden;
   color: #000000;
   // margin: -8px;

@@ -121,7 +121,7 @@
         <template v-for="(data, index) in props.task.dataList" :key="data">
           <el-form-item
             :label="data.name.slice(0, 25)"
-            v-if="data.simularTrait != 'model'"
+            v-if="data.simularTrait != 'model'&&data.simularTrait != 'task'"
           >
             <el-button
               type="success"
@@ -151,6 +151,36 @@
         class="data-list demo-form-inline"
       >
         <h4>模型配置：</h4>
+        <template v-for="(data, index) in props.task.dataList" :key="data">
+          <el-form-item :label="data.name" v-if="data.simularTrait == 'model'">
+            <el-button
+              type="success"
+              v-if="!edit_task"
+              disabled
+              circle
+              size="small"
+              ><el-icon><Check /></el-icon
+            ></el-button>
+            <el-button
+              type="danger"
+              v-if="edit_task"
+              circle
+              size="small"
+              @click="deleteData(index)"
+              ><el-icon><Close /></el-icon
+            ></el-button>
+          </el-form-item>
+        </template>
+      </el-form>
+      <el-form
+        :inline="true"
+        :label-position="labelPosition"
+        label-width="200px"
+        :model="task_data"
+        style="max-width: 80%"
+        class="data-list demo-form-inline"
+      >
+        <h4>实验运行：</h4>
         <template v-for="(data, index) in props.task.dataList" :key="data">
           <el-form-item :label="data.name" v-if="data.simularTrait == 'model'">
             <el-button

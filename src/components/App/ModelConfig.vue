@@ -171,7 +171,7 @@ const handleLoadTestData = () => {
     .get("http://172.21.212.63:8999/model/getModelTestDataSet/" + props.modelId)
     .then((res) => {
       let data = res.data.data.dataSet1;
-      prepared = true;
+      prepared = true;  
       addTestData(data);
     });
 };
@@ -371,9 +371,11 @@ const handleInvokeNext = () => {
           tid: data.tid,
         };
         task.dataList.push({
-          'trait':'task',
+          'simularTrait':'task',
           'taskBody':taskBody
         })
+        localStorage.getItem('taskResultList')
+        localStorage.setItem('taskResult',JSON.stringify(taskBody))
         let interval = setInterval(() => {
           axios
             .post("http://172.21.213.44:8999/task/taskResult", taskBody)
@@ -383,7 +385,7 @@ const handleInvokeNext = () => {
               let msg = res.data.data.data.msg;
               console.log("status", data.status, res.data.data);
               if (code === -1) {
-                loading.value = false;
+                // loading.value = false;
                 clearInterval(interval);
                 ElNotification({
                   title: "Error",
@@ -392,7 +394,7 @@ const handleInvokeNext = () => {
                 });
               }
               if (data.status === -1) {
-                loading.value = false;
+                // loading.value = false;
                 clearInterval(interval);
                 ElNotification({
                   title: "Error",

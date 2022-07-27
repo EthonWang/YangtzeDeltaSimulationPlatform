@@ -693,6 +693,17 @@
       <Button type="primary" @click="commitAnalysis()">开始分析</Button>
     </template>
   </Modal>
+  <Modal v-model="newTxtModal">
+    <template #header>
+      <Icon type="md-square" size="18" />
+      <span style="margin-left: 5px; font-size: 18px">确认新建文本文件</span>
+    </template>
+    <Input v-model="newTxtFileName" style="width: 90%"></Input>
+    <template #footer>
+      <Button @click="newTxtModal = false">取消</Button>
+      <Button type="primary" @click="commitNewTxt()">确定创建</Button>
+    </template>
+  </Modal>
   <Modal
     v-model="analysisSelectFeaturesModal"
     draggable
@@ -877,6 +888,8 @@ export default {
         chartsType: "line",
         dateNum: "",
       },
+      newTxtModal: false,
+      newTxtFileName: "",
 
       activeNames: "data",
       resList: {
@@ -929,10 +942,9 @@ export default {
     let that = this;
     setTimeout(function () {
       that.filterResList();
-      setTimeout(()=>{
+      setTimeout(() => {
         that.initShpShowList();
-      },500)
-      
+      }, 500);
     }, 500);
   },
 
@@ -1023,9 +1035,9 @@ export default {
     initShpShowList() {
       // console.log(this.resList);
       for (let i = 0; i < this.resList.dataList.length; i++) {
-        console.log('simular :',this.resList.dataList[i]);
-        if(this.resList.dataList[i].mdl!=undefined){
-          continue
+        console.log("simular :", this.resList.dataList[i]);
+        if (this.resList.dataList[i].mdl != undefined) {
+          continue;
         }
         if (
           this.resList.dataList[i].visualType == "shp" ||
@@ -1137,12 +1149,13 @@ export default {
     handleEditBoardShow(val) {
       if (val) {
         this.editBoardShow = true;
-        document.getElementsByClassName("model-tree")[0].style.opacity='1'
-        document.getElementsByClassName("model-tree")[0].style.transform='';
+        document.getElementsByClassName("model-tree")[0].style.opacity = "1";
+        document.getElementsByClassName("model-tree")[0].style.transform = "";
       } else {
         this.editBoardShow = false;
-        document.getElementsByClassName("model-tree")[0].style.opacity='0'
-        document.getElementsByClassName("model-tree")[0].style.transform='scaleY(0.1)';
+        document.getElementsByClassName("model-tree")[0].style.opacity = "0";
+        document.getElementsByClassName("model-tree")[0].style.transform =
+          "scaleY(0.1)";
       }
     },
 
@@ -1216,13 +1229,13 @@ export default {
       unionButtonObj.classList =
         "mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_union ivu-icon ivu-icon-md-square";
       unionButtonObj.id = "mapbox-gl-draw_union";
-      unionButtonObj.title = "联合";
+      unionButtonObj.title = "新建文本文件";
       unionButtonObj.style.fontSize = "16px";
       drawBox.appendChild(unionButtonObj);
       unionButtonObj.addEventListener(
         "click",
         (e) => {
-          that.clipModalShow();
+          that.newTxtModalShow();
         },
         true
       );
@@ -1233,8 +1246,8 @@ export default {
       polygonButton.setAttribute("title", "绘制多边形");
       const trashButton = document.querySelector(".mapbox-gl-draw_trash");
       trashButton.setAttribute("title", "删除图形");
-      // const combineButton = document.querySelector(".mapbox-gl-draw_combine");
-      // combineButton.setAttribute("title", "合并");
+      const combineButton = document.querySelector(".mapbox-gl-draw_union");
+      combineButton.setAttribute("title", "新建文本文件");
       // const uncombineButton = document.querySelector(
       //   ".mapbox-gl-draw_uncombine"
       // );
@@ -1468,7 +1481,12 @@ export default {
         message: "裁剪中，请稍等！",
       });
       axios({
-        url: this.dataServer + "/script/gdalClip/" + this.taskInfo.id,
+        url:
+          this.dataServer +
+          "/script/gdalClip/" +
+          this.taskInfo.id +
+          "/" +
+          this.userInfo.id,
         method: "post",
         data: GDALClipDTO,
       }).then(
@@ -1563,7 +1581,7 @@ export default {
                 chartInfo.chartsType = this.analysisForm.chartsType;
                 this.$emit("getCheckChart", chartInfo);
                 this.analysisModal = false;
-              } else if(this.analysisForm.type == "raster"){
+              } else if (this.analysisForm.type == "raster") {
                 let chartInfo = {};
                 chartInfo.options = res.data.data;
                 chartInfo.name = this.analysisForm.inputFeaturesName;
@@ -1592,6 +1610,39 @@ export default {
           message: "提交失败，请检查数据并重试！",
         });
       }
+    },
+    newTxtModalShow() {
+      this.newTxtModal = true;
+    },
+    commitNewTxt() {
+      let formData = new FormData();
+      formData.append("userId", this.userInfo.id);
+      formData.append("name", this.newTxtFileName);
+      axios({
+        url: this.dataServer + "/LabTask/newLabTxtFile/" + this.taskInfo.id,
+        method: "post",
+        data: formData,
+      }).then(
+        (res) => {
+          // console.log(res.data);
+          if (res.data.code == 0) {
+            localStorage.setItem("task", JSON.stringify(res.data.data));
+            this.newTxtFileName = "";
+            this.newTxtModal = false;
+            ElMessage({
+              type: "success",
+              message: "创建成功！",
+            });
+          }
+        },
+        (err) => {
+          ElMessage({
+            type: "error",
+            message: "创建失败，请重试！",
+          });
+          console.log(err);
+        }
+      );
     },
   },
 };
@@ -1647,9 +1698,9 @@ export default {
 }
 
 /deep/.el-collapse-item__header.is-active {
-    border-bottom-color: transparent;
-    font-size: 16px;
-    font-weight: 900;
+  border-bottom-color: transparent;
+  font-size: 16px;
+  font-weight: 900;
 }
 
 .lyric-enter-from,
@@ -1657,7 +1708,7 @@ export default {
   opacity: 0.1;
   transform-origin: 100% 0;
   transform: scaleY(0.1);
-  
+
   // height: 10px;
   // width: 84px;
 }

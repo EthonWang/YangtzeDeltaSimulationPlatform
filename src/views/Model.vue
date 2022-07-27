@@ -1,6 +1,7 @@
 <template>
   <div class="about">
-    <ModelTree style=""
+    <ModelTree
+      style=""
       @getCheckData="getCheckData"
       @getCheckChart="getCheckChart"
       @getCheckTif="getCheckTif"
@@ -341,13 +342,15 @@ export default {
       axios
         .post(this.dataServer + "/LabTask/updateLabTxtFile", formData)
         .then((res) => {
-          console.log(res.data.data);
-          localStorage.setItem("task", JSON.stringify(res.data.data));
-          this.$refs.mapBoxView.updateTxtInfo(res.data.data);
-          ElMessage({
-            type: "success",
-            message: "修改成功！",
-          });
+          if (res.data.code == 0) {
+            console.log(res.data.data);
+            localStorage.setItem("task", JSON.stringify(res.data.data));
+            this.$refs.mapBoxView.updateTxtInfo(res.data.data);
+            ElMessage({
+              type: "success",
+              message: "修改成功！",
+            });
+          }
         })
         .catch((err) => {
           console.log(err);

@@ -61,6 +61,11 @@ export const cases_config = [
         problem:"长三角新冠疫情",
         path: "Covid19",
         component:() => import("views/CasesView/Covid19.vue")
+    },
+    {
+        problem:"南京地面淹没模拟系统",
+        path: "SUFS",
+        component:() => import("views/CasesView/SUFS.vue")
     }
     // {
     //     problem:"湖泊水环境监测",

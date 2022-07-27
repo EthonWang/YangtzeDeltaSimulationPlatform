@@ -55,7 +55,7 @@
       <template #footer>
         <div style="flex: auto">
           <el-button type="primary" @click="btnLoadTestData"
-            >加载测试数据</el-button
+            >加载上次实验结果</el-button
           >
           <el-button type="primary" @click="InvokeModel">运行模型</el-button>
         </div>
@@ -421,7 +421,7 @@ const options = [
   transition: all 0.5s;
 }
 
-@bg-config: rgba(39, 39, 39, 0.92);
+@bg-config: rgba(39, 39, 39, 0.95);
 @color-config: rgb(235, 235, 235);
 /deep/.el-drawer {
   background-color: @bg-config;

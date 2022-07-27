@@ -14,9 +14,9 @@
               <el-button :type="buttonType[0]" @click="GDPClick('GDP',0)"  round>GDP</el-button>
               <el-button :type="buttonType[1]" @click="GDPClick('PPI',1)" >PPI</el-button>
               <el-button :type="buttonType[2]" @click="GDPClick('CPI',2)">CPI</el-button>
-              <el-button :type="buttonType[3]" @click="GDPClick('工业',3)" round>工业</el-button>
+              <el-button :type="buttonType[3]" @click="GDPClick('IDI',3)" round>工业</el-button>
             </el-button-group>
-            <chart-case id="leftChart1" :option="leftOption1" :style="chartStyle"></chart-case>
+            <chart-case id="leftChartId1" :option="leftOption1" :style="chartStyle" :key="state.timer"></chart-case>
           </dv-border-box10>
         </div>
         <div class="left2 marginBox">
@@ -36,15 +36,23 @@
         <div class="mid1 marginBox">
           <dv-border-box1 >
             <dv-decoration-7 class="box-title"><h3 class="box-title-text">{{boxTitle.mid1}}</h3></dv-decoration-7>
+            <el-button-group  size="small" style="position: absolute;right: 5%;top:8%;z-index: 99">
+              <el-button :type="covButtonType[0]" @click="CovClick('covC',0)"  round>确诊</el-button>
+              <el-button :type="covButtonType[1]" @click="CovClick('covD',1)" >死亡</el-button>
+              <el-button :type="covButtonType[2]" @click="CovClick('covH',2)">治愈</el-button>
+              <el-button :type="covButtonType[3]" @click="CovClick('医疗资源',3)" round>医疗资源</el-button>
+            </el-button-group>
+            <h1 style="position: absolute;right: 15%;top:20%;z-index: 100">{{date.month}}月{{date.day}}日</h1>
             <div id="midChart1"  style="position: relative;width: 94%;height: 90%;top: 5%;left: 3%"></div>
           </dv-border-box1>
         </div>
         <div class="mid2">
           <dv-border-box1 >
             <dv-decoration-7 class="box-title"><h3 class="box-title-text">{{boxTitle.mid2}}</h3></dv-decoration-7>
-            <chart-case id="midOption2a" :option="midOption21" style="width: 100%;height: 33%;padding: 15px 0 0 0;"></chart-case>
-            <chart-case id="midOption2b" :option="midOption22" :style="midStyle"></chart-case>
-            <chart-case id="midOption2c" :option="midOption23" :style="midStyle"></chart-case>
+            <h3 style="position: absolute;right: 20%;top:0%;z-index: 100">{{midDate.month}}月{{midDate.day}}日</h3>
+            <div id="midOption2a" style="width: 100%;height: 33%;padding: 15px 0 0 0;"></div>
+            <div id="midOption2b" :style="midStyle"></div>
+            <div id="midOption2c" :style="midStyle"></div>
           </dv-border-box1>
         </div>
       </el-col>
@@ -92,12 +100,11 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import {onBeforeUnmount, onMounted, ref} from "vue";
 import ChartCase from "components/Cases/chartCase";
-import mapboxgl from "mapbox-gl";
-import MapboxLanguage from "@mapbox/mapbox-gl-language";
 import "echarts/extension/bmap/bmap";
 import * as echarts from 'echarts';
+import {cov19Data_C,cov19Data_D,cov19Data_H,timeList,midOptionData21,midTimeList,midOptionData22,midOptionData23} from 'components/Cases/cov19Data'
 
 const QG_SH = require('@/assets/img/cases/QG-SH.gif');
 const QG_ZJ = require('@/assets/img/cases/QG-ZJ.gif');
@@ -106,21 +113,59 @@ const ZJ_QG = require('@/assets/img/cases/ZJ-QG.gif');
 
 
 const buttonType = ref(['primary','warning','warning','warning'])
+const checkType = ref('GDP')
 const GDPClick = (type,index)=>{
+  checkType.value = type;
   for(let i = 0;i<4;i++){
     if(i == index){
       buttonType.value[i] = 'primary'
     }else {
       buttonType.value[i] = 'warning'
     }
-  }
+  };
+  reload();
+  loadLeftOption1();
+}
+
+const covButtonType = ref(['primary','warning','warning','warning']);
+const covCheckType = ref('covC')
+const CovClick = (type,index) => {
+  covCheckType.value = type;
+  for(let i = 0;i<4;i++){
+    if(i == index){
+      covButtonType.value[i] = 'primary'
+    }else {
+      covButtonType.value[i] = 'warning'
+    }
+  };
 }
 
 let midChart1;
+let midOption2a,midOption2b,midOption2c;
+let timer;
+let midTimer2;
 onMounted(()=>{
   midChart1 = echarts.init(document.getElementById('midChart1'));
+  midOption2a = echarts.init(document.getElementById('midOption2a'));
+  midOption2b = echarts.init(document.getElementById('midOption2b'));
+  midOption2c = echarts.init(document.getElementById('midOption2c'));
   loadMidChart1();
+  timer = setInterval(loadMidChart1,200);
+  loadMidOption2();
+  midTimer2 = setInterval(loadMidOption2,200);
 })
+
+onBeforeUnmount(()=>{
+  clearInterval(timer)
+  clearInterval(midTimer2)
+})
+window.onresize = () =>{
+  midChart1.resize();
+  midOption2a.resize();
+  midOption2b.resize();
+  midOption2c.resize();
+}
+
 const chartStyle = ref({})
 chartStyle.value = {
   width: "100%",
@@ -138,9 +183,30 @@ const themeColor = ['#C56183','#4FD3C4','#488FB1','#C9BBCF','#247881'];
 
 const chartData = {
   leftOption1:{
-    type:['GDP','第一产业','第二产业','第二产业'],
-    value:['456.6144','26.0530','172.759','257.8024'],
-    increasePercent:['-1.6','0.9','-1.9','-1.6']
+    GDP:{
+      type:['GDP','第一产业','第二产业','第二产业'],
+      value:['456.6144','26.0530','172.759','257.8024'],
+      increasePercent:['-1.6','0.9','-1.9','-1.6']
+    },
+    PPI:{
+      time:['1月', '2月', '3月', '4月', '5月', '6月'],
+      value1:[0.1, -0.4, -1.5, -3.1, -3.7, -3.0],
+      value2:[-0.4, -1.0, -2.4, -4.5, -5.1, -4.2],
+      value3:[1.3, 1.4, 1.2, 0.9, 0.5, 0.6],
+    },
+    CPI:{
+      time:['1月', '2月', '3月', '4月', '5月', '6月'],
+      value1:[5.4, 5.2, 4.3, 3.3, 2.4, 2.5],
+      value2:[5.1, 4.8, 4.0, 3.0, 2.3, 2.2],
+      value3:[6.3, 6.3, 5.3, 4.0, 3.0, 3.2],
+    },
+    IDI:{
+      time:['1-2月','3月', '4月', '5月', '6月', '7月'],
+      value1:[-13.5, -1.1, 3.9, 4.4, 4.8, 4.8],
+      value2:[-7.9, -2.5, 0.5, 2.1, 4.9, 4.1],
+      value3:[-14.2, -0.2, 4.0, 4.8, 5.0, 4.2],
+      value4:[-21.4, -5.4, 3.9, 3.4, 4.2, 7.6],
+    }
   },
   leftOption2:{
     type:['17.Q2', '17.Q3', '17.Q4', '18.Q1', '18.Q2', '18.Q3', '18.Q4', '19.Q1', '19.Q2', '19.Q3', '19.Q4', '20.Q1', '20.Q2'],
@@ -212,95 +278,369 @@ const boxTitle = ref({
   right2:"疫情期间居民心理健康演变",
   right3:"2020年上半年长三角省会城市空气质量指数",
 })
-const leftOption1 = ref({})
-leftOption1.value = {
-  tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      type: 'cross',
-      crossStyle: {
-        color: 'white'
-      }
-    }
-  },
-  grid: {
-    top:'30%',
-    left: '3%',
-    right: '4%',
-    bottom: '5%',
-    containLabel: true
-  },
-  xAxis: [
-    {
-      type: 'category',
-      data: chartData.leftOption1.type,
+
+const leftOption1 = ref({});
+const state = ref({
+  timer:0,
+  timer1:1,
+})
+const reload = ()=>{
+  state.value.timer = new Date().getTime();
+}
+const reload1 = ()=>{
+  state.value.timer1 = new Date().getTime();
+}
+const loadLeftOption1 = () => {
+  let option1 = {
+    tooltip: {
+      trigger: 'axis',
       axisPointer: {
-        type: 'shadow'
-      },
-      axisLabel: {
-        show: true,
-        color:'white'
-      }
-
-    }
-  ],
-  yAxis: [
-    {
-      type: 'value',
-      name: '单位:千亿元',
-      nameTextStyle:{
-        color:'#fff'
-      },
-      min: 0,
-      max: 700,
-      interval: 100,
-      axisLabel: {
-        formatter: '{value}',
-        color:'white'
-      },
-    },
-    {
-      type: 'value',
-      name: '单位:%',
-      nameTextStyle:{
-        color:'#fff'
-      },
-      min: -6,
-      max: 1,
-      interval: 1,
-      axisLabel: {
-        formatter: '{value}',
-        color:'white'
-      }
-    }
-  ],
-  series: [
-    {
-      name: '',
-      type: 'bar',
-      color:'#C56183',
-      tooltip: {
-        valueFormatter: function (value) {
-          return value + ' 千亿元';
+        type: 'cross',
+        crossStyle: {
+          color: 'white'
         }
-      },
-
-      data: chartData.leftOption1.value
+      }
     },
-    {
-      name: '',
-      type: 'line',
-      color:'#36a0d6',
-      yAxisIndex: 1,
-      tooltip: {
-        valueFormatter: function (value) {
-          return value + ' %';
+    grid: {
+      top:'30%',
+      left: '3%',
+      right: '4%',
+      bottom: '5%',
+      containLabel: true
+    },
+    xAxis: [
+      {
+        type: 'category',
+        data: chartData.leftOption1.GDP.type,
+        axisPointer: {
+          type: 'shadow'
+        },
+        axisLabel: {
+          show: true,
+          color:'white'
         }
+
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        name: '单位:千亿元',
+        nameTextStyle:{
+          color:'#fff'
+        },
+        min: 0,
+        max: 700,
+        interval: 100,
+        axisLabel: {
+          formatter: '{value}',
+          color:'white'
+        },
       },
-      data: chartData.leftOption1.increasePercent
-    }
-  ]
-};
+      {
+        type: 'value',
+        name: '单位:%',
+        nameTextStyle:{
+          color:'#fff'
+        },
+        min: -6,
+        max: 1,
+        interval: 1,
+        axisLabel: {
+          formatter: '{value}',
+          color:'white'
+        }
+      }
+    ],
+    series: [
+      {
+        name: '',
+        type: 'bar',
+        color:'#C56183',
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' 千亿元';
+          }
+        },
+        data: chartData.leftOption1.GDP.value
+      },
+      {
+        name: '',
+        type: 'line',
+        color:'#36a0d6',
+        yAxisIndex: 1,
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' %';
+          }
+        },
+        data: chartData.leftOption1.GDP.increasePercent
+      }
+    ]
+  };
+  let option2 = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        crossStyle: {
+          color: 'white'
+        }
+      }
+    },
+    color:themeColor,
+    grid: {
+      top:'30%',
+      left: '3%',
+      right: '4%',
+      bottom: '5%',
+      containLabel: true
+    },
+    xAxis: [
+      {
+        type: 'category',
+        data: chartData.leftOption1.PPI.time,
+        axisPointer: {
+          type: 'shadow'
+        },
+        axisLabel: {
+          show: true,
+          color:'white'
+        }
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        name: '单位:%',
+        nameTextStyle:{
+          color:'#fff'
+        },
+        yAxisIndex: 1,
+        min: -6,
+        max: 2,
+        axisLabel: {
+          formatter: '{value}',
+          color:'white'
+        }
+      }
+    ],
+    series: [
+      {
+        name: '工业生产者出厂价格月度同比涨跌',
+        type: 'line',
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' %';
+          }
+        },
+        data: chartData.leftOption1.PPI.value1
+      },{
+        name: '生产资料工业生产者出厂价格月度同比涨跌',
+        type: 'line',
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' %';
+          }
+        },
+        data: chartData.leftOption1.PPI.value2
+      },{
+        name: '生活资料工业生产者出厂价格月度同比涨跌',
+        type: 'line',
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' %';
+          }
+        },
+        data: chartData.leftOption1.PPI.value3
+      },
+    ]
+  };
+  let option3 = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        crossStyle: {
+          color: 'white'
+        }
+      }
+    },
+    color:themeColor,
+    grid: {
+      top:'30%',
+      left: '3%',
+      right: '4%',
+      bottom: '5%',
+      containLabel: true
+    },
+    xAxis: [
+      {
+        type: 'category',
+        data: chartData.leftOption1.CPI.time,
+        axisPointer: {
+          type: 'shadow'
+        },
+        axisLabel: {
+          show: true,
+          color:'white'
+        }
+
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        name: '单位:%',
+        nameTextStyle:{
+          color:'#fff'
+        },
+        yAxisIndex: 1,
+        min: 0,
+        max: 7,
+        axisLabel: {
+          formatter: '{value}',
+          color:'white'
+        }
+      }
+    ],
+    series: [
+      {
+        name: '居民消费价格月度同比涨跌',
+        type: 'line',
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' %';
+          }
+        },
+        data: chartData.leftOption1.CPI.value1
+      },{
+        name: '城市消费价格月度同比涨跌',
+        type: 'line',
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' %';
+          }
+        },
+        data: chartData.leftOption1.CPI.value2
+      },{
+        name: '农村消费价格月度同比涨跌',
+        type: 'line',
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' %';
+          }
+        },
+        data: chartData.leftOption1.CPI.value3
+      },
+    ]
+  };
+  let option4 = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        crossStyle: {
+          color: 'white'
+        }
+      }
+    },
+    color:themeColor,
+    grid: {
+      top:'30%',
+      left: '3%',
+      right: '4%',
+      bottom: '5%',
+      containLabel: true
+    },
+    xAxis: [
+      {
+        type: 'category',
+        data: chartData.leftOption1.IDI.time,
+        axisPointer: {
+          type: 'shadow'
+        },
+        axisLabel: {
+          show: true,
+          color:'white'
+        }
+
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        name: '单位:%',
+        nameTextStyle:{
+          color:'#fff'
+        },
+        yAxisIndex: 1,
+        min: -22,
+        max: 8,
+        interval:6,
+        axisLabel: {
+          formatter: '{value}',
+          color:'white'
+        }
+      }
+    ],
+    series: [
+      {
+        name: '规模以上工业增加值月度同比增长',
+        type: 'line',
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' %';
+          }
+        },
+        data: chartData.leftOption1.IDI.value1
+      },{
+        name: '国有及国有控股企业月度同比增长',
+        type: 'line',
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' %';
+          }
+        },
+        data: chartData.leftOption1.IDI.value2
+      },{
+        name: '股份制企业月度同比增长',
+        type: 'line',
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' %';
+          }
+        },
+        data: chartData.leftOption1.IDI.value3
+      },
+      {
+        name: '外商及港澳台商投资企业月度同比增长',
+        type: 'line',
+        tooltip: {
+          valueFormatter: function (value) {
+            return value + ' %';
+          }
+        },
+        data: chartData.leftOption1.IDI.value4
+      },
+    ]
+  };
+  switch (checkType.value){
+    case "GDP":
+      leftOption1.value = option1;
+      break;
+    case "PPI":
+      leftOption1.value = option2;
+      break;
+    case "CPI":
+      leftOption1.value = option3;
+      break;
+    case "IDI":
+      leftOption1.value = option4;
+      break;
+  }
+}
+loadLeftOption1();
 
 const leftOption2 = ref({})
 leftOption2.value = {
@@ -403,7 +743,12 @@ leftOption3.value = {
   },
   legend:{
     show:true,
-    data:chartData.leftOption3.legend
+    top:"10%",
+    right:"5%",
+    data:chartData.leftOption3.legend,
+    textStyle:{
+      color:"#fff"
+    }
   },
   angleAxis: {
     type: 'category',
@@ -418,6 +763,7 @@ leftOption3.value = {
   tooltip: {},
   series: [
     {
+      name:"GDP",
       type: 'bar',
       data: chartData.leftOption3.GDP,
       coordinateSystem: 'polar',
@@ -428,6 +774,7 @@ leftOption3.value = {
       }
     },
     {
+      name:"财政",
       type: 'bar',
       data: chartData.leftOption3.financial,
       coordinateSystem: 'polar',
@@ -441,17 +788,46 @@ leftOption3.value = {
   animation: true
 };
 
-
+let timeIndex = 0;
+const date = ref({
+  month:'',
+  day:""
+})
 const loadMidChart1 = () => {
+  date.value.month = timeList[timeIndex].slice(8,9)
+  date.value.day = timeList[timeIndex].slice(9,11)
+
   fetch('/case/economicRun/cityArea.geojson').then(res=>{
     return res.json()
   }).then(json=>{
     echarts.registerMap('cityMap',json);
+
+    let data,name;
+    switch (covCheckType.value){
+      case "covC":
+        name = "累计确诊人数";
+        data = cov19Data_C[timeList[timeIndex]];
+        break;
+      case "covD":
+        name = "累计死亡人数";
+        data = cov19Data_D[timeList[timeIndex]];
+        break;
+      case "covH":
+        name = "累计治愈人数";
+        data = cov19Data_H[timeList[timeIndex]];
+        break;
+      case "医疗资源":
+        data = cov19Data_C[timeList[timeIndex]];
+        break;
+    };
     let option = {
+      tooltip:{
+        trigger: 'item',
+      },
       bmap: {
         center: [118.81893, 32.09936],
         zoom: 6,
-        roam: true,
+        roam: false,
         mapStyle: {
           styleJson: [
             {
@@ -585,142 +961,187 @@ const loadMidChart1 = () => {
           ]
         }
       },
-      geo:[
-      ],
+      visualMap: {
+        // min: 0,
+        // max: 700,
+        text: ['High', 'Low'],
+        realtime: false,
+        calculable: true,
+        inRange: {
+          color: ['#65c6c4','#408ab4','#887299','#C56183']
+        },
+        right:'0',
+        textStyle:{
+          color:"#fff"
+        }
+      },
       series:[
         {
-
+          name:name,
+          type:'map',
+          map:'cityMap',
+          data:data
         }
       ]
     }
     midChart1.setOption(option)
+    console.log("name,data",name,data,option)
   })
-
+  if(timeIndex < timeList.length - 1){
+    timeIndex++;
+  }else {
+    timeIndex = 0;
+  }
 }
 
-const midOption21 = ref({})
-midOption21.value = {
-  tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      type: 'shadow'
-    }
-  },
-  color:'#C56183',
-  grid: {
-    top:'10%',
-    left: '3%',
-    right: '3%',
-    bottom: '0%',
-    containLabel: true
-  },
-  xAxis: {
-    type: 'category',
-    data: chartData.midOption2.cityList,
-    axisLabel: {
-      color:'white'
-    }
-  },
-  yAxis: {
-    type: 'value',
-    splitLine:{
-      show:false
+let midTimeIndex = 0;
+const midDate = ref({
+  month:'',
+  day:""
+})
+const loadMidOption2 = () => {
+  let legend = {
+    right:'5%',
+    textStyle:{
+      color:'#fff',
+      fontSize:'10'
     },
-    interval:3,
-    axisLabel: {
-      color:'white'
-    }
-  },
-  series: [
-    {
-      data: chartData.midOption2.value1,
-      type: 'bar'
-    }
-  ]
-};
-
-const midOption22 = ref({})
-midOption22.value = {
-  tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      type: 'shadow'
-    }
-  },
-  color:'#4FD3C4',
-  grid: {
-    top:'10%',
-    left: '3%',
-    right: '3%',
-    bottom: '0%',
-    containLabel: true
-  },
-  xAxis: {
-    type: 'category',
-    data: chartData.midOption2.cityList,
-    axisLabel: {
-      color:'white'
-    }
-  },
-  yAxis: {
-    type: 'value',
-    splitLine:{
-      show:false
+    itemHeight:"10"
+  };
+  midDate.value.month = midTimeList[midTimeIndex].slice(10,11)
+  midDate.value.day = midTimeList[midTimeIndex].slice(11,13)
+  let option21 = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      }
     },
-    interval:3,
-    axisLabel: {
-      color:'white'
-    }
-  },
-  series: [
-    {
-      data: chartData.midOption2.value1,
-      type: 'bar'
-    }
-  ]
-};
-
-const midOption23 = ref({})
-midOption23.value = {
-  tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      type: 'shadow'
-    }
-  },
-  color:'#488FB1',
-  grid: {
-    top:'10%',
-    left: '3%',
-    right: '3%',
-    bottom: '0%',
-    containLabel: true
-  },
-  xAxis: {
-    type: 'category',
-    data: chartData.midOption2.cityList,
-    axisLabel: {
-      color:'white'
-    }
-  },
-  yAxis: {
-    type: 'value',
-    splitLine:{
-      show:false
+    legend:legend,
+    color:'#C56183',
+    grid: {
+      top:'10%',
+      left: '3%',
+      right: '3%',
+      bottom: '0%',
+      containLabel: true
     },
-    interval:3,
-    axisLabel: {
-      color:'white'
-    }
-  },
-  series: [
-    {
-      data: chartData.midOption2.value1,
-      type: 'bar'
-    }
-  ]
-};
-
+    xAxis: {
+      type: 'category',
+      data: chartData.midOption2.cityList,
+      axisLabel: {
+        color:'white'
+      }
+    },
+    yAxis: {
+      type: 'value',
+      splitLine:{
+        show:false
+      },
+      interval:3,
+      axisLabel: {
+        color:'white'
+      }
+    },
+    series: [
+      {
+        name:"出行强度指数",
+        data: midOptionData21[midTimeList[midTimeIndex]],
+        type: 'bar'
+      }
+    ]
+  };
+  let option22 = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      }
+    },
+    legend:legend,
+    color:'#4FD3C4',
+    grid: {
+      top:'10%',
+      left: '3%',
+      right: '3%',
+      bottom: '0%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: chartData.midOption2.cityList,
+      axisLabel: {
+        color:'white'
+      }
+    },
+    yAxis: {
+      type: 'value',
+      splitLine:{
+        show:false
+      },
+      interval:3,
+      axisLabel: {
+        color:'white'
+      }
+    },
+    series: [
+      {
+        name:"迁入规模指数",
+        data: midOptionData22[midTimeList[midTimeIndex]],
+        type: 'bar'
+      }
+    ]
+  };
+  let option23 = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      }
+    },
+    legend: legend,
+    color:'#488FB1',
+    grid: {
+      top:'10%',
+      left: '3%',
+      right: '3%',
+      bottom: '0%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: chartData.midOption2.cityList,
+      axisLabel: {
+        color:'white'
+      }
+    },
+    yAxis: {
+      type: 'value',
+      splitLine:{
+        show:false
+      },
+      interval:3,
+      axisLabel: {
+        color:'white'
+      }
+    },
+    series: [
+      {
+        name:"迁出规模指数",
+        data: midOptionData23[midTimeList[midTimeIndex]],
+        type: 'bar'
+      }
+    ]
+  };
+  if(midTimeIndex < midTimeList.length - 1){
+    midTimeIndex++;
+  }else {
+    midTimeIndex = 0;
+  }
+  midOption2a.setOption(option21);
+  midOption2b.setOption(option22);
+  midOption2c.setOption(option23);
+}
 const rightOption2 = ref({})
 rightOption2.value = {
   tooltip: {

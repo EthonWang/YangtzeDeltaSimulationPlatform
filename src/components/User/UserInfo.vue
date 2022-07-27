@@ -2,7 +2,7 @@
   <div style="" class="user-span">
     <img
       class="img-ava"
-      src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F4k%2Fs%2F02%2F2109242306111155-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1658408390&t=1968c63685cad0ef9295f811e27764f2"
+      src="https://img0.baidu.com/it/u=3590740517,3858531448&fm=253&fmt=auto&app=120&f=JPEG?w=800&h=1199"
       alt=""
     />
 

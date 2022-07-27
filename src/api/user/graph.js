@@ -13,13 +13,11 @@ export default class {
         relation.weight = new Array(relation.nodes.length).fill(0)
         let sourceNodes = []
         for (let i = 0; i < knownName.length; i++) {
-            console.log(relation.nodes);
             let firstNode = relation.nodes.findIndex((elment) => {
                 return elment.name == knownName[i]
             })
             sourceNodes.push(firstNode)
         }
-        console.log(sourceNodes);
 
         for (let i = 0; i < sourceNodes.length; i++) {
             let willVisit = new Array(relation.nodes.length).fill(true)
@@ -78,10 +76,10 @@ export default class {
     getKnowledgeSorce(user_id) {
         return new Promise((resolve, reject) => {
             post("/resource/getUserAllResource?userId=" + user_id,).then((res) => {
-                localStorage.setItem("allResourceNum", JSON.stringify({ 
+                localStorage.setItem("allResourceNum", JSON.stringify({
                     privateDataNum: res.data.personalData.length,
-                    modelNum:res.data.modelList.length,
-                    themeNum:res.data.themeList.length
+                    modelNum: res.data.modelList.length,
+                    themeNum: res.data.themeList.length
                 }))
                 let personalData = res.data.personalData
                 let publicData = res.data.publicData
@@ -320,6 +318,12 @@ export default class {
                     let outEdge = []
                     let inEdge = []
                     let node = relation.nodes[i]
+                    //暂时改变id的key值，调用的时候改回来
+                    if('id' in node){
+                        node['id_backup']=node['id']
+                        delete node['id']
+                    }
+
                     for (let j = 0; j < relation.links.length; j++) {
                         let link = relation.links[j]
                         if (node.name == link.source) {
@@ -335,7 +339,7 @@ export default class {
                     relation.allOutDegreeEdge.push(outEdge)
                     relation.allInDegreeEdge.push(inEdge)
                 }
-                console.log(relation.edgeNode)
+
                 resolve("ok")
             })
         })

@@ -1,6 +1,6 @@
 <template>
   <div class="model-tree">
-    <h3>模型列表</h3>
+    <!-- <h3>模型列表</h3> -->
     <el-tree
       ref="treeRef"
       :data="modelTreeData"
@@ -24,14 +24,13 @@
             >{{ node.label }}</el-checkbox
           >
         </span>
-        <span v-else>{{ data.name }}</span>
-        <span style="position: absolute; right: 20px; margin-left: 50px">
+        <span v-else>{{ data.name }} 模型</span>
+        <span style="position: absolute; right: 26px; margin-left: 50px">
           <el-button
             style=""
             type="primary"
-            size="mini"
+            size="small"
             @click="openModelConfig(data.label, data.modelId, data)"
-            plain
           >
             配置
           </el-button>
@@ -56,7 +55,7 @@
       <template #footer>
         <div style="flex: auto">
           <el-button type="primary" @click="btnLoadTestData"
-            >加载测试数据</el-button
+            >加载上次实验结果</el-button
           >
           <el-button type="primary" @click="InvokeModel">运行模型</el-button>
         </div>
@@ -199,7 +198,7 @@ const refModelConfig = ref();
 const openModelConfig = (modelName, dataModelId, data) => {
   drawer.value = true;
   model.value = data;
-  drawerTitle.value = data.name + " 配置与运行";
+  drawerTitle.value = data.name + "模型 配置与运行";
   tempModelId = dataModelId;
 };
 const handleOpenDraw = () => {
@@ -409,31 +408,33 @@ const options = [
   overflow: scroll;
 }
 .model-tree {
-  position: absolute;
+  position: relative;
   z-index: 1002;
-  top: 110px;
-  left: 400px;
-  width: 12vw;
+  // top: 110px;
+  // left: 400px;
+  width: 100px;
+  height: 150px;
   background-color: rgba(255, 255, 255, 1);
   border-radius: 5px !important;
-  padding: 22px 8px 8px 8px;
+  padding: 2px;
   transform-origin: 100% 20%;
   transition: all 0.5s;
 }
 
-@bg-config: rgb(39, 39, 39);
+@bg-config: rgba(39, 39, 39, 0.95);
 @color-config: rgb(235, 235, 235);
 /deep/.el-drawer {
   background-color: @bg-config;
   .el-drawer__header {
     color: #dedede;
+    font-size: 20px;
   }
 
   .el-drawer__body {
     .el-table {
       --el-table-border-color: #7e7e7e8a;
     }
-    background: @bg-config !important;
+    background: transparent !important;
     .el-input__inner {
       background-color: #414141;
       color: #ebebeb;
@@ -449,7 +450,7 @@ const options = [
       background-color: rgb(51, 51, 51);
     }
     .modelConfigBox[data-v-3b81a03d] {
-      background-color: @bg-config;
+      background-color: transparent;
       color: @color-config;
     }
     .el-table__body-wrapper:hover {

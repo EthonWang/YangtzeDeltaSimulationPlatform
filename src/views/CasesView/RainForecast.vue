@@ -771,7 +771,6 @@ export default {
 #map {
   width: 96%;
   height: 85%;
-
 }
 
 #map2 {

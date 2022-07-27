@@ -60,5 +60,6 @@ const props = defineProps({
 }
 .font-title{
   color: #3e5c66;
+
 }
 </style>

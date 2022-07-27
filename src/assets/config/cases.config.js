@@ -67,6 +67,11 @@ export const cases_config = [
         problem:"长三角风暴潮模拟",
         path: "stormSurge",
         component:() => import("views/CasesView/stormSurge.vue")
+    },
+    {
+        problem:"南京地面淹没模拟系统",
+        path: "SUFS",
+        component:() => import("views/CasesView/SUFS.vue")
     }
     // {
     //     problem:"湖泊水环境监测",

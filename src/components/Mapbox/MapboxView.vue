@@ -22,7 +22,7 @@
 
     <transition-group name="lyric">
       <div class="edit-board" v-if="editBoardShow">
-        <el-collapse v-model="activeNames" @change="handleChange">
+        <el-collapse v-model="activeNames" @change="handleChange" style="position: relative;z-index: 1005;">
           <el-collapse-item title="数据列表" name="data">
             <el-table
               :data="showLayerTableList"
@@ -513,8 +513,18 @@
               </el-table-column>
             </el-table>
           </el-collapse-item>
-          <!-- <el-collapse-item title="模型列表" name="model">
-            <el-table
+          <el-collapse-item title="模型列表" name="model" style="position: relative;z-index: 1005;">
+
+            <ModelTree
+              style="width: 100%;height: 100%;position: relative;z-index: 1005;"
+              @getCheckData="getCheckData"
+              @getCheckChart="getCheckChart"
+              @getCheckTif="getCheckTif"
+              @getCheckJson="getCheckJson"
+            ></ModelTree>
+
+
+            <!-- <el-table
               :data="
                 showLayerTableList.filter((item) => item.simularTrait == 'model')
               "
@@ -553,8 +563,8 @@
                   <el-button>使用</el-button>
                 </template>
               </el-table-column>
-            </el-table>
-          </el-collapse-item> -->
+            </el-table> -->
+          </el-collapse-item>
         </el-collapse>
       </div>
     </transition-group>
@@ -789,13 +799,16 @@ import { toRaw } from "@vue/reactivity";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import ModelConfig from "../App/ModelConfig.vue";
+import ModelTree from "../App/ModelTree.vue";
 
 var map = null;
 
 export default {
   name: "MapboxView",
   props: ["shpShowList"], //shpShowList为前端勾选的要展示在地图上的shp，格式为[{name:"",type:"",nameId:""}]
-
+  components: {
+    ModelTree,
+  },
   data() {
     return {
       modelId: ref("7887988"),
@@ -891,7 +904,7 @@ export default {
       newTxtModal: false,
       newTxtFileName: "",
 
-      activeNames: "data",
+      activeNames: ["data","model"],
       resList: {
         modelList: [],
         dataList: [],
@@ -1513,6 +1526,18 @@ export default {
     openTxtEditor(info) {
       this.$emit("openTxtEditor", info);
     },
+    getCheckData(data){
+      this.$emit("getCheckData", data);
+    },
+    getCheckTif(data){
+      this.$emit("getCheckTif", data);
+    },
+    getCheckChart(data){
+      this.$emit("getCheckChart", data);
+    },
+    getCheckJson(data){
+      this.$emit("getCheckJson", data);
+    },
     updateTxtInfo(res) {
       for (let i = 0; i < res.dataList.length; i++) {
         if (
@@ -1677,7 +1702,7 @@ export default {
   position: absolute;
   top: 110px;
   left: 40px;
-  z-index: 99;
+  z-index: 1009;
   background-color: white;
   width: 350px;
   height: auto;
@@ -1702,7 +1727,11 @@ export default {
   font-size: 16px;
   font-weight: 900;
 }
-
+/deep/.el-collapse-item__content{
+  padding-bottom:0;
+  position: relative;
+  z-index: 1002;
+}
 .lyric-enter-from,
 .lyric-leave-to {
   opacity: 0.1;

@@ -4,7 +4,7 @@
 
 <script setup>
 import * as echarts from 'echarts';
-import {onMounted,ref,defineProps,onBeforeUnmount} from "vue";
+import {onMounted, ref, defineProps, onBeforeUnmount} from "vue";
 const props = defineProps({
   id:{
     type:String,
@@ -16,9 +16,12 @@ const props = defineProps({
 let economicChart;
 onMounted(()=>{
   economicChart = echarts.init(document.getElementById(props.id));
-  economicChart.setOption(props.option)
+  loadChart();
   window.addEventListener('resize',economicChart.resize())
 })
+const loadChart=()=>{
+  economicChart.setOption(props.option)
+}
 
 onBeforeUnmount(()=>{
   window.removeEventListener('resize',economicChart.resize())

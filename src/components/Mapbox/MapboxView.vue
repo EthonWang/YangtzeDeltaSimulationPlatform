@@ -35,8 +35,18 @@
               <el-table-column width="50">
                 <template #default="scope">
                   <el-switch
+                  
                     :width="30"
                     v-model="scope.row.show"
+                    v-if="scope.row.visualType!='zip'"
+                    @change="handleLayerShowSwitchChange($event, scope.row)"
+                  >
+                  </el-switch>
+                  <el-switch
+                  v-else
+                  disabled
+                    :width="30"
+                    v-model="falseShow"
                     @change="handleLayerShowSwitchChange($event, scope.row)"
                   >
                   </el-switch>
@@ -800,6 +810,7 @@ export default {
   },
   data() {
     return {
+      falseShow:false,
       modelId: ref("7887988"),
       refModelConfig: ref(),
       showCenter: "-90,17",
@@ -1024,6 +1035,7 @@ export default {
     },
     filterResList() {
       for (let i = 0; i < this.taskInfo.dataList.length; i++) {
+        if (this.taskInfo.dataList[i].simularTrait=='task'){continue}
         if (this.taskInfo.dataList[i].type == "model") {
           this.resList.modelList.push(this.taskInfo.dataList[i]);
         } else {
@@ -1680,6 +1692,8 @@ export default {
   padding-bottom:0;
   position: relative;
   z-index: 1002;
+  max-height:40vh !important;
+  overflow: scroll !important;
 }
 .lyric-enter-from,
 .lyric-leave-to {

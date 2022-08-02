@@ -873,7 +873,6 @@ const loadMidChart1 = () => {
         ]
       }
       midChart1.setOption(option)
-      console.log("name,data",name,data,option)
     })
 
 

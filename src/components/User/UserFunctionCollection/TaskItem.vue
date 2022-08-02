@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="task-item">
-      <h3 v-if="!edit_task">{{ props.task.name }}实验</h3>
+      <h2 v-if="!edit_task">{{ props.task.name }}实验</h2>
       <el-input
         style="
           width: 40%;
@@ -172,7 +172,7 @@
           </el-form-item>
         </template>
       </el-form>
-      <el-form
+      <!-- <el-form
         :inline="true"
         :label-position="labelPosition"
         label-width="200px"
@@ -201,7 +201,7 @@
             ></el-button>
           </el-form-item>
         </template>
-      </el-form>
+      </el-form> -->
       <el-button
         type="primary"
         class="btn_view"
@@ -288,12 +288,12 @@ const confirmEdit = () => {
 const options = Array.from({ length: sciencePro.length }).map((_, idx) => {
   const label = idx;
   return {
-    value: sciencePro[label].name,
-    label: sciencePro[label].name,
+    value: sciencePro[label].name.replace('\n',''),
+    label: sciencePro[label].name.replace('\n',''),
     children: Array.from({ length: sciencePro[label].children.length }).map(
       (_, idx1) => ({
-        value: sciencePro[label].children[idx1].name,
-        label: sciencePro[label].children[idx1].name,
+        value: sciencePro[label].children[idx1].name.replace('\n',''),
+        label: sciencePro[label].children[idx1].name.replace('\n',''),
       })
     ),
   };

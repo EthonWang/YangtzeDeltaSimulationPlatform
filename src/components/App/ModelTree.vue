@@ -55,7 +55,7 @@
       <template #footer>
         <div style="flex: auto">
           <el-button type="primary" @click="btnLoadTestData"
-            >加载上次实验结果</el-button
+            >获取上次实验结果</el-button
           >
           <el-button type="primary" @click="InvokeModel">运行模型</el-button>
         </div>
@@ -197,7 +197,7 @@ let tempModelId = "";
 const refModelConfig = ref();
 const openModelConfig = (modelName, dataModelId, data) => {
   drawer.value = true;
-  model.value = data;
+  model.value = data;//传到modelconfig
   drawerTitle.value = data.name + "模型 配置与运行";
   tempModelId = dataModelId;
 };

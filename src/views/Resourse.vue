@@ -144,6 +144,8 @@
           <el-row>
             <div class="resourceList">
               <resource-list :resList="resList"></resource-list>
+              <el-divider></el-divider>
+              <resource-list :resList="modelList"></resource-list>
             </div>
           </el-row>
         </el-col>
@@ -154,6 +156,7 @@
 
 <script>
 import {useStore} from "vuex";
+import { useRouter } from "vue-router";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import tagTree from "@/components/resource/tagTree.vue";
@@ -166,21 +169,32 @@ export default {
     resourceList,
   },
   setup(props, ctx) {
+    const router = useRouter();
     let searchPage = ref(true);
     let searchValue = ref("");
     let selectedTag = ref([]);
     let questionsSelectValue = ref("");
     let resList = ref([]);
+    let modelList=ref([]);
     let sortField = ref("relativity"); //默认相关，共有relativity、timeUp、timeDown、sizeUp、sizeDown五类
     let dataNum = ref(0);
+    let modelNum=ref(0);
     let visualChecked = ref(false);
     let downloadChecked = ref(false);
     const restaurants = ref([]);
     const store = useStore();
     const dataServer = store.getters.devIpAddress;
     onMounted(() => {
+      getRouteValue();
       getAutocompleteList();
     });
+    const getRouteValue = () => {
+      let routerValue = router.currentRoute.value.query.searchValue;
+      if(routerValue != undefined){
+        searchValue.value = routerValue;
+        startSearch();
+      }
+    }
     let getAutocompleteList = function () {
       let DTO = {
         asc: false,
@@ -270,6 +284,25 @@ export default {
           console.log(err);
         }
       );
+      axios({
+        url: dataServer +  "/getResourceModelList",
+        method: "post",
+        //忽略contentType
+        contentType: false,
+        //取消序列换 formData本来就是序列化好的
+        processData: false,
+        dataType: "json",
+        data: DTO,
+      }).then(
+        (res) => {
+          searchPage.value = false;
+          modelList.value = res.data.data.content;
+          modelNum.value = res.data.data.totalElements;
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
     };
     const clearSearch = function () {
       searchValue.value = "";
@@ -314,6 +347,8 @@ export default {
       sortField,
       sortByField,
       resList,
+      modelList,
+      modelNum,
       visualChecked,
       downloadChecked,
       clearSearch,

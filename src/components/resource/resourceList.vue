@@ -21,7 +21,7 @@
           <el-button class="downloadButton" @click="downloadRes(item)"
             >下载</el-button
           >
-          <div class="fontSet" style="margin: 5px 0">
+          <div class="fontSet" style="margin: 5px 0" v-if="'fileSize' in item">
             <span>{{ filterSizeType(item.fileSize) }}</span
             ><br />
             <span>{{ item.userEmail }}</span>
@@ -47,7 +47,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button type="primary" @click="show_task = true"
-          >添加到个人中心</el-button
+          >添加到个人实验室</el-button
         >
         <el-button @click="mapCardDialogVisible = false">取消</el-button>
       </span>
@@ -59,12 +59,16 @@
     width="30%"
     :before-close="handleClose"
   >
-    <h3 style="margin-bottom: 15px;">选择要添加的资源</h3>
+    <h3 style="margin-bottom: 15px">选择要添加的资源</h3>
     <el-checkbox-group v-model="selectedVisualDataItems">
-      <el-checkbox :label="item.name" v-for="(item, index) in selectedRes.visualDataItems" :key="index"/>
+      <el-checkbox
+        :label="item.name"
+        v-for="(item, index) in selectedRes.visualDataItems"
+        :key="index"
+      />
     </el-checkbox-group>
     <el-divider border-style="dashed" />
-    <h3 style="margin-bottom: 15px;">选择要添加到的实验室</h3>
+    <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
     <el-button
       v-for="task in task_list"
       :key="task"
@@ -75,7 +79,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="show_task = false">取消</el-button>
-        <el-button type="primary" @click="show_task = false">完成</el-button>
+        <!-- <el-button type="primary" @click="show_task = false">完成</el-button> -->
       </span>
     </template>
   </el-dialog>
@@ -108,20 +112,30 @@ const props = defineProps({
   resList: Array,
 });
 const addDataToTask = (task) => {
-  console.log(task);
-  let dataList = [];
-  for (let i in selectedVisualDataItems.value) {
-    let dataName = selectedVisualDataItems.value[i];
-    for(let j in selectedRes.value.visualDataItems){
-      let data = selectedRes.value.visualDataItems[j];
-      if(dataName == data.name){
-        dataList.push(data);
+  console.log(selectedRes.value);
+  if ('mdl' in selectedRes.value) {
+    console.log(234);
+    let data=selectedRes.value
+    data["simularTrait"] = "model";
+    task_api.addData(task, [data]);
+  } else {
+    let dataList = [];
+    console.log(selectedVisualDataItems.value);
+    for (let i in selectedVisualDataItems.value) {
+      let dataName = selectedVisualDataItems.value[i];
+      for (let j in selectedRes.value.visualDataItems) {
+        let data = selectedRes.value.visualDataItems[j];
+        if (dataName == data.name) {
+          console.log(1);
+          data["simularTrait"] = "data";
+          dataList.push(data);
+        }
       }
     }
-    
+    task_api.addData(task, dataList);
   }
-  task_api.addData(task, dataList);
   show_task.value = false;
+  mapCardDialogVisible.value = false;
 };
 
 const handleClose = function (done) {
@@ -185,7 +199,7 @@ const filterSizeType = function (value) {
   // flex-direction: column;
   margin-bottom: 20px;
   padding-top: 10px;
-  border-top: solid 0.1px rgb(176, 174, 174);
+  border-top: solid 0.1px rgba(176, 174, 174, 0.445);
 }
 .cardTitle {
   height: 30px;

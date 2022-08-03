@@ -4,19 +4,19 @@
         <el-col :span="8">
           <div class="box-left left1">
             <dv-border-box1 >
-              <dv-decoration-7 class="box-title"><h3>创新投入</h3></dv-decoration-7>
+              <dv-decoration-7 class="box-title"><h3 class="box-title-text">创新投入</h3></dv-decoration-7>
               <div id="leftChart1" class="chart"></div>
             </dv-border-box1>
           </div>
           <div class="box-left left2">
             <dv-border-box1 >
-              <dv-decoration-7 class="box-title"><h3>创新环境</h3></dv-decoration-7>
+              <dv-decoration-7 class="box-title"><h3 class="box-title-text">创新环境</h3></dv-decoration-7>
               <div id="leftChart2" class="chart"></div>
             </dv-border-box1>
           </div>
           <div class="box-left left3">
             <dv-border-box1 >
-              <dv-decoration-7 class="box-title"><h3>创新产出</h3></dv-decoration-7>
+              <dv-decoration-7 class="box-title"><h3 class="box-title-text">创新产出</h3></dv-decoration-7>
               <div id="leftChart3" style="width: 100%;height: 90%;"></div>
             </dv-border-box1>
           </div>
@@ -55,13 +55,13 @@
         <el-col :span="8">
           <div class="box-right right1">
             <dv-border-box1 >
-              <dv-decoration-7 class="box-title"><h3>重点城市创新概况</h3></dv-decoration-7>
+              <dv-decoration-7 class="box-title"><h3 class="box-title-text">重点城市创新概况</h3></dv-decoration-7>
               <div id="rightChart1" style="width: 100%;height: 90%;"></div>
             </dv-border-box1>
           </div>
           <div class="box-right right2">
             <dv-border-box1 >
-              <dv-decoration-7 class="box-title"><h3>创新综合评价结果</h3></dv-decoration-7>
+              <dv-decoration-7 class="box-title"><h3 class="box-title-text">创新综合评价结果</h3></dv-decoration-7>
               <div style="width: 100%;height: 60%;display: flex">
                 <div id="rightChart2" style="width: 50%;height: 100%;"></div>
                 <div id="rightChart3" style="width: 50%;height: 100%;"></div>
@@ -138,7 +138,6 @@ window.onresize = () =>{
   rightChart4.resize();
   rightChart5.resize();
   rightChart6.resize();
-
 }
 const loadLeftChart1 = () => {
   let option;
@@ -1403,79 +1402,16 @@ const loadMidChart3 = () => {
       }
     ]
   };
-  let option2 = {
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'shadow'
-      }
-    },
-    grid: {
-      right:60,
-      top:0,
-      bottom:20,
-      containLabel: true,
-      left: 20
-    },
-    yAxis: {
-      data: ['安徽省','浙江省','江苏省','上海市' ],
-      inverse: true,
-      axisLine: { show: false },
-      axisTick: { show: false },
-      axisLabel: {
-        margin: 30,
-        fontSize: 14
-      },
-      axisPointer: {
-        label: {
-          show: true,
-          margin: 30
-        }
-      }
-    },
-    xAxis: {
-      splitLine: { show: false },
-      axisLabel: { show: false },
-      axisTick: { show: false },
-      axisLine: { show: false }
-    },
-    series: [
-      {
-        name: '独角兽企业数',
-        type: 'pictorialBar',
-        symbolRepeat: true,
-        symbolSize: ['80%', '80%'],
-        z: 10,
-        barCategoryGap: '1%',
-        data: [
-          {
-            value: 1,
-            symbol: 'circle'
-          },
-          {
-            value: 27,
-            symbol: 'circle'
-          },
-          {
-            value: 19,
-            symbol: 'circle'
-          },
-          {
-            value: 44,
-            symbol: 'circle'
-          },
-        ]
-      },
-    ]
-  };
   midChart3.setOption(option)
 }
 </script>
 
 <style scoped>
 .box-title{
-  margin-left:calc(50% - 90px);
-  width:180px;height:30px;
+  height:30px;
+}
+.box-title-text{
+  margin: 0px 10px;
 }
 .box-left{
 

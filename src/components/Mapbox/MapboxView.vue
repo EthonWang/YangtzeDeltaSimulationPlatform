@@ -1,5 +1,7 @@
 <template>
   <div class="mapbox-page">
+    <!-- <ModelConfig :modelId="modelId" ref="refModelConfig"> </ModelConfig> -->
+
     <el-tag class="map-zoom-lnglat" type="info">
       Zoom:{{ zoom }} &nbsp; LngLat:{{ showCenter }}
     </el-tag>
@@ -8,19 +10,19 @@
         v-if="!editBoardShow"
         size="small"
         @click="handleEditBoardShow(1)"
-        >打开编辑框
+        ><el-icon><ArrowDownBold /></el-icon>&nbsp;打开编辑框
       </el-button>
       <el-button
         v-if="editBoardShow"
         size="small"
         @click="handleEditBoardShow(0)"
-        >收起编辑框
+        ><el-icon><ArrowUpBold /></el-icon>&nbsp;收起编辑框
       </el-button>
     </div>
 
     <transition-group name="lyric">
       <div class="edit-board" v-if="editBoardShow">
-        <el-collapse v-model="activeNames" @change="handleChange">
+        <el-collapse v-model="activeNames" @change="handleChange" style="position: relative;z-index: 1005;">
           <el-collapse-item title="数据列表" name="data">
             <el-table
               :data="showLayerTableList"
@@ -33,8 +35,18 @@
               <el-table-column width="50">
                 <template #default="scope">
                   <el-switch
+                  
                     :width="30"
                     v-model="scope.row.show"
+                    v-if="scope.row.visualType!='zip'"
+                    @change="handleLayerShowSwitchChange($event, scope.row)"
+                  >
+                  </el-switch>
+                  <el-switch
+                  v-else
+                  disabled
+                    :width="30"
+                    v-model="falseShow"
                     @change="handleLayerShowSwitchChange($event, scope.row)"
                   >
                   </el-switch>
@@ -511,7 +523,58 @@
               </el-table-column>
             </el-table>
           </el-collapse-item>
-          <el-collapse-item title="模型列表" name="model"> </el-collapse-item>
+          <el-collapse-item title="模型列表" name="model" style="position: relative;z-index: 1005;">
+           
+            <ModelTree
+              style="width: 100%;height: 100%;position: relative;z-index: 1005;"
+              @getCheckData="getCheckData"
+              @getCheckChart="getCheckChart"
+              @getCheckTif="getCheckTif"
+              @getCheckJson="getCheckJson"
+            ></ModelTree>
+           
+            
+            <!-- <el-table
+              :data="
+                showLayerTableList.filter((item) => item.simularTrait == 'model')
+              "
+              ref="shpLayerTable"
+              row-key="nameId"
+              size="small"
+              @cell-click="handleLayerClick"
+              style="width: 100%"
+            >
+              <el-table-column width="50">
+                <template #default="scope">
+                  <el-switch
+                    :width="30"
+                    v-model="scope.row.show"
+                    @change="handleLayerShowSwitchChange($event, scope.row)"
+                  >
+                  </el-switch>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="类型"
+                prop="visualType"
+                min-width="50"
+                show-overflow-tooltip
+              >
+              </el-table-column>
+              <el-table-column
+                label="名称"
+                prop="name"
+                min-width="130"
+                show-overflow-tooltip
+              >
+              </el-table-column>
+              <el-table-column label="操作" min-width="90">
+                <template>
+                  <el-button>使用</el-button>
+                </template>
+              </el-table-column>
+            </el-table> -->
+          </el-collapse-item>
         </el-collapse>
       </div>
     </transition-group>
@@ -607,12 +670,123 @@
       </div>
     </RadioGroup>
   </Modal>
+  <Modal v-model="analysisModal" draggable sticky scrollable :mask="false">
+    <template #header>
+      <Icon type="logo-buffer" size="18" />
+      <span style="margin-left: 5px; font-size: 18px">数据分析</span>
+    </template>
+    <Form :model="analysisForm" label-position="top">
+      <FormItem label="分析方法">
+        <RadioGroup v-model="analysisForm.type">
+          <Radio label="charts">趋势分析</Radio>
+          <Radio label="raster">统计分析</Radio>
+          <Radio label="other">其他</Radio>
+        </RadioGroup>
+      </FormItem>
+      <FormItem label="输入要素">
+        <Input
+          v-model="analysisForm.inputFeaturesName"
+          style="width: 90%"
+          readonly
+        ></Input>
+        <Button
+          :size="buttonSize"
+          icon="ios-folder-open"
+          style="margin-left: 15px"
+          @click="selectAnalysisFeatures(analysisForm.type)"
+        ></Button>
+      </FormItem>
+      <FormItem label="输出形式" v-if="analysisForm.type == 'charts'">
+        <RadioGroup v-model="analysisForm.chartsType">
+          <Radio label="line">折线图</Radio>
+          <Radio label="bar">柱状图</Radio>
+          <Radio label="pie">饼图</Radio>
+          <Radio label="scatter">散点图</Radio>
+        </RadioGroup>
+      </FormItem>
+      <FormItem label="统计时间" v-if="analysisForm.type == 'raster'">
+        <Input v-model="analysisForm.dateNum" style="width: 90%"></Input>
+      </FormItem>
+    </Form>
+    <template #footer>
+      <Button @click="analysisModal = false">取消</Button>
+      <Button type="primary" @click="commitAnalysis()">开始分析</Button>
+    </template>
+  </Modal>
+  <Modal
+    v-model="analysisSelectFeaturesModal"
+    draggable
+    sticky
+    scrollable
+    :mask="false"
+    :closable="false"
+  >
+    <template #header>
+      <Icon type="logo-buffer" size="18" />
+      <span style="margin-left: 5px; font-size: 18px">数据分析 - 选择数据</span>
+    </template>
+    <Alert
+      type="warning"
+      show-icon
+      closable
+      v-if="analysisForm.type == 'charts'"
+    >
+      A success prompt
+      <template #desc
+        >Content of prompt. Content of prompt. Content of prompt. Content of
+        prompt.
+      </template>
+    </Alert>
+    <RadioGroup
+      v-model="analysisForm.inputFeaturesName"
+      vertical
+      v-if="analysisForm.type == 'charts'"
+      :on-change="analysisFormChange(analysisForm.inputFeaturesName, 'charts')"
+    >
+      <div v-for="(item, index) in showLayerTableList" :key="index">
+        <Radio :label="item.name" v-if="item.visualType == 'txt'">
+          <span>{{ item.name }}</span>
+        </Radio>
+      </div>
+    </RadioGroup>
+    <Alert
+      type="warning"
+      show-icon
+      closable
+      v-if="analysisForm.type == 'raster'"
+    >
+      A success prompt
+      <template #desc
+        >Content of prompt. Content of prompt. Content of prompt. Content of
+        prompt.
+      </template>
+    </Alert>
+    <RadioGroup
+      v-model="analysisForm.inputFeaturesName"
+      vertical
+      v-if="analysisForm.type == 'raster'"
+      :on-change="analysisFormChange(analysisForm.inputFeaturesName, 'raster')"
+    >
+      <div v-for="(item, index) in showLayerTableList" :key="index">
+        <Radio :label="item.name" v-if="item.visualType == 'nc'">
+          <span>{{ item.name }}</span>
+        </Radio>
+      </div>
+    </RadioGroup>
+    <template #footer>
+      <Button @click="analysisSelectFeaturesModal = false">取消</Button>
+      <Button type="primary" @click="analysisSelectFeaturesModal = false"
+        >确定</Button
+      >
+    </template>
+  </Modal>
 </template>
 
 <script>
+import { ref } from "vue";
 import { useStore } from "vuex";
 import mapboxgl from "mapbox-gl";
-import { ElNotification } from "element-plus";
+import { ElNotification, ElMessage } from "element-plus";
 import { get, post } from "@/request/request";
 import axios from "axios";
 import MapboxLanguage from "@mapbox/mapbox-gl-language";
@@ -623,14 +797,22 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { toRaw } from "@vue/reactivity";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
+import ModelConfig from "../App/ModelConfig.vue";
+import ModelTree from "../App/ModelTree.vue";
+
 var map = null;
 
 export default {
   name: "MapboxView",
   props: ["shpShowList"], //shpShowList为前端勾选的要展示在地图上的shp，格式为[{name:"",type:"",nameId:""}]
-
+  components: {
+    ModelTree,
+  },
   data() {
     return {
+      falseShow:false,
+      modelId: ref("7887988"),
+      refModelConfig: ref(),
       showCenter: "-90,17",
       zoom: 6,
       editBoardShow: true,
@@ -710,8 +892,17 @@ export default {
         inputShp: "",
         outputFeaturesName: "",
       },
+      analysisModal: false,
+      analysisSelectFeaturesModal: false,
+      analysisForm: {
+        inputFeaturesName: "",
+        inputTxtPath: "",
+        type: "charts",
+        chartsType: "line",
+        dateNum: "",
+      },
 
-      activeNames: "data",
+      activeNames: ["data","model"],
       resList: {
         modelList: [],
         dataList: [],
@@ -762,7 +953,9 @@ export default {
     let that = this;
     setTimeout(function () {
       that.filterResList();
-      that.initShpShowList();
+      setTimeout(() => {
+        that.initShpShowList();
+      }, 500);
     }, 500);
   },
 
@@ -842,6 +1035,7 @@ export default {
     },
     filterResList() {
       for (let i = 0; i < this.taskInfo.dataList.length; i++) {
+        if (this.taskInfo.dataList[i].simularTrait=='task'){continue}
         if (this.taskInfo.dataList[i].type == "model") {
           this.resList.modelList.push(this.taskInfo.dataList[i]);
         } else {
@@ -851,8 +1045,12 @@ export default {
       // this.resList = this.data_list;
     },
     initShpShowList() {
-      console.log(this.resList);
+      // console.log(this.resList);
       for (let i = 0; i < this.resList.dataList.length; i++) {
+        console.log("simular :", this.resList.dataList[i]);
+        if (this.resList.dataList[i].mdl != undefined) {
+          continue;
+        }
         if (
           this.resList.dataList[i].visualType == "shp" ||
           this.resList.dataList[i].visualType == "tif" ||
@@ -963,8 +1161,13 @@ export default {
     handleEditBoardShow(val) {
       if (val) {
         this.editBoardShow = true;
+        document.getElementsByClassName("model-tree")[0].style.opacity = "1";
+        document.getElementsByClassName("model-tree")[0].style.transform = "";
       } else {
         this.editBoardShow = false;
+        document.getElementsByClassName("model-tree")[0].style.opacity = "0";
+        document.getElementsByClassName("model-tree")[0].style.transform =
+          "scaleY(0.1)";
       }
     },
 
@@ -1020,17 +1223,17 @@ export default {
         },
         true
       );
-      let intersetButtonObj = document.createElement("button");
-      intersetButtonObj.classList =
-        "mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_interset ivu-icon ivu-icon-logo-buffer";
-      intersetButtonObj.id = "mapbox-gl-draw_interset";
-      intersetButtonObj.title = "相交";
-      intersetButtonObj.style.fontSize = "16px";
-      drawBox.appendChild(intersetButtonObj);
-      intersetButtonObj.addEventListener(
+      let analysisButtonObj = document.createElement("button");
+      analysisButtonObj.classList =
+        "mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_analysis ivu-icon ivu-icon-logo-buffer";
+      analysisButtonObj.id = "mapbox-gl-draw_analysis";
+      analysisButtonObj.title = "数据分析";
+      analysisButtonObj.style.fontSize = "16px";
+      drawBox.appendChild(analysisButtonObj);
+      analysisButtonObj.addEventListener(
         "click",
         (e) => {
-          that.clipModalShow();
+          that.analysisModalShow();
         },
         true
       );
@@ -1242,15 +1445,16 @@ export default {
       for (let i = 0; i < this.showLayerTableList.length; i++) {
         if (this.showLayerTableList[i].name == name && type == "raster") {
           this.clipForm.inputRaster =
-            this.showLayerTableList[i].data.visualRelativePath;
+            this.showLayerTableList[i].data.fileRelativePath;
         } else if (this.showLayerTableList[i].name == name && type == "shp") {
           if (
-            this.showLayerTableList[i].data.visualRelativePath != undefined &&
-            this.showLayerTableList[i].data.visualRelativePath != null &&
-            this.showLayerTableList[i].data.visualRelativePath != ""
+            this.showLayerTableList[i].data.fileRelativePath != undefined &&
+            this.showLayerTableList[i].data.fileRelativePath != null &&
+            this.showLayerTableList[i].data.fileRelativePath != "" &&
+            this.showLayerTableList[i].data.visualType == "shp"
           ) {
             this.clipForm.inputShp =
-              this.showLayerTableList[i].data.visualRelativePath;
+              this.showLayerTableList[i].data.fileRelativePath;
             this.clipForm.isShp = true;
           } else {
             this.clipForm.jsonInfo = this.showLayerTableList[i];
@@ -1258,7 +1462,7 @@ export default {
           }
         }
       }
-      console.log(this.clipForm);
+      // console.log(this.clipForm);
     },
     commitClip() {
       let res = {};
@@ -1284,21 +1488,147 @@ export default {
         GDALClipDTO.outputTifName = GDALClipDTO.outputTifName + ".tif";
       }
       GDALClipDTO.isShp = this.clipForm.isShp;
+      ElMessage({
+        type: "info",
+        message: "裁剪中，请稍等！",
+      });
       axios({
         url: this.dataServer + "/script/gdalClip/" + this.taskInfo.id,
         method: "post",
         data: GDALClipDTO,
       }).then(
         (res) => {
-          console.log(res.data);
+          // console.log(res.data);
+          if (res.data.code == 0) {
+            localStorage.setItem("task", JSON.stringify(res.data.data));
+            ElMessage({
+              type: "success",
+              message: "裁剪成功，正在加载数据...",
+            });
+            location.reload();
+          }
         },
         (err) => {
+          ElMessage({
+            type: "error",
+            message: "裁剪失败，请重试！",
+          });
           console.log(err);
         }
       );
     },
     openTxtEditor(info) {
       this.$emit("openTxtEditor", info);
+    },
+    getCheckData(data){
+      this.$emit("getCheckData", data);
+    },
+    getCheckTif(data){
+      this.$emit("getCheckTif", data);
+    },
+    getCheckChart(data){
+      this.$emit("getCheckChart", data);
+    },
+    getCheckJson(data){
+      this.$emit("getCheckJson", data);
+    },
+    updateTxtInfo(res) {
+      for (let i = 0; i < res.dataList.length; i++) {
+        if (
+          res.dataList[i].visualType == "txt" &&
+          res.dataList[i].id == this.showLayerTableList[i].id
+        ) {
+          let newTxtLayer = {
+            show: true,
+            name: res.dataList[i].name,
+            id: res.dataList[i].id,
+            type: res.dataList[i].type,
+            visualType: res.dataList[i].visualType,
+            filter: ["all"],
+            data: res.dataList[i],
+            // "source-layer": "default"
+          };
+          this.showLayerTableList.splice(i, 1, newTxtLayer);
+        }
+      }
+    },
+    analysisModalShow() {
+      this.analysisModal = true;
+    },
+    selectAnalysisFeatures(type) {
+      this.analysisSelectFeaturesModal = true;
+    },
+    analysisFormChange(name, type) {
+      for (let i = 0; i < this.showLayerTableList.length; i++) {
+        if (this.showLayerTableList[i].name == name && type == "charts") {
+          this.analysisForm.inputTxtPath =
+            this.showLayerTableList[i].data.fileRelativePath;
+        } else if (
+          this.showLayerTableList[i].name == name &&
+          type == "raster"
+        ) {
+          this.analysisForm.inputTxtPath =
+            this.showLayerTableList[i].data.fileRelativePath;
+        }
+      }
+      console.log(this.analysisForm);
+    },
+    commitAnalysis() {
+      if (this.analysisForm.inputTxtPath != "") {
+        ElMessage({
+          type: "info",
+          message: "正在统计分析中，请稍等！",
+        });
+        axios({
+          url: this.dataServer + "/script/txtAnalysis/" + this.taskInfo.id,
+          method: "post",
+          data: this.analysisForm,
+        }).then(
+          (res) => {
+            if (res.data.code == 0) {
+              // localStorage.setItem("task", JSON.stringify(res.data.data));
+              // location.reload();
+              if (this.analysisForm.type == "charts") {
+                let chartInfo = {};
+                chartInfo.options = res.data.data;
+                chartInfo.name = this.analysisForm.inputFeaturesName;
+                chartInfo.id = this.analysisForm.inputTxtPath.substring(
+                  this.analysisForm.inputTxtPath.length - 28,
+                  this.analysisForm.inputTxtPath.length - 4
+                );
+                chartInfo.mapDataType = "chart";
+                chartInfo.chartsType = this.analysisForm.chartsType;
+                this.$emit("getCheckChart", chartInfo);
+                this.analysisModal = false;
+              } else if(this.analysisForm.type == "raster"){
+                let chartInfo = {};
+                chartInfo.options = res.data.data;
+                chartInfo.name = this.analysisForm.inputFeaturesName;
+                chartInfo.id = this.analysisForm.inputTxtPath.substring(
+                  this.analysisForm.inputTxtPath.length - 28,
+                  this.analysisForm.inputTxtPath.length - 4
+                );
+                chartInfo.mapDataType = "raster";
+                chartInfo.dateNum = this.analysisForm.dateNum;
+                this.$emit("getCheckChart", chartInfo);
+                this.analysisModal = false;
+              }
+            }
+          },
+          (err) => {
+            ElMessage({
+              type: "error",
+              message: "分析失败，请重试！",
+            });
+            console.log(err);
+          }
+        );
+      } else {
+        ElMessage({
+          type: "error",
+          message: "提交失败，请检查数据并重试！",
+        });
+      }
     },
   },
 };
@@ -1333,10 +1663,10 @@ export default {
   position: absolute;
   top: 110px;
   left: 40px;
-  z-index: 99;
+  z-index: 1009;
   background-color: white;
   width: 350px;
-  height: 80vh;
+  height: auto;
   border-radius: 4px;
   border: 1px solid #ebeef5;
   box-shadow: 0 3.2px 7.2px 0 rgb(0 0 0 / 13%), 0 0.6px 1.8px 0 rgb(0 0 0 / 11%);
@@ -1353,12 +1683,26 @@ export default {
   margin-top: 3.5%;
 }
 
+/deep/.el-collapse-item__header.is-active {
+  border-bottom-color: transparent;
+  font-size: 16px;
+  font-weight: 900;
+}
+/deep/.el-collapse-item__content{
+  padding-bottom:0;
+  position: relative;
+  z-index: 1002;
+  max-height:40vh !important;
+  overflow: scroll !important;
+}
 .lyric-enter-from,
 .lyric-leave-to {
   opacity: 0.1;
-  transform: translateY(-39px) translateX(70px);
-  height: 10%;
-  width: 84px;
+  transform-origin: 100% 0;
+  transform: scaleY(0.1);
+
+  // height: 10px;
+  // width: 84px;
 }
 .lyric-enter-to,
 .lyric-leave-from {

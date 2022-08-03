@@ -14,12 +14,16 @@
             </div>
             <div>
               <h2 class="case-name">{{caseInfo.name}}</h2>
-              <p  class="case-name">{{caseInfo.description[0]}}</p>
+              <template v-for="(item,key) in caseInfo.description" :key="key">
+                <p class="case-name">{{item.value}}</p>
+              </template>
             </div>
           </div>
           <h3 class="typeName">案例描述</h3>
           <el-divider ></el-divider>
-          <p>{{caseInfo.description[0]}}{{caseInfo.description[0]}}</p>
+          <template v-for="(item,key) in caseInfo.description" :key="key">
+            <p>{{item.value}}</p>
+          </template>
           <h3 class="typeName">案例数据</h3>
           <el-divider ></el-divider>
             <div class="data-area">
@@ -35,24 +39,29 @@
       <el-col :span="4" :offset="1">
         <div class="rightBox1">
           <div><el-button  class="rightButton hvr-shutter-out-horizontal" plain><span>在实验室中打开</span><ArrowDown style="width: 1em"/></el-button></div>
-          <div><el-button  class="rightButton hvr-shutter-out-horizontal" plain><span>查看案例</span><ArrowDown style="width: 1em"/></el-button></div>
+          <div><el-button  class="rightButton hvr-shutter-out-horizontal" @click="toCase(caseInfo.path)" plain><span>查看案例</span><ArrowDown style="width: 1em"/></el-button></div>
+          <div><el-button  class="rightButton hvr-shutter-out-horizontal" @click="editCases" plain><span>编辑案例</span><ArrowDown style="width: 1em"/></el-button></div>
+          <edit-case-draw
+              ref="editCaseRef"
+              title="编辑--案例"
+              :editing-case-info="updateCases"
+              @saveCase="saveCase"
+              @cancelCase ="cancelCase"
+          ></edit-case-draw>
         </div>
         <div>
-          <h3 class="authorInfo">贡献者</h3>
-          <p class="font-size-1">
-           {{caseInfo.caseAuthor.name}}
-          </p>
-
           <h3 class="authorInfo">作者</h3>
-          <p class="font-size-1">
-            作者：{{caseInfo.caseAuthor.name}}
-          </p>
-          <p  class="font-size-1">
-            作者单位：{{caseInfo.caseAuthor.workPlace}}
-          </p>
-          <p  class="font-size-1">
-            作者邮箱：{{caseInfo.caseAuthor.email}}
-          </p>
+          <template v-for="(item,key) in caseInfo.caseAuthor" :key="key">
+            <p class="font-size-1">
+              作者：{{item.name}}
+            </p>
+            <p  class="font-size-1">
+              作者单位：{{item.workPlace}}
+            </p>
+            <p  class="font-size-1">
+              作者邮箱：{{item.email}}
+            </p>
+          </template>
         </div>
       </el-col>
     </el-row>
@@ -61,20 +70,58 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {ArrowDown} from '@element-plus/icons-vue'
-import { useRouter} from "vue-router";
+import {ArrowDown,Plus,Upload} from '@element-plus/icons-vue'
+import { useRouter,useRoute} from "vue-router";
+import {post ,get} from "@/request/request_backup";
+import {ElNotification} from "element-plus";
+import EditCaseDraw from "components/Cases/editCaseDraw";
 const router = useRouter();
+const route = useRoute();
+
 const mdOpenIcon = require("@/assets/img/icon/md-open.png")
 const toCase = (path) => {
   router.push("/case/" + path + "/");
 }
-
 const caseInfo = ref({})
-const baseUrl = ref("http://172.21.213.248:8999")
+const baseUrl = ref("/back")
+
+//编辑案例信息
+const editCaseRef = ref();
+const updateCases = ref({})
+const editCases = () => {
+  editCaseRef.value.showCase();
+  updateCases.value = JSON.parse(JSON.stringify(caseInfo.value));
+}
+const saveCase = (data) => {
+  post("/case/updateCase/"+caseId,data).then(res=>{
+    ElNotification({
+      message: '案例已更新！',
+      type: "success",
+    });
+    //重新查询更新后的案例信息
+    getCaseInfo();
+    cancelCase();
+  })
+}
+const cancelCase = () => {
+  editCaseRef.value.cancelCase();
+}
+
+let caseId;
+onMounted(()=>{
+  getCaseInfo();
+})
+const getCaseInfo = () => {
+  caseId = route.query.caseId;
+  get("/case/getCaseById/"+caseId).then(res=>{
+    caseInfo.value = res.data.data
+  })
+}
 caseInfo.value = {
   name:"SWMM",
   thumbnail:"/store/themeImg/swmm.62c2a75e443cecf9144a6fb0.png",
   path:"SWMM",
+  problem:["洪涝水环境灾害","地表地下水耦合"],
   description:["SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。"],
   dataList:[
     {
@@ -187,6 +234,13 @@ caseInfo.value = {
   line-height: 1.5;
   color: #6e6e6e;
   padding: 15px 15px 0 20px;
+}
+
+.editDialogRow {
+  align-items: center;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  justify-content: center;
 }
 
 /* Shutter Out Horizontal */

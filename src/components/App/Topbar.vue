@@ -2,7 +2,7 @@
   <div class="container">
     <span
       class="bg"
-      style="position: absolute; z-index: 2; transition: all 1s"
+      style="position: absolute; z-index: 2; transition: all .5s"
       :class="{
         background_show: background_show,
         background_hide: !background_show,
@@ -16,7 +16,7 @@
         style="
           transition: all 1s;
           height: 70%;
-          margin-left: 17%;
+          margin-left: 1.5vw;
           margin-top: 0px;
           color: white;
           position: relative;
@@ -57,11 +57,10 @@ const user_info = JSON.parse(localStorage.getItem("userInfo"));
 // const dataapi=new dataApi()
 
 const graphapi = new graphAPI();
-if(user_info!=undefined){
+if (user_info != undefined) {
   graphapi.initGraph(user_info.id).then((res) => {
-  console.log("推薦",graphapi.giveRecommend(["公开"]));
-});
-
+    console.log(res);
+  });
 }
 
 const props = defineProps({
@@ -82,11 +81,11 @@ const getRootPath = (whole) => {
 const searchIndexInRoutes = () => {
   let i = 0;
   if (getRootPath(route.path) != "") {
-    setTimeout(() => {
-      document.getElementsByClassName("user-topbar")[0].style.right = "2vw";
-      document.getElementById("logo").style.marginLeft = "2vw";
-      document.getElementsByClassName("topbar")[0].style.left = "5vw";
-    }, 150);
+    // setTimeout(() => {
+    //   document.getElementsByClassName("user-topbar")[0].style.right = "2vw";
+    //   document.getElementById("logo").style.marginLeft = "2vw";
+    //   document.getElementsByClassName("topbar")[0].style.left = "5vw";
+    // }, 150);
 
     pick.value = new Array(barList.length).fill(0);
   } else {
@@ -110,18 +109,26 @@ watch(
         document.getElementsByClassName("bg")[0].style.opacity = "0";
         document.getElementsByClassName("container")[0].style.background =
           "#24292f3b";
-      }, 800);
+      }, 100);
       setTimeout(() => {
         pick.value = new Array(barList.length).fill(0);
-        document.getElementsByClassName("user-topbar")[0].style.right = "2vw";
-        document.getElementById("logo").style.marginLeft = "2vw";
-        document.getElementsByClassName("topbar")[0].style.left = "5vw";
+        // document.getElementsByClassName("user-topbar")[0].style.right = "2vw";
+        // document.getElementById("logo").style.marginLeft = "2vw";
+        // document.getElementsByClassName("topbar")[0].style.left = "5vw";
         for (let i in barList) {
           if (getRootPath(barList[i].path) == getRootPath(newValue)) {
             pickup(i);
           }
         }
       }, 201);
+      let fromHome = localStorage.getItem("fromHome");
+      console.log(fromHome);
+      if (fromHome=='true') {
+        setTimeout(() => {
+          localStorage.setItem("fromHome", 'false');
+          location.reload();
+        }, 600);
+      }
     }
   }
 );
@@ -142,15 +149,17 @@ const sendRouterToFather = (route1, index) => {
     // if (index != -1) {
     //     pickup(index);
     //   }
-
-    return;
+    setTimeout(() => {
+      // location.reload();
+      console.log(router.options);
+    }, 300);
   }
-  setTimeout(() => {
-    document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
-    document.getElementById("logo").style.marginLeft = "17vw";
-    document.getElementsByClassName("topbar")[0].style.left =
-      "calc(17% + 50px)";
-  }, 1000);
+  // setTimeout(() => {
+  //   document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
+  //   document.getElementById("logo").style.marginLeft = "17vw";
+  //   document.getElementsByClassName("topbar")[0].style.left =
+  //     "calc(17% + 50px)";
+  // }, 1000);
 
   pickup(index);
   emit("RouterFromBar", route1);
@@ -184,12 +193,13 @@ setTimeout(searchIndexInRoutes, 100);
   // margin-left: 20px;
   width: 100%;
   position: absolute;
-  left: calc(17% + 50px);
+  // left: calc(17% + 50px);
+  left: 4vw;
   transition: all 1s;
 }
 
 .pickup {
-  border: hsl(54, 94%, 75%) 1px solid;
+  border: hsl(201, 100%, 65%) 2px solid;
   border-top: 0;
   border-left: 0;
   border-right: 0;

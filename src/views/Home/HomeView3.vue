@@ -1,6 +1,6 @@
 <template>
   <div style="display:flex;flex-direction: column; align-items: center">
-    <video id="video" controls muted autoplay loading="lazy" preload="undefined" playsinline="playsinline">
+    <video id="video" muted autoplay loading="lazy" preload="undefined" playsinline="playsinline">
       <source  src="@/assets/introduce/introduce.mp4" type="video/mp4">
     </video>
   <el-button class="explore" @click="explore()">开始探索</el-button>

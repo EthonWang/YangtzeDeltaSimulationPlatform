@@ -106,6 +106,7 @@
           append-to-body
         >
           <el-upload
+          v-model:file-list="fileList"
             class="upload-demo"
             action="/back/resource/saveDataItem"
             :headers="upload_header"
@@ -190,42 +191,46 @@ task_api.getTaskList(userInfo.id).then((res) => {
     task_list.value.push(res.data.data[i]);
   }
 });
+const fileList = ref([
+])
 const addToTask = () => {
   show_task.value = true;
 };
 const addDataToTask = (task) => {
-  console.log(task)
-  let dataList=[]
+  console.log(task);
+  let dataList = [];
   for (let i in choosing_files) {
-    
+    if (choosing_files[i].type != "folder") {
       let data = {
         name: choosing_files[i].name,
         id: choosing_files[i].id,
         source: "cloud",
-        type:"data",
-        "fill-color":"red",
-        visualizationBoolean:false,
-        visualWebAddress:"",
-        visualType: choosing_files[i].name.split('.')[1],
+        type: "data",
+        visualizationBoolean: false,
+        visualWebAddress: choosing_files[i].visualWebAddress,
+        visualType: choosing_files[i].name.split(".")[1],
         geoType: "line",
+        fileRelativePath: choosing_files[i].fileRelativePath,
+        fileWebAddress: choosing_files[i].fileWebAddress,
+        fileStoreName: choosing_files[i].fileStoreName,
       };
-      dataList.push(data)
- 
+      dataList.push(data);
+    }
   }
   task_api.addData(task, dataList);
   show_task.value = false;
 };
-var upload_file = reactive({
+var upload_file = ref({
   name: "",
   description: "",
   problemTags: [],
   publicBoolean: false,
   problemTagsString: computed(() => {
-    return upload_file.problemTags.toString();
+    return upload_file.value.problemTags.toString();
   }),
   normalTags: [],
   normalTagsString: computed(() => {
-    return upload_file.normalTags.toString();
+    return upload_file.value.normalTags.toString();
   }),
 });
 const data_des_width = "100px";
@@ -267,19 +272,21 @@ setTimeout(() => {
 }, 320);
 const successUpload = () => {
   innerVisible.value = false;
-  upload_file = reactive({
+  dialogVisible.value=false;
+  fileList.value=[]
+  upload_file.value = {
     name: "",
     description: "",
     problemTags: [],
     publicBoolean: false,
     problemTagsString: computed(() => {
-      return upload_file.problemTags.toString();
+      return upload_file.value.problemTags.toString();
     }),
     normalTags: [],
     normalTagsString: computed(() => {
-      return upload_file.normalTags.toString();
+      return upload_file.value.normalTags.toString();
     }),
-  });
+  };
   refresh();
 };
 const now_id = ref(userInfo.id);
@@ -327,7 +334,7 @@ const beforeUpload = (rawFile) => {
       return false;
     }
   }
-  upload_file.name = rawFile.name;
+  upload_file.value.name = rawFile.name;
   return true;
 };
 const uploadFile = (file_artribute, file_data) => {
@@ -349,17 +356,15 @@ const refresh = () => {
       }
     }
     file_data.value = res.data;
+    choose_num.value=0;
+    choosing_files = [];
+    choosing_files_index = [];
     ElMessage({
       type: "success",
       message: "数据获取成功",
     });
   });
-  setTimeout(() => {
-    api.getAllFile(now_id.value).then((res) => {
-      console.log(res)
-      
-    });
-  }, 500);
+
 };
 const comeIn = (file) => {
   console.log(file);
@@ -385,12 +390,13 @@ const downloadData = () => {
     let file = choosing_files[i];
     console.log(file);
     if (file.type == "folder") {
-      api.downloadFolder(file).then(() => {
-        ElMessage({
-          message: "下载成功",
-          type: "success",
-        });
-      });
+      ElMessage.error('无法下载文件夹')
+      // api.downloadFolder(file).then(() => {
+      //   ElMessage({
+      //     message: "下载成功",
+      //     type: "success",
+      //   });
+      // });
     }
     api.downloadFile(file).then(() => {
       ElMessage({

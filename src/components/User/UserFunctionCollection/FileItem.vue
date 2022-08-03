@@ -74,7 +74,7 @@
     <span v-if="file.type != 'folder' && file.type != 'zip'" class="type">{{
       file.name.split(".")[1]
     }}</span>
-    <span style="font-size: 16px; width: 90%" v-if="!file.rename"
+    <span style="font-size: 16px; width: 90%;overflow-x: hidden;" v-if="!file.rename"
       >{{ file.name.split(".")[0] }}
     </span>
     <span style="font-size: 16px; width: 100%; display: flex" v-if="file.rename"

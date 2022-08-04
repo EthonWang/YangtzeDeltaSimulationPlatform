@@ -40,8 +40,6 @@ const props = defineProps({
     default:''
   }
 })
-// videoPath1.value = "/back/store/themeImg/Eutrophication.62d77135443c3b60743a520c.mp4";
-// videoPath2.value = "/back/store/themeImg/shuihua.62d771a9443c3b60743a520e.mp4";
 </script>
 
 <style scoped>

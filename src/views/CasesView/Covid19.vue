@@ -800,192 +800,82 @@ const loadMidChart1 = () => {
   fetch('/case/economicRun/cityArea.geojson').then(res=>{
     return res.json()
   }).then(json=>{
-    echarts.registerMap('cityMap',json);
+    fetch('/case/economicRun/province.geojson').then(resProv=>{
+      return resProv.json()
+    }).then(prov=>{
+      echarts.registerMap('prov',prov)
+      echarts.registerMap('cityMap',json);
 
-    let data,name;
-    switch (covCheckType.value){
-      case "covC":
-        name = "累计确诊人数";
-        data = cov19Data_C[timeList[timeIndex]];
-        break;
-      case "covD":
-        name = "累计死亡人数";
-        data = cov19Data_D[timeList[timeIndex]];
-        break;
-      case "covH":
-        name = "累计治愈人数";
-        data = cov19Data_H[timeList[timeIndex]];
-        break;
-      case "医疗资源":
-        data = cov19Data_C[timeList[timeIndex]];
-        break;
-    };
-    let option = {
-      tooltip:{
-        trigger: 'item',
-      },
-      bmap: {
-        center: [118.81893, 32.09936],
-        zoom: 6,
-        roam: false,
-        mapStyle: {
-          styleJson: [
-            {
-              featureType: 'water',
-              elementType: 'all',
-              stylers: {
-                color: '#044161'
-              }
+      let data,name;
+      switch (covCheckType.value){
+        case "covC":
+          name = "累计确诊人数";
+          data = cov19Data_C[timeList[timeIndex]];
+          break;
+        case "covD":
+          name = "累计死亡人数";
+          data = cov19Data_D[timeList[timeIndex]];
+          break;
+        case "covH":
+          name = "累计治愈人数";
+          data = cov19Data_H[timeList[timeIndex]];
+          break;
+        case "医疗资源":
+          data = cov19Data_C[timeList[timeIndex]];
+          break;
+      };
+      let option = {
+        tooltip:{
+          trigger: 'item',
+        },
+        visualMap: {
+          // min: 0,
+          // max: 700,
+          text: ['High', 'Low'],
+          realtime: false,
+          calculable: true,
+          inRange: {
+            color: ['#65c6c4','#408ab4','#887299','#C56183']
+          },
+          right:'0',
+          textStyle:{
+            color:"#fff"
+          }
+        },
+        series:[
+          {
+            name: '省边界',
+            type: 'map',
+            map: 'prov',
+            center: [118.81893, 31.40936],
+            zoom:6,
+            z:1,
+            itemStyle: {
+              color:"#164a83",
+              borderColor:"#3397ce",
             },
-            {
-              featureType: 'land',
-              elementType: 'all',
-              stylers: {
-                color: '#004981'
-              }
-            },
-            {
-              featureType: 'boundary',
-              elementType: 'geometry',
-              stylers: {
-                color: '#064f85'
-              }
-            },
-            {
-              featureType: 'railway',
-              elementType: 'all',
-              stylers: {
-                visibility: 'off'
-              }
-            },
-            {
-              featureType: 'highway',
-              elementType: 'geometry',
-              stylers: {
-                color: '#004981'
-              }
-            },
-            {
-              featureType: 'highway',
-              elementType: 'geometry.fill',
-              stylers: {
-                color: '#005b96',
-                lightness: 1
-              }
-            },
-            {
-              featureType: 'highway',
-              elementType: 'labels',
-              stylers: {
-                visibility: 'off'
-              }
-            },
-            {
-              featureType: 'arterial',
-              elementType: 'geometry',
-              stylers: {
-                color: '#004981'
-              }
-            },
-            {
-              featureType: 'arterial',
-              elementType: 'geometry.fill',
-              stylers: {
-                color: '#00508b'
-              }
-            },
-            {
-              featureType: 'poi',
-              elementType: 'all',
-              stylers: {
-                visibility: 'off'
-              }
-            },
-            {
-              featureType: 'green',
-              elementType: 'all',
-              stylers: {
-                color: '#056197',
-                visibility: 'off'
-              }
-            },
-            {
-              featureType: 'subway',
-              elementType: 'all',
-              stylers: {
-                visibility: 'off'
-              }
-            },
-            {
-              featureType: 'manmade',
-              elementType: 'all',
-              stylers: {
-                visibility: 'off'
-              }
-            },
-            {
-              featureType: 'local',
-              elementType: 'all',
-              stylers: {
-                visibility: 'off'
-              }
-            },
-            {
-              featureType: 'arterial',
-              elementType: 'labels',
-              stylers: {
-                visibility: 'off'
-              }
-            },
-            {
-              featureType: 'boundary',
-              elementType: 'geometry.fill',
-              stylers: {
-                color: '#029fd4'
-              }
-            },
-            {
-              featureType: 'building',
-              elementType: 'all',
-              stylers: {
-                color: '#1a5787'
-              }
-            },
-            {
-              featureType: 'label',
-              elementType: 'all',
-              stylers: {
-                visibility: 'off'
+            emphasis:{
+              disabled:true,
+              label:{
+                show:false
               }
             }
-          ]
-        }
-      },
-      visualMap: {
-        // min: 0,
-        // max: 700,
-        text: ['High', 'Low'],
-        realtime: false,
-        calculable: true,
-        inRange: {
-          color: ['#65c6c4','#408ab4','#887299','#C56183']
-        },
-        right:'0',
-        textStyle:{
-          color:"#fff"
-        }
-      },
-      series:[
-        {
-          name:name,
-          type:'map',
-          map:'cityMap',
-          data:data
-        }
-      ]
-    }
-    midChart1.setOption(option)
-    console.log("name,data",name,data,option)
+          },
+          {
+            name:name,
+            type:'map',
+            roam: false,
+            center: [118.81893, 31.40936],
+            z:2,
+            map:'cityMap',
+            data:data
+          }
+        ]
+      }
+      midChart1.setOption(option)
+    })
+
+
   })
   if(timeIndex < timeList.length - 1){
     timeIndex++;

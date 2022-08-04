@@ -55,6 +55,12 @@ public class LabTaskController {
         return labTaskService.deleteLabTaskList(labTaskId);
     }
 
+    @ApiOperation(value = "新建文本文件")
+    @PostMapping("/newLabTxtFile/{labTaskId}")
+    public JsonResult newLabTxtFile(HttpServletRequest request, @PathVariable String labTaskId){
+        return labTaskService.newLabTxtFile(request,labTaskId);
+    }
+
     @ApiOperation(value = "修改文本文件内容")
     @PostMapping("/updateLabTxtFile")
     public JsonResult updateLabTxtFile(HttpServletRequest request){

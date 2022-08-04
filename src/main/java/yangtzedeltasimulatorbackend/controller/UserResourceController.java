@@ -112,7 +112,7 @@ public class UserResourceController {
         return userResourceService.deleteDataItem(dataItemId);
     }
 
-    @LoginRequired
+
     @ApiOperation(value = "下载数据")
     @GetMapping("/downloadDataItem/{dataItemId}")
     public void downloadDataItem(@PathVariable("dataItemId") String dataItemId, HttpServletResponse response) {

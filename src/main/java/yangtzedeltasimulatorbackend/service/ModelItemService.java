@@ -266,11 +266,11 @@ public class ModelItemService {
         lists.put("username", email);
 
 //        ComputableModel computableModel=computableModelDao.findFirstById(lists.getString("oid"));
-        ModelItem modelItem=modelItemDao.findById(lists.getString("oid")).get();
+        ResourceModel resourceModel = resourceModelDao.findById(lists.getString("oid")).get();
         //长三角这里pid就是md5前端不传了
-        lists.put("pid", modelItem.getMd5());
+        lists.put("pid", resourceModel.getMd5());
 
-        String mdlStr=modelItem.getMdl();
+        String mdlStr=resourceModel.getMdl();
         JSONObject mdlJson= Utils.convertMdl(mdlStr);
         // System.out.println(mdlJson);
         JSONObject mdl=mdlJson.getJSONObject("mdl");
@@ -343,7 +343,7 @@ public class ModelItemService {
         } else {
             Task task = new Task();
             task.setComputableId(lists.getString("oid"));
-            task.setComputableName(modelItem.getModelName());
+            task.setComputableName(resourceModel.getName());
             task.setTaskId(result.getString("tid"));
             task.setEmail(email);
             task.setIntegrate(false);
@@ -365,7 +365,7 @@ public class ModelItemService {
 
             taskDao.save(task);
 
-            modelItemDao.save(modelItem);
+            resourceModelDao.save(resourceModel);
 
             return ResultUtils.success(result);
         }

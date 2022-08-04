@@ -8,10 +8,7 @@ import it.geosolutions.geoserver.rest.decoder.RESTLayer;
 import it.geosolutions.geoserver.rest.encoder.GSAbstractStoreEncoder;
 import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
 import it.geosolutions.geoserver.rest.encoder.GSResourceEncoder;
-import it.geosolutions.geoserver.rest.encoder.datastore.GSAbstractDatastoreEncoder;
-import it.geosolutions.geoserver.rest.encoder.datastore.GSGeoTIFFDatastoreEncoder;
-import it.geosolutions.geoserver.rest.encoder.datastore.GSPostGISDatastoreEncoder;
-import it.geosolutions.geoserver.rest.encoder.datastore.GSShapefileDatastoreEncoder;
+import it.geosolutions.geoserver.rest.encoder.datastore.*;
 import it.geosolutions.geoserver.rest.encoder.feature.GSFeatureTypeEncoder;
 import it.geosolutions.geoserver.rest.manager.GeoServerRESTAbstractManager;
 import it.geosolutions.geoserver.rest.manager.GeoServerRESTStoreManager;
@@ -150,6 +147,50 @@ public class GeoServerUtils {
         return true;
     }
 
+    /**
+     * @param workSpace: 工作空间名称
+     * @param storeName: 存储库名称
+     * @param ascPath:  tiff文件路径
+     * @return void
+     * @description 将asc文件发布为GeoServer服务
+     * @author zym
+     * @date 2022/7/26 10:00
+     */
+    public static void PublishArcGrid(String workSpace, String storeName, String ascPath) throws MalformedURLException, FileNotFoundException {
+        /**Geoserver 连接配置**/
+        String url = "http://172.21.213.92:8089/geoserver";
+        String username = "admin";
+        String passWord = "geoserver";
+
+        /**Geoserver 连接配置**/
+//        判断workspace是否存在，不存在创建
+        GeoServerRESTManager manager = new GeoServerRESTManager(new URL(url), username, passWord);
+        GeoServerRESTPublisher publisher = manager.getPublisher();
+        List<String> workSpaces = manager.getReader().getNamespaceNames();
+        if (!workSpaces.contains(workSpace)) {
+            boolean createws = publisher.createWorkspace(workSpace);
+            System.out.println("create workspace: " + createws);
+        } else {
+            System.out.println("workspace已经存在了,workspace:" + workSpace);
+        }
+//        判断数据存储是否存在，不存在创建
+        RESTDataStore restDataStore = manager.getReader().getDatastore(workSpace, storeName);
+        if (restDataStore == null) {
+            // TODO: 2022-7-26  找不到合适的ArcGridEncoder库
+            GSGeoTIFFDatastoreEncoder gsGeoTIFFDatastoreEncoder = new GSGeoTIFFDatastoreEncoder(storeName);
+            gsGeoTIFFDatastoreEncoder.setWorkspaceName(workSpace);
+            gsGeoTIFFDatastoreEncoder.setUrl(new URL("file:" + ascPath));
+            
+//            创建数据存储
+            boolean creatStore = manager.getStoreManager().create(workSpace, gsGeoTIFFDatastoreEncoder);
+            System.out.println("create ArcGridStore : " + creatStore);
+//            发布图层
+            boolean publish = publisher.publishArcGrid(workSpace, storeName, new File(ascPath));
+            System.out.println("publish ArcGrid : " + publish);
+        } else {
+            System.out.println("数据存储已经存在了,store:" + storeName);
+        }
+    }
     /**
      * @param workSpace: 工作区
      * @param storeType: 数据类型：[“Image”,“Shape”]

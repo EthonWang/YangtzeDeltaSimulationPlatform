@@ -34,9 +34,13 @@ public class ScriptExecController {
     }
 
     @ApiOperation(value = "GDAL_clip")
-    @PostMapping("/gdalClip/{labTaskId}")
-    public JsonResult gdalClip(@RequestBody GDALClipDTO gdalClipDTO,  @PathVariable String labTaskId){
-        return  scriptExecService.gdalClip(gdalClipDTO,labTaskId);
+    @PostMapping("/gdalClip/{labTaskId}/{userId}")
+    public JsonResult gdalClip(@RequestBody GDALClipDTO gdalClipDTO,  @PathVariable String labTaskId,  @PathVariable String userId){
+        if (!gdalClipDTO.getInputRasterPath().equals("")){
+            return  scriptExecService.gdalClip(gdalClipDTO,labTaskId, userId);
+        } else {
+            return  scriptExecService.gdalClipDataSet(gdalClipDTO,labTaskId, userId);
+        }
     }
 
     @ApiOperation(value = "txt_analysis")

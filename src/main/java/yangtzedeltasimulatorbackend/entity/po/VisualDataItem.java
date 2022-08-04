@@ -40,4 +40,5 @@ public class VisualDataItem {
     String visualWebAddress; //可视化文件下载请求的地址
     String fileRelativePath;
     String visualType;
+    String dataContainerUrl="";
 }

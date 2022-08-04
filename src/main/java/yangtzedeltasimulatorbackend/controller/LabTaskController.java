@@ -31,11 +31,11 @@ public class LabTaskController {
     @ApiOperation(value = "新建实验室任务")
     @PostMapping(value = "/createLabTask")
     JsonResult createLabTask(@RequestBody CreateLabTaskDTO createLabTaskDTO, HttpServletRequest request) {
-        String userId= TokenUtils.getUserId(request.getHeader("token"));
-        return labTaskService.createLabTask(createLabTaskDTO,userId);
+//        String userId= TokenUtils.getUserId(request.getHeader("token"));
+        return labTaskService.createLabTask(createLabTaskDTO);
     }
 
-    @ApiOperation(value = "获取实验室任务列表")
+    @ApiOperation(value = "根据实验室id，获取任务列表")
     @GetMapping(value = "/getLabTaskList/{userId}")
     JsonResult getLabTaskList(@PathVariable("userId") String userId ) {
         return labTaskService.getLabTaskList(userId);

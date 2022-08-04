@@ -18,7 +18,7 @@ import java.util.List;
  **/
 
 @Data
-public class Case {
+public class MyCase {
     @Id
     @ApiModelProperty(value = "id",hidden = true)
     String id= IdUtil.objectId();

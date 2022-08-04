@@ -1,6 +1,7 @@
-package yangtzedeltasimulatorbackend.entity.dto;
+package yangtzedeltasimulatorbackend.entity.dto.myCase;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.Data;
 
 import java.util.List;
 
@@ -9,7 +10,8 @@ import java.util.List;
  * @Auther wyjq
  * @Date 2022/7/6
  **/
-public class CreateCaseDTO {
+@Data
+public class UpdateMyCaseDTO {
     String name;
     String thumbnail;
     String path;

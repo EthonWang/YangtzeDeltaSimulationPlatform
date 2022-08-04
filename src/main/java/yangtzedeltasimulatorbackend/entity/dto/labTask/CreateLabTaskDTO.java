@@ -22,4 +22,5 @@ public class CreateLabTaskDTO {
     List<JSONObject> dataList;
     List<ResourceModel> modelList;
 
+    String labId;
 }

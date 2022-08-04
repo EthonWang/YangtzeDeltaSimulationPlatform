@@ -2,8 +2,9 @@ package yangtzedeltasimulatorbackend.dao;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-import yangtzedeltasimulatorbackend.entity.po.BigFileInfo;
-import yangtzedeltasimulatorbackend.entity.po.Case;
+import yangtzedeltasimulatorbackend.entity.po.MyCase;
+
+import java.util.Optional;
 
 /**
  * @Description
@@ -11,6 +12,7 @@ import yangtzedeltasimulatorbackend.entity.po.Case;
  * @Date 2022/4/6
  **/
 @Repository
-public interface CaseDao extends MongoRepository<Case, String> {
+public interface MyCaseDao extends MongoRepository<MyCase, String> {
 
+    Optional<MyCase> findByName(String caseName);
 }

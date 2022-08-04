@@ -25,6 +25,10 @@ import yangtzedeltasimulatorbackend.entity.dto.resource.CreateResourceSmallFileD
 import yangtzedeltasimulatorbackend.entity.dto.resource.ResourcePageDTO;
 import yangtzedeltasimulatorbackend.entity.po.*;
 import yangtzedeltasimulatorbackend.utils.*;
+import yangtzedeltasimulatorbackend.utils.FileUtils;
+import yangtzedeltasimulatorbackend.utils.GeoServerUtils;
+import yangtzedeltasimulatorbackend.utils.ResultUtils;
+import yangtzedeltasimulatorbackend.utils.Utils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -360,6 +364,7 @@ public class ResourceService {
             ResourceModel resourceModel=new ResourceModel();
             BeanUtils.copyProperties(createResourceModelDTO,resourceModel);
 
+            resourceModel.setMdlJson(Utils.convertMdl(createResourceModelDTO.getMdl()));
 
             //图像
             if (imgFile.isEmpty()) {

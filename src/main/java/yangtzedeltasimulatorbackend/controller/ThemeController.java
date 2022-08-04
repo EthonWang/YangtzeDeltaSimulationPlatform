@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
+import yangtzedeltasimulatorbackend.entity.dto.theme.GetCasesDTO;
 import yangtzedeltasimulatorbackend.entity.dto.theme.ThemeDTO;
 import yangtzedeltasimulatorbackend.entity.dto.theme.UpdateThemeDTO;
 import yangtzedeltasimulatorbackend.entity.po.Theme;
@@ -47,5 +48,10 @@ public class ThemeController {
         return themeService.uploadThemeImg(uploadImg);
     }
 
+    @ApiOperation(value = "批量查询案例信息")
+    @PostMapping("/getCasesInfo")
+    public JsonResult getCasesInfo(@RequestBody GetCasesDTO getCasesDTO){
+        return themeService.getCasesInfo(getCasesDTO);
+    }
 
 }

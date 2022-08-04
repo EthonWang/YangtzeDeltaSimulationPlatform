@@ -131,6 +131,9 @@ export default class {
                     if (publicData[i].normalTags[0] != "" && publicData[i].normalTags != []) {
                         publicData[i].normalTags = data.normalTags.split(",");
                     }
+                    if(data.name==undefined||data.name==null){
+                        continue
+                    }
                     relation.nodes.push({
                         name: data.name,
                         category: 0,
@@ -234,9 +237,12 @@ export default class {
                 }
                 for (let i in modelList) {
                     let data = modelList[i];
-
+                    if(data.name==undefined||data.name==null){
+                        continue
+                    }
+                    console.log(data.name);
                     relation.nodes.push({
-                        name: data.modelName,
+                        name: data.name,
                         category: 1,
                         symbolSize: 10,
                         value: data.overview,
@@ -244,13 +250,13 @@ export default class {
                         weight: 0
                     });
                     relation.links.push({
-                        source: data.modelName,
+                        source: data.name,
                         target: "模型",
                         relation: "类型"
                     });
                     for (let j in data.classifications) {
                         relation.links.push({
-                            source: data.modelName,
+                            source: data.name,
                             target: data.classifications[j],
                             relation: "归类"
                         });
@@ -300,6 +306,12 @@ export default class {
                     }
 
                 }
+                let obj={}
+                relation.nodes.forEach((item)=>obj[item.name]=item)
+                let a=[]
+                for(let key in obj){a.push(obj[key])}
+                console.log("a is :",a);
+                relation.nodes=a
                 resolve("ok")
             }).catch((err) => {
                 reject("error")

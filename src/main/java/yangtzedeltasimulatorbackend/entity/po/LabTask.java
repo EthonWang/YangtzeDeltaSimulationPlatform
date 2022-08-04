@@ -29,4 +29,6 @@ public class LabTask {
 
     String userId;
 
+    String labId;
+
 }

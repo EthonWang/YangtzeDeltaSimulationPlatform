@@ -29,5 +29,4 @@ public class CreateResourceModelDTO {
 
     String md5; //模型的md5
     String mdl;  //模型的mdl xml直接存储为string
-    Object mdlJson; //模型mdl的json格式
 }

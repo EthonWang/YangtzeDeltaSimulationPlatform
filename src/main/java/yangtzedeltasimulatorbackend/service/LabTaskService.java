@@ -48,12 +48,12 @@ public class LabTaskService {
     UserDataDao userDataDao;
 
 
-    public JsonResult createLabTask(CreateLabTaskDTO createLabTaskDTO, String userId) {
+    public JsonResult createLabTask(CreateLabTaskDTO createLabTaskDTO) {
         try {
             LabTask labTask=new LabTask();
 
             BeanUtils.copyProperties(createLabTaskDTO,labTask);
-            labTask.setUserId(userId);
+//            labTask.setUserId(userId);
             labTaskDao.save(labTask);
 
             return ResultUtils.success("新建实验室任务成功");

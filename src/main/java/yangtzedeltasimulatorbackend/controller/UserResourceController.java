@@ -5,11 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import yangtzedeltasimulatorbackend.component.LoginRequired;
-import yangtzedeltasimulatorbackend.entity.dto.DataItemDTO;
-import yangtzedeltasimulatorbackend.entity.dto.UpdateDataItem;
+import yangtzedeltasimulatorbackend.entity.dto.user.DataItemDTO;
+import yangtzedeltasimulatorbackend.entity.dto.user.UpdateUserDataItemDTO;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
 import yangtzedeltasimulatorbackend.entity.dto.user.CreateFolderDTO;
-import yangtzedeltasimulatorbackend.entity.po.Folder;
+import yangtzedeltasimulatorbackend.entity.dto.user.UpdateFolderDTO;
 import yangtzedeltasimulatorbackend.service.UserResourceService;
 import yangtzedeltasimulatorbackend.utils.TokenUtils;
 
@@ -60,10 +60,17 @@ public class UserResourceController {
     }
 
     @LoginRequired
-    @ApiOperation(value = "更新数据描述信息")
-    @PostMapping("/updateDataItem")
-    public JsonResult updateDataItem(@RequestBody UpdateDataItem updateDataItem) {
-        return userResourceService.updateDataItem(updateDataItem);
+    @ApiOperation(value = "更新用户个人中心数据描述信息（不包括文件夹）")
+    @PostMapping("/updateUserDataItem")
+    public JsonResult updateUserDataItem(@RequestBody UpdateUserDataItemDTO updateUserDataItemDTO) {
+        return userResourceService.updateUserDataItem(updateUserDataItemDTO);
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "更新用户文件夹描述信息")
+    @PostMapping("/updateUserFolder")
+    public JsonResult updateUserFolder(@RequestBody UpdateFolderDTO updateFolderDTO) {
+        return userResourceService.updateUserFolder(updateFolderDTO);
     }
 
 //    @ApiOperation(value = "上传数据")

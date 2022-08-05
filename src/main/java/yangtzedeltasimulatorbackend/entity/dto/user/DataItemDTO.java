@@ -1,4 +1,4 @@
-package yangtzedeltasimulatorbackend.entity.dto;
+package yangtzedeltasimulatorbackend.entity.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

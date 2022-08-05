@@ -11,9 +11,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import yangtzedeltasimulatorbackend.dao.*;
-import yangtzedeltasimulatorbackend.entity.dto.DataItemDTO;
-import yangtzedeltasimulatorbackend.entity.dto.UpdateDataItem;
+import yangtzedeltasimulatorbackend.entity.dto.user.DataItemDTO;
+import yangtzedeltasimulatorbackend.entity.dto.user.UpdateUserDataItemDTO;
 import yangtzedeltasimulatorbackend.entity.dto.user.CreateFolderDTO;
+import yangtzedeltasimulatorbackend.entity.dto.user.UpdateFolderDTO;
 import yangtzedeltasimulatorbackend.entity.po.*;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
 import yangtzedeltasimulatorbackend.utils.MyFileUtils;
@@ -220,10 +221,10 @@ public class UserResourceService {
         }
     }
 
-    public JsonResult updateDataItem(UpdateDataItem updateDataItem) {
+    public JsonResult updateUserDataItem(UpdateUserDataItemDTO updateUserDataItemDTO) {
         try {
-            UserData userData = userDataDao.findById(updateDataItem.getId()).get();
-            BeanUtils.copyProperties(updateDataItem, userData);
+            UserData userData = userDataDao.findById(updateUserDataItemDTO.getId()).get();
+            BeanUtils.copyProperties(updateUserDataItemDTO, userData);
             userDataDao.save(userData);
 
             return ResultUtils.success("更新数据成功");
@@ -258,6 +259,18 @@ public class UserResourceService {
         }catch (Exception e){
             log.error(e.getMessage());
             return ResultUtils.error("查询失败"+e.getMessage());
+        }
+    }
+
+    public JsonResult updateUserFolder(UpdateFolderDTO updateFolderDTO) {
+        try {
+            Folder folder=folderDao.findById(updateFolderDTO.getId()).get();
+            BeanUtils.copyProperties(updateFolderDTO, folder);
+            folderDao.save(folder);
+            return ResultUtils.success("更新文件夹信息成功");
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("更新文件夹信息失败"+e.getMessage());
         }
     }
 }

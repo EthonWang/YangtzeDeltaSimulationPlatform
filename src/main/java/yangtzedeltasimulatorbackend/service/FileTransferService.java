@@ -151,7 +151,7 @@ public class FileTransferService {
             return ResultUtils.success(o);
         }else {
             response.setStatus(201);
-            return ResultUtils.success("upload part success");
+            return ResultUtils.error("upload part success");
         }
     }
 

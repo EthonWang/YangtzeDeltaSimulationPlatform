@@ -1,4 +1,4 @@
-package yangtzedeltasimulatorbackend.entity.dto;
+package yangtzedeltasimulatorbackend.entity.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateDataItem {
+public class UpdateUserDataItemDTO {
     String id;
     String name; //数据名称
     String description; //概述

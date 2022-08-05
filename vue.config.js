@@ -45,7 +45,7 @@ module.exports = {
             // new CopyWebpackPlugin([ { from: path.join(cesiumSource, 'Widgets'), to: 'Widgets'}]),
             // new CopyWebpackPlugin([ { from: path.join(cesiumSource, 'ThirdParty/Workers'), to: 'ThirdParty/Workers'}]),
             new webpack.DefinePlugin({
-                CESIUM_BASE_URL: JSON.stringify('./')
+                CESIUM_BASE_URL: JSON.stringify('/')
             })
         ],
         module: {

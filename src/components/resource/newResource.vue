@@ -389,7 +389,7 @@ import "./style.css";
 export default {
   data() {
     return {
-      dataServer: useStore().getters.devIpAddress,
+      dataServer: useStore().state.devIpAddress,
       formInline: {
         resType: "data",
         workName: "",
@@ -486,7 +486,7 @@ export default {
       imageFile: null,
       createProjectInfo: {},
       uploaderOptions: {
-        target: this.dataServer+"/fileTransfer/upload", //上传地址
+        target: "http://172.21.213.44:8999/fileTransfer/upload", //上传地址
         chunkSize: 5 * 1024 * 1024,
         testChunks: false,
         simultaneousUploads: 1,

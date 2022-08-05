@@ -61,7 +61,7 @@
     </template>
     <txt-editor :txtInfo="txtInfo" @saveTxtHtml="saveTxtHtml"></txt-editor>
     <template #footer>
-      <Button @click="txtEditorModal = false">取消</Button>
+      <Button @click="handleTxtEditorClose">取消</Button>
       <Button type="primary" @click="handleTxtEditorClose">确认</Button>
     </template>
   </Modal>

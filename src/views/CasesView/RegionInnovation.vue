@@ -138,7 +138,6 @@ window.onresize = () =>{
   rightChart4.resize();
   rightChart5.resize();
   rightChart6.resize();
-
 }
 const loadLeftChart1 = () => {
   let option;

@@ -29,94 +29,103 @@
         >
           <el-collapse-item title="数据列表" name="data">
             <el-scrollbar max-height="60vh">
-              <el-table
-                :data="showLayerTableList"
-                ref="shpLayerTable"
-                row-key="nameId"
-                size="small"
-                @cell-click="handleLayerClick"
-                style="width: 100%"
+            <el-table
+              :data="showLayerTableList"
+              ref="shpLayerTable"
+              row-key="nameId"
+              size="small"
+              @cell-click="handleLayerClick"
+              style="width: 100%"
+            >
+              <el-table-column width="50">
+                <template #default="scope">
+                  <el-switch
+                    :width="30"
+                    v-model="scope.row.show"
+                    v-if="scope.row.visualType!='zip'"
+                    @change="handleLayerShowSwitchChange($event, scope.row)"
+                  >
+                  </el-switch>
+                  <el-switch
+                  v-else
+                  disabled
+                    :width="30"
+                    v-model="falseShow"
+                    @change="handleLayerShowSwitchChange($event, scope.row)"
+                  >
+                  </el-switch>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="类型"
+                prop="visualType"
+                min-width="50"
+                show-overflow-tooltip
               >
-                <el-table-column width="50">
-                  <template #default="scope">
-                    <el-switch
-                      :width="30"
-                      v-model="scope.row.show"
-                      @change="handleLayerShowSwitchChange($event, scope.row)"
+              </el-table-column>
+              <el-table-column
+                label="名称"
+                prop="name"
+                min-width="130"
+                show-overflow-tooltip
+              >
+              </el-table-column>
+              <el-table-column label="操作" min-width="90">
+                <template #default="scope">
+                  <el-popover
+                    placement="right"
+                    title="图层样式"
+                    width="250"
+                    trigger="click"
+                  >
+                    <!--              点图层编辑-->
+                    <div
+                      v-if="
+                        scope.row.type === 'circle' &&
+                        scope.row.data.visualType == 'shp'
+                      "
                     >
-                    </el-switch>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  label="类型"
-                  prop="visualType"
-                  min-width="50"
-                  show-overflow-tooltip
-                >
-                </el-table-column>
-                <el-table-column
-                  label="名称"
-                  prop="name"
-                  min-width="130"
-                  show-overflow-tooltip
-                >
-                </el-table-column>
-                <el-table-column label="操作" min-width="90">
-                  <template #default="scope">
-                    <el-popover
-                      placement="right"
-                      title="图层编辑"
-                      width="250"
-                      trigger="click"
-                    >
-                      <!--              点图层编辑-->
-                      <div
-                        v-if="
-                          scope.row.type === 'circle' &&
-                          scope.row.data.visualType == 'shp'
-                        "
-                      >
-                        {{ scope.row.name }}
-                        <div class="flex-row-start">
-                          <h3 style="width: 100px">颜色:</h3>
-                          <el-input
-                            v-model="
+                      {{ scope.row.name }}
+                      <div class="flex-row-start">
+                        <h3 style="width: 100px">颜色:</h3>
+                        <el-input
+                          v-model="
+                            showLayerTableList[scope.$index].paint[
+                              'circle-color'
+                            ]
+                          "
+                          @change="
+                            handlePaintChange(
+                              showLayerTableList[scope.$index]['id'],
+                              'circle-color',
                               showLayerTableList[scope.$index].paint[
                                 'circle-color'
                               ]
-                            "
-                            @change="
-                              handlePaintChange(
-                                showLayerTableList[scope.$index]['id'],
-                                'circle-color',
-                                showLayerTableList[scope.$index].paint[
-                                  'circle-color'
-                                ]
-                              )
-                            "
-                            placeholder="something"
-                            size="small"
-                          ></el-input>
-                          <el-color-picker
-                            v-model="
+                            )
+                          "
+                          placeholder="something"
+                          size="small"
+                        ></el-input>
+                        <el-color-picker
+                          v-model="
+                            showLayerTableList[scope.$index].paint[
+                              'circle-color'
+                            ]
+                          "
+                          @change="
+                            handlePaintChange(
+                              showLayerTableList[scope.$index]['id'],
+                              'circle-color',
                               showLayerTableList[scope.$index].paint[
                                 'circle-color'
                               ]
-                            "
-                            @change="
-                              handlePaintChange(
-                                showLayerTableList[scope.$index]['id'],
-                                'circle-color',
-                                showLayerTableList[scope.$index].paint[
-                                  'circle-color'
-                                ]
-                              )
-                            "
-                            :predefine="predefineColors"
-                            size="small"
-                          >
-                          </el-color-picker>
-                        </div>
+                            )
+                          "
+                          :predefine="predefineColors"
+                          size="small"
+                        >
+                        </el-color-picker>
+                      </div>
 
                         <div class="flex-row-start">
                           <h3 style="width: 200px">半径（px）:</h3>
@@ -867,6 +876,7 @@ export default {
   },
   data() {
     return {
+      falseShow:false,
       modelId: ref("7887988"),
       refModelConfig: ref(),
       showCenter: "-90,17",
@@ -1093,6 +1103,7 @@ export default {
     },
     filterResList() {
       for (let i = 0; i < this.taskInfo.dataList.length; i++) {
+        if (this.taskInfo.dataList[i].simularTrait=='task'){continue}
         if (this.taskInfo.dataList[i].type == "model") {
           this.resList.modelList.push(this.taskInfo.dataList[i]);
         } else {
@@ -1829,6 +1840,8 @@ export default {
   padding-bottom: 0;
   position: relative;
   z-index: 1002;
+  max-height:40vh !important;
+  overflow: scroll !important;
 }
 .lyric-enter-from,
 .lyric-leave-to {

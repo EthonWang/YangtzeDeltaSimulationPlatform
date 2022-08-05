@@ -76,6 +76,11 @@ export const cases_config = [
         problem:"南京地面淹没模拟系统",
         path: "SUFS",
         component:() => import("views/CasesView/SUFS.vue")
+    },
+    {
+        problem:"测试案例",
+        path: "testCase",
+        component:() => import("views/CasesView/testCase.vue")
     }
     // {
     //     problem:"湖泊水环境监测",

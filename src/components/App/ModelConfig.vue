@@ -29,7 +29,7 @@ const store = useStore(); //vuex直接用store.commit
 const dataApi = new dataAPI();
 const taskApi = new taskAPI();
 const loading = ref(false);
-
+let task = JSON.parse(localStorage.getItem("task"));
 const MDLStatesInfo = ref([]);
 
 const props = defineProps({
@@ -167,13 +167,89 @@ const addTestData = (data) => {
 };
 let prepared = false;
 const handleLoadTestData = () => {
-  axios
-    .get("http://172.21.212.63:8999/model/getModelTestDataSet/" + props.modelId)
-    .then((res) => {
-      let data = res.data.data.dataSet1;
-      prepared = true;  
-      addTestData(data);
+  let taskBody = JSON.parse(localStorage.getItem("task")).dataList.filter(
+    (item) => {
+      if (item.simularTrait == "task" && item.taskModel == props.model.name) {
+        return item;
+      }
+    }
+  )[0].taskBody;
+  console.log('taskBody=',taskBody);
+  if (taskBody == null || taskBody == undefined) {
+    ElMessage.info({
+      type: "warning",
+      message: "暂未找到历史记录",
     });
+    return;
+  }
+  ElMessage("正在查询，请稍作等待...");
+  loading.value = true;
+  let interval = setInterval(() => {
+    axios
+      .post("http://172.21.213.44:8999/task/taskResult", taskBody)
+      .then((res) => {
+        let data = res.data.data.data;
+        let code = res.data.data.data.code;
+        let msg = res.data.data.data.msg;
+        console.log("status", data.status, res.data.data);
+        if (code === -1) {
+          loading.value = false;
+          clearInterval(interval);
+          ElNotification({
+            title: "Error",
+            message: msg,
+            type: "error",
+          });
+        }
+        if (data.status === -1) {
+          loading.value = false;
+          clearInterval(interval);
+          ElNotification({
+            title: "Error",
+            message: "上次模型运行失败，无记录保存",
+            type: "error",
+          });
+        } else if (data.status === 2) {
+          clearInterval(interval);
+          ElNotification({
+            title: "Success",
+            message: "加载成功",
+            type: "success",
+            duration: 10000,
+          });
+          loading.value = false;
+          let outputs = data.outputdata;
+
+          outputs.forEach((el) => {
+            let statename = el.statename;
+            let eventName = el.event;
+            let state = MDLStatesInfo.value.find((state) => {
+              return state.name == statename;
+            });
+            if (state == undefined) return;
+            let event = state.event.find((event) => {
+              return event.eventName == eventName;
+            });
+            if (event == undefined) return;
+            event.tag = el.tag;
+            event.suffix = el.suffix;
+            event.url = el.url;
+            event.multiple = el.multiple;
+          });
+        } else {
+          console.log("");
+          
+        }
+      });
+  }, 5000);
+
+  // axios
+  //   .get("http://172.21.212.63:8999/model/getModelTestDataSet/" + props.modelId)
+  //   .then((res) => {
+  //     let data = res.data.data.dataSet1;
+  //     prepared = true;
+  //     addTestData(data);
+  //   });
 };
 
 const structXML = (children) => {
@@ -274,10 +350,11 @@ const handleInvoke = () => {
   });
 };
 const handleInvokeNext = () => {
-  let task = JSON.parse(localStorage.getItem("task"));
+  task = JSON.parse(localStorage.getItem("task"));
   taskApi.editTask(task).then((res) => {});
   prepared = true;
   if (prepared) {
+    loading.value = true;
     //loading部分代码
     let json = {
       oid: props.model.id,
@@ -315,6 +392,7 @@ const handleInvokeNext = () => {
               }
             } else {
               if (url === null || url === undefined) {
+                loading.value = false;
                 console.log("这个出问题了", el);
                 ElNotification({
                   title: "Error",
@@ -337,10 +415,11 @@ const handleInvokeNext = () => {
         });
       });
     } catch (e) {
+      loading.value = false;
       return;
     }
     //请求接口调用模型
-    loading.value = true;
+    
     console.log("json is :", json);
     axios.post("http://172.21.213.44:8999/model/invoke", json).then((res) => {
       console.log("模型运行结果", res.data);
@@ -364,18 +443,31 @@ const handleInvokeNext = () => {
         return;
       }
       if (data != null) {
-        
         let taskBody = {
           ip: "172.21.213.105",
           port: "8061",
           tid: data.tid,
         };
-        task.dataList.push({
-          'simularTrait':'task',
-          'taskBody':taskBody
-        })
-        localStorage.getItem('taskResultList')
-        localStorage.setItem('taskResult',JSON.stringify(taskBody))
+        let pushData = {
+          taskModel: props.model.name,
+          simularTrait: "task",
+          taskBody: taskBody,
+        };
+        //更新模型运行情况,如果有同模型历史数据，则删除
+        let nameList = [];
+        for (let i = 0; i < task.dataList.length; i++) {
+          const element = task.dataList[i];
+          if (
+            element.simularTrait == "task" &&
+            element.taskModel == props.model.name
+          ) {
+            task.dataList.splice(i, 1);
+            break;
+          }
+        }
+        task.dataList.push(pushData);
+        taskApi.addData(task, [pushData]);
+        localStorage.setItem("task", JSON.stringify(task));
         let interval = setInterval(() => {
           axios
             .post("http://172.21.213.44:8999/task/taskResult", taskBody)
@@ -385,7 +477,7 @@ const handleInvokeNext = () => {
               let msg = res.data.data.data.msg;
               console.log("status", data.status, res.data.data);
               if (code === -1) {
-                // loading.value = false;
+                loading.value = false;
                 clearInterval(interval);
                 ElNotification({
                   title: "Error",
@@ -394,7 +486,7 @@ const handleInvokeNext = () => {
                 });
               }
               if (data.status === -1) {
-                // loading.value = false;
+                loading.value = false;
                 clearInterval(interval);
                 ElNotification({
                   title: "Error",
@@ -430,7 +522,7 @@ const handleInvokeNext = () => {
                 });
               } else {
                 console.log("");
-                loading.value = false;
+                // loading.value = false;
               }
             });
         }, 5000);

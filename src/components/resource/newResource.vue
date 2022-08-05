@@ -144,6 +144,20 @@ h1 {
               placeholder="输入资源描述..."
             />
           </FormItem>
+          <FormItem prop="description" label="资源描述" :label-width="150">
+            <Input
+              v-model="formInline.md5"
+              type="textarea"
+              placeholder="输入md5..."
+            />
+          </FormItem>
+          <FormItem prop="description" label="资源描述" :label-width="150">
+            <Input
+              v-model="formInline.mdl"
+              type="textarea"
+              placeholder="输入mdl..."
+            />
+          </FormItem>
           <FormItem prop="problemTags" label="涉及问题选择" :label-width="150">
             <el-select
               v-model="formInline.problemTags"
@@ -393,6 +407,8 @@ export default {
       formInline: {
         resType: "data",
         workName: "",
+        md5:"",
+        mdl:"",
         visualType: "shp",
         geoType: "circle",
         description: "",
@@ -643,8 +659,8 @@ export default {
         info.type = this.formInline.resType;
         info.normalTags = this.formInline.tagList.toString();
         info.problemTags = this.formInline.problemTags.toString();
-        info.mdl = "1";
-        info.md5 = "2";
+        info.mdl = this.formInline.mdl;
+        info.md5 = this.formInline.md5;
         info.mdlJson = {};
 
         formData.append("imgFile", this.imageFile);
@@ -677,31 +693,35 @@ export default {
       }
     },
     commitProjectModel() {
-      let formData = new FormData();
-      let info = {};
-      info.name = this.formInline.workName;
-      info.normalTags = "";
-      info.overview = "";
-      info.problemTags = "";
-      info.mdl = "";
-      info.md5 = "";
-      info.mdlJson = {};
-      info.authorShips = [];
-      formData.append("imgFile", this.imageFile);
-      formData.append(
-          "info",
-          new Blob([JSON.stringify(info)], { type: "application/json" })
-      );
-      axios({
-        url: this.dataServer + "/createResourceModel",
-        method: "post",
-        //忽略contentType
-        contentType: false,
-        //取消序列换 formData本来就是序列化好的
-        processData: false,
-        dataType: "json",
-        data: formData,
-      }).then(
+      console.log("come");
+        let formData = new FormData();
+        let info = {};
+        info.name = this.formInline.workName;
+        info.description = this.formInline.description;
+        info.type = this.formInline.resType;
+        info.normalTags = this.formInline.tagList.toString();
+        info.problemTags = this.formInline.problemTags.toString();
+        info.mdl = this.formInline.mdl;
+        info.md5 = this.formInline.md5;
+        info.mdlJson = {};
+
+        formData.append("imgFile", this.imageFile);
+        // formData.append("visualFile", this.toUploadVisualFiles[0]);
+        console.log(info);
+        formData.append(
+          "info",new Blob([JSON.stringify(info)], { type: "application/json" })
+        );
+
+        axios({
+          url: this.dataServer + "/createResourceModel",
+          method: "post",
+          //忽略contentType
+          contentType: false,
+          //取消序列换 formData本来就是序列化好的
+          processData: false,
+          dataType: "json",
+          data: formData,
+        }).then(
           (res) => {
             console.log(res.data);
             this.$router.go(-1);
@@ -709,7 +729,8 @@ export default {
           (err) => {
             console.log(err);
           }
-      );
+        );
+    
       let searchInfo = {
         asc:false,
         page:1,

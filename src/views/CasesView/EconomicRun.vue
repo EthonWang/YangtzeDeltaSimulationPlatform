@@ -48,7 +48,6 @@
             <chart-case id="midChart1" :option="midChartOption1" style="width: 40%;height: 95%;"></chart-case>
             <chart-case id="midChart2" :option="midChartOption2" :style="chartStyle"></chart-case>
             <span class="note-info">*本数据来源于各省市统计局，时间为2020年</span>
-
           </div>
         </dv-border-box1>
       </div>
@@ -58,6 +57,9 @@
             <dv-decoration-7 class="box-title"><h3 class="box-title-text">人民生活</h3></dv-decoration-7>
           </div>
           <chart-case id="midChart3" :option="midChartOption3" :style="chartStyle"></chart-case>
+          <span class="chartLegend" style="left: 10%;top: 20%">全体居民人均可<br>支配收入(元)</span>
+          <span class="chartLegend" style="right: 5%;top: 12%">城镇居民人均可<br>支配收入(元)</span>
+          <span class="chartLegend" style="right: 5%;top: 62%">农村居民人均可<br>支配收入(元)</span>
           <span class="note-info">*数据来源于各省市统计局,<br>时间为2021年前三季度</span>
         </dv-border-box1>
       </div>
@@ -87,6 +89,7 @@
 import {onMounted, ref} from "vue";
 import * as echarts from 'echarts';
 import ChartCase from "components/Cases/chartCase";
+import "echarts/extension/bmap/bmap";
 
 const buttonType = ref(['','info','info','info'])
 const GDPClick = ()=>{
@@ -451,9 +454,7 @@ leftChartOption3.value = {
 
 const midChartOption1 = ref({})
 midChartOption1.value = {
-  tooltip: {
-    trigger: 'item'
-  },
+  tooltip: {},
   color:chartData.color,
   grid: {
     top:'0%',
@@ -495,7 +496,8 @@ midChartOption1.value = {
 const midChartOption2 = ref({})
 midChartOption2.value = {
   tooltip: {
-    trigger: 'item'
+    trigger: 'item',
+    formatter:'{c}%'
   },
   color:chartData.color,
   series: [
@@ -631,33 +633,47 @@ midChartOption3.value = {
 };
 
 const rightChartOption1 = ref({})
+
+
 const getJsonData = () => {
   let mapEcharts = echarts.init(document.getElementById('rightChart1'))
   fetch('/case/economicRun/cityArea.geojson').then(res=>{
     return res.json()
   }).then(cityArea=>{
-    console.log("cityJson",cityArea);
     echarts.registerMap('cityArea',cityArea)
     rightChartOption1.value = {
       visualMap: {
-        show:false,
-        min: 1,
-        max: 3,
-        text: ['High', 'Low'],
+        top:'5%',
+        right:'5%',
+        type: "piecewise",
+        show:true,
+        min: -1,
+        max: 2,
+        splitNumber: 3,
         realtime: false,
         calculable: true,
         inRange: {
           color: ['#e0e4e7','#7de6c0','#646c92']
+        },
+        formatter:function (value,value2){
+          if(value == 0){
+            return "GDP在5000亿-1万亿元以上的城市";
+          }else if(value == 1){
+            return "GDP在1万亿元以上的城市";
+          }else {
+            return "GDP在5000亿元以下的城市";
+          }
         }
       },
       series: [
         {
-          name: '省级边界',
+          name: '市级边界',
           type: 'map',
           map: 'cityArea',
-          room:'scale',
-          data:chartData.rightChart1.pointData
-        },
+          center: [118.81893, 31.40936],
+          z:2,
+          data:chartData.rightChart1.pointData,
+        }
       ]
     }
     mapEcharts.setOption(rightChartOption1.value)
@@ -666,7 +682,6 @@ const getJsonData = () => {
 onMounted(()=>{
   getJsonData()
 })
-
 
 const rightChartOption2 = ref({})
 rightChartOption2.value = {
@@ -722,7 +737,6 @@ const chartRightData3 = ()=>{
   for (let i = chartData.rightChart3.value.length;i>0;i--){
     city.push(chartData.rightChart3.value[i-1])
   }
-  console.log(city)
   let data = []
   chartData.rightChart3.value.map(item=>{
     data.push({
@@ -731,7 +745,6 @@ const chartRightData3 = ()=>{
       symbolSize: [42, 32]
     })
   })
-  console.log("cicleData",data)
   return data;
 }
 chartRightData3()
@@ -806,6 +819,11 @@ rightChartOption3.value = {
   padding-right: 20px;
   padding-left: 20px;
   align-items: center;
+}
+.chartLegend{
+  position: absolute;
+  color: #0c7dd8;
+  font-size: 0.8em;
 }
 .box-title-text{
   margin: 0px 10px;

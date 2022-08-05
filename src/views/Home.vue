@@ -58,7 +58,7 @@ const mousedown = () => {
     explore()
     
   }
-  else if(document.getElementsByClassName("container")[0].style.width=="35vw"){
+  else if(document.getElementsByClassName("container")[0].style.width=="45vw"){
     document.getElementsByClassName("container")[0].style.width="100vw"
     setTimeout(()=>{
     document.getElementsByClassName("bg")[0].style.opacity="1"
@@ -86,7 +86,7 @@ setTimeout(() => {
 }, 100);
 const explore=()=>{
   home_scroll_listen.value.scrollTop=window.innerHeight
-  document.getElementsByClassName("container")[0].style.width="35vw"
+  document.getElementsByClassName("container")[0].style.width="45vw"
   setTimeout(()=>{
     document.getElementsByClassName("bg")[0].style.opacity="0"
   },500)

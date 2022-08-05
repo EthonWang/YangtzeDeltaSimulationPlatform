@@ -285,7 +285,7 @@ export default {
               this.dialogDataChoose = false;
             })
             .catch((err) => {
-              ElMessage.error("使用数据失败");
+              ElMessage.error("使用数据失败1");
               loading_data.close();
             });
         } else {
@@ -295,6 +295,9 @@ export default {
               console.log(res.data.data);
               this.nowChooseConfig.tag = data.name.split(".")[0];
               this.nowChooseConfig.suffix = data.name.split(".")[1];
+              if(data.visualType == "dataSet"){
+                this.nowChooseConfig.suffix = "zip";
+              }
               this.nowChooseConfig.url = res.data.data;
               data.dataContainerUrl = res.data.data;
               for (let i = 0; i < this.task.dataList.length; i++) {
@@ -312,7 +315,7 @@ export default {
               this.dialogDataChoose = false;
             })
             .catch((err) => {
-              ElMessage.error("使用数据失败");
+              ElMessage.error("使用数据失败2");
               loading_data.close();
             });
         }

@@ -60,8 +60,8 @@ export default class {
     sendDataToContainer(fileRelativePath, userDataId) {
         return get('/model/upToDataContainer?dataRelativePath=' + fileRelativePath + '&userDataId=' + userDataId)
     }
-    sendResDataToContainer(fileRelativePath, taskId, userDataId, userId) {
-        return get('/model/upToResDataContainer?dataRelativePath=' + fileRelativePath + '&userDataId=' + userDataId + '&taskId=' + taskId + '&userId=' + userId)
+    sendResDataToContainer(fileRelativePath, taskId, resDataId, userId) {
+        return get('/model/upResToDataContainer?dataRelativePath=' + fileRelativePath + '&resDataId=' + resDataId + '&taskId=' + taskId + '&userId=' + userId)
     }
     sendXMLToContainer(configFile) {
         return post('/model/upXMLToDataContainer', configFile)

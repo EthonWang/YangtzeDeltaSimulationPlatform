@@ -5,6 +5,7 @@ import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ZipUtil;
+import cn.hutool.json.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
@@ -20,14 +21,16 @@ import yangtzedeltasimulatorbackend.dao.*;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
 import yangtzedeltasimulatorbackend.entity.doo.support.TaskData;
 import yangtzedeltasimulatorbackend.entity.po.*;
+import yangtzedeltasimulatorbackend.utils.FileUtils;
+import yangtzedeltasimulatorbackend.utils.GeoServerUtils;
 import yangtzedeltasimulatorbackend.utils.ResultUtils;
 import yangtzedeltasimulatorbackend.utils.Utils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Date;
-import java.util.List;
+import java.text.MessageFormat;
+import java.util.*;
 
 /**
  * @Description
@@ -53,9 +56,14 @@ public class ModelItemService {
     @Autowired
     UserDataDao userDataDao;
 
+    @Autowired
+    LabTaskDao labTaskDao;
+
     @Value("${dataStoreDir}"+"/temp")
     private  String tempDir;
 
+    @Value("${dataStoreDir}"+"/data")
+    private  String userDataDir;
 
     @Value("${dataStoreDir}"+"/models")
     private  String modelsFolder;
@@ -477,7 +485,7 @@ public class ModelItemService {
 
     public JsonResult upToDataContainer(String userDataId, String dataRelativePath) {
         try {
-
+            // 用户中心的资源 上传到 数据容器
             File file = new File(dataStoreDir,dataRelativePath);
             if(!file.exists()){
                 return ResultUtils.error("文件不存在");
@@ -505,6 +513,137 @@ public class ModelItemService {
                 return ResultUtils.error("上传数据容器失败");
             }
 
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("上传数据容器失败");
+        }
+    }
+
+    /**
+     * @param resDataId
+     * @param labTaskId
+     * @param dataRelativePath
+     * @return: yangtzedeltasimulatorbackend.entity.doo.JsonResult
+     * @Description:  上传资源目录或者处理后的资源到 数据容器
+     * @Author: ZhaoYiming
+     * @Date: 2022-8-4 21:55
+     */
+    public JsonResult upResToDataContainer(String resDataId, String labTaskId, String userId, String dataRelativePath) {
+        try {
+            // CASE 1.资源目录中的资源上传到数据容器 （资源目录中的单个（总的）数据直接添加到 数据容器，dataContainerUrl只临时保留在labTask中）
+            // CASE 2.脚本处理后的数据上传数据容器  （脚本处理后理论上属于用户中心资源，有parentId，走的是上边的方法）
+            // CASE 3.集数据上传数据容器（根据路径复制出来，打包成压缩包上传，压缩包添加到个人中心，但格式为压缩包，而不是集）
+            Optional<LabTask> byId1 = labTaskDao.findById(labTaskId);
+            if (!byId1.isPresent()) {
+                return ResultUtils.error("上传失败失败，taskId错误！");
+            }
+            LabTask labTask = byId1.get();
+            List<cn.hutool.json.JSONObject> dataList = new ArrayList<>();
+            dataList = labTask.getDataList();
+            cn.hutool.json.JSONObject resDataInfo = new cn.hutool.json.JSONObject();
+            for(cn.hutool.json.JSONObject item : dataList){
+                if(item.getStr("id") == resDataId){
+                    resDataInfo = item;
+                }
+            }
+            if(resDataInfo.getStr("id") == null || resDataInfo.getStr("id").equals("")){
+                return ResultUtils.error("上传失败，未找到该数据信息");
+            }
+            // 判断类型（来自资源目录还是集）
+            if(resDataInfo.getStr("visualType").equals("dataSet")){
+                //集
+                // 1.创建压缩文件
+                String tempFolderPath = tempDir + "/" + resDataInfo.getStr("name");
+                File tempFolder =new File(tempFolderPath);
+                tempFolder.mkdir();
+                cn.hutool.json.JSONArray dataSetList = new cn.hutool.json.JSONArray();
+                dataSetList = resDataInfo.getJSONArray("dataSetList");
+                if(dataSetList != null){
+                    Iterator<Object> it = dataSetList.iterator();
+                    while(it.hasNext()){
+                        cn.hutool.json.JSONObject jo = (cn.hutool.json.JSONObject) it.next();
+                        String joPath = dataStoreDir + jo.getStr("fileRelativePath");
+                        String joName = jo.getStr("name");
+                        File originFile = new File(joPath);
+                        File targetFile = new File(tempFolderPath + "/" + joName.replace("_clip",""));
+                        targetFile.createNewFile();
+                        FileUtils.copyFileUsingStream(originFile,targetFile);
+                    }
+                }
+                String zipPath = userDataDir + "/" + resDataInfo.getStr("name") + ".zip";
+                File zipFile = new File(zipPath);
+                FileOutputStream zipFos = new FileOutputStream(zipFile);
+                FileUtils.toZip(tempFolderPath, zipFos,true);
+
+                // 2.（压缩包）保存到个人中心
+                UserData userData = new UserData();
+                String fileName = zipFile.getName();
+                Long fileSize = zipFile.length();
+                userData.setName(fileName);
+                userData.setType("file");
+                userData.setVisualType("zip");
+                userData.setSize(fileSize.toString());
+                userData.setFileStoreName(fileName);
+                userData.setFileWebAddress("/store/data/" + fileName);
+                userData.setFileRelativePath("/data/" + fileName);
+                userData.setPublicBoolean(true);
+                userData.setVisualizationBoolean(true);
+                userData.setParentId(labTaskId);
+                userData.setUserId(userId);
+
+                // 3.上传数据容器
+                if(!zipFile.exists()){
+                    return ResultUtils.error("文件不存在");
+                }
+                FileInputStream fileInputStream = new FileInputStream(zipFile);
+                MultipartFile multipartFile = new MockMultipartFile(zipFile.getName(), zipFile.getName(),
+                        ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
+
+                MultiValueMap<String, Object> part = new LinkedMultiValueMap<>();
+                part.add("datafile",multipartFile.getResource());
+                part.add("userId","371252847@qq.com");
+                part.add("serverNode","China");
+                part.add("origination","YangzeDelta");
+                JSONObject uploadResult=Utils.uploadDataToDataServer(dataContainerIpAndPort,part);
+                if(uploadResult.getIntValue("code")==1){
+                    String dataUrl="http://"+ dataContainerIpAndPort +"/data/"+uploadResult.getJSONObject("data").getString("id");
+
+                    resDataInfo.set("dataContainerUrl",dataUrl);
+                    userData.setDataContainerUrl(dataUrl);
+                    userDataDao.save(userData);
+
+                    return ResultUtils.success(dataUrl);
+                }else{
+                    log.error(uploadResult.getString("message"));
+                    return ResultUtils.error("上传数据容器失败");
+                }
+            } else {
+                //资源目录
+                File file = new File(dataStoreDir,dataRelativePath);
+                if(!file.exists()){
+                    return ResultUtils.error("文件不存在");
+                }
+                FileInputStream fileInputStream = new FileInputStream(file);
+                MultipartFile multipartFile = new MockMultipartFile(file.getName(), file.getName(),
+                        ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
+
+                MultiValueMap<String, Object> part = new LinkedMultiValueMap<>();
+                part.add("datafile",multipartFile.getResource());
+                part.add("userId","371252847@qq.com");
+                part.add("serverNode","China");
+                part.add("origination","YangzeDelta");
+                JSONObject uploadResult=Utils.uploadDataToDataServer(dataContainerIpAndPort,part);
+                if(uploadResult.getIntValue("code")==1){
+                    String dataUrl="http://"+ dataContainerIpAndPort +"/data/"+uploadResult.getJSONObject("data").getString("id");
+
+                    resDataInfo.set("dataContainerUrl",dataUrl);
+
+                    return ResultUtils.success(dataUrl);
+                }else{
+                    log.error(uploadResult.getString("message"));
+                    return ResultUtils.error("上传数据容器失败");
+                }
+            }
         }catch (Exception e){
             log.error(e.getMessage());
             return ResultUtils.error("上传数据容器失败");

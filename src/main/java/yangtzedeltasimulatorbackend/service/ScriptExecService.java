@@ -208,12 +208,17 @@ public class ScriptExecService {
                     if (re1 == 0) {
                         //tif2asc
                         if(publish_1st.equals("false")){
-                            publish_1st = "true";
-                            String tempName = IdUtil.objectId() + item.getStr("name").replace(".asc","_clip.tif");
-                            GeoServerUtils.PublishTiff("yangtzeRiver",tempName.split(".tif")[0].replace(".","_"),newTifPath);
-                            String geoServerUrl= MessageFormat.format("{0}/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A{1}&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857" +
-                                    "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl,tempName.split(".tif")[0].replace(".","_"));
-                            tempGeoUrl = geoServerUrl;
+                            List<String> argvList3 = new ArrayList<>();
+                            argvList3.add(newTifPath);
+                            int re3 = ExecCmdUtils.execPython("tifSetProj.py", argvList3);
+                            if (re3 == 0) {
+                                publish_1st = "true";
+                                String tempName = IdUtil.objectId() + item.getStr("name").replace(".asc","_clip.tif");
+                                GeoServerUtils.PublishTiff("yangtzeRiver",tempName.split(".tif")[0].replace(".","_"),newTifPath);
+                                String geoServerUrl= MessageFormat.format("{0}/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A{1}&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857" +
+                                        "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl,tempName.split(".tif")[0].replace(".","_"));
+                                tempGeoUrl = geoServerUrl;
+                            }
                         }
                         List<String> argvList2 = new ArrayList<>();
                         argvList2.add(newTifPath);
@@ -232,67 +237,36 @@ public class ScriptExecService {
                     }
                 }
             }
-//            List<String> argvList = new ArrayList<>();
-//            argvList.add(dataResourceDir + inputPath);
-//            argvList.add(dataResourceDir + inputRasterPath);
-//            argvList.add(scriptOutDir + "/" + outFileName);
+            if(publish_1st.equals("true") && resultList.size() == inputRasterList.size()){
+                //保存到labTask
+                Optional<LabTask> byId1 = labTaskDao.findById(labTaskId);
+                if (!byId1.isPresent()) {
+                    return ResultUtils.error("保存失败");
+                }
+                LabTask labTask = byId1.get();
+                List<cn.hutool.json.JSONObject> dataList = labTask.getDataList();
+                cn.hutool.json.JSONObject dataObject = new cn.hutool.json.JSONObject();
+                dataObject.set("id", IdUtil.objectId());
+                dataObject.set("name", outFileName);
+                dataObject.set("type", "tif");
+                dataObject.set("visualType", "dataSet");
+                dataObject.set("size", "0");
+                dataObject.set("fileStoreName", outFileName + folderId);
+                dataObject.set("fileRelativePath", "/scriptOut/" + outFileName + folderId);
+                dataObject.set("fileWebAddress", "/store/scriptOut/" + outFileName + folderId);
+                dataObject.set("visualWebAddress", tempGeoUrl);
+                dataObject.set("visualizationBoolean", true);
+                dataObject.set("publicBoolean", true);
+                dataObject.set("source", "cloud");
+                dataObject.set("dataSetList", resultList);
+                dataList.add(dataObject);
+                labTask.setDataList(dataList);
+                labTaskDao.save(labTask);
 
-//            int re;
-//            if (isShp) {
-//                re = ExecCmdUtils.execPython("GDAL_clip.py", argvList);
-//            } else {
-//                re = ExecCmdUtils.execPython("GDAL_clip_GeoJson.py", argvList);
-//            }
-//            if (re == 0) {
-//                // 对裁剪成功的tif进行发布
-//                File file = new File(scriptOutDir + "/" + outFileName);
-//                UserData userData = new UserData();
-//                String path = scriptOutDir + "/" + outFileName;
-//                String fileName = file.getName();
-//                Long fileSize = file.length();
-//                GeoServerUtils.PublishTiff("yangtzeRiver", fileName.split(".tif")[0], path);
-//                String geoServerUrl = MessageFormat.format("{0}/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A{1}&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857" +
-//                        "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'", geoserverUrl, fileName.split(".tif")[0]);
-//                userData.setName(fileName);
-//                userData.setType("file");
-//                userData.setVisualType("tif");
-//                userData.setSize(fileSize.toString());
-//                userData.setFileStoreName(fileName);
-//                userData.setFileWebAddress("/store/scriptOut/" + fileName);
-//                userData.setFileRelativePath("/scriptOut/" + fileName);
-//                userData.setVisualWebAddress(geoServerUrl);
-//                userData.setPublicBoolean(true);
-//                userData.setVisualizationBoolean(true);
-//                userData.setParentId(labTaskId);
-//                userData.setUserId(userId);
-//                userDataDao.save(userData);
-//                //保存到labTask
-//                Optional<LabTask> byId1 = labTaskDao.findById(labTaskId);
-//                if (!byId1.isPresent()) {
-//                    return ResultUtils.error("保存失败");
-//                }
-//                LabTask labTask = byId1.get();
-//                List<cn.hutool.json.JSONObject> dataList = labTask.getDataList();
-//                cn.hutool.json.JSONObject dataObject = new cn.hutool.json.JSONObject();
-//                dataObject.set("id", userData.getId());
-//                dataObject.set("name", fileName);
-//                dataObject.set("type", "tif");
-//                dataObject.set("visualType", "tif");
-//                dataObject.set("size", String.valueOf(fileSize));
-//                dataObject.set("fileStoreName", fileName);
-//                dataObject.set("fileRelativePath", "/scriptOut/" + fileName);
-//                dataObject.set("fileWebAddress", "/store/scriptOut/" + fileName);
-//                dataObject.set("visualWebAddress", geoServerUrl);
-//                dataObject.set("visualizationBoolean", true);
-//                dataObject.set("publicBoolean", true);
-//                dataObject.set("source", "cloud");
-//                dataList.add(dataObject);
-//                labTask.setDataList(dataList);
-//                labTaskDao.save(labTask);
-//
-//                return ResultUtils.success(labTask);
-//            }
-            return ResultUtils.success();
+                return ResultUtils.success(labTask);
+            }
+
+            return ResultUtils.error();
         } catch (Exception e) {
             log.error(e.getMessage());
             return ResultUtils.error();

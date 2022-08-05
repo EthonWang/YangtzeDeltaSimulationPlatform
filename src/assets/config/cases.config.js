@@ -63,6 +63,16 @@ export const cases_config = [
         component:() => import("views/CasesView/Covid19.vue")
     },
     {
+        problem:"长三角风暴潮模拟",
+        path: "stormSurge",
+        component:() => import("views/CasesView/stormSurge.vue")
+    },
+    {
+        problem:"长三角风暴潮模拟",
+        path: "stormSurge2",
+        component:() => import("views/CasesView/stromSurge2.vue")
+    },
+    {
         problem:"南京地面淹没模拟系统",
         path: "SUFS",
         component:() => import("views/CasesView/SUFS.vue")

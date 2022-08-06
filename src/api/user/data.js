@@ -4,11 +4,11 @@ import { useStore } from "vuex"
 const dataServer = "http://172.21.213.44:8999";
 // 上传文件
 export default class {
-    getAllFile(user_id){
-        return post("/resource/getUserAllResource?userId="+user_id,)
+    getAllFile(user_id) {
+        return post("/resource/getUserAllResource?userId=" + user_id,)
     }
     getFile(parent_id) {
-        return post("/resource/getUserResource?parentId="+parent_id, )
+        return post("/resource/getUserResource?parentId=" + parent_id,)
 
     }
     uploadFile(data) {
@@ -18,7 +18,7 @@ export default class {
         // return service.get('/file/download', {params: data})
         return new Promise((resolve, reject) => {
             try {
-                window.location.href =dataServer+ '/resource/downloadDataItem/' + data.id
+                window.location.href = dataServer + '/resource/downloadDataItem/' + data.id
                 resolve()
             } catch (error) {
                 reject(error)
@@ -29,7 +29,7 @@ export default class {
         // return service.get('/file/download', {params: data})
         return new Promise((resolve, reject) => {
             try {
-                window.location.href =dataServer+ '/resource/downloadDataItem/' + data.id
+                window.location.href = dataServer + '/resource/downloadDataItem/' + data.id
                 resolve()
             } catch (error) {
                 reject(error)
@@ -37,10 +37,10 @@ export default class {
         })
     }
     deleteFile(file) {
-        if (file.type != 'folder') { 
-            return post('/resource/deleteDataItem?dataItemId='+file.id,) 
+        if (file.type != 'folder') {
+            return post('/resource/deleteDataItem?dataItemId=' + file.id,)
         } else {
-            return post('/resource/deleteFolder?folderId='+file.id,) 
+            return post('/resource/deleteFolder?folderId=' + file.id,)
         }
     }
     createFolder(parent_id, name) {
@@ -55,12 +55,15 @@ export default class {
 
     moveFile() { }
     editFile(data) {
-        return post('/respurce/updateDataItem',data)
+        return post('/respurce/updateDataItem', data)
     }
-    sendDataToContainer(fileRelativePath,userDataId ){
-        return get('/model/upToDataContainer?dataRelativePath='+fileRelativePath+'&userDataId='+userDataId)
+    sendDataToContainer(fileRelativePath, userDataId) {
+        return get('/model/upToDataContainer?dataRelativePath=' + fileRelativePath + '&userDataId=' + userDataId)
     }
-    sendXMLToContainer(configFile ){
-        return post('/model/upXMLToDataContainer',configFile)
+    sendResDataToContainer(fileRelativePath, taskId, resDataId, userId) {
+        return get('/model/upResToDataContainer?dataRelativePath=' + fileRelativePath + '&resDataId=' + resDataId + '&taskId=' + taskId + '&userId=' + userId)
+    }
+    sendXMLToContainer(configFile) {
+        return post('/model/upXMLToDataContainer', configFile)
     }
 }

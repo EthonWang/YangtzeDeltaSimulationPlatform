@@ -14,15 +14,15 @@
             </div>
             <div>
               <h2 class="case-name">{{caseInfo.name}}</h2>
-              <template v-for="(item,key) in caseInfo.description" :key="key">
-                <p class="case-name">{{item.value}}</p>
-              </template>
+              <p style="font-size: 1.1em;margin-left: 40px"
+                 v-if="caseInfo.description[0] !=null"
+              >{{caseInfo.description[0].value}}</p>
             </div>
           </div>
           <h3 class="typeName">案例描述</h3>
           <el-divider ></el-divider>
           <template v-for="(item,key) in caseInfo.description" :key="key">
-            <p>{{item.value}}</p>
+            <p style="font-size: 1.2em;text-indent: 1.5em">{{item.value}}</p>
           </template>
           <h3 class="typeName">案例数据</h3>
           <el-divider ></el-divider>
@@ -156,6 +156,7 @@ caseInfo.value = {
   overflow: scroll;
 }
 .case-name{
+  font-size: 1.8em;
   margin-left: 40px;
 }
 .data-area{
@@ -175,18 +176,18 @@ caseInfo.value = {
   flex-direction: row;
   flex-wrap: wrap;
   position: relative;
-  height: 100px;
-  width: 160px;
+  height: 120px;
+  width: 192px;
   cursor: pointer;
 }
 
 .caseImage{
-  height: 100px;
-  width: 160px;
+  height: 120px;
+  width: 192px;
 }
 .imageMask{
-  height: 100px;
-  width: 160px;
+  height: 120px;
+  width: 192px;
   opacity: 0;
   position: absolute;
   top:0;

@@ -2,7 +2,7 @@
   <el-row
     class="modelConfigBox"
     v-loading="loading"
-    element-loading-text="模型运行中...（Esc返回）"
+    element-loading-text="获取模型运行结果中...（Esc暂时返回）"
     element-loading-background="rgba(122, 122, 122, 0.8)"
   >
     <el-col :span="22" :offset="1">
@@ -241,7 +241,7 @@ const handleLoadTestData = () => {
           
         }
       });
-  }, 5000);
+  }, 10000);
 
   // axios
   //   .get("http://172.21.212.63:8999/model/getModelTestDataSet/" + props.modelId)

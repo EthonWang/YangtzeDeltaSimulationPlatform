@@ -1,28 +1,56 @@
 <template>
-  <div style="background-color: white;">
-      <h2>科学问题分类</h2>
+  <div style="background-color: white">
+    <h2>科学问题分类</h2>
     <el-tree
       style="width: 100%; height: 100%; background: white"
       :data="data"
       show-checkbox
-      node-key="id"
-      :default-expanded-keys="[1, 2, 3, 4]"
-      :default-checked-keys="[0]"
+      node-key="label"
+      :default-expanded-keys="[
+        '全选',
+        '灾害响应与治理',
+        '全球变化与区域环境演化',
+        '流域水循环及驱动机制',
+        '城市化与人地关系协调发展',
+      ]"
+      :default-checked-keys="['全选']"
       :props="defaultProps"
+      :current-change="changeScienceChoose()"
+      ref="scienceTree"
     />
   </div>
 </template>
 
 <script setup>
 //采用vue2写法的话把setup去掉，
-import { reactive, computed, ref } from "vue";
+import { reactive, computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { scienceChoose } from "@/assets/user/scienceChoose.js";
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const defaultProps = {
   children: "children",
   label: "label",
+};
+const scienceTree = ref(null);
+// setTimeout(()=>{console.log(scienceTree.value.getCheckedKeys());},5000)
+// watch(()=>scienceTree.value,(newval,oldval)=>{
+//   scienceChoose=newval.getCheckedKeys()
+//   console.log(scienceTree.value.getCheckedKeys());
+//   console.log(scienceChoose);
+// })
+
+setTimeout(() => {
+  scienceChoose.value = scienceTree.value.getCheckedKeys();
+  console.log("scienceChoose", scienceChoose.value);
+}, 800);
+const changeScienceChoose = () => {
+  if (scienceTree.value == null) {
+    return;
+  } else {
+    scienceChoose.value = scienceTree.value.getCheckedKeys();
+  }
 };
 const data = [
   {
@@ -45,7 +73,7 @@ const data = [
             id: 12,
             label: "洪涝水环境灾害",
           },
-          
+
           {
             id: 13,
             label: "地质灾害",
@@ -145,11 +173,12 @@ const data = [
 
 <style lang="less" scoped>
 // 兼容css
-h2{
-    padding-left:70px ;
-    position: relative;
-    z-index: 400;
-    background: white;
+h2 {
+  padding-left: 70px;
+  position: relative;
+  font-size: 23px;
+  z-index: 400;
+  background: white;
 }
 </style>
 

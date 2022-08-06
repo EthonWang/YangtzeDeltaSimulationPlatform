@@ -22,6 +22,15 @@
       <el-form-item label="输入实验名称" :label-width="formLabelWidth">
         <el-input v-model="newTaskName" autocomplete="off" />
       </el-form-item>
+      <el-form-item label="面向科学问题" :label-width="formLabelWidth">
+            <el-tree-select
+              :popper-append-to-body="false"
+              v-model="newTaskProblem"
+              :data="options"
+              multiple
+              show-checkbox
+            />
+          </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
@@ -37,13 +46,16 @@
 
 <script setup>
 //采用vue2写法的话把setup去掉，
-import { reactive, computed, ref } from "vue";
+import { reactive, computed, ref ,watch} from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import TaskItem from "./TaskItem.vue";
 import Api from "@/api/user/task";
 import { ElMessage } from "element-plus";
 import { random } from "lodash";
+import { scienceChoose } from "@/assets/user/scienceChoose";
+import { sciencePro } from "@/assets/data/home/sciencePro";
+
 const user_info = JSON.parse(localStorage.getItem("userInfo"));
 
 const router = useRouter(); //路由直接用router.push(...)
@@ -56,18 +68,84 @@ class task {
     this.publicBoolean = false;
     this.problemTags = [];
     this.dataList = [];
-    // this.id = String(new Date());
+    this.userId = String(new Date());
   }
 }
 
 const dialogFormVisible = ref(false)
 const newTaskName=ref('')
+const newTaskProblem=ref([])
 const tasks = ref([]);
+const task_origin=ref([])
+watch(
+  () => scienceChoose.value,
+  (newval, oldval) => {
+    tasks.value = task_origin.value.filter((item) => {
+      if (item.problemTags == "" || item.problemTags == []) {
+        console.log(newval.includes("未分类"));
+        if (newval.includes("未分类")) {
+          return item;
+        }
+      } else {
+        for (let i = 0; i < item.problemTags.length; i++) {
+          const el = item.problemTags[i];
+          console.log(el, scienceChoose.value.includes(el));
+          if (scienceChoose.value.includes(el)) {
+            console.log(item);
+            return item;
+          }
+        }
+      }
+    });
+  }
+);
+//更新数据时联动问题面板进行筛选
+watch(
+  () => task_origin.value,
+  (newval, oldval) => {
+    tasks.value = newval.filter((item) => {
+      if (item.problemTags == "" || item.problemTags == []) {
+        if (scienceChoose.value.includes("未分类")) {
+          return item;
+        }
+      } else {
+        for (let i = 0; i < item.problemTags.length; i++) {
+          const el = item.problemTags[i];
+          console.log(el, scienceChoose.value.includes(el));
+          if (scienceChoose.value.includes(el)) {
+            console.log(item);
+            return item;
+          }
+        }
+      }
+    });
+    console.log(tasks.value);
+  }
+);
+
+const options = Array.from({ length: sciencePro.length }).map((_, idx) => {
+  const label = idx;
+  return {
+    value: sciencePro[label].name.replace("\n", "").replace("\r", ""),
+    label: sciencePro[label].name.replace("\n", "").replace("\r", ""),
+    children: Array.from({ length: sciencePro[label].children.length }).map(
+      (_, idx1) => ({
+        value: sciencePro[label].children[idx1].name
+          .replace("\n", "")
+          .replace("\r", ""),
+        label: sciencePro[label].children[idx1].name
+          .replace("\n", "")
+          .replace("\r", ""),
+      })
+    ),
+  };
+});
+
 const refresh = () => {
   api.getTaskList(user_info.id).then((res) => {
-    tasks.value = [];
+    task_origin.value = [];
     for (let i= res.data.data.length-1;i>=0;i--) {
-      tasks.value.push(res.data.data[i]);
+      task_origin.value.push(res.data.data[i]);
     }
   });
 };
@@ -75,6 +153,8 @@ const refresh = () => {
 const createTask = () => {
   let new_task = new task();
   new_task.name=newTaskName.value
+  new_task.userId=user_info.id
+  new_task.problemTags=newTaskProblem.value
   dialogFormVisible.value = false
   api.createTask(new_task).then((res) => {
     refresh();

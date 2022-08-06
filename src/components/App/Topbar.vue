@@ -28,7 +28,7 @@
           v-for="(bar, index) in barList"
           :key="bar"
           @click="sendRouterToFather(bar.path, index)"
-          style="font-size: 1.2vw; cursor: pointer"
+          style="font-size: 25px; cursor: pointer"
           class="set_7_btn-wrapper"
         >
           <svg height="54" width="150">
@@ -39,7 +39,12 @@
           </div>
         </div>
       </div>
-      <avatar class="user-topbar" ref="user" />
+      <!-- <avatar class="user-topbar" ref="user" /> -->
+      <img
+      class="user-topbar"
+      src="https://img0.baidu.com/it/u=3590740517,3858531448&fm=253&fmt=auto&app=120&f=JPEG?w=800&h=1199"
+      alt=""
+    />
     </div>
   </div>
 </template>
@@ -89,7 +94,7 @@ const searchIndexInRoutes = () => {
 
     pick.value = new Array(barList.length).fill(0);
   } else {
-    document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
+    // document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
   }
   if (getRootPath(route.path) != "") {
     return;
@@ -178,15 +183,17 @@ setTimeout(searchIndexInRoutes, 100);
 @import "../../css/btn/btn7.css";
 
 .user-topbar {
-  display: none;
-  position: relative;
+  // display: none;
+  position: absolute;
   transition: all 1s;
   color: aliceblue;
-  width: 5vw;
-  height: 5vh;
-  right: 20vw;
-  margin-top: 1vh;
-  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+ margin-top: 8px;
+  right: 1vw;
+  // margin-top: 1vh;
+  cursor: default;
 }
 
 .topbar {

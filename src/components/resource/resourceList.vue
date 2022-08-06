@@ -53,12 +53,7 @@
       </span>
     </template>
   </el-dialog>
-  <el-dialog
-    v-model="show_task"
-    title="添加到实验室"
-    width="30%"
-    :before-close="handleClose"
-  >
+  <el-dialog v-model="show_task" title="添加到实验室" width="30%">
     <h3 style="margin-bottom: 15px">选择要添加的资源</h3>
     <el-checkbox-group v-model="selectedVisualDataItems">
       <el-checkbox
@@ -70,11 +65,16 @@
     <el-divider border-style="dashed" />
     <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
     <el-button
-      v-for="task in task_list"
+      v-for="(task, index) in task_list"
       :key="task"
       @click="addDataToTask(task)"
+      style="margin: 5px"
     >
-      <el-icon><Monitor /></el-icon> &nbsp; {{ task.name }}</el-button
+      <el-icon><Monitor /></el-icon> &nbsp;
+      <span v-if="index == 0" style="color: hsl(210, 100%, 40%)">{{
+        task.name
+      }}</span
+      ><span v-else>{{ task.name }}</span></el-button
     >
     <template #footer>
       <span class="dialog-footer">
@@ -103,7 +103,7 @@ const selectedVisualDataItems = ref([]);
 const mapCardDialogVisible = ref(false);
 const selectedRes = ref({});
 task_api.getTaskList(userInfo.id).then((res) => {
-  for (let i in res.data.data) {
+  for (let i = res.data.data.length - 1; i >= 0; i--) {
     task_list.value.push(res.data.data[i]);
   }
 });
@@ -113,9 +113,9 @@ const props = defineProps({
 });
 const addDataToTask = (task) => {
   console.log(selectedRes.value);
-  if ('mdl' in selectedRes.value) {
+  if ("mdl" in selectedRes.value) {
     console.log(234);
-    let data=selectedRes.value
+    let data = selectedRes.value;
     data["simularTrait"] = "model";
     task_api.addData(task, [data]);
   } else {

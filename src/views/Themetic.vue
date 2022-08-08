@@ -54,7 +54,7 @@
               "
             >
               <template
-                  v-for="(item, key) in thematicItem.relatedCases"
+                  v-for="(item, key) in themeCase"
                   :key="key"
               >
                 <div class="caseCard">
@@ -97,7 +97,7 @@
             <div class="dataBlock">
               <edit-case-draw
                   ref="createCaseRef"
-                  title="编辑--案例"
+                  title="编辑案例"
                   :editing-case-info="createCases"
                   @saveCase="saveCase"
                   @cancelCase ="cancelCase"
@@ -479,7 +479,6 @@ const tableData = ref([])
 const getAllCases = () => {
   tableData.value = [];
   get('/case/getAllCase').then(res=>{
-    console.log("获取全部案例",res);
     res.data.data.map(item=>{
       tableData.value.push({
         name:item.name,
@@ -491,6 +490,7 @@ const getAllCases = () => {
     })
   })
 }
+//添加案例到专题
 const addToTheme = (row) => {
   relatedCases.value.push({
     name:row.name,
@@ -501,7 +501,6 @@ const addToTheme = (row) => {
 }
 const deleteCases = (id) => {
   get('/case/deleteCaseById/'+id).then(res=>{
-    console.log("删除案例",res)
     ElNotification({
       message: '案例已从数据库中删除！',
       type: "success",
@@ -564,6 +563,7 @@ const getThemeInfo = (thematicName, tagName) => {
     let themeInfo = res.data.data;
     if (themeInfo != null) {
       thematicItem.value = themeInfo;
+      getCaseById(themeInfo.relatedCases)
     } else {
       thematicItem.value = {};
       relatedCases.value = [];
@@ -598,6 +598,25 @@ const getThemeInfo = (thematicName, tagName) => {
       }
   );
 };
+
+const themeCase = ref([])
+const getCaseById = (idList) => {
+  themeCase.value = []
+  let body = {
+    ids:idList
+  }
+  post("/getCasesInfo",body).then(res=>{
+    let caseResult = res.data;
+    caseResult.map(item=>{
+      themeCase.value.push({
+        name:item.name,
+        path:item.path,
+        thumbnail:item.thumbnail,
+        id:item.id
+      })
+    })
+  })
+}
 const toCase = (path) => {
   router.push("/case/" + path + "/");
 };
@@ -615,9 +634,7 @@ const editThematic = () => {
   editThemeItem.value = JSON.parse(JSON.stringify(thematicItem.value));
   if (editThemeItem.value.relatedCases != null) {
     relatedCases.value = [];
-    editThemeItem.value.relatedCases.map((item) => {
-      relatedCases.value.push(item);
-    });
+    relatedCases.value = JSON.parse(JSON.stringify(themeCase.value));
   } else {
     relatedCases.value = [];
   }
@@ -631,11 +648,7 @@ const editThematic = () => {
   }
 };
 
-
-
-const editingCases = ref({});
 const relatedCases = ref([]);
-const isSaved = ref(true);
 
 const removeCases = (key) => {
   ElMessageBox.confirm("确认移除此案例吗？")
@@ -660,35 +673,6 @@ const showAllCases = () => {
 };
 const editDialogClose = () => {
   allCasesVisible.value = false;
-}
-
-//案例数据条目的增加与删除
-const newCaseDataList = () => {
-  editingCases.value.dataList.push({
-    name:"",
-    type:""
-  })
-}
-const deleteCaseDataList = (key) => {
-  editingCases.value.dataList.splice(key,1)
-}
-const newCaseAuthor = () => {
-  editingCases.value.caseAuthor.push({
-    name:"",
-    workPlace:"",
-    email:""
-  })
-}
-const deleteCaseAuthor = (key) => {
-  editingCases.value.caseAuthor.splice(key,1)
-}
-const newCaseDescList = () => {
-  editingCases.value.description.push({
-    value:""
-  })
-}
-const deleteCaseDescList = (key) => {
-  editingCases.value.description.splice(key,1)
 }
 
 const description = ref([]);
@@ -722,13 +706,6 @@ const deleteDescription = (type, key) => {
 };
 //用于标识当前案例或者描述的索引
 const tempKey = ref("");
-const handleSuccess = (res, uploadFile) => {
-  let editingCase = editingCases.value;
-  editingCase.thumbnail = res.data.imgWebPath;
-  editingCase.imageName = uploadFile.name;
-  editingCases.value = editingCase;
-  console.log("上传图片成功", res.data.imgWebPath);
-};
 const addImage = (key) => {
   tempKey.value = key;
 };
@@ -754,6 +731,7 @@ const saveToServer = (bodyData, successMessage) => {
         duration: 10000,
       });
       thematicItem.value = bodyData;
+      getCaseById(bodyData.relatedCases)
     }
   });
 };
@@ -766,7 +744,6 @@ const editCancel = () => {
   editDialogVisible.value = false;
 };
 
-
 const getCurrentNode = (checked, data) => {
   // thematicName.value = data.label;
   //
@@ -777,12 +754,9 @@ const treeRef = ref();
 const handleNodeClick = (node, node2) => {
   let tagName = "";
   if (node.type == "subProblem") {
-    console.log("subProblem", node);
     tagName = node2.parent.data.label;
     thematicName.value = node.label;
     getThemeInfo(node.label, tagName);
-
-    console.log("node2", node2.parent.data.label);
   } else {
     console.log("problem", node);
   }

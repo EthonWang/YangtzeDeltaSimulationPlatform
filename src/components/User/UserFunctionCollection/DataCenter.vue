@@ -441,7 +441,7 @@ const refresh = () => {
     choosing_files_index = [];
     ElMessage({
       type: "success",
-      message: "刷新",
+      message: "成功",
     });
   });
 };

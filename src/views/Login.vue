@@ -9,12 +9,13 @@
         :label-position="labelPosition"
         label-width="100px"
         :model="formLabelAlign"
+        :rules="rules"
         style="min-width: 460px"
       >
-        <el-form-item label="请输入邮箱">
+        <el-form-item label="请输入邮箱" prop="email">
           <el-input v-model="formLabelAlign.email" />
         </el-form-item>
-        <el-form-item label="请输入密码">
+        <el-form-item label="请输入密码" prop="password">
           <el-input
             type="password"
             show-password
@@ -38,7 +39,10 @@ import { reactive, computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import userApi from "@/api/user/user";
+import { ElLoading } from "element-plus";
+import graphAPI from "@/api/user/graph";
 
+const graphapi = new graphAPI();
 const api = new userApi();
 const route = useRoute();
 const router = useRouter(); //路由直接用router.push(...)
@@ -48,6 +52,24 @@ const formLabelAlign = reactive({
   email: "",
   password: "",
 });
+const rules = reactive({
+  email: [
+    {
+      required: true,
+      type: "email",
+      message: "请输入邮箱",
+      trigger: "blur",
+    },
+  ],
+  password: [
+    {
+      required: true,
+      message: "请输入密码",
+      trigger: "blur",
+    },
+  ],
+});
+
 if ("user" in route.query) {
   const new_user = JSON.parse(route.query.user);
   if (new_user != null) {
@@ -61,17 +83,26 @@ const toRegister = () => {
 };
 const login = () => {
   api.login(formLabelAlign.email, formLabelAlign.password).then((res1) => {
-    localStorage.setItem("token",res1.data.token)
+    localStorage.setItem("token", res1.data.token);
     api.getUserInfo(formLabelAlign.email).then((res) => {
       localStorage.setItem("userInfo", JSON.stringify(res.data.data));
-      router.push("/user");
+      const loading = ElLoading.service({
+        lock: true,
+        text: "Loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      graphapi.initGraph(res.data.data.id).then((res) => {
+        console.log(res);
+      });
       setTimeout(() => {
-      document.getElementsByClassName("user-topbar")[0].style.right = "1vw";
-      document.getElementById("logo").style.marginLeft = "2vw";
-      document.getElementsByClassName("topbar")[0].style.left = "5vw";
-      document.getElementsByClassName("user-info")[0].style.opacity = 1;
-      document.getElementsByClassName("science")[0].style.opacity = 0;
-    }, 601);
+        loading.close();
+        // document.getElementsByClassName("user-topbar")[0].style.right = "1vw";
+        // document.getElementById("logo").style.marginLeft = "2vw";
+        // document.getElementsByClassName("topbar")[0].style.left = "5vw";
+        document.getElementsByClassName("user-info")[0].style.opacity = 1;
+        document.getElementsByClassName("science")[0].style.opacity = 0;
+      }, 601);
+      router.push("/user");
     });
   });
 };
@@ -84,7 +115,7 @@ const login = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  top: 8vh;
+  top: 65px;
 }
 h4 {
   position: relative;

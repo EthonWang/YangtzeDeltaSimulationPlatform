@@ -61,7 +61,7 @@
     </template>
     <txt-editor :txtInfo="txtInfo" @saveTxtHtml="saveTxtHtml"></txt-editor>
     <template #footer>
-      <Button @click="txtEditorModal = false">取消</Button>
+      <Button @click="handleTxtEditorClose">取消</Button>
       <Button type="primary" @click="handleTxtEditorClose">确认</Button>
     </template>
   </Modal>
@@ -350,13 +350,15 @@ export default {
       axios
         .post(this.dataServer + "/LabTask/updateLabTxtFile", formData)
         .then((res) => {
-          console.log(res.data.data);
-          localStorage.setItem("task", JSON.stringify(res.data.data));
-          this.$refs.mapBoxView.updateTxtInfo(res.data.data);
-          ElMessage({
-            type: "success",
-            message: "修改成功！",
-          });
+          if (res.data.code == 0) {
+            console.log(res.data.data);
+            localStorage.setItem("task", JSON.stringify(res.data.data));
+            this.$refs.mapBoxView.updateTxtInfo(res.data.data);
+            ElMessage({
+              type: "success",
+              message: "修改成功！",
+            });
+          }
         })
         .catch((err) => {
           console.log(err);

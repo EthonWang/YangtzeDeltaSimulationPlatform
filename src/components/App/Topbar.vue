@@ -127,12 +127,11 @@ watch(
         }
       }, 201);
       let fromHome = localStorage.getItem("fromHome");
-      console.log(fromHome);
       if (fromHome=='true') {
         setTimeout(() => {
           localStorage.setItem("fromHome", 'false');
           location.reload();
-        }, 600);
+        }, 700);
       }
     }
   }
@@ -187,9 +186,9 @@ setTimeout(searchIndexInRoutes, 100);
   position: absolute;
   transition: all 1s;
   color: aliceblue;
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
  margin-top: 8px;
   right: 1vw;
   // margin-top: 1vh;

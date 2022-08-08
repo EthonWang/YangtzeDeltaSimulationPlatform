@@ -1,7 +1,7 @@
 <template>
   <div class="dianChiPage">
     <el-card :body-style="{ padding: '0px' }">
-      <video class="videoBox" loop autoplay controlsList="nodownload" controls width="900" >
+      <video class="videoBox" loop autoplay controlsList="nodownload" controls>
         <source :src="videoPath1" type="video/mp4">
       </video>
       <div class="titleBox">
@@ -9,7 +9,7 @@
       </div>
     </el-card>
     <el-card :body-style="{ padding: '0px' }">
-      <video class="videoBox"  controlsList="nodownload" controls width="900" >
+      <video class="videoBox"  controlsList="nodownload" controls >
         <source :src="videoPath2" type="video/mp4">
       </video>
       <div class="titleBox">
@@ -49,7 +49,12 @@ const props = defineProps({
   display: flex;
   justify-content: space-around;
   align-items: center;
-  background-color: #295563;
+  background-color: #80D0C7;
+  background-image: linear-gradient(180deg, #80D0C7 0%, #295563 86%);
+
+}
+.videoBox{
+  width: 46vw;
 }
 .titleBox{
   padding: 10px;

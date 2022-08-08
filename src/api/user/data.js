@@ -43,19 +43,26 @@ export default class {
             return post('/resource/deleteFolder?folderId=' + file.id,)
         }
     }
-    createFolder(parent_id, name) {
+    createFolder(parent_id, name,problemTags="") {
         let folder = {
             name: name,
             parentId: parent_id,
             description: '新建文件夹',
-            problemTags: "",
+            problemTags: problemTags,
+            publicBoolean:false,
+            type: "folder",
         }
         return post('/resource/createFolder', folder)
     }
 
     moveFile() { }
     editFile(data) {
-        return post('/respurce/updateDataItem', data)
+        if (data.type == 'file') {
+            return post('/resource/updateUserDataItem', data)
+        }
+        else {
+            return post('/resource/updateUserFolder', data)
+        }
     }
     sendDataToContainer(fileRelativePath, userDataId) {
         return get('/model/upToDataContainer?dataRelativePath=' + fileRelativePath + '&userDataId=' + userDataId)

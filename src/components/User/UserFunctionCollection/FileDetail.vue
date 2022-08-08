@@ -109,7 +109,7 @@
             show-word-limit
           />
         </el-form-item>
-        <el-form-item label="数据归属" :label-width="formLabelWidth">
+        <!-- <el-form-item label="数据归属" :label-width="formLabelWidth">
           <el-tag
             v-for="tag in form.problemTags"
             :key="tag"
@@ -121,9 +121,9 @@
           >
             {{ tag }}
           </el-tag>
-        </el-form-item>
-        <el-form-item label="新增归属" :label-width="formLabelWidth">
-          <el-tree-select :popper-append-to-body="false" v-model="add_tags" :data="options" multiple show-checkbox />
+        </el-form-item> -->
+        <el-form-item label="科学问题" :label-width="formLabelWidth">
+          <el-tree-select :popper-append-to-body="false" v-model="form.problemTags" :data="options" multiple show-checkbox />
         </el-form-item>
         <el-form-item label="开放情况" :label-width="formLabelWidth">
           <el-switch
@@ -163,6 +163,7 @@ import { useStore } from "vuex";
 import Api from "@/api/user/data";
 import dataRelation from "./dataRelation.vue";
 import { sciencePro } from "@/assets/data/home/sciencePro";
+import { ElMessage } from "element-plus/lib/components";
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
@@ -181,7 +182,10 @@ const downloadData=()=>{
   emit("downloadData1",)
 }
 const addToTask=()=>{
-
+  if(props.file.type=='folder'){
+    ElMessage.error('请选择一个或多个文件，而非文件夹')
+    return
+  }
   emit("addToTask",)
 }
 watch(form, (newValue, oldValue) => {
@@ -199,12 +203,12 @@ const add_tags = ref([]);
 const options = Array.from({ length: sciencePro.length }).map((_, idx) => {
   const label = idx;
   return {
-    value: sciencePro[label].name,
-    label: sciencePro[label].name,
+    value: sciencePro[label].name.replace('\n','').replace('\r',''),
+    label: sciencePro[label].name.replace('\n','').replace('\r',''),
     children: Array.from({ length: sciencePro[label].children.length }).map(
       (_, idx1) => ({
-        value: sciencePro[label].children[idx1].name,
-        label: sciencePro[label].children[idx1].name,
+        value: sciencePro[label].children[idx1].name.replace('\n','').replace('\r',''),
+        label: sciencePro[label].children[idx1].name.replace('\n','').replace('\r',''),
       })
     ),
   };
@@ -228,23 +232,26 @@ const handleClose = (tag) => {
 };
 
 const changeData = () => {
-  
-  for (let it in add_tags.value) {
-    let ii = 0;
-    for (let j in form.value.tags) {
-      if (add_tags.value[it] == form.value.problemTags[j]) {
-        ii = 1;
-        break;
-      }
-    }
-    if (ii == 1) {
-      continue;
-    }
-    form.value.problemTags.push(add_tags.value[it]);
-  }
+  //处理标签
+  // for (let it in add_tags.value) {
+  //   console.log('it',it);
+  //   let ii = 0;
+  //   for (let j in form.value.tags) {
+  //     if (add_tags.value[it] == form.value.problemTags[j]) {
+  //       ii = 1;
+  //       break;
+  //     }
+  //   }
+  //   if (ii == 1) {
+  //     continue;
+     
+  //   }
+  //   form.value.problemTags.push(add_tags.value[it]);
+  // }
   dialogFormVisible.value = false;
-  add_tags.value=[]
-  // api.editFile();
+  let send_form=JSON.parse(JSON.stringify(form.value))
+  send_form.problemTags=send_form.problemTags.toString()
+  api.editFile(send_form);
 };
 </script>
 

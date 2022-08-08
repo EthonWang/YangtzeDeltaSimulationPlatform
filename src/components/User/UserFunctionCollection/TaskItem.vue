@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="task-item">
-      <h2 v-if="!edit_task">{{ props.task.name }}实验</h2>
+      <h2 v-if="!edit_task"><span>实验：</span>{{ props.task.name }}</h2>
       <el-input
         style="
           width: 40%;
@@ -108,7 +108,8 @@
         style="float: left; margin-right: 5px"
         >选择并添加<strong>公共资源</strong></el-button
       >
-      <br /><br />
+<br>
+      <div style="margin: 30px;"></div>
       <el-form
         :inline="true"
         :label-position="labelPosition"
@@ -142,6 +143,7 @@
           </el-form-item>
         </template>
       </el-form>
+      <div style="margin: 15px;"></div>
       <el-form
         :inline="true"
         :label-position="labelPosition"
@@ -221,9 +223,9 @@
       v-model="centerDialogVisible"
       title="删除实验"
       width="30%"
-      center
+      
     >
-      <span>删除后将无法回复，确认删除？</span>
+      <span>删除后无法恢复，确认删除？</span>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="centerDialogVisible = false">取消</el-button>
@@ -312,6 +314,13 @@ const handleClose = (tag) => {
 
 <style lang="less" scoped>
 // 兼容css
+h2{
+  font-size: 22px;
+  color: hsl(210,100%,40%);
+}
+h4{
+  font-size: 18px;
+}
 .task-public {
   position: absolute;
   top: 15px;

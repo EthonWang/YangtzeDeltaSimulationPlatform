@@ -100,8 +100,11 @@
           transform="translate(-5.57 -5.45)"
         ></path>
       </svg>
+      <div style="margin: 1.5vh;"></div>
       <h1>开始您的长三角模拟实验</h1>
-      <p>基于数据、模型、地图，进行您的科研活动</p>
+      <div style="margin: 1.5vh;"></div>
+      <p style="font-size: 20px;color:#646464;">基于数据、模型、地图，进行您的科研活动</p>
+      <div style="margin: 3.5vh;"></div>
       <IntroduceVue
         :picture="introduce"
         style="width: 100%; height: 60vh"
@@ -134,6 +137,8 @@ const introduce = ref([
 
 h1 {
   font-weight: 500;
+  font-size: 23px;
+  // color: #646464;
 }
 .cls-1 {
   fill: #79b8ff;

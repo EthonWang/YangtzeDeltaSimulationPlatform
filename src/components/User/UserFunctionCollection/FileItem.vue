@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="file"
-    
-    @click="choose()"
-  >
+  <div class="file" @click="choose()">
     <span
       style="position: absolute; right: 10%; top: 10%; color: rgb(61, 204, 56)"
       v-if="file.publicBoolean"
@@ -74,7 +70,9 @@
     <span v-if="file.type != 'folder' && file.type != 'zip'" class="type">{{
       file.name.split(".")[1]
     }}</span>
-    <span style="font-size: 16px; width: 90%;overflow-x: hidden;" v-if="!file.rename"
+    <span
+      style="font-size: 16px; width: 90%; overflow-x: hidden"
+      v-if="!file.rename"
       >{{ file.name.split(".")[0] }}
     </span>
     <span style="font-size: 16px; width: 100%; display: flex" v-if="file.rename"
@@ -96,7 +94,20 @@
         @click="createFolder()"
         ><el-icon><FolderChecked /></el-icon
       ></el-button>
+      
     </span>
+    <div v-if="file.rename" style="position: absolute;top: 200px;">
+      <el-tree-select
+      
+        :popper-append-to-body="false"
+        v-model="file.problemTags"
+        :data="options"
+        multiple
+        show-checkbox
+        placeholder="选择科学问题"
+      />
+    </div>
+    
   </div>
 </template>
 
@@ -105,18 +116,37 @@
 import { reactive, computed, ref, defineProps, defineEmits, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { sciencePro } from "@/assets/data/home/sciencePro";
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const props = defineProps({
   prop_file: Object,
   prop_index: Number,
 });
+
 const emit = defineEmits([
   "createFolder_f",
   "choose_f",
   "rightClick_f",
   "comeIn_f",
 ]);
+const options = Array.from({ length: sciencePro.length }).map((_, idx) => {
+  const label = idx;
+  return {
+    value: sciencePro[label].name.replace("\n", "").replace("\r", ""),
+    label: sciencePro[label].name.replace("\n", "").replace("\r", ""),
+    children: Array.from({ length: sciencePro[label].children.length }).map(
+      (_, idx1) => ({
+        value: sciencePro[label].children[idx1].name
+          .replace("\n", "")
+          .replace("\r", ""),
+        label: sciencePro[label].children[idx1].name
+          .replace("\n", "")
+          .replace("\r", ""),
+      })
+    ),
+  };
+});
 const createFolder = () => {
   emit("createFolder_f", index);
 };
@@ -124,11 +154,11 @@ const choose = () => {
   emit("choose_f", file, index);
 };
 const rightClick = (e) => {
-  emit("rightClick_f", e,file,index);
+  emit("rightClick_f", e, file, index);
 };
-const comeIn=()=>{
- emit("comeIn_f",file)
-}
+const comeIn = () => {
+  emit("comeIn_f", file);
+};
 
 const file = ref(props.prop_file);
 const index = ref(props.prop_index);

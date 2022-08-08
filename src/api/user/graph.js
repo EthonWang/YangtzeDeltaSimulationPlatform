@@ -275,13 +275,11 @@ export default class {
                         for (let l in recordName) {
                             if (acase.name == recordName[l]) {
                                 ok = false
-                                console.log(recordName[l]);
                                 break
                             }
                         }
                         if (ok) {
                             recordName.push(acase.name)
-                            console.log(recordName);
                             relation.nodes.push({
                                 name: acase.name + "案例",
                                 category: 2,

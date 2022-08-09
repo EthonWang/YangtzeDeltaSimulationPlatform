@@ -131,6 +131,7 @@ watch(
     if (getRootPath(newValue) != "") {
       setTimeout(() => {
         document.getElementsByClassName("bg")[0].style.opacity = "0";
+        document.getElementsByClassName("bg_pro")[0].style.opacity = "0";
         document.getElementsByClassName("container")[0].style.background =
           "#24292f3b";
       }, 100);

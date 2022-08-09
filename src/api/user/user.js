@@ -13,6 +13,9 @@ export default class{
     editUserInfo(user){
         return post('/user/updateUserInfo',user)
     }
+    uploadAvatar(user_id,picture){
+        return post('/user/uploadUserPic/'+user_id,picture)
+    }
     // editPassword(){}
     // editAvator(){}
 }

@@ -109,7 +109,26 @@
     </div>
   </div>
   <el-dialog v-model="recommendVisible" title="推荐数据" width="30%">
-    <span>{{ recommendShowOne.name }}</span>
+   <el-descriptions
+    class="margin-top"
+    title=""
+    :column="1"
+    :size="'large'"
+    border
+  >
+  <el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          <el-icon :style="iconStyle">
+            <user />
+          </el-icon>
+          数据名称
+        </div>
+      </template>
+      <span>{{ recommendShowOne.name }}</span>
+    </el-descriptions-item>
+    </el-descriptions>
+    
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="recommendVisible = false">取消</el-button>
@@ -507,7 +526,7 @@ const store = useStore(); //vuex直接用store.commit
   transform: rotateX(30deg) rotateY(0deg) rotate(0deg) translate(-40px, 10px);
   z-index: 100;
   opacity: 1;
-  border:5px solid rgb(153, 153, 153)
+  border:1px solid rgb(153, 153, 153)
 }
 .levels .level:hover:after {
   transform: translateX(100%);

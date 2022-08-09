@@ -2,12 +2,25 @@
   <div class="container">
     <span
       class="bg"
-      style="position: absolute; z-index: 2; transition: all .5s"
+      style="position: absolute; z-index: 2; transition: all 0.5s"
       :class="{
         background_show: background_show,
         background_hide: !background_show,
       }"
     ></span>
+   
+    <img
+      class="bg_pro"
+      src="@/assets/img/mesh-673.png"
+      style="
+        position: absolute;
+        z-index: 2;
+        width: 100vw;
+        height: 65px;
+        transition: all 0.5s;
+        opacity: 0;
+      "
+    >
     <div class="head">
       <!-- <span class="logo">长 三 角 模 拟 器</span> -->
       <img
@@ -41,10 +54,12 @@
       </div>
       <!-- <avatar class="user-topbar" ref="user" /> -->
       <img
-      class="user-topbar"
-      src="https://img0.baidu.com/it/u=3590740517,3858531448&fm=253&fmt=auto&app=120&f=JPEG?w=800&h=1199"
-      alt=""
-    />
+        class="user-topbar"
+        src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.ntimg.cn%2F20140727%2F6608733_095451721000_2.jpg&refer=http%3A%2F%2Fpic.ntimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1662540904&t=bf172540a1b26f7eb55b539080c3b0a1"
+        alt=""
+        v-if="userAvatar == null"
+      />
+      <img class="user-topbar" :src="userAvatar" alt="" v-else />
     </div>
   </div>
 </template>
@@ -54,8 +69,12 @@ import { userInfo } from "os";
 import { reactive, computed, ref, defineEmits, defineProps, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import graphAPI from "@/api/user/graph";
+import { userAvatar } from "@/assets/user/scienceChoose";
 
 const user_info = JSON.parse(localStorage.getItem("userInfo"));
+if (user_info != null && user_info != undefined) {
+  userAvatar.value = user_info.avatar;
+}
 
 // import dataApi from "@/api/user/data"
 
@@ -127,9 +146,9 @@ watch(
         }
       }, 201);
       let fromHome = localStorage.getItem("fromHome");
-      if (fromHome=='true') {
+      if (fromHome == "true") {
         setTimeout(() => {
-          localStorage.setItem("fromHome", 'false');
+          localStorage.setItem("fromHome", "false");
           location.reload();
         }, 700);
       }
@@ -189,7 +208,7 @@ setTimeout(searchIndexInRoutes, 100);
   width: 50px;
   height: 50px;
   border-radius: 25px;
- margin-top: 8px;
+  margin-top: 0px;
   right: 1vw;
   // margin-top: 1vh;
   cursor: default;

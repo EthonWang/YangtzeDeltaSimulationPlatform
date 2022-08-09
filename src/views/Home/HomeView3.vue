@@ -46,7 +46,7 @@ setTimeout(()=>{
 .explore{
   position: absolute;
   left: 47%;
-  top: 75%;
+  top: 55%;
   background: transparent;
   color: white;
   font-size: 25px;

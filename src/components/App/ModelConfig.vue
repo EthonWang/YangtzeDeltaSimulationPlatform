@@ -167,21 +167,24 @@ const addTestData = (data) => {
 };
 let prepared = false;
 const handleLoadTestData = () => {
-  let taskBody = JSON.parse(localStorage.getItem("task")).dataList.filter(
+  let taskBody = null
+  let taskItem=JSON.parse(localStorage.getItem("task")).dataList.filter(
     (item) => {
       if (item.simularTrait == "task" && item.taskModel == props.model.name) {
         return item;
       }
     }
-  )[0].taskBody;
-  console.log('taskBody=',taskBody);
-  if (taskBody == null || taskBody == undefined) {
-    ElMessage.info({
+  )[0];
+  if (taskItem == null || taskItem == undefined) {
+    ElMessage({
       type: "warning",
       message: "暂未找到历史记录",
     });
     return;
   }
+  taskBody=taskItem.taskBody
+  console.log('taskBody=',taskBody);
+  
   ElMessage("正在查询，请稍作等待...");
   loading.value = true;
   let interval = setInterval(() => {

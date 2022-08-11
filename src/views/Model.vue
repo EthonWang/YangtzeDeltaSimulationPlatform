@@ -139,7 +139,10 @@
 
 <el-button style="position: absolute;z-index: 100;top: 50%;left: 50%;" @click="myDataVisible=true">打开我的数据</el-button>
 <el-dialog v-model="myDataVisible" title="我的数据" width="80%" draggable>
-   <DataCenter style="height: 70vh;width: 80vw;"></DataCenter>
+   <div style="height: 60vh;width: 80vw;">
+<DataCenter></DataCenter>
+   </div>
+   
     
     <template #footer>
       <span class="dialog-footer">

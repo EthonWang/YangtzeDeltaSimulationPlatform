@@ -269,7 +269,11 @@ export default {
       this.nowChooseConfig = modelInEvent;
     },
     chooseOneData(data) {
-      if (data.fileRelativePath == undefined || data.id == undefined) {
+      console.log(data);
+      if (
+        (data.visualType != "dataSet" && (data.fileRelativePath == undefined || data.id == undefined)) ||
+        (data.visualType == "dataSet" && data.id == undefined)
+      ) {
         this.dialogDataChoose = false;
         ElMessage.error("加入数据失败");
         return;

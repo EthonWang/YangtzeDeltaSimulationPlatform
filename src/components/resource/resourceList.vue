@@ -14,11 +14,12 @@
           <el-button
             class="downloadButton"
             style="margin-left: 2px"
-            type="info"
+            type="primary"
+            effect="dark"
             @click="showMapCard(item)"
             >查看</el-button
           >
-          <el-button class="downloadButton" @click="downloadRes(item)"
+          <el-button type="primary" v-if="'fileSize' in item" class="downloadButton" @click="downloadRes(item)"
             >下载</el-button
           >
           <div class="fontSet" style="margin: 5px 0" v-if="'fileSize' in item">
@@ -46,10 +47,36 @@
     <mapbox-card :jsonData="selectedRes"></mapbox-card>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="show_task = true"
+        
+        <el-button v-if="'mdl' in selectedRes" type="primary" @click="show_task_model = true"
+          >添加到个人实验室</el-button
+        >
+        <el-button v-else type="primary" @click="show_task = true"
           >添加到个人实验室</el-button
         >
         <el-button @click="mapCardDialogVisible = false">取消</el-button>
+      </span>
+    </template>
+  </el-dialog>
+  <el-dialog v-model="show_task_model" title="添加模型到实验室" width="30%">
+   
+    <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
+    <el-button
+      v-for="(task, index) in task_list"
+      :key="task"
+      @click="addDataToTask(task)"
+      style="margin: 5px"
+    >
+      <el-icon><Monitor /></el-icon> &nbsp;
+      <span v-if="index == 0" style="color: hsl(210, 100%, 40%)">{{
+        task.name
+      }}</span
+      ><span v-else>{{ task.name }}</span></el-button
+    >
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="show_task_model = false">取消</el-button>
+        <!-- <el-button type="primary" @click="show_task = false">完成</el-button> -->
       </span>
     </template>
   </el-dialog>
@@ -135,6 +162,7 @@ const dataServer = store.getters.devIpAddress;
 const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 const task_api = new taskApi();
 const show_task = ref(false);
+const show_task_model=ref(false)
 const task_list = ref([]);
 const selectedVisualDataItems = ref([]);
 const selectedVisualDataItemsRange = ref([0, 0]);
@@ -204,6 +232,7 @@ const addDataToTask = (task) => {
     task_api.addData(task, dataList);
   }
   show_task.value = false;
+  show_task_model.value=false
   mapCardDialogVisible.value = false;
 };
 
@@ -218,8 +247,12 @@ const handleClose = function (done) {
 };
 const showMapCard = function (info) {
   // if (info.visualizationBoolean) {
+    selectedRes.value ={}
   selectedRes.value = info;
-  mapCardDialogVisible.value = true;
+  setTimeout(()=>{
+    mapCardDialogVisible.value = true;
+  },200)
+  
 };
 const downloadRes = function (item) {
   if (item.publicBoolean) {
@@ -311,6 +344,7 @@ const guideMarks = computed(() => {
   left: 0;
   width: 100%;
   height: 100%;
+  filter: brightness(0.75);
 }
 .resListPagination {
   display: flex;
@@ -319,9 +353,10 @@ const guideMarks = computed(() => {
   // flex-direction: column;
   margin-bottom: 20px;
   padding-top: 10px;
-  border-top: solid 0.1px rgba(176, 174, 174, 0.445);
+  // border-top: solid 0.1px rgba(176, 174, 174, 0.445);
 }
 .cardTitle {
+  // color: white;
   height: 30px;
   line-height: 30px;
   width: 62%;
@@ -329,22 +364,29 @@ const guideMarks = computed(() => {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-weight: 700;
+  font-size: 18px;
 }
 .downloadButton {
   width: 15%;
   float: right;
   height: 30px;
+  background: hsla(220,100%,15%,70%);
 }
 .fontSet {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
     "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
   font-size: 12px;
   font-weight: 500;
-  color: #606266;
+  // color: #606266;
+  color: rgb(78, 78, 78);
   vertical-align: middle;
 }
 .el-card {
   --el-card-padding: 0px;
+}
+/deep/.el-dialog {
+  background: hsl(220,100%,5%) !important;
 }
 </style>
 <style lang="less">
@@ -372,4 +414,5 @@ const guideMarks = computed(() => {
 .slider-demo-block .el-slider {
   flex: 0 0 75%;
 }
+
 </style>

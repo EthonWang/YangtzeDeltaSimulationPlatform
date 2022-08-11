@@ -3,7 +3,7 @@
   <div class="bg"></div>
     <div style="margin: 9vh"></div>
     <img src="../assets/globle.svg" class="logo" />
-    <h4>注册长三角综合模拟器</h4>
+    <h4>注册长三角综合模拟平台</h4>
     <div class="user-info">
       <div style="margin: 20px" />
       <el-form

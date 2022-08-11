@@ -213,8 +213,11 @@
     :before-close="handleClose"
   >
     <el-button
-      v-for="data in dataList"
+      v-for="data in dataList.filter(
+        (item) => item.simularTrait != 'model' && item.simularTrait != 'task'
+      )"
       :key="data"
+      style="margin: 5px"
       @click="chooseOneData(data)"
       >{{ data.name }}</el-button
     >
@@ -278,7 +281,11 @@ export default {
         background: "rgba(0, 0, 0, 0.7)",
       });
       console.log("have url=", data.dataContainerUrl);
-      if (data.dataContainerUrl != null && data.dataContainerUrl != undefined) {
+      if (
+        data.dataContainerUrl != null &&
+        data.dataContainerUrl != undefined &&
+        data.dataContainerUrl != ""
+      ) {
         this.nowChooseConfig.url = data.dataContainerUrl;
         this.nowChooseConfig.tag = data.name.split(".")[0];
         this.nowChooseConfig.suffix = data.name.split(".")[1];
@@ -480,7 +487,7 @@ export default {
           localStorage.setItem("task", JSON.stringify(this.task));
           this.task_api.editTask(this.task).then((res) => {
             setTimeout(() => {
-              loading_data.close()
+              loading_data.close();
               location.reload();
             }, 500);
           });

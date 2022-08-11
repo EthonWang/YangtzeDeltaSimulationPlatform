@@ -151,7 +151,7 @@ caseInfo.value = {
 
 <style scoped>
 .about {
-  top: 7.46vh;
+  top: 65px;
   background-color: white;
   overflow: scroll;
 }

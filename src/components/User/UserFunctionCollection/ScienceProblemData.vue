@@ -2,7 +2,7 @@
   <div style="background-color: white">
     <h2>科学问题分类</h2>
     <el-tree
-      style="width: 100%; height: 100%; background: white"
+      style="width: 100%; height: 95%; background: white"
       :data="data"
       show-checkbox
       node-key="label"

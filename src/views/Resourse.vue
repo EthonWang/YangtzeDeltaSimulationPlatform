@@ -380,7 +380,7 @@ export default {
 }
 .main {
   margin-top: 65px;
-  height: 93vh;
+  height: calc(100vh - 65px);
   background: url("../assets/night.jpg");
   background-size: 100% 100%;
 }
@@ -392,19 +392,25 @@ export default {
 }
 .tagTree {
   // height: 800px;
-  border: solid 1px black;
+  border: solid 0px rgb(255, 255, 255);
+  // border-radius: 5px !important;
+  box-shadow: 2px 4px 12px rgba(255, 255, 255, 0.5);
   // background-color: rgb(239, 143, 17);
+  background: hsla(220, 100%, 5%,0.3);
 }
 .indexBox {
+  background: hsla(220, 100%, 5%,0.3);
   margin-left: 10px;
-  height: 100px;
+  height: 120px;
   width: 100%;
+  padding:10px 0 5px 5px ;
   border-bottom: solid 0.1px rgb(176, 174, 174);
+  box-shadow: 2px 2px 6px rgba(255,255,255,0.5) !important;
   // background-color: rgb(95, 239, 17);
 }
 .searchBox {
   height: 50px;
-  background-color: rgb(197, 193, 193);
+  // background-color: rgb(197, 193, 193);
   display: flex;
   line-height: 50px;
   // align-items: center;
@@ -425,7 +431,7 @@ export default {
 }
 .sortBox {
   height: 50px;
-  background-color: white;
+  // background-color: white;
   display: flex;
   align-items: center;
   // justify-content: space-around;
@@ -439,21 +445,24 @@ export default {
 .sortCheckBox {
   margin-left: 10px;
   vertical-align: sub;
+  color: white;
 }
 .fontSet {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
     "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: #606266;
+  // color: #606266;
+  color: white;
   vertical-align: middle;
 }
 .sortButton {
   width: 60px;
   height: 50px;
+  color: white;
 }
 .resourceList {
-  background-color: rgb(255, 255, 255);
+  // background-color: rgb(255, 255, 255);
   margin-left: 10px;
   // margin-top: 10px;
   // height: 600px;
@@ -470,6 +479,27 @@ export default {
 .selectedTagFont {
   font-weight: 550;
   color: rgb(131, 124, 124);
+}
+/deep/.el-col-19 {
+width: 87%;
+max-width:87%;
+position: absolute;
+left: 20%;
+}
+/deep/.el-col-5 {
+    max-width: 20.8333333333%;
+    flex: 0 0 20.8333333333%;
+    margin-left: -5vw;
+}
+/deep/.el-card{
+  // background: hsl(220, 100%, 5%);
+  background: hsl(0,0,75%);
+  // color: white;
+  // border:0px;
+  box-shadow: 2px 2px 8px rgba(255,255,255,0.5) !important;
+}
+/deep/.el-link{
+  color: rgba(255, 255, 255, 0.8);
 }
 </style>
 <style>

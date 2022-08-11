@@ -54,7 +54,7 @@
         <el-button v-else type="primary" @click="show_task = true"
           >添加到个人实验室</el-button
         >
-        <el-button @click="mapCardDialogVisible = false">取消</el-button>
+        <el-button @click="mapCardDialogClose()">取消</el-button>
       </span>
     </template>
   </el-dialog>
@@ -111,7 +111,6 @@
       <el-slider
         v-model="selectedVisualDataItemsRange"
         range
-        show-stops
         :marks="guideMarks"
         :max="selectedRes.visualDataItems.length"
         @change="selectedVisualDataItemsRangeChange"
@@ -228,6 +227,8 @@ const addDataToTask = (task) => {
           }
         }
       }
+      selectedVisualDataItemsRange.value = [0, 0];
+      selectedVisualDataItems.value = [];
     }
     task_api.addData(task, dataList);
   }
@@ -239,11 +240,18 @@ const addDataToTask = (task) => {
 const handleClose = function (done) {
   ElMessageBox.confirm("确定关闭此窗口?")
     .then(() => {
+      selectedVisualDataItemsRange.value = [0, 0];
+      selectedVisualDataItems.value = [];
       done();
     })
     .catch(() => {
       // catch error
     });
+};
+const mapCardDialogClose = function () {
+  selectedVisualDataItemsRange.value = [0, 0];
+  selectedVisualDataItems.value = [];
+  mapCardDialogVisible.value = false;
 };
 const showMapCard = function (info) {
   // if (info.visualizationBoolean) {
@@ -256,7 +264,8 @@ const showMapCard = function (info) {
 };
 const downloadRes = function (item) {
   if (item.publicBoolean) {
-    window.location.href = dataServer + item.fileWebAddress;
+    window.location.href =
+      dataServer + "/script/downloadPic?path=" + item.fileRelativePath;
   } else {
     // this.$Message.warning("该资源未开放下载权限，详情请联系网站管理员！");
     ElMessage({
@@ -286,10 +295,9 @@ const selectedVisualDataItemsRangeChangeBefore = function (value) {
             min = max = j;
           } else {
             //判断增减
-            if (min >= j){
+            if (min >= j) {
               min = j;
-            } 
-            else if (max <= j){
+            } else if (max <= j) {
               max = j;
             }
           }
@@ -312,18 +320,34 @@ const selectedVisualDataItemsRangeChange = function (value) {
 };
 const guideMarks = computed(() => {
   let marks = {};
-  for (let i = 0; i <= 160; i++) {
-    if (i % 10 == 0) {
-      marks[i] = i + "";
-    } else if (i % 2 == 0) {
-      marks[i] = {
-        style: {
-          color: "#ccc",
-        },
-        label: "",
-      };
+  if (selectedRes.value.visualDataItems.length < 500) {
+    for (let i = 0; i <= 1000; i++) {
+      if (i % 50 == 0) {
+        marks[i] = i + "";
+      } else if (i % 10 == 0) {
+        marks[i] = {
+          style: {
+            color: "#ccc",
+          },
+          label: "",
+        };
+      }
+    }
+  } else if (selectedRes.value.visualDataItems.length < 1000) {
+    for (let i = 0; i <= 1000; i++) {
+      if (i % 100 == 0) {
+        marks[i] = i + "";
+      } else if (i % 20 == 0) {
+        marks[i] = {
+          style: {
+            color: "#ccc",
+          },
+          label: "",
+        };
+      }
     }
   }
+
   return marks;
 });
 </script>

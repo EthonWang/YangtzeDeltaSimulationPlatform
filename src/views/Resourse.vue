@@ -379,7 +379,7 @@ export default {
   // background-size: 100% 100%;
 }
 .main {
-  margin-top: 7vh;
+  margin-top: 65px;
   height: 93vh;
   background: url("../assets/night.jpg");
   background-size: 100% 100%;

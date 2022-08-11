@@ -4,6 +4,7 @@
       <source  src="@/assets/introduce/introduce.mp4" type="video/mp4">
     </video>
   <el-button class="explore" @click="explore()">开始探索</el-button>
+  <span class="videoDesc">*视频素材来自央视新闻</span>
   </div>
 </template>
 
@@ -46,7 +47,7 @@ setTimeout(()=>{
 .explore{
   position: absolute;
   left: 47%;
-  top: 75%;
+  top: 55%;
   background: transparent;
   color: white;
   font-size: 25px;
@@ -55,5 +56,11 @@ setTimeout(()=>{
 }
 #video{
   width: 100%;
+}
+.videoDesc{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: #beb3b3;
 }
 </style>

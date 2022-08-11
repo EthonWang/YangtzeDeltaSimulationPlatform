@@ -2,10 +2,30 @@
   <div style="" class="user-span">
     <img
       class="img-ava"
-      src="https://img0.baidu.com/it/u=3590740517,3858531448&fm=253&fmt=auto&app=120&f=JPEG?w=800&h=1199"
+      src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.ntimg.cn%2F20140727%2F6608733_095451721000_2.jpg&refer=http%3A%2F%2Fpic.ntimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1662540904&t=bf172540a1b26f7eb55b539080c3b0a1"
       alt=""
+      v-if="userAvatar==null"
     />
+    <img
+      class="img-ava"
+      :src=userAvatar
+      alt=""
+      v-else
+    />
+    <el-upload
+    v-model:file-list="fileList"
+    class="upload-demo"
+    action=""
+    :limit="1"
+    :before-upload="beforeUploadAvatar"
+    :auto-upload="false"
+  >
+   <el-button round style="position: absolute; top: 34%;right: 5%;display: flex;align-items: center;background: hsl(0, 0%, 90%);">
+      <el-icon><Camera /></el-icon>&nbsp;更换
+    </el-button>
 
+  </el-upload>
+    
     <div class="infoSpan">
       <h4>{{ data.name }}</h4>
       <span style="color: gray">{{ data.email }}</span
@@ -58,9 +78,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取消</el-button>
-          <el-button type="primary" @click="updateUserInfo()"
-            >确定</el-button
-          >
+          <el-button type="primary" @click="updateUserInfo()">确定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -74,7 +92,10 @@ import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import userApi from "@/api/user/user";
 import { ElMessage } from "element-plus/lib/components";
+import dataAPI from "@/api/user/data";
+import {userAvatar} from "@/assets/user/scienceChoose"
 
+const dataApi = new dataAPI();
 const api = new userApi();
 const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 const dialogFormVisible = ref(false);
@@ -94,11 +115,31 @@ const data = reactive({
   phone: "15689652365",
   adress: "江苏省南京市",
 });
-data.name=user_info.name
-data.email=user_info.email
-data.description=user_info.description
-data.instruction=user_info.instruction
+data.name = user_info.name;
+data.email = user_info.email;
+data.description = user_info.description;
+data.instruction = user_info.instruction;
 
+const beforeUploadAvatar=(rawFile)=>{
+   if (rawFile.type !== 'image/jpeg'&&rawFile.type !== 'image/png') {
+    ElMessage.error('请使用jpg或png格式')
+    return false
+  } else if (rawFile.size / 1024 / 1024 > 5) {
+    ElMessage.error('头像请控制在 5MB 以内')
+    return false
+  }
+ 
+  let form=new FormData()
+  form.append("userPic", rawFile)
+  api.uploadAvatar(user_info.id,form).then((res)=>{
+    api.getUserInfo(user_info.email).then((res)=>{
+      localStorage.setItem("userInfo", JSON.stringify(res.data.data));
+      user_info.avatar=res.data.data.avatar
+      userAvatar.value=res.data.data.avatar
+       return true
+    })
+  })
+}
 const logout = () => {
   localStorage.clear();
   router.push("/login");
@@ -108,22 +149,24 @@ const init = () => {
     document.getElementsByClassName("user-info")[0].style.opacity = 1;
   }
 };
-const updateUserInfo=()=>{
-  let userNewInfo=user_info
-  userNewInfo.name=data.name
-  userNewInfo.description=data.description
-  userNewInfo.instruction=data.instruction
-  userNewInfo.phone=data.phone
-  userNewInfo.adress=data.adress
-  api.editUserInfo(userNewInfo).then((res)=>{
+const updateUserInfo = () => {
+  let userNewInfo = user_info;
+  userNewInfo.name = data.name;
+  userNewInfo.description = data.description;
+  userNewInfo.instruction = data.instruction;
+  userNewInfo.phone = data.phone;
+  userNewInfo.adress = data.adress;
+  api.editUserInfo(userNewInfo).then((res) => {
     dialogFormVisible.value = false;
-    localStorage.setItem("userInfo",JSON.stringify(userNewInfo))
+    localStorage.setItem("userInfo", JSON.stringify(userNewInfo));
     ElMessage({
-      type:"success",
-      message:"用户信息更新成功"
-    })
-  })
-}
+      type: "success",
+      message: "用户信息更新成功",
+    });
+  });
+};
+
+
 setTimeout(init, 109);
 </script>
 

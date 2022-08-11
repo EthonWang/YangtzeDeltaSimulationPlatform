@@ -20,7 +20,8 @@ videoPath.value = "/back/store/themeImg/watershedFlood.62d6c5ad443c3b60743a51bd.
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #76BA99;
+  background-color: #80D0C7;
+  background-image: linear-gradient(180deg, #80D0C7 0%, #295563 86%);
 }
 
 .videoBox{

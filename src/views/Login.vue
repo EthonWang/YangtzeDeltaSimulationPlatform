@@ -1,6 +1,7 @@
 <template>
   <div class="login-page">
-    <div style="margin: 2.5vh"></div>
+    <div class="bg"></div>
+    <div style="margin: 10vh"></div>
     <img src="../assets/globle.svg" class="logo" />
     <h4>登录长三角综合模拟器</h4>
     <div class="user-info">
@@ -9,12 +10,13 @@
         :label-position="labelPosition"
         label-width="100px"
         :model="formLabelAlign"
+        :rules="rules"
         style="min-width: 460px"
       >
-        <el-form-item label="请输入邮箱">
+        <el-form-item label="请输入邮箱" prop="email">
           <el-input v-model="formLabelAlign.email" />
         </el-form-item>
-        <el-form-item label="请输入密码">
+        <el-form-item label="请输入密码" prop="password">
           <el-input
             type="password"
             show-password
@@ -38,7 +40,10 @@ import { reactive, computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import userApi from "@/api/user/user";
+import { ElLoading } from "element-plus";
+import graphAPI from "@/api/user/graph";
 
+const graphapi = new graphAPI();
 const api = new userApi();
 const route = useRoute();
 const router = useRouter(); //路由直接用router.push(...)
@@ -48,6 +53,24 @@ const formLabelAlign = reactive({
   email: "",
   password: "",
 });
+const rules = reactive({
+  email: [
+    {
+      required: true,
+      type: "email",
+      message: "请输入邮箱",
+      trigger: "blur",
+    },
+  ],
+  password: [
+    {
+      required: true,
+      message: "请输入密码",
+      trigger: "blur",
+    },
+  ],
+});
+
 if ("user" in route.query) {
   const new_user = JSON.parse(route.query.user);
   if (new_user != null) {
@@ -61,17 +84,26 @@ const toRegister = () => {
 };
 const login = () => {
   api.login(formLabelAlign.email, formLabelAlign.password).then((res1) => {
-    localStorage.setItem("token",res1.data.token)
+    localStorage.setItem("token", res1.data.token);
     api.getUserInfo(formLabelAlign.email).then((res) => {
       localStorage.setItem("userInfo", JSON.stringify(res.data.data));
+      const loading = ElLoading.service({
+        lock: true,
+        text: "Loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      graphapi.initGraph(res.data.data.id).then((res) => {
+        setTimeout(() => {
+        loading.close();
+        // document.getElementsByClassName("user-topbar")[0].style.right = "1vw";
+        // document.getElementById("logo").style.marginLeft = "2vw";
+        // document.getElementsByClassName("topbar")[0].style.left = "5vw";
+        document.getElementsByClassName("user-info")[0].style.opacity = 1;
+        document.getElementsByClassName("science")[0].style.opacity = 0;
+      }, 601);
       router.push("/user");
-      setTimeout(() => {
-      document.getElementsByClassName("user-topbar")[0].style.right = "1vw";
-      document.getElementById("logo").style.marginLeft = "2vw";
-      document.getElementsByClassName("topbar")[0].style.left = "5vw";
-      document.getElementsByClassName("user-info")[0].style.opacity = 1;
-      document.getElementsByClassName("science")[0].style.opacity = 0;
-    }, 601);
+      });
+      
     });
   });
 };
@@ -79,24 +111,34 @@ const login = () => {
 
 <style lang="less" scoped>
 // 兼容css
+.bg{
+  background-image: url('../assets/img/rainForecast_back.png');
+  background-size: 100% 100%;
+  filter: blur(0px);
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+}
 .login-page {
-  background-color: white;
+  
   display: flex;
   flex-direction: column;
   align-items: center;
-  top: 8vh;
+  top: 0px;
+  
 }
 h4 {
   position: relative;
   font-size: 1.5vw;
   font-weight: 400;
+  color: white;
 }
 .user-info {
   width: fit-content;
   height: fit-content;
   position: relative;
-  background-color: rgba(241, 241, 241, 0.534);
-  border: 1px solid rgb(221, 221, 221);
+  background-color: hsla(220, 100%, 6%, 0.5);
+  border: 0px solid rgb(221, 221, 221);
   padding: 1%;
 }
 .logo {
@@ -107,6 +149,10 @@ h4 {
   border: 1px solid;
   // top: 5vh;
   //   background: #409eff;
+}
+/deep/.el-form-item__label {
+
+    color:white;
 }
 </style>
 

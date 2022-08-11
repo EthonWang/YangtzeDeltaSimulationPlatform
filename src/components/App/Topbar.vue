@@ -2,12 +2,25 @@
   <div class="container">
     <span
       class="bg"
-      style="position: absolute; z-index: 2; transition: all .5s"
+      style="position: absolute; z-index: 2; transition: all 0.5s"
       :class="{
         background_show: background_show,
         background_hide: !background_show,
       }"
     ></span>
+   
+    <img
+      class="bg_pro"
+      src="@/assets/img/mesh-673.png"
+      style="
+        position: absolute;
+        z-index: 2;
+        width: 100vw;
+        height: 65px;
+        transition: all 0.5s;
+        opacity: 0;
+      "
+    >
     <div class="head">
       <!-- <span class="logo">长 三 角 模 拟 器</span> -->
       <img
@@ -28,7 +41,7 @@
           v-for="(bar, index) in barList"
           :key="bar"
           @click="sendRouterToFather(bar.path, index)"
-          style="font-size: 1.2vw; cursor: pointer"
+          style="font-size: 25px; cursor: pointer"
           class="set_7_btn-wrapper"
         >
           <svg height="54" width="150">
@@ -39,7 +52,14 @@
           </div>
         </div>
       </div>
-      <avatar class="user-topbar" ref="user" />
+      <!-- <avatar class="user-topbar" ref="user" /> -->
+      <img
+        class="user-topbar"
+        src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.ntimg.cn%2F20140727%2F6608733_095451721000_2.jpg&refer=http%3A%2F%2Fpic.ntimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1662540904&t=bf172540a1b26f7eb55b539080c3b0a1"
+        alt=""
+        v-if="userAvatar == null"
+      />
+      <img class="user-topbar" :src="userAvatar" alt="" v-else />
     </div>
   </div>
 </template>
@@ -49,8 +69,12 @@ import { userInfo } from "os";
 import { reactive, computed, ref, defineEmits, defineProps, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import graphAPI from "@/api/user/graph";
+import { userAvatar } from "@/assets/user/scienceChoose";
 
 const user_info = JSON.parse(localStorage.getItem("userInfo"));
+if (user_info != null && user_info != undefined) {
+  userAvatar.value = user_info.avatar;
+}
 
 // import dataApi from "@/api/user/data"
 
@@ -89,7 +113,7 @@ const searchIndexInRoutes = () => {
 
     pick.value = new Array(barList.length).fill(0);
   } else {
-    document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
+    // document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
   }
   if (getRootPath(route.path) != "") {
     return;
@@ -107,6 +131,7 @@ watch(
     if (getRootPath(newValue) != "") {
       setTimeout(() => {
         document.getElementsByClassName("bg")[0].style.opacity = "0";
+        document.getElementsByClassName("bg_pro")[0].style.opacity = "0";
         document.getElementsByClassName("container")[0].style.background =
           "#24292f3b";
       }, 100);
@@ -122,12 +147,11 @@ watch(
         }
       }, 201);
       let fromHome = localStorage.getItem("fromHome");
-      console.log(fromHome);
-      if (fromHome=='true') {
+      if (fromHome == "true") {
         setTimeout(() => {
-          localStorage.setItem("fromHome", 'false');
+          localStorage.setItem("fromHome", "false");
           location.reload();
-        }, 600);
+        }, 700);
       }
     }
   }
@@ -178,15 +202,17 @@ setTimeout(searchIndexInRoutes, 100);
 @import "../../css/btn/btn7.css";
 
 .user-topbar {
-  display: none;
-  position: relative;
+  // display: none;
+  position: absolute;
   transition: all 1s;
   color: aliceblue;
-  width: 5vw;
-  height: 5vh;
-  right: 20vw;
-  margin-top: 1vh;
-  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  margin-top: 0px;
+  right: 1vw;
+  // margin-top: 1vh;
+  cursor: default;
 }
 
 .topbar {

@@ -366,6 +366,7 @@ import EditCaseDraw from "components/Cases/editCaseDraw";
 const router = useRouter();
 const store = useStore();
 const dataServer = store.getters.devIpAddress;
+const user_info = JSON.parse(localStorage.getItem("userInfo"));
 
 const mdOpenIcon = require("@/assets/img/icon/md-open.png");
 
@@ -551,10 +552,16 @@ const editThemeItem = ref({});
 const relatedData = ref([]);
 
 const startSearch = function (searchValue) {
-  router.push({
+  if(user_info==null||user_info==undefined){
+    ElMessage('请登录')
+    router.push('/login')
+  }else{
+    router.push({
     path: "/resourse",
     query: {searchValue},
   });
+  }
+  
 };
 
 let tagClass = "problemTags";
@@ -840,7 +847,7 @@ setTimeout(() => {
 
 <style lang="less" scoped>
 .about {
-  top: 7.46vh;
+  top: 65px;
   background-color: white;
   overflow: scroll;
 }

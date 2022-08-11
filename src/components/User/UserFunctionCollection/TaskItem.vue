@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="task-item">
-      <h2 v-if="!edit_task">{{ props.task.name }}实验</h2>
+      <h2 v-if="!edit_task"><span>实验：</span>{{ props.task.name }}</h2>
       <el-input
         style="
           width: 40%;
@@ -108,7 +108,8 @@
         style="float: left; margin-right: 5px"
         >选择并添加<strong>公共资源</strong></el-button
       >
-      <br /><br />
+      <br />
+      <div style="margin: 30px"></div>
       <el-form
         :inline="true"
         :label-position="labelPosition"
@@ -121,7 +122,7 @@
         <template v-for="(data, index) in props.task.dataList" :key="data">
           <el-form-item
             :label="data.name.slice(0, 25)"
-            v-if="data.simularTrait != 'model'&&data.simularTrait != 'task'"
+            v-if="data.simularTrait != 'model' && data.simularTrait != 'task'"
           >
             <el-button
               type="success"
@@ -142,6 +143,7 @@
           </el-form-item>
         </template>
       </el-form>
+      <div style="margin: 15px"></div>
       <el-form
         :inline="true"
         :label-position="labelPosition"
@@ -217,13 +219,8 @@
         ><el-icon><CloseBold /></el-icon>&nbsp; 删除本实验</el-button
       >
     </div>
-    <el-dialog
-      v-model="centerDialogVisible"
-      title="删除实验"
-      width="30%"
-      center
-    >
-      <span>删除后将无法回复，确认删除？</span>
+    <el-dialog v-model="centerDialogVisible" title="删除实验" width="30%">
+      <span>删除后无法恢复，确认删除？</span>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="centerDialogVisible = false">取消</el-button>
@@ -288,12 +285,12 @@ const confirmEdit = () => {
 const options = Array.from({ length: sciencePro.length }).map((_, idx) => {
   const label = idx;
   return {
-    value: sciencePro[label].name.replace('\n',''),
-    label: sciencePro[label].name.replace('\n',''),
+    value: sciencePro[label].name.replace("\n", ""),
+    label: sciencePro[label].name.replace("\n", ""),
     children: Array.from({ length: sciencePro[label].children.length }).map(
       (_, idx1) => ({
-        value: sciencePro[label].children[idx1].name.replace('\n',''),
-        label: sciencePro[label].children[idx1].name.replace('\n',''),
+        value: sciencePro[label].children[idx1].name.replace("\n", ""),
+        label: sciencePro[label].children[idx1].name.replace("\n", ""),
       })
     ),
   };
@@ -312,6 +309,13 @@ const handleClose = (tag) => {
 
 <style lang="less" scoped>
 // 兼容css
+h2 {
+  font-size: 22px;
+  color: hsl(210, 100%, 40%);
+}
+h4 {
+  font-size: 18px;
+}
 .task-public {
   position: absolute;
   top: 15px;
@@ -329,12 +333,12 @@ const handleClose = (tag) => {
 }
 .task-item {
   position: relative;
-  border: 0.5px solid rgba(206, 206, 206, 0.5);
+  border: 1px solid rgba(206, 206, 206, 0.75);
   width: 100%;
   padding: 2% 5% 35px 5%;
   transition: all 0.5s;
   &:hover {
-    border: 0.5px solid rgba(81, 113, 255, 0.5);
+    border: 1px solid rgba(81, 113, 255, 0.85);
   }
   strong {
     color: hsl(210, 100%, 60%);

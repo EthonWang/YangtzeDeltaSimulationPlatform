@@ -466,7 +466,7 @@ const confirmChange = (type, index) => {};
 const downloadData = () => {
   console.log("asdajksdjkasdkjasd");
   let i=0
-  //注意：循环请求用这个而非for循环
+  //注意：循环请求后台用这个而非for循环
   let downloadInterval=setInterval(()=>{
     let file = choosing_files[i];
     console.log(file);

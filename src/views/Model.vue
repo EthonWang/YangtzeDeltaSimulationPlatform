@@ -136,6 +136,18 @@
       </span>
     </template>
   </el-dialog>
+
+<el-button style="position: absolute;z-index: 100;top: 50%;left: 50%;" @click="myDataVisible=true">打开我的数据</el-button>
+<el-dialog v-model="myDataVisible" title="我的数据" width="80%" draggable>
+   <DataCenter style="height: 70vh;width: 80vw;"></DataCenter>
+    
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="myDataVisible = false">取消</el-button>
+      </span>
+    </template>
+  </el-dialog>
+  
 </template>
 
 <!--<script setup>-->
@@ -154,6 +166,7 @@ import txtEditor from "../components/Mapbox/labUtils/wangEditorBox.vue";
 import taskApi from "@/api/user/task";
 import { ElMessageBox, ElMessage } from "element-plus";
 import graphAPI from "@/api/user/graph";
+import DataCenter from "@/components/User/UserFunctionCollection/DataCenter.vue";
 
 export default {
   components: {
@@ -162,6 +175,7 @@ export default {
     Cesium,
     chartTemplate,
     txtEditor,
+    DataCenter,
   },
   data() {
     return {
@@ -169,6 +183,7 @@ export default {
       recommendShowOne: {},
       recommendList: true,
       recommendVisible: false,
+      myDataVisible:false,
       res_list: JSON.parse(localStorage.getItem("task")).dataList,
       mapType: "mapBox",
       //使用mapbox-view组件需要传递的参数

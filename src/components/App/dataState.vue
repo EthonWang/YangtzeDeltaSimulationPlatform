@@ -441,7 +441,6 @@ export default {
       }
     },
     loadToLab(event) {
-      console.log(event);
       if (event.url != undefined) {
         let name = event.tag + "." + event.suffix;
         let type = event.suffix; //对应可视化

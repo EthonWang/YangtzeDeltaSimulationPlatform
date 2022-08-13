@@ -62,7 +62,7 @@
                     <el-image
                         class="caseImage"
                         @click="toCase(item.path)"
-                        :src="'/back' + item.thumbnail"
+                        :src="baseUrl + item.thumbnail"
                         fit="fill"
                     ></el-image>
                     <div class="imageMask">
@@ -97,10 +97,11 @@
             <div class="dataBlock">
               <edit-case-draw
                   ref="createCaseRef"
-                  title="编辑案例"
+                  title="新增案例"
                   :editing-case-info="createCases"
                   @saveCase="saveCase"
                   @cancelCase ="cancelCase"
+                  theme=""
               >
               </edit-case-draw>
             </div>
@@ -130,14 +131,10 @@
                       <span>查看数据</span>
                     </div>
                   </div>
-                  <div
-                      style="
-                      display: flex;
-                      justify-content: center;
-                      padding: 0.5rem;
-                    "
-                  >
-                    <h4 class="font-size-1">{{ item.name }}</h4>
+                  <div class="cardText">
+                    <el-tooltip :content="item.name" placement="bottom">
+                      <h4 class="font-size-1">{{ item.name }}</h4>
+                    </el-tooltip>
                   </div>
                 </div>
               </template>
@@ -164,12 +161,13 @@
                 <p v-if="item.type == 'text'" class="descriptionText">
                   {{ item.value }}
                 </p>
-                <div class="imageBlock">
+
                   <el-image
+                      class="imageBlock"
                       v-if="item.type == 'image'"
-                      :src="'/back' + item.value"
+                      :src="baseUrl + item.value"
                   ></el-image>
-                </div>
+
               </template>
             </div>
           </div>
@@ -221,7 +219,7 @@
           <el-card :body-style="{ padding: '0px' }" style="margin-left: 10px;margin-bottom: 10px">
             <el-image
                 class="caseImage"
-                :src="'/back' + item.thumbnail"
+                :src="baseUrl + item.thumbnail"
                 fit="fill"
             ></el-image>
               <div style="display: flex;padding: 0 10px 10px 10px;flex-direction: column;align-items: center">
@@ -240,7 +238,7 @@
         <el-table-column prop="path" label="path"  />
         <el-table-column prop="thumbnail" label="缩略图"  width="80">
           <template #default="scope">
-              <el-image style="width: 100%" :src="'/back'+scope.row.thumbnail" :preview-src-list="['/back'+scope.row.thumbnail]"/>
+              <el-image style="width: 100%" :src="baseUrl+scope.row.thumbnail" :preview-src-list="[baseUrl+scope.row.thumbnail]"/>
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="创建时间" width="200" />
@@ -306,7 +304,7 @@
             <el-upload
                 ref="upload"
                 class="upload-demo"
-                action="/back/uploadThemeImg"
+                :action="baseUrl+'/uploadThemeImg'"
                 :limit="1"
                 method="post"
                 :on-success="uploadDescImg"
@@ -366,13 +364,14 @@ import EditCaseDraw from "components/Cases/editCaseDraw";
 const router = useRouter();
 const store = useStore();
 const dataServer = store.getters.devIpAddress;
+const baseUrl = store.state.devBackIp;
 const user_info = JSON.parse(localStorage.getItem("userInfo"));
 const isAdmin=ref(user_info.email=="opengms@126.com")
 const mdOpenIcon = require("@/assets/img/icon/md-open.png");
 
 onMounted(() => {
   thematicName.value = "流域生态环境演变";
-  getThemeInfo("流域生态环境演变");
+  getThemeInfo("流域生态环境演变","流域水循环及其驱动机制");
 });
 
 const modelTreeData = ref([]);
@@ -570,7 +569,7 @@ const startSearch = function (searchValue) {
 
 let tagClass = "problemTags";
 const getThemeInfo = (thematicName, tagName) => {
-  axios.get("/back/getTheme/" + thematicName).then((res) => {
+  get("/getTheme/" + thematicName).then((res) => {
     let themeInfo = res.data.data;
     if (themeInfo != null) {
       thematicItem.value = themeInfo;
@@ -733,8 +732,8 @@ const editOK = () => {
   editDialogVisible.value = false;
 };
 const saveToServer = (bodyData, successMessage) => {
-  axios.post("/back/saveTheme", bodyData).then((res) => {
-    if (res.data.msg == "Success") {
+  post("/saveTheme", bodyData).then((res) => {
+    if (res.code == 0) {
       ElNotification({
         title: "Success",
         message: successMessage,
@@ -867,26 +866,29 @@ setTimeout(() => {
   background-color: white;
   overflow: scroll;
 }
-
+@imageHeight: 100px;
+@imageWidth:160px;
 .caseImageWrap {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   position: relative;
-  height: 100px;
-  width: 160px;
+ 
+  height: @imageHeight;
+  width: @imageWidth;
   cursor: pointer;
 }
 
 .caseImage {
-  height: 100px;
-  width: 160px;
+ 
+  height: @imageHeight;
+  width: @imageWidth;
   border-bottom: 1px solid lightgray;
 }
 
 .imageMask {
-  height: 100px;
-  width: 160px;
+  height: @imageHeight;
+  width: @imageWidth;
   opacity: 0;
   position: absolute;
   top: 0;
@@ -912,6 +914,14 @@ setTimeout(() => {
 .font-size-1 {
   line-height: 1.5;
   font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cardText{
+  padding: 0.5rem;
+  text-align: center;
+  width:160px;
 }
 
 .caseCard {
@@ -947,15 +957,11 @@ setTimeout(() => {
 
 .imageBlock {
   width: 30vw;
+  margin-top: 15px;
   margin-bottom: 15px;
   animation: scale-in-center 1s both;
-  box-shadow: 10px -8px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
-
-//.imageBlock :hover{
-//  transform: scale(1.05);
-//  transition: 0.6s;
-//}
 @keyframes scale-in-center {
   0% {
     transform: scale(0.9);

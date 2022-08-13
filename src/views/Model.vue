@@ -109,7 +109,26 @@
     </div>
   </div>
   <el-dialog v-model="recommendVisible" title="推荐数据" width="30%">
-    <span>{{ recommendShowOne.name }}</span>
+   <el-descriptions
+    class="margin-top"
+    title=""
+    :column="1"
+    :size="'large'"
+    border
+  >
+  <el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          <el-icon :style="iconStyle">
+            <user />
+          </el-icon>
+          数据名称
+        </div>
+      </template>
+      <span>{{ recommendShowOne.name }}</span>
+    </el-descriptions-item>
+    </el-descriptions>
+    
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="recommendVisible = false">取消</el-button>
@@ -117,6 +136,21 @@
       </span>
     </template>
   </el-dialog>
+
+<el-button style="position: absolute;z-index: 100;top: 50%;left: 50%;" @click="myDataVisible=true">打开我的数据</el-button>
+<el-dialog v-model="myDataVisible" title="我的数据" width="80%" draggable>
+   <div style="height: 60vh;width: 80vw;">
+<DataCenter></DataCenter>
+   </div>
+   
+    
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="myDataVisible = false">取消</el-button>
+      </span>
+    </template>
+  </el-dialog>
+  
 </template>
 
 <!--<script setup>-->
@@ -135,6 +169,7 @@ import txtEditor from "../components/Mapbox/labUtils/wangEditorBox.vue";
 import taskApi from "@/api/user/task";
 import { ElMessageBox, ElMessage } from "element-plus";
 import graphAPI from "@/api/user/graph";
+import DataCenter from "@/components/User/UserFunctionCollection/DataCenter.vue";
 
 export default {
   components: {
@@ -143,6 +178,7 @@ export default {
     Cesium,
     chartTemplate,
     txtEditor,
+    DataCenter,
   },
   data() {
     return {
@@ -150,6 +186,7 @@ export default {
       recommendShowOne: {},
       recommendList: true,
       recommendVisible: false,
+      myDataVisible:false,
       res_list: JSON.parse(localStorage.getItem("task")).dataList,
       mapType: "mapBox",
       //使用mapbox-view组件需要传递的参数
@@ -507,7 +544,7 @@ const store = useStore(); //vuex直接用store.commit
   transform: rotateX(30deg) rotateY(0deg) rotate(0deg) translate(-40px, 10px);
   z-index: 100;
   opacity: 1;
-  border:5px solid rgb(153, 153, 153)
+  border:1px solid rgb(153, 153, 153)
 }
 .levels .level:hover:after {
   transform: translateX(100%);

@@ -4,7 +4,7 @@
       <el-col :offset="2" :span="4">
         <el-card>
           <template #header>
-            <span>专题分类</span>
+            <span style="font-size: 20px;font-weight: 800">专题分类</span>
           </template>
           <el-tree
               ref="treeRef"
@@ -365,6 +365,7 @@ const router = useRouter();
 const store = useStore();
 const dataServer = store.getters.devIpAddress;
 const baseUrl = store.state.devBackIp;
+const user_info = JSON.parse(localStorage.getItem("userInfo"));
 
 const mdOpenIcon = require("@/assets/img/icon/md-open.png");
 
@@ -470,6 +471,10 @@ modelTreeData.value = [
         label: "自然遗产",
         type: "subProblem",
       },
+      {
+        label: "城市群发展",
+        type: "subProblem",
+      },
     ],
   },
 ];
@@ -550,10 +555,16 @@ const editThemeItem = ref({});
 const relatedData = ref([]);
 
 const startSearch = function (searchValue) {
-  router.push({
+  if(user_info==null||user_info==undefined){
+    ElMessage('请登录')
+    router.push('/login')
+  }else{
+    router.push({
     path: "/resourse",
     query: {searchValue},
   });
+  }
+  
 };
 
 let tagClass = "problemTags";
@@ -755,6 +766,7 @@ const handleNodeClick = (node, node2) => {
   if (node.type == "subProblem") {
     tagName = node2.parent.data.label;
     thematicName.value = node.label;
+    localStorage.setItem('show_themetic',node.label)
     getThemeInfo(node.label, tagName);
   } else {
     console.log("problem", node);
@@ -830,10 +842,21 @@ allThematic.value = [
     ],
   },
 ];
+const findParentName=(childName)=>{
+  for(let i in allThematic.value){
+    let parent = allThematic.value[i].label
+    for(let j in allThematic.value[i].children){
+      if(allThematic.value[i].children[j].label==childName){
+        return parent
+      }
+    }
+  }
+  return "流域水循环及其驱动机制"
+}
 setTimeout(() => {
   const show_name = localStorage.getItem("show_themetic");
   thematicName.value = show_name.replace("\n", "");
-  getThemeInfo(show_name);
+  getThemeInfo(show_name,findParentName(show_name));
 }, 600);
 </script>
 
@@ -850,12 +873,14 @@ setTimeout(() => {
   flex-direction: row;
   flex-wrap: wrap;
   position: relative;
+ 
   height: @imageHeight;
   width: @imageWidth;
   cursor: pointer;
 }
 
 .caseImage {
+ 
   height: @imageHeight;
   width: @imageWidth;
   border-bottom: 1px solid lightgray;

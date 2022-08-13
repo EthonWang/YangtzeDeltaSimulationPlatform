@@ -167,21 +167,26 @@ const addTestData = (data) => {
 };
 let prepared = false;
 const handleLoadTestData = () => {
-  let taskBody = JSON.parse(localStorage.getItem("task")).dataList.filter(
+  let taskBody = null
+  let taskItemList=JSON.parse(localStorage.getItem("task")).dataList.filter(
     (item) => {
       if (item.simularTrait == "task" && item.taskModel == props.model.name) {
         return item;
       }
     }
-  )[0].taskBody;
-  console.log('taskBody=',taskBody);
-  if (taskBody == null || taskBody == undefined) {
-    ElMessage.info({
+  );
+  
+  if (taskItemList == null || taskItemList == undefined) {
+    ElMessage({
       type: "warning",
       message: "暂未找到历史记录",
     });
     return;
   }
+  let taskItem=taskItemList[taskItemList.length-1]
+  taskBody=taskItem.taskBody
+  console.log('taskBody=',taskBody);
+  
   ElMessage("正在查询，请稍作等待...");
   loading.value = true;
   let interval = setInterval(() => {
@@ -466,7 +471,7 @@ const handleInvokeNext = () => {
           }
         }
         task.dataList.push(pushData);
-        taskApi.addData(task, [pushData]);
+        taskApi.editTask(task);
         localStorage.setItem("task", JSON.stringify(task));
         let interval = setInterval(() => {
           axios

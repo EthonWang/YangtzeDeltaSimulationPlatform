@@ -144,14 +144,14 @@ h1 {
               placeholder="输入资源描述..."
             />
           </FormItem>
-          <FormItem prop="description" label="资源描述" :label-width="150">
+          <FormItem prop="description" label="md5" :label-width="150">
             <Input
               v-model="formInline.md5"
               type="textarea"
               placeholder="输入md5..."
             />
           </FormItem>
-          <FormItem prop="description" label="资源描述" :label-width="150">
+          <FormItem prop="description" label="mdl" :label-width="150">
             <Input
               v-model="formInline.mdl"
               type="textarea"

@@ -218,7 +218,7 @@ caseInfo.value = {
 
 <style lang="less" scoped>
 .about {
-  top: 7.46vh;
+  top: 65px;
   background-color: white;
   overflow: scroll;
   margin-bottom: 70px;

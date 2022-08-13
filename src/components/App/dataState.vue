@@ -52,14 +52,20 @@
                 <!-- 按钮 -->
                 <el-col :span="4">
                   <div class="_btn-group">
-                    <el-button
-                      round
-                      type="success"
-                      size="mini"
-                      :icon="Upload"
-                      @click="chooseConfig(modelInEvent)"
-                    ></el-button>
-
+                    <el-tooltip
+                      class="box-item"
+                      effect="light"
+                      content="选取实验数据"
+                      placement="top"
+                    >
+                      <el-button
+                        round
+                        type="success"
+                        size="mini"
+                        :icon="Upload"
+                        @click="chooseConfig(modelInEvent)"
+                      ></el-button>
+                    </el-tooltip>
                     <el-button
                       round
                       type="warning"
@@ -153,14 +159,36 @@
               <!-- 按钮 -->
               <el-col :span="2">
                 <div class="_btn-group">
-                  <el-button
-                    round
-                    type="warning"
-                    size="mini"
-                    :icon="Download"
-                    @click="download(modelOutEvent)"
+                  <el-tooltip
+                    class="box-item"
+                    effect="light"
+                    content="下载实验结果"
+                    placement="bottom"
                   >
-                  </el-button>
+                    <el-button
+                      round
+                      type="warning"
+                      size="mini"
+                      :icon="Download"
+                      @click="download(modelOutEvent)"
+                    >
+                    </el-button>
+                  </el-tooltip>
+                  <el-tooltip
+                    class="box-item"
+                    effect="light"
+                    content="加入实验室"
+                    placement="bottom"
+                  >
+                    <el-button
+                      round
+                      type="primary"
+                      size="mini"
+                      :icon="Plus"
+                      @click="loadToLab(modelOutEvent)"
+                    >
+                    </el-button>
+                  </el-tooltip>
                 </div>
               </el-col>
             </el-row>
@@ -179,14 +207,17 @@
 
   <el-dialog
     v-model="dialogDataChoose"
-    title="数据选取"
+    title="选择实验数据"
     width="50%"
     height="500"
     :before-close="handleClose"
   >
     <el-button
-      v-for="data in dataList"
+      v-for="data in dataList.filter(
+        (item) => item.simularTrait != 'model' && item.simularTrait != 'task'
+      )"
       :key="data"
+      style="margin: 5px"
       @click="chooseOneData(data)"
       >{{ data.name }}</el-button
     >
@@ -203,16 +234,19 @@
 
 <script>
 import { Upload } from "@element-plus/icons-vue";
-import { Download } from "@element-plus/icons-vue";
+import { Download, Plus } from "@element-plus/icons-vue";
 import ChooseData from "../Model/ChooseData.vue";
 import dataAPI from "@/api/user/data";
 import { ElMessage } from "element-plus/lib/components";
 import { ElLoading } from "element-plus";
+import taskApi from "@/api/user/task";
+
 export default {
   name: "DataState",
   props: ["state"],
   data() {
     return {
+      task_api: new taskApi(),
       task: JSON.parse(localStorage.getItem("task")),
       userInfo: JSON.parse(localStorage.getItem("userInfo")),
       nowChooseConfig: null,
@@ -221,6 +255,7 @@ export default {
       fileList: [],
       Upload,
       Download,
+      Plus,
       dialogDataChoose: false,
       dataList: JSON.parse(localStorage.getItem("task")).dataList.filter(
         (item) => item.simularTrait != "model"
@@ -234,7 +269,11 @@ export default {
       this.nowChooseConfig = modelInEvent;
     },
     chooseOneData(data) {
-      if (data.fileRelativePath == undefined || data.id == undefined) {
+      console.log(data);
+      if (
+        (data.visualType != "dataSet" && (data.fileRelativePath == undefined || data.id == undefined)) ||
+        (data.visualType == "dataSet" && data.id == undefined)
+      ) {
         this.dialogDataChoose = false;
         ElMessage.error("加入数据失败");
         return;
@@ -246,7 +285,11 @@ export default {
         background: "rgba(0, 0, 0, 0.7)",
       });
       console.log("have url=", data.dataContainerUrl);
-      if (data.dataContainerUrl != null && data.dataContainerUrl != undefined) {
+      if (
+        data.dataContainerUrl != null &&
+        data.dataContainerUrl != undefined &&
+        data.dataContainerUrl != ""
+      ) {
         this.nowChooseConfig.url = data.dataContainerUrl;
         this.nowChooseConfig.tag = data.name.split(".")[0];
         this.nowChooseConfig.suffix = data.name.split(".")[1];
@@ -290,12 +333,17 @@ export default {
             });
         } else {
           this.dataApi
-            .sendResDataToContainer(data.fileRelativePath,this.task.id, data.id, this.userInfo.id)
+            .sendResDataToContainer(
+              data.fileRelativePath,
+              this.task.id,
+              data.id,
+              this.userInfo.id
+            )
             .then((res) => {
               console.log(res.data.data);
               this.nowChooseConfig.tag = data.name.split(".")[0];
               this.nowChooseConfig.suffix = data.name.split(".")[1];
-              if(data.visualType == "dataSet"){
+              if (data.visualType == "dataSet") {
                 this.nowChooseConfig.suffix = "zip";
               }
               this.nowChooseConfig.url = res.data.data;
@@ -393,7 +441,64 @@ export default {
 
         window.open(this.eventChoosing.url);
       } else {
-        this.$message.error("No data can be downloaded.");
+        this.$message.error("请先进行实验");
+      }
+    },
+    loadToLab(event) {
+      if (event.url != undefined) {
+        let name = event.tag + "." + event.suffix;
+        let type = event.suffix; //对应可视化
+        let have = false;
+        for (let i = 0; i < this.task.dataList.length; i++) {
+          const element = this.task.dataList[i];
+          if (element.id == event.data[0].Id) {
+            have = true;
+            break;
+          }
+        }
+        if (!have) {
+          this.task.dataList.push({
+            createTime: "2022-08-03 20:39:40",
+            dataContainerUrl: event.url,
+            description: event.eventDesc,
+            fileRelativePath: "",
+            fileStoreName: name,
+            fileWebAddress: "",
+            geoType: "line",
+            id: event.data[0].Id,
+            name: name,
+            normalTags: "",
+            parentId: null,
+            problemTags: [],
+            publicBoolean: false,
+            size: "0.045 MB",
+            source: "cloud",
+            type: "data",
+            userId: "62c59b2fa5c524973a4d5cc4",
+            visualType: type,
+            visualizationBoolean: false,
+          });
+          ElMessage({
+            type: "success",
+            message: "成功加入实验室",
+          });
+          let loading_data = ElLoading.service({
+            lock: true,
+            text: "加载...",
+            background: "rgba(0, 0, 0, 0.7)",
+          });
+          localStorage.setItem("task", JSON.stringify(this.task));
+          this.task_api.editTask(this.task).then((res) => {
+            setTimeout(() => {
+              loading_data.close();
+              location.reload();
+            }, 500);
+          });
+        } else {
+          ElMessage.error("该数据已在实验室");
+        }
+      } else {
+        this.$message.error("请先进行实验");
       }
     },
   },

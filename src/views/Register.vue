@@ -1,8 +1,9 @@
 <template>
   <div class="login-page" v-loading="loading">
-    <div style="margin: 2.5vh"></div>
+  <div class="bg"></div>
+    <div style="margin: 9vh"></div>
     <img src="../assets/globle.svg" class="logo" />
-    <h4>注册长三角综合模拟器</h4>
+    <h4>注册长三角综合模拟平台</h4>
     <div class="user-info">
       <div style="margin: 20px" />
       <el-form
@@ -124,19 +125,32 @@ const toLogin = (index=0) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  top: 65px;
+  top: 0;
+}
+.bg{
+  background-image: url('../assets/img/rainForecast_back.png');
+  background-size: 100% 100%;
+  filter: blur(0px);
+  width: 100%;
+  height: 100vh;
+  position: absolute;
 }
 h4 {
   position: relative;
   font-size: 1.5vw;
   font-weight: 400;
+  color: white;
+}
+/deep/.el-form-item__label {
+
+    color:white;
 }
 .user-info {
   width: fit-content;
   height: fit-content;
   position: relative;
-  background-color: rgba(241, 241, 241, 0.534);
-  border: 1px solid rgb(221, 221, 221);
+  background-color: hsla(220, 100%, 6%, 0.5);
+  border: 0px solid rgb(221, 221, 221);
   padding: 1%;
 }
 .logo {

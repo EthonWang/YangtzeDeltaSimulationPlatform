@@ -27,6 +27,7 @@
               :popper-append-to-body="false"
               v-model="newTaskProblem"
               :data="options"
+              placeholder="请选择"
               multiple
               show-checkbox
             />

@@ -8,9 +8,9 @@
         <el-carousel-item style="height: 100%;" v-for="config in configs" :key="config">
           <div class="over-item">
             <div style="margin: 2%; width: 100%"></div>
-            <h3>{{ config.tittle }}</h3>
+            <h3><el-icon><InfoFilled /></el-icon>&nbsp;简介：{{ config.tittle }}</h3>
             <el-divider></el-divider>
-            <div class="des">{{config.sum_des}}：{{ config.all }}</div>
+            <div class="des" v-if="config.tittle=='我的数据'">{{config.sum_des}}：{{ config.all }}</div>
             <div class="des">{{ config.des }}</div>
             <el-divider></el-divider>
             <img :src="config.img" style="width: 100%;" alt="">
@@ -62,7 +62,7 @@ const configs = reactive([
   {
     tittle: "我的实验",
     sum_des:"我的实验总量",
-    des: "我在各个科学问题的研究中执行的实验",
+    des: "此处是我的实验室，汇总我在各个科学问题的研究中执行的实验，用于使用数据并调用模型进行地理模拟问题的求解，并对结果进行分析与可视化。",
     img:require("@/assets/img/LAB.png"),
     edit_des: false,
     all: allResourceNum.themeNum,
@@ -100,6 +100,8 @@ const configs = reactive([
     font-weight: 500;
     margin:2% 0 2% 0 ;
     font-size: 22px;
+    display: flex;
+    align-items: center;
   }
   span {
     color: rgb(105, 105, 105);

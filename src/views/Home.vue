@@ -33,7 +33,7 @@ const show1 = computed(() => {
 const x=window.innerHeight
 const show2 = computed(() => {
   return (
-    scrollTop.value > standardizeHeight(330+x) &&
+    scrollTop.value > standardizeHeight(430+x) &&
     scrollTop.value < standardizeHeight(1360+x)
   );
 });

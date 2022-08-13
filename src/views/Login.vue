@@ -1,8 +1,9 @@
 <template>
   <div class="login-page">
-    <div style="margin: 2.5vh"></div>
+    <div class="bg"></div>
+    <div style="margin: 10vh"></div>
     <img src="../assets/globle.svg" class="logo" />
-    <h4>登录长三角综合模拟器</h4>
+    <h4>登录长三角综合模拟平台</h4>
     <div class="user-info">
       <div style="margin: 20px" />
       <el-form
@@ -92,9 +93,7 @@ const login = () => {
         background: "rgba(0, 0, 0, 0.7)",
       });
       graphapi.initGraph(res.data.data.id).then((res) => {
-        console.log(res);
-      });
-      setTimeout(() => {
+        setTimeout(() => {
         loading.close();
         // document.getElementsByClassName("user-topbar")[0].style.right = "1vw";
         // document.getElementById("logo").style.marginLeft = "2vw";
@@ -103,6 +102,8 @@ const login = () => {
         document.getElementsByClassName("science")[0].style.opacity = 0;
       }, 601);
       router.push("/user");
+      });
+      
     });
   });
 };
@@ -110,24 +111,34 @@ const login = () => {
 
 <style lang="less" scoped>
 // 兼容css
+.bg{
+  background-image: url('../assets/img/rainForecast_back.png');
+  background-size: 100% 100%;
+  filter: blur(0px);
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+}
 .login-page {
-  background-color: white;
+  
   display: flex;
   flex-direction: column;
   align-items: center;
-  top: 65px;
+  top: 0px;
+  
 }
 h4 {
   position: relative;
   font-size: 1.5vw;
   font-weight: 400;
+  color: white;
 }
 .user-info {
   width: fit-content;
   height: fit-content;
   position: relative;
-  background-color: rgba(241, 241, 241, 0.534);
-  border: 1px solid rgb(221, 221, 221);
+  background-color: hsla(220, 100%, 6%, 0.5);
+  border: 0px solid rgb(221, 221, 221);
   padding: 1%;
 }
 .logo {
@@ -138,6 +149,10 @@ h4 {
   border: 1px solid;
   // top: 5vh;
   //   background: #409eff;
+}
+/deep/.el-form-item__label {
+
+    color:white;
 }
 </style>
 

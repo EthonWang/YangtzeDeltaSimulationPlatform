@@ -11,8 +11,8 @@
         "
       >
         <!--        <span style="background: transparent" class="border-box">长三角综合模拟器</span>-->
-        <dv-border-box8 dur="3" style="width: 20%; padding: 3px"
-          >长三角综合模拟器</dv-border-box8
+        <dv-border-box8 dur="3" style="width: 23%; padding: 3px"
+          >长三角综合模拟平台</dv-border-box8
         >
       </h1>
       <div
@@ -48,7 +48,7 @@
       >
         <el-divider style="margin: 5px 0 5px 0"></el-divider>
         <p>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长三角模拟器汇聚了大量长江三角洲区域的地理模型和数据资源，用以揭示区域水循环及其内部驱动机理的水循环，阐明全球气候变化条件下区域环境演化规律，以及长三角城市化与人地关系相互作用的互动互馈机制的综合集成模型，实现区域灾害的快速响应与治理，服务于长三角高质量一体化发展国家战略。
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长三角模拟平台汇聚了大量长江三角洲区域的地理模型和数据资源，用以揭示区域水循环及其内部驱动机理的水循环，阐明全球气候变化条件下区域环境演化规律，以及长三角城市化与人地关系相互作用的互动互馈机制的综合集成模型，实现区域灾害的快速响应与治理，服务于长三角高质量一体化发展国家战略。
         </p>
         <el-divider style="margin: 15px 0 -5px 0"></el-divider>
         <div class="login">

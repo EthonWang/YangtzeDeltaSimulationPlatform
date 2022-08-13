@@ -52,8 +52,8 @@ switch (route.path.split("/")[route.path.split("/").length - 1]) {
   case "task":
     activeName.value = "task";
     break;
-  case "model":
-    activeName.value = "model";
+  case "":
+    activeName.value = "";
     break;
   case "data":
     activeName.value = "data";
@@ -144,13 +144,13 @@ const toRouter = (route) => {
 }
 .science {
   position: fixed;
-  top: 15%;
+  top: calc(4.6vh + 65px + 24px);
   z-index: 500;
   // padding-top: 1vh;
   left: 5vw;
   width: 290px;
   height: 80%;
-  border: 0.5px solid rgba(197, 197, 197, 0.219);
+  border: 1px solid rgba(197, 197, 197, 0.8);
   box-shadow: 0 1px 3px rgba(22, 22, 22, 0.1);
   transition: all 1s;
   opacity: 0;

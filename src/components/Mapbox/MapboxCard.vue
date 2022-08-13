@@ -15,9 +15,7 @@
           >{{ jsonData.name }}</el-descriptions-item
         >
         <el-descriptions-item label="类型" label-align="center" align="center"
-          ><el-tag size="small">{{
-            jsonData.type
-          }}</el-tag></el-descriptions-item
+          ><el-tag v-if="jsonData.type=='data'" size="small">数据</el-tag><el-tag v-else size="small">模型</el-tag></el-descriptions-item
         >
         <el-descriptions-item
           label="作者"
@@ -309,6 +307,7 @@ export default {
   top: 75px;
   width: 27%;
   height: 45vh;
+  background: white !important;
 }
 .scrollbar-demo-item {
   display: flex;

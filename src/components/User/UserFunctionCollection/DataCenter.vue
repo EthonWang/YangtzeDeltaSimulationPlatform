@@ -53,8 +53,10 @@
     <div
       style="
         position: absolute;
-        background-color: hsla(220, 15%, 94%, 0.5);
+        background-color: hsla(220, 15%, 94%, 0.75);
         width: 20%;
+        border: 1px solid hsla(220, 50%, 74%, 0.75);
+        border-radius: 5px;
         right: 0;
         height: 100%;
       "
@@ -108,7 +110,7 @@
           <el-upload
             v-model:file-list="fileList"
             class="upload-demo"
-            action="/back/resource/saveDataItem"
+            action="http://172.21.213.44:8999/resource/saveDataItem"
             :headers="upload_header"
             :data="{
               name: upload_file.name,
@@ -464,7 +466,7 @@ const confirmChange = (type, index) => {};
 const downloadData = () => {
   console.log("asdajksdjkasdkjasd");
   let i=0
-  //注意：循环请求用这个而非for循环
+  //注意：循环请求后台用这个而非for循环
   let downloadInterval=setInterval(()=>{
     let file = choosing_files[i];
     console.log(file);
@@ -571,31 +573,11 @@ const deleteData = () => {
   top: 10%;
   height: 89%;
   left: 0;
-  border: 0.5px solid rgba(197, 197, 197, 0.219);
+  border: 1px solid rgba(197, 197, 197, 0.8);
   width: 99%;
+  border-radius: 5px;
   overflow: scroll;
   //   display: flex;
 }
-// .arrow{
-//     position: fixed;
-//     left: 10vw;
-//     top: 60vh;
-//     z-index: 5000;
-//     font-size: 100px;
-//     font-weight: 1000;
-//     background: white;
-//     color: hsl(220,90%,40%);
-// }
-// .ani{
-//     background: transparent;
-//     color: aqua !important;
-//     animation: identifier 2.4s linear infinite;
-//     @keyframes identifier {
-//         0%{}
-//         100%{
-//             transform: translateX(1480px);
-//         }
-//     }
-// }
 </style>
 

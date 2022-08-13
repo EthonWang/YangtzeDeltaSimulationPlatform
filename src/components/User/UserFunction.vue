@@ -78,7 +78,8 @@ const spaceAniChange = (scene = 0) => {
   }
 };
 setTimeout(() => {
-  if (route.path.split("/")[route.path.split("/").length - 1] == "user") {
+  let routeSplit=route.path.split("/")
+  if (routeSplit[routeSplit.length - 1] == "user" || (routeSplit[routeSplit.length - 2] == "user"&&routeSplit[routeSplit.length - 1] == "")) {
     spaceAniChange(0);
   } else {
     spaceAniChange(1);
@@ -144,7 +145,7 @@ const toRouter = (route) => {
 }
 .science {
   position: fixed;
-  top: calc(4.6vh + 65px + 24px);
+  top: calc(4.6vh + 65px + 40px);
   z-index: 500;
   // padding-top: 1vh;
   left: 5vw;

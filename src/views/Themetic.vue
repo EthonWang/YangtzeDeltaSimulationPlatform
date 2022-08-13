@@ -32,10 +32,10 @@
                 style="cursor: pointer; margin-right: 15px"
             >
               <el-tooltip content="编辑专题" placement="top" effect="light">
-                <Edit @click="editThematic">编辑专题</Edit>
+                <Edit @click="editThematic" v-if="isAdmin">编辑专题</Edit>
               </el-tooltip>
               <el-tooltip content="添加案例" placement="top" effect="light">
-                <CirclePlus @click="newCases"/>
+                <CirclePlus v-if="isAdmin" @click="newCases"/>
               </el-tooltip>
             </el-icon>
           </el-row>
@@ -367,7 +367,7 @@ const router = useRouter();
 const store = useStore();
 const dataServer = store.getters.devIpAddress;
 const user_info = JSON.parse(localStorage.getItem("userInfo"));
-
+const isAdmin=ref(user_info.email=="opengms@126.com")
 const mdOpenIcon = require("@/assets/img/icon/md-open.png");
 
 onMounted(() => {
@@ -965,10 +965,6 @@ setTimeout(() => {
     transform: scale(1);
     opacity: 1;
   }
-}
-
-.thematicName {
-  //margin-top: 5vh;
 }
 
 .typeName {

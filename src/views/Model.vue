@@ -109,26 +109,26 @@
     </div>
   </div>
   <el-dialog v-model="recommendVisible" title="推荐数据" width="30%">
-   <el-descriptions
-    class="margin-top"
-    title=""
-    :column="1"
-    :size="'large'"
-    border
-  >
-  <el-descriptions-item>
-      <template #label>
-        <div class="cell-item">
-          <el-icon :style="iconStyle">
-            <user />
-          </el-icon>
-          数据名称
-        </div>
-      </template>
-      <span>{{ recommendShowOne.name }}</span>
-    </el-descriptions-item>
+    <el-descriptions
+      class="margin-top"
+      title=""
+      :column="1"
+      :size="'large'"
+      border
+    >
+      <el-descriptions-item>
+        <template #label>
+          <div class="cell-item">
+            <el-icon :style="iconStyle">
+              <user />
+            </el-icon>
+            数据名称
+          </div>
+        </template>
+        <span>{{ recommendShowOne.name }}</span>
+      </el-descriptions-item>
     </el-descriptions>
-    
+
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="recommendVisible = false">取消</el-button>
@@ -137,20 +137,24 @@
     </template>
   </el-dialog>
 
-<el-button style="position: absolute;z-index: 100;top: 50%;left: 50%;" @click="myDataVisible=true">打开我的数据</el-button>
-<el-dialog v-model="myDataVisible" title="我的数据" width="80%" draggable>
-   <div style="height: 60vh;width: 80vw;">
-<DataCenter></DataCenter>
-   </div>
-   
-    
+  <el-button
+  size="small"
+    style="position: absolute; z-index: 100; top: 75px; left: 295px"
+    @click="myDataVisible = true"
+    ><el-icon><FolderOpened /></el-icon>&nbsp;我的数据</el-button
+  >
+  <el-dialog v-model="myDataVisible" width="80%" draggable>
+    <div style="display: flex">
+      <ScienceProblemData style="width: 20vw"></ScienceProblemData>
+      <DataCenter style="width: 40vw;height: ;60vh"></DataCenter>
+    </div>
+
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="myDataVisible = false">取消</el-button>
+        <el-button style="position: relative;z-index: 5;" @click="myDataVisible = false">退出</el-button>
       </span>
     </template>
   </el-dialog>
-  
 </template>
 
 <!--<script setup>-->
@@ -170,6 +174,7 @@ import taskApi from "@/api/user/task";
 import { ElMessageBox, ElMessage } from "element-plus";
 import graphAPI from "@/api/user/graph";
 import DataCenter from "@/components/User/UserFunctionCollection/DataCenter.vue";
+import ScienceProblemData from "@/components/User/UserFunctionCollection/ScienceProblemData.vue";
 
 export default {
   components: {
@@ -179,6 +184,7 @@ export default {
     chartTemplate,
     txtEditor,
     DataCenter,
+    ScienceProblemData,
   },
   data() {
     return {
@@ -186,7 +192,7 @@ export default {
       recommendShowOne: {},
       recommendList: true,
       recommendVisible: false,
-      myDataVisible:false,
+      myDataVisible: false,
       res_list: JSON.parse(localStorage.getItem("task")).dataList,
       mapType: "mapBox",
       //使用mapbox-view组件需要传递的参数
@@ -451,6 +457,20 @@ const store = useStore(); //vuex直接用store.commit
     }
   }
 }
+
+/deep/.file-container[data-v-017137ce] {
+  width: 60%;
+}
+/deep/.file-operation[data-v-017137ce] {
+  width: 60%;
+}
+/deep/.file-controller[data-v-017137ce] {
+  height: calc(98% - 60px);
+}
+/deep/.file-detail-controller[data-v-017137ce] {
+  height: calc(98% - 120px);
+  right: 3%;
+}
 </style>
 <style lang="css">
 :root {
@@ -544,7 +564,7 @@ const store = useStore(); //vuex直接用store.commit
   transform: rotateX(30deg) rotateY(0deg) rotate(0deg) translate(-40px, 10px);
   z-index: 100;
   opacity: 1;
-  border:1px solid rgb(153, 153, 153)
+  border: 1px solid rgb(153, 153, 153);
 }
 .levels .level:hover:after {
   transform: translateX(100%);

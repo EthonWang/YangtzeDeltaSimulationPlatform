@@ -1,12 +1,12 @@
 <template>
   <div class="about">
     <div class="file-detail">
-      <h3 style="width: 50%">数据详情</h3>
-      <span style="width: 50%; position: absolute; top: 15px; right: 0%"
+      <h3 style="width: 50%;font-size: 23px;">数据详情</h3>
+      <span style="width: 50%; position: absolute; top: 18px; right: 0%"
         >已选中{{ props.num }}个数据</span
       >
 
-      <h4>{{ props.file.name }}</h4>
+      <h4 style="font-size: 21px;margin-bottom: 10px;color:hsla(220,80%,50%,1)">{{ props.file.name }}</h4>
       <el-tag
         v-for="tag in props.file.problemTags"
         :key="tag"

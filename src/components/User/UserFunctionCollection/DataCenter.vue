@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%; width: 100%">
-    <div style="position: absolute; width: 79%; height: 100%">
+    <div class="file-controller" style="">
       <div class="file-operation">
         <!-- <el-button @click="showScience" id="expand"
         style="border: 0;"
@@ -26,7 +26,7 @@
       </div>
       <div class="file-container">
         <div
-          style="position: absolute; width: 100%; height: 100%"
+          style="position: fixed; width: 100%; height: 100%"
           @click="choose(null, -1)"
         ></div>
         <FileItem
@@ -50,17 +50,7 @@
       @deleteData="deleteData"
       @downloadData="downloadData"
     ></RightClick>
-    <div
-      style="
-        position: absolute;
-        background-color: hsla(220, 15%, 94%, 0.75);
-        width: 20%;
-        border: 1px solid hsla(220, 50%, 74%, 0.75);
-        border-radius: 5px;
-        right: 0;
-        height: 100%;
-      "
-    >
+    <div class="file-detail-controller">
       <FileDetail
         style="width: 100%; height: 100%"
         :file="show_file"
@@ -175,7 +165,7 @@
 <script setup>
 //采用vue2写法的话把setup去掉，
 import { reactive, computed, ref, watch } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { ArrowRight } from "@element-plus/icons-vue";
 import RightClick from "./RightClick.vue";
@@ -188,12 +178,24 @@ import { sciencePro } from "@/assets/data/home/sciencePro";
 import { relation, initRelation } from "@/assets/data/another/relation";
 import FileItem from "./FileItem.vue";
 import { scienceChoose } from "@/assets/user/scienceChoose";
+import { ElLoading } from "element-plus";
 
 const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 const task_api = new taskApi();
 const show_task = ref(false);
 const task_list = ref([]);
+const route = useRoute();
 
+// 判断是否在实验室
+const isInLab = ref(false);
+let routeSplit = route.path.split("/");
+
+if (routeSplit[routeSplit.length - 1] == "") {
+  routeSplit.splice(routeSplit.length - 1, 1);
+}
+if (routeSplit[routeSplit.length - 1] == 'model') {
+  isInLab.value = true;
+}
 const upload_header = { token: localStorage.getItem("token") };
 task_api.getTaskList(userInfo.id).then((res) => {
   for (let i = res.data.data.length - 1; i >= 0; i--) {
@@ -201,11 +203,22 @@ task_api.getTaskList(userInfo.id).then((res) => {
   }
 });
 const fileList = ref([]);
+
+// 判断是否在实验室，是的话直接加入当前实验室
 const addToTask = () => {
-  show_task.value = true;
+  if (isInLab.value) {
+    addDataToTask(nowTask.value);
+  } else {
+    show_task.value = true;
+  }
 };
+const nowTask = ref(JSON.parse(localStorage.getItem("task")));
 const addDataToTask = (task) => {
-  console.log(task);
+  let loading = ElLoading.service({
+    lock: true,
+    text: "Loading",
+    background: "rgba(0, 0, 0, 0.7)",
+  });
   let dataList = [];
   for (let i in choosing_files) {
     if (choosing_files[i].type != "folder") {
@@ -231,7 +244,20 @@ const addDataToTask = (task) => {
       dataList.push(data);
     }
   }
-  task_api.addData(task, dataList);
+  ElMessage({
+    type: "success",
+    message: "成功加入实验室",
+  });
+  for (let i in dataList) {
+    task.dataList.push(dataList[i]);
+  }
+  task_api.editTask(task).then((res) => {
+    localStorage.setItem("task", JSON.stringify(task));
+    setTimeout(() => {
+      loading.close();
+      location.reload();
+    }, 200);
+  });
   show_task.value = false;
 };
 var upload_file = ref({
@@ -284,16 +310,16 @@ watch(
   (newval, oldval) => {
     file_data_choose.value = file_data.value.filter((item) => {
       if (item.problemTags == "" || item.problemTags == []) {
-        console.log(newval.includes("未分类"));
+        
         if (newval.includes("未分类")) {
           return item;
         }
       } else {
         for (let i = 0; i < item.problemTags.length; i++) {
           const el = item.problemTags[i];
-          console.log(el, scienceChoose.value.includes(el));
+          
           if (scienceChoose.value.includes(el)) {
-            console.log(item);
+           
             return item;
           }
         }
@@ -313,15 +339,15 @@ watch(
       } else {
         for (let i = 0; i < item.problemTags.length; i++) {
           const el = item.problemTags[i];
-          console.log(el, scienceChoose.value.includes(el));
+          
           if (scienceChoose.value.includes(el)) {
-            console.log(item);
+            
             return item;
           }
         }
       }
     });
-    console.log(file_data_choose.value);
+ 
   }
 );
 const breadcrumbs = reactive(["/ 根目录"]);
@@ -464,27 +490,27 @@ const back = () => {
 
 const confirmChange = (type, index) => {};
 const downloadData = () => {
-  console.log("asdajksdjkasdkjasd");
-  let i=0
+ 
+  let i = 0;
   //注意：循环请求后台用这个而非for循环
-  let downloadInterval=setInterval(()=>{
+  let downloadInterval = setInterval(() => {
     let file = choosing_files[i];
-    console.log(file);
+ 
     if (file.type == "folder") {
       ElMessage.error("请选择文件而非文件夹");
-    }else{
+    } else {
       api.downloadFile(file).then(() => {
-      ElMessage({
-        message: "下载成功",
-        type: "success",
+        ElMessage({
+          message: "下载成功",
+          type: "success",
+        });
       });
-    });
     }
-    i++
-    if(i>=choosing_files.length){
-      clearInterval(downloadInterval)
+    i++;
+    if (i >= choosing_files.length) {
+      clearInterval(downloadInterval);
     }
-  },500)
+  }, 500);
 };
 const rightClick = (event, file, index) => {
   right_file.value = file;
@@ -549,6 +575,20 @@ const deleteData = () => {
 
 <style lang="less" scoped>
 // 兼容css
+.file-detail-controller {
+  position: absolute;
+  background-color: hsla(220, 30%, 94%, 0.75);
+  width: 20%;
+  border: 1px solid hsla(220, 50%, 74%, 0.75);
+  border-radius: 5px;
+  right: 0;
+  height: 100%;
+}
+.file-controller {
+  position: absolute;
+  width: 79%;
+  height: 100%;
+}
 .right-click {
   position: fixed;
   left: 0;

@@ -1,4 +1,4 @@
-import { get, post } from "@/request/request"
+import { get, post } from "@/request/request_backup"
 import { useStore } from "vuex"
 
 const dataServer = "http://172.21.213.44:8999";

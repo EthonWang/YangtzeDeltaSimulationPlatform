@@ -1,4 +1,4 @@
-import { get, post } from "@/request/request"
+import { get, post } from "@/request/request_backup"
 
 import { ElMessage } from "element-plus";
 

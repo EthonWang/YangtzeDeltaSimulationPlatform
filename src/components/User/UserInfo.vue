@@ -8,17 +8,17 @@
     />
     <img
       class="img-ava"
-      :src=userAvatar
+      :src="devServer+userAvatar"
       alt=""
       v-else
     />
     <el-upload
-    v-model:file-list="fileList"
+    v-model:file-list="fileList_ava"
     class="upload-demo"
     action=""
     :limit="1"
     :before-upload="beforeUploadAvatar"
-    :auto-upload="false"
+    :auto-upload="true"
   >
    <el-button round style="position: absolute; top: 34%;right: 5%;display: flex;align-items: center;background: hsl(0, 0%, 90%);">
       <el-icon><Camera /></el-icon>&nbsp;更换
@@ -30,7 +30,7 @@
       <h4>{{ data.name }}</h4>
       <span style="color: gray">{{ data.email }}</span
       ><br />
-      <span>{{ data.description }} </span><br />
+      <span style="font-size: 19px;">{{ data.introduction }} </span><br />
     </div>
     <el-button
       type="primary"
@@ -45,7 +45,7 @@
       <span>手机号：</span><span>{{ data.phone }} </span><br />
     </div>
     <el-button
-      @click="logout"
+      @click="logout()"
       style="
         width: 88%;
         color: white;
@@ -63,7 +63,7 @@
           <el-input v-model="data.email" autocomplete="off" />
         </el-form-item>
         <el-form-item label="自我介绍" :label-width="formLabelWidth">
-          <el-input v-model="data.description" autocomplete="off" />
+          <el-input v-model="data.introduction" autocomplete="off" />
         </el-form-item>
         <el-form-item label="机构" :label-width="formLabelWidth">
           <el-input v-model="data.instruction" autocomplete="off" />
@@ -103,24 +103,27 @@ const formLabelWidth = "140px";
 const router = useRouter(); //路由直接用router.push(...)
 const route = useRoute();
 const store = useStore(); //vuex直接用store.commit
+const devServer=ref(store.getters.devIpAddress_backup)
 const user_info = JSON.parse(localStorage.getItem("userInfo"));
+const fileList_ava=reactive([])
 const data = reactive({
   name: "ZZZ",
   email: "zzz@myzzz.zzz",
-  description: "个人介绍是用来介绍自己的，所以要用个人介绍来介绍自己。",
+  introduction: "个人介绍是用来介绍自己的，所以要用个人介绍来介绍自己。",
   data_num: 5,
-  instruction: "nnu",
+  instruction: "待输入",
   model_num: 5,
   task_num: 50,
-  phone: "15689652365",
-  adress: "江苏省南京市",
+  phone: "待输入",
+  adress: "待输入",
 });
 data.name = user_info.name;
 data.email = user_info.email;
-data.description = user_info.description;
+data.introduction = user_info.introduction;
 data.instruction = user_info.instruction;
 
 const beforeUploadAvatar=(rawFile)=>{
+  console.log(1);
    if (rawFile.type !== 'image/jpeg'&&rawFile.type !== 'image/png') {
     ElMessage.error('请使用jpg或png格式')
     return false
@@ -133,6 +136,10 @@ const beforeUploadAvatar=(rawFile)=>{
   form.append("userPic", rawFile)
   api.uploadAvatar(user_info.id,form).then((res)=>{
     api.getUserInfo(user_info.email).then((res)=>{
+      ElMessage({
+        type:'success',
+        message:'成功'
+      })
       localStorage.setItem("userInfo", JSON.stringify(res.data.data));
       user_info.avatar=res.data.data.avatar
       userAvatar.value=res.data.data.avatar
@@ -143,6 +150,7 @@ const beforeUploadAvatar=(rawFile)=>{
 const logout = () => {
   localStorage.clear();
   router.push("/login");
+  location.reload();
 };
 const init = () => {
   if (route.path != "/user/data") {
@@ -152,7 +160,7 @@ const init = () => {
 const updateUserInfo = () => {
   let userNewInfo = user_info;
   userNewInfo.name = data.name;
-  userNewInfo.description = data.description;
+  userNewInfo.introduction = data.introduction;
   userNewInfo.instruction = data.instruction;
   userNewInfo.phone = data.phone;
   userNewInfo.adress = data.adress;
@@ -183,7 +191,7 @@ setTimeout(init, 109);
 .img-ava {
   color: aliceblue;
   width: 85%;
-  height: 36%;
+  // height: calc( $width + 0px);
   // height: $width;
   margin-right: 8px;
   margin-top: 2%;

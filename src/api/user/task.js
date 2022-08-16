@@ -1,4 +1,4 @@
-import { get, post } from "@/request/request"
+import { get, post } from "@/request/request_backup"
 
 import { ElMessage } from "element-plus";
 
@@ -103,5 +103,8 @@ export default class {
     deleteData(task,index){
         task.dataList.splice(index, 1);
         this.editTask(task)
+    }
+    openCaseInLab(userId,caseName){
+        return get("/LabTask/openLabTaskByCase/"+userId+"/"+caseName)
     }
 }

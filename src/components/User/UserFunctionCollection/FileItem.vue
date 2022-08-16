@@ -73,7 +73,7 @@
     <span
       style="font-size: 16px; width: 90%; overflow-x: hidden"
       v-if="!file.rename"
-      >{{ file.name.split(".")[0] }}
+      >{{ file.name.split(".")[0].slice(0, 25) }}
     </span>
     <span style="font-size: 16px; width: 100%; display: flex" v-if="file.rename"
       ><el-input

@@ -271,8 +271,8 @@ const structXML = (children) => {
         "' kernelType='" +
         child.eventType.toLowerCase() +
         "' value='" +
-        child.value +
-        "' /> ";
+        child.value + "' df='15' " +
+        " /> ";
     }
   }
   if (kpi == 0) {
@@ -283,7 +283,7 @@ const structXML = (children) => {
   }
 
   configContent += " </Dataset>";
-  let configFile = new File([configContent], "config.udxcfg", {
+  let configFile = new File([configContent], "config.xml", {
     type: "text/plain",
   });
   console.log("content is :", configContent);

@@ -1,4 +1,4 @@
-import {get ,post} from "@/request/request"
+import {get ,post} from "@/request/request_backup"
 
 export default class{
     register(user){

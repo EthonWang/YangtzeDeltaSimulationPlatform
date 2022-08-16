@@ -379,13 +379,15 @@ h4 {
 /deep/.el-form--label-left .el-form-item__label {
   text-align: left;
   overflow: hidden !important;
+  line-height: 120%;
 }
 .data-list {
   transition: all 0.5s;
   /deep/ .el-form-item {
     transition: all 0.5s;
     --font-size: 14px;
-    margin-bottom: 0px;
+    margin-bottom: 5px;
+    margin-top: 5px;
     margin-right: 10%;
     animation: come 1s linear 1;
     @keyframes come {

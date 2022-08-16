@@ -94,16 +94,15 @@ const login = () => {
       });
       graphapi.initGraph(res.data.data.id).then((res) => {
         setTimeout(() => {
-        loading.close();
-        // document.getElementsByClassName("user-topbar")[0].style.right = "1vw";
-        // document.getElementById("logo").style.marginLeft = "2vw";
-        // document.getElementsByClassName("topbar")[0].style.left = "5vw";
-        document.getElementsByClassName("user-info")[0].style.opacity = 1;
-        document.getElementsByClassName("science")[0].style.opacity = 0;
-      }, 601);
-      router.push("/user");
+          loading.close();
+          // document.getElementsByClassName("user-topbar")[0].style.right = "1vw";
+          // document.getElementById("logo").style.marginLeft = "2vw";
+          // document.getElementsByClassName("topbar")[0].style.left = "5vw";
+          // document.getElementsByClassName("user-info")[0].style.opacity = 1;
+          // document.getElementsByClassName("science")[0].style.opacity = 0;
+        }, 601);
+        router.push("/user");
       });
-      
     });
   });
 };
@@ -111,8 +110,8 @@ const login = () => {
 
 <style lang="less" scoped>
 // 兼容css
-.bg{
-  background-image: url('../assets/img/rainForecast_back.png');
+.bg {
+  background-image: url("../assets/img/rainForecast_back.png");
   background-size: 100% 100%;
   filter: blur(0px);
   width: 100%;
@@ -120,12 +119,10 @@ const login = () => {
   position: absolute;
 }
 .login-page {
-  
   display: flex;
   flex-direction: column;
   align-items: center;
   top: 0px;
-  
 }
 h4 {
   position: relative;
@@ -151,8 +148,7 @@ h4 {
   //   background: #409eff;
 }
 /deep/.el-form-item__label {
-
-    color:white;
+  color: white;
 }
 </style>
 

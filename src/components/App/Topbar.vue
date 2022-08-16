@@ -59,7 +59,7 @@
         alt=""
         v-if="userAvatar == null"
       />
-      <img class="user-topbar" :src="userAvatar" alt="" v-else />
+      <img class="user-topbar" :src="devServer+userAvatar" alt="" v-else />
     </div>
   </div>
 </template>
@@ -70,7 +70,10 @@ import { reactive, computed, ref, defineEmits, defineProps, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import graphAPI from "@/api/user/graph";
 import { userAvatar } from "@/assets/user/scienceChoose";
+import { useStore } from "vuex";
 
+const store = useStore();
+const devServer=ref(store.getters.devIpAddress_backup)
 const user_info = JSON.parse(localStorage.getItem("userInfo"));
 if (user_info != null && user_info != undefined) {
   userAvatar.value = user_info.avatar;

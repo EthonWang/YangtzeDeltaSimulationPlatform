@@ -28,7 +28,7 @@
           style="position: relative; z-index: 1005"
         >
           <el-collapse-item title="数据列表" name="data">
-            <el-scrollbar max-height="60vh">
+            
             <el-table
               :data="showLayerTableList"
               ref="shpLayerTable"
@@ -562,7 +562,7 @@
                   </template>
                 </el-table-column>
               </el-table>
-            </el-scrollbar>
+            
           </el-collapse-item>
           <el-collapse-item
             title="模型列表"
@@ -1145,6 +1145,7 @@ export default {
         }
       }
     },
+    //更新数据用这个
     addLayerToMap(newShpInfo) {
       //添加数据源
       if (newShpInfo.visualType == "shp") {

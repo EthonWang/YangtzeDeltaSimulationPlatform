@@ -24,7 +24,7 @@
             >{{ node.label }}</el-checkbox
           >
         </span>
-        <span v-else>{{ data.name }} 模型</span>
+        <span v-else>{{ data.name }}</span>
         <span style="position: absolute; right: 26px; margin-left: 50px">
           <el-button
             style=""
@@ -198,7 +198,7 @@ const refModelConfig = ref();
 const openModelConfig = (modelName, dataModelId, data) => {
   drawer.value = true;
   model.value = data;//传到modelconfig
-  drawerTitle.value = data.name + "模型 配置与运行";
+  drawerTitle.value = data.name + " 配置与运行";
   tempModelId = dataModelId;
 };
 const handleOpenDraw = () => {

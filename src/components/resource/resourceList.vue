@@ -19,7 +19,11 @@
             @click="showMapCard(item)"
             >查看</el-button
           >
-          <el-button type="primary" v-if="'fileSize' in item" class="downloadButton" @click="downloadRes(item)"
+          <el-button
+            type="primary"
+            v-if="'fileSize' in item"
+            class="downloadButton"
+            @click="downloadRes(item)"
             >下载</el-button
           >
           <div class="fontSet" style="margin: 5px 0" v-if="'fileSize' in item">
@@ -47,8 +51,10 @@
     <mapbox-card :jsonData="selectedRes"></mapbox-card>
     <template #footer>
       <span class="dialog-footer">
-        
-        <el-button v-if="'mdl' in selectedRes" type="primary" @click="show_task_model = true"
+        <el-button
+          v-if="'mdl' in selectedRes"
+          type="primary"
+          @click="show_task_model = true"
           >添加到个人实验室</el-button
         >
         <el-button v-else type="primary" @click="show_task = true"
@@ -59,7 +65,6 @@
     </template>
   </el-dialog>
   <el-dialog v-model="show_task_model" title="添加模型到实验室" width="30%">
-   
     <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
     <el-button
       v-for="(task, index) in task_list"
@@ -161,7 +166,7 @@ const dataServer = store.getters.devIpAddress;
 const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 const task_api = new taskApi();
 const show_task = ref(false);
-const show_task_model=ref(false)
+const show_task_model = ref(false);
 const task_list = ref([]);
 const selectedVisualDataItems = ref([]);
 const selectedVisualDataItemsRange = ref([0, 0]);
@@ -183,6 +188,10 @@ const addDataToTask = (task) => {
     // console.log(234);
     let data = selectedRes.value;
     data["simularTrait"] = "model";
+    ElMessage({
+      type: "success",
+      message: "成功加入实验室",
+    });
     task_api.addData(task, [data]);
   } else {
     let dataList = [];
@@ -230,10 +239,14 @@ const addDataToTask = (task) => {
       selectedVisualDataItemsRange.value = [0, 0];
       selectedVisualDataItems.value = [];
     }
+    ElMessage({
+      type: "success",
+      message: "成功加入实验室",
+    });
     task_api.addData(task, dataList);
   }
   show_task.value = false;
-  show_task_model.value=false
+  show_task_model.value = false;
   mapCardDialogVisible.value = false;
 };
 
@@ -255,12 +268,11 @@ const mapCardDialogClose = function () {
 };
 const showMapCard = function (info) {
   // if (info.visualizationBoolean) {
-    selectedRes.value ={}
+  selectedRes.value = {};
   selectedRes.value = info;
-  setTimeout(()=>{
+  setTimeout(() => {
     mapCardDialogVisible.value = true;
-  },200)
-  
+  }, 200);
 };
 const downloadRes = function (item) {
   if (item.publicBoolean) {
@@ -395,7 +407,7 @@ const guideMarks = computed(() => {
   width: 15%;
   float: right;
   height: 30px;
-  background: hsla(220,100%,15%,70%);
+  background: hsla(220, 100%, 15%, 70%);
 }
 .fontSet {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
@@ -410,7 +422,7 @@ const guideMarks = computed(() => {
   --el-card-padding: 0px;
 }
 /deep/.el-dialog {
-  background: hsl(220,100%,5%) !important;
+  background: hsl(220, 100%, 5%) !important;
 }
 </style>
 <style lang="less">
@@ -438,5 +450,4 @@ const guideMarks = computed(() => {
 .slider-demo-block .el-slider {
   flex: 0 0 75%;
 }
-
 </style>

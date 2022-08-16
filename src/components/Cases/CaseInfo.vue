@@ -239,12 +239,12 @@ const openInLab=()=>{
       router.push('/model')
     },200)
     }
-    
+
   }).catch((err)=>{
     ElMessage('暂无案例实验')
   })
   }
-  
+
 }
 </script>
 
@@ -321,14 +321,14 @@ const openInLab=()=>{
 }
 
 .caseImage {
-  height: 150px;
-  width: 240px;
+  height: @imageHeight;
+  width: @imageWidth;
   border-bottom: 1px solid lightgray;
 }
 
 .imageMask {
-  height: 100px;
-  width: 160px;
+  height: @imageHeight;
+  width: @imageWidth;
   opacity: 0;
   position: absolute;
   top: 0;
@@ -361,7 +361,7 @@ const openInLab=()=>{
 .cardText{
   padding: 0.5rem;
   text-align: center;
-  width:160px;
+  width:@imageWidth;
 }
 
 .caseCard {

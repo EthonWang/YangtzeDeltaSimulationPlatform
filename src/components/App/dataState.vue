@@ -234,7 +234,7 @@
     height="500"
     :before-close="handleClose"
   >
-    <img src="" alt="">
+    <img src="" alt="" />
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="addLabVisible = false">取消</el-button>
@@ -251,6 +251,7 @@ import dataAPI from "@/api/user/data";
 import { ElMessage } from "element-plus/lib/components";
 import { ElLoading } from "element-plus";
 import taskApi from "@/api/user/task";
+import { Encrypt, Decrypt } from "@/util/codeUtil";
 
 export default {
   name: "DataState",
@@ -258,21 +259,21 @@ export default {
   data() {
     return {
       task_api: new taskApi(),
-      task: JSON.parse(localStorage.getItem("task")),
-      userInfo: JSON.parse(localStorage.getItem("userInfo")),
+      task: JSON.parse(Decrypt(localStorage.getItem("task"))),
+      userInfo: JSON.parse(Decrypt(localStorage.getItem("userInfo"))),
       nowChooseConfig: null,
-      mdlStatesList: JSON.parse(localStorage.getItem("mdlStatesList")),
+      mdlStatesList: JSON.parse(Decrypt(localStorage.getItem("mdlStatesList"))),
       loading: false,
       fileList: [],
       Upload,
       Download,
       Plus,
       dialogDataChoose: false,
-      dataList: JSON.parse(localStorage.getItem("task")).dataList.filter(
-        (item) => item.simularTrait != "model"
-      ),
+      dataList: JSON.parse(
+        Decrypt(localStorage.getItem("task"))
+      ).dataList.filter((item) => item.simularTrait != "model"),
       dataApi: new dataAPI(),
-      addLabVisible:false,
+      addLabVisible: false,
     };
   },
   methods: {
@@ -283,7 +284,8 @@ export default {
     chooseOneData(data) {
       console.log(data);
       if (
-        (data.visualType != "dataSet" && (data.fileRelativePath == undefined || data.id == undefined)) ||
+        (data.visualType != "dataSet" &&
+          (data.fileRelativePath == undefined || data.id == undefined)) ||
         (data.visualType == "dataSet" && data.id == undefined)
       ) {
         this.dialogDataChoose = false;
@@ -331,7 +333,7 @@ export default {
                   break;
                 }
               }
-              localStorage.setItem("task", JSON.stringify(this.task));
+              localStorage.setItem("task", Encrypt(JSON.stringify(this.task)));
               loading_data.close();
               ElMessage({
                 type: "success",
@@ -366,7 +368,7 @@ export default {
                   break;
                 }
               }
-              localStorage.setItem("task", JSON.stringify(this.task));
+              localStorage.setItem("task", Encrypt(JSON.stringify(this.task)));
               loading_data.close();
               ElMessage({
                 type: "success",
@@ -458,59 +460,22 @@ export default {
     },
     loadToLab(event) {
       if (event.url != undefined) {
-        ElMessage('下载数据后回到上个页面打开我的数据')
-
-        // let name = event.tag + "." + event.suffix;
-        // let type = event.suffix; //对应可视化
-        // let have = false;
-        // for (let i = 0; i < this.task.dataList.length; i++) {
-        //   const element = this.task.dataList[i];
-        //   if (element.id == event.data[0].Id) {
-        //     have = true;
-        //     break;
-        //   }
-        // }
-        // if (!have) {
-        //   this.task.dataList.push({
-        //     createTime: "2022-08-03 20:39:40",
-        //     dataContainerUrl: event.url,
-        //     description: event.eventDesc,
-        //     fileRelativePath: "",
-        //     fileStoreName: name,
-        //     fileWebAddress: "",
-        //     geoType: "line",
-        //     id: event.data[0].Id,
-        //     name: name,
-        //     normalTags: "",
-        //     parentId: null,
-        //     problemTags: [],
-        //     publicBoolean: false,
-        //     size: "0.045 MB",
-        //     source: "cloud",
-        //     type: "data",
-        //     userId: "62c59b2fa5c524973a4d5cc4",
-        //     visualType: type,
-        //     visualizationBoolean: false,
-        //   });
-        //   ElMessage({
-        //     type: "success",
-        //     message: "成功加入实验室",
-        //   });
-        //   let loading_data = ElLoading.service({
-        //     lock: true,
-        //     text: "加载...",
-        //     background: "rgba(0, 0, 0, 0.7)",
-        //   });
-        //   localStorage.setItem("task", JSON.stringify(this.task));
-        //   this.task_api.editTask(this.task).then((res) => {
-        //     setTimeout(() => {
-        //       loading_data.close();
-        //       location.reload();
-        //     }, 500);
-        //   });
-        // } else {
-        //   ElMessage.error("该数据已在实验室");
-        // }
+        this.task_api.addResultToLabAndDataCenter(
+          event.url,
+          this.userInfo.id,
+          this.task.id
+        ).then((res)=>{
+          if(res.data==null){
+            ElMessage.error("出错，可能已存在或无数据" );
+          }else{
+            let newTask=res.data.data
+          console.log(newTask);
+          localStorage.setItem("task",Encrypt(JSON.stringify(newTask)))
+          ElMessage({ type: "success", message: "成功加入实验室" });
+          }
+          
+        });
+        
       } else {
         this.$message.error("请先进行实验");
       }

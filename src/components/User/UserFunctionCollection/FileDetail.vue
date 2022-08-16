@@ -1,12 +1,21 @@
 <template>
   <div class="about">
     <div class="file-detail">
-      <h3 style="width: 50%;font-size: 23px;">数据详情</h3>
+      <h3 style="width: 50%; font-size: 23px">数据详情</h3>
       <span style="width: 50%; position: absolute; top: 18px; right: 0%"
         >已选中{{ props.num }}个数据</span
       >
 
-      <h4 style="font-size: 21px;margin-bottom: 10px;color:hsla(220,80%,50%,1)">{{ props.file.name }}</h4>
+      <h4
+        style="
+          line-height: 100%;
+          font-size: 21px;
+          margin-bottom: 10px;
+          color: hsla(220, 80%, 50%, 1);
+        "
+      >
+        {{ props.file.name }}
+      </h4>
       <el-tag
         v-for="tag in props.file.problemTags"
         :key="tag"
@@ -15,7 +24,7 @@
         >{{ tag }}
       </el-tag>
       <el-tag
-        v-if="props.file.problemTags.length==0"
+        v-if="props.file.problemTags.length == 0"
         effect="plain"
         style="margin-bottom: 5px; margin-right: 5px"
         >未分类
@@ -34,8 +43,10 @@
           circle
           style="height: 25px; width: 25px; cursor: default"
           ><el-icon><EditPen /></el-icon></el-button
-        ><span style="color: black;">{{ props.file.description }}</span>
-        <span v-if="props.file.description==''" style="color: black;">暂无描述</span>
+        ><span style="color: black">{{ props.file.description }}</span>
+        <span v-if="props.file.description == ''" style="color: black"
+          >暂无描述</span
+        >
       </p>
       <span
         style="
@@ -72,7 +83,7 @@
 
       <span>创建时间：{{ props.file.time }}</span
       ><br />
-      <span>数据类型：{{ props.file.name.split('.')[1] }}</span
+      <span>数据类型：{{ props.file.name.split(".")[1] }}</span
       ><br />
       <span>数据作者：{{ props.file.author }}</span
       ><br />
@@ -86,17 +97,29 @@
         @click="dialogVisible1 = !dialogVisible1"
         style="margin-top: 2%; width: 100%"
         ><el-icon><Share /></el-icon>&nbsp;关系图谱</el-button
-      ><br>
-      <el-button style="margin-top: 2%; width: 100%" type="success" @click="addToTask()"
-        ><el-icon><CirclePlusFilled /></el-icon>&nbsp;加入实验室({{props.num}})</el-button
       ><br />
-      <el-button style="margin-top: 2%; width: 100%" type="primary" @click="downloadData"
-        ><el-icon><Download /></el-icon>&nbsp;下载数据({{props.num}})</el-button
+      <el-button
+        style="margin-top: 2%; width: 100%"
+        type="success"
+        @click="addToTask()"
+        ><el-icon><CirclePlusFilled /></el-icon>&nbsp;加入实验室({{
+          props.num
+        }})</el-button
       ><br />
-      <el-button style="margin-top: 2%; width: 100%" type="danger" @click="deleteData"
-        ><el-icon><Delete /></el-icon>&nbsp;删除数据({{props.num}})</el-button
+      <el-button
+        style="margin-top: 2%; width: 100%"
+        type="primary"
+        @click="downloadData"
+        ><el-icon><Download /></el-icon>&nbsp;下载数据({{
+          props.num
+        }})</el-button
       ><br />
-      
+      <el-button
+        style="margin-top: 2%; width: 100%"
+        type="danger"
+        @click="deleteData"
+        ><el-icon><Delete /></el-icon>&nbsp;删除数据({{ props.num }})</el-button
+      ><br />
     </div>
     <el-dialog v-model="dialogFormVisible" title="数据描述" draggable>
       <el-form :model="form">
@@ -123,7 +146,13 @@
           </el-tag>
         </el-form-item> -->
         <el-form-item label="科学问题" :label-width="formLabelWidth">
-          <el-tree-select :popper-append-to-body="false" v-model="form.problemTags" :data="options" multiple show-checkbox />
+          <el-tree-select
+            :popper-append-to-body="false"
+            v-model="form.problemTags"
+            :data="options"
+            multiple
+            show-checkbox
+          />
         </el-form-item>
         <el-form-item label="开放情况" :label-width="formLabelWidth">
           <el-switch
@@ -174,20 +203,25 @@ const props = defineProps({
   file: Object,
   num: Number,
 });
-const emit = defineEmits(["update:file","deleteData","downloadData1","addToTask"]);
-const deleteData=()=>{
-  emit("deleteData",)
-}
-const downloadData=()=>{
-  emit("downloadData1",)
-}
-const addToTask=()=>{
-  if(props.file.type=='folder'){
-    ElMessage.error('请选择一个或多个文件，而非文件夹')
-    return
+const emit = defineEmits([
+  "update:file",
+  "deleteData",
+  "downloadData1",
+  "addToTask",
+]);
+const deleteData = () => {
+  emit("deleteData");
+};
+const downloadData = () => {
+  emit("downloadData1");
+};
+const addToTask = () => {
+  if (props.file.type == "folder") {
+    ElMessage.error("请选择一个或多个文件，而非文件夹");
+    return;
   }
-  emit("addToTask",)
-}
+  emit("addToTask");
+};
 watch(form, (newValue, oldValue) => {
   emit("update:file", newValue);
 });
@@ -203,12 +237,16 @@ const add_tags = ref([]);
 const options = Array.from({ length: sciencePro.length }).map((_, idx) => {
   const label = idx;
   return {
-    value: sciencePro[label].name.replace('\n','').replace('\r',''),
-    label: sciencePro[label].name.replace('\n','').replace('\r',''),
+    value: sciencePro[label].name.replace("\n", "").replace("\r", ""),
+    label: sciencePro[label].name.replace("\n", "").replace("\r", ""),
     children: Array.from({ length: sciencePro[label].children.length }).map(
       (_, idx1) => ({
-        value: sciencePro[label].children[idx1].name.replace('\n','').replace('\r',''),
-        label: sciencePro[label].children[idx1].name.replace('\n','').replace('\r',''),
+        value: sciencePro[label].children[idx1].name
+          .replace("\n", "")
+          .replace("\r", ""),
+        label: sciencePro[label].children[idx1].name
+          .replace("\n", "")
+          .replace("\r", ""),
       })
     ),
   };
@@ -244,21 +282,21 @@ const changeData = () => {
   //   }
   //   if (ii == 1) {
   //     continue;
-     
+
   //   }
   //   form.value.problemTags.push(add_tags.value[it]);
   // }
   dialogFormVisible.value = false;
-  let send_form=JSON.parse(JSON.stringify(form.value))
-  send_form.problemTags=send_form.problemTags.toString()
+  let send_form = JSON.parse(JSON.stringify(form.value));
+  send_form.problemTags = send_form.problemTags.toString();
   api.editFile(send_form);
 };
 </script>
 
 <style lang="less" scoped>
 // 兼容css
-/deep/.el-select__popper.el-popper{
-  z-index:20000 !important
+/deep/.el-select__popper.el-popper {
+  z-index: 20000 !important;
 }
 .file-detail {
   padding: 15px 5% 0 5%;

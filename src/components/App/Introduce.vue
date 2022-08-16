@@ -38,13 +38,15 @@
 import { reactive, computed, ref, defineProps } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { Encrypt,Decrypt } from "@/util/codeUtil"
+
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const props = defineProps({
   picture: [],
 });
 const fill = ref("fill");
-const allResourceNum=JSON.parse(localStorage.getItem("allResourceNum"))
+const allResourceNum=JSON.parse(Decrypt(localStorage.getItem("allResourceNum")))
 const edit_des = ref(false);
 const configs = reactive([
   {

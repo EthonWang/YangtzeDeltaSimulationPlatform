@@ -94,17 +94,18 @@ import userApi from "@/api/user/user";
 import { ElMessage } from "element-plus/lib/components";
 import dataAPI from "@/api/user/data";
 import {userAvatar} from "@/assets/user/scienceChoose"
+import { Encrypt,Decrypt } from "@/util/codeUtil"
 
 const dataApi = new dataAPI();
 const api = new userApi();
-const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+const userInfo = JSON.parse(Decrypt(localStorage.getItem("userInfo")));
 const dialogFormVisible = ref(false);
 const formLabelWidth = "140px";
 const router = useRouter(); //路由直接用router.push(...)
 const route = useRoute();
 const store = useStore(); //vuex直接用store.commit
 const devServer=ref(store.getters.devIpAddress_backup)
-const user_info = JSON.parse(localStorage.getItem("userInfo"));
+const user_info = JSON.parse(Decrypt(localStorage.getItem("userInfo")));
 const fileList_ava=reactive([])
 const data = reactive({
   name: "ZZZ",
@@ -140,7 +141,7 @@ const beforeUploadAvatar=(rawFile)=>{
         type:'success',
         message:'成功'
       })
-      localStorage.setItem("userInfo", JSON.stringify(res.data.data));
+      localStorage.setItem("userInfo", Encrypt(JSON.stringify(res.data.data)));
       user_info.avatar=res.data.data.avatar
       userAvatar.value=res.data.data.avatar
        return true
@@ -169,7 +170,7 @@ const updateUserInfo = () => {
   userNewInfo.adress = data.adress;
   api.editUserInfo(userNewInfo).then((res) => {
     dialogFormVisible.value = false;
-    localStorage.setItem("userInfo", JSON.stringify(userNewInfo));
+    localStorage.setItem("userInfo", Encrypt(JSON.stringify(userNewInfo)));
     ElMessage({
       type: "success",
       message: "用户信息更新成功",
@@ -202,6 +203,10 @@ setTimeout(init, 109);
   margin-bottom: 4%;
   border-radius: 50%;
   background-color: rgb(20, 20, 20);
+  transition: all 1s;
+  &:hover{
+    filter: brightness(1.75);
+  }
 }
 
 .infoSpan {

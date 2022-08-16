@@ -1,5 +1,6 @@
 import { get, post } from "@/request/request"
 import { relation, initRelation } from "@/assets/data/another/relation"
+import { Encrypt,Decrypt } from "@/util/codeUtil"
 
 // 上传文件
 export default class {
@@ -76,11 +77,11 @@ export default class {
     getKnowledgeSorce(user_id) {
         return new Promise((resolve, reject) => {
             post("/resource/getUserAllResource?userId=" + user_id,).then((res) => {
-                localStorage.setItem("allResourceNum", JSON.stringify({
+                localStorage.setItem("allResourceNum", Encrypt(JSON.stringify({
                     privateDataNum: res.data.personalData.length,
                     modelNum: res.data.modelList.length,
                     themeNum: res.data.themeList.length
-                }))
+                })))
                 let personalData = res.data.personalData
                 let publicData = res.data.publicData
                 let modelList = res.data.modelList

@@ -360,12 +360,13 @@ import {useRouter} from "vue-router";
 import axios from "axios";
 import {post ,get} from "@/request/request_backup";
 import EditCaseDraw from "components/Cases/editCaseDraw";
+import { Encrypt,Decrypt } from "@/util/codeUtil"
 
 const router = useRouter();
 const store = useStore();
 const dataServer = store.getters.devIpAddress;
 const baseUrl = store.state.devBackIp;
-const user_info = JSON.parse(localStorage.getItem("userInfo"));
+const user_info = JSON.parse(Decrypt(localStorage.getItem("userInfo")));
 const isAdmin=ref(user_info.email=="opengms@126.com")
 const mdOpenIcon = require("@/assets/img/icon/md-open.png");
 
@@ -766,7 +767,7 @@ const handleNodeClick = (node, node2) => {
   if (node.type == "subProblem") {
     tagName = node2.parent.data.label;
     thematicName.value = node.label;
-    localStorage.setItem('show_themetic',node.label)
+    localStorage.setItem('show_themetic',Encrypt(node.label))
     getThemeInfo(node.label, tagName);
   } else {
     console.log("problem", node);
@@ -854,7 +855,7 @@ const findParentName=(childName)=>{
   return "流域水循环及其驱动机制"
 }
 setTimeout(() => {
-  const show_name = localStorage.getItem("show_themetic");
+  const show_name = Decrypt(localStorage.getItem("show_themetic"));
   thematicName.value = show_name.replace("\n", "");
   getThemeInfo(show_name,findParentName(show_name));
 }, 600);

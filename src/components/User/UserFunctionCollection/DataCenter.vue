@@ -179,8 +179,9 @@ import { relation, initRelation } from "@/assets/data/another/relation";
 import FileItem from "./FileItem.vue";
 import { scienceChoose } from "@/assets/user/scienceChoose";
 import { ElLoading } from "element-plus";
+import { Encrypt,Decrypt } from "@/util/codeUtil"
 
-const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+const userInfo = JSON.parse(Decrypt(localStorage.getItem("userInfo")));
 const task_api = new taskApi();
 const show_task = ref(false);
 const task_list = ref([]);
@@ -196,7 +197,7 @@ if (routeSplit[routeSplit.length - 1] == "") {
 if (routeSplit[routeSplit.length - 1] == 'model') {
   isInLab.value = true;
 }
-const upload_header = { token: localStorage.getItem("token") };
+const upload_header = { token: Decrypt(localStorage.getItem("token")) };
 task_api.getTaskList(userInfo.id).then((res) => {
   for (let i = res.data.data.length - 1; i >= 0; i--) {
     task_list.value.push(res.data.data[i]);
@@ -212,7 +213,7 @@ const addToTask = () => {
     show_task.value = true;
   }
 };
-const nowTask = ref(JSON.parse(localStorage.getItem("task")));
+const nowTask = ref(JSON.parse(Decrypt(localStorage.getItem("task"))));
 const addDataToTask = (task) => {
   let loading = ElLoading.service({
     lock: true,
@@ -252,7 +253,7 @@ const addDataToTask = (task) => {
     task.dataList.push(dataList[i]);
   }
   task_api.editTask(task).then((res) => {
-    localStorage.setItem("task", JSON.stringify(task));
+    localStorage.setItem("task", Encrypt(JSON.stringify(task)));
     setTimeout(() => {
       loading.close();
       location.reload();

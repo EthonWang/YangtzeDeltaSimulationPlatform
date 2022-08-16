@@ -11,7 +11,7 @@
     </el-button>
     <el-button
       size="small"
-      @click="this.router.push('/user/task')"
+      @click="this.router.go(-1)"
       class="backButton"
       ><el-icon><ArrowLeftBold /></el-icon>&nbsp;返回
     </el-button>
@@ -174,6 +174,7 @@ import taskApi from "@/api/user/task";
 import { ElMessageBox, ElMessage } from "element-plus";
 import graphAPI from "@/api/user/graph";
 import DataCenter from "@/components/User/UserFunctionCollection/DataCenter.vue";
+import { Encrypt,Decrypt } from "@/util/codeUtil"
 import ScienceProblemData from "@/components/User/UserFunctionCollection/ScienceProblemData.vue";
 
 export default {
@@ -193,7 +194,7 @@ export default {
       recommendList: true,
       recommendVisible: false,
       myDataVisible: false,
-      res_list: JSON.parse(localStorage.getItem("task")).dataList,
+      res_list: JSON.parse(Decrypt(localStorage.getItem("task"))).dataList,
       mapType: "mapBox",
       //使用mapbox-view组件需要传递的参数
       shpList: [], //格式参考[{name: "111", type: "circle", nameId: "111_123"}]
@@ -208,7 +209,7 @@ export default {
       isTxtContent: false,
       dataServer: useStore().state.devIpAddress,
       graphapi: new graphAPI(),
-      user_info: JSON.parse(localStorage.getItem("userInfo")),
+      user_info: JSON.parse(Decrypt(localStorage.getItem("userInfo"))),
       router: useRouter(),
       dataRecommend: [],
     };
@@ -289,11 +290,11 @@ export default {
         delete this.recommendShowOne["id_backup"];
       }
 
-      let newTask = JSON.parse(localStorage.getItem("task"));
+      let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
 
       this.task_api.addData(newTask, [this.recommendShowOne]);
       newTask.dataList.push(this.recommendShowOne);
-      localStorage.setItem("task", JSON.stringify(newTask));
+      localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
       this.recommendVisible = false;
       location.reload();
     },
@@ -389,13 +390,13 @@ export default {
       formData.append("visualType", this.txtInfo.data.visualType);
       formData.append("fileStoreName", this.txtInfo.data.fileStoreName);
       formData.append("id", this.txtInfo.data.id);
-      formData.append("taskId", JSON.parse(localStorage.getItem("task")).id);
+      formData.append("taskId", JSON.parse(Decrypt(localStorage.getItem("task"))).id);
       axios
         .post(this.dataServer + "/LabTask/updateLabTxtFile", formData)
         .then((res) => {
           if (res.data.code == 0) {
             console.log(res.data.data);
-            localStorage.setItem("task", JSON.stringify(res.data.data));
+            localStorage.setItem("task", Encrypt(JSON.stringify(res.data.data)));
             this.$refs.mapBoxView.updateTxtInfo(res.data.data);
             ElMessage({
               type: "success",

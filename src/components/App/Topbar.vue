@@ -8,7 +8,7 @@
         background_hide: !background_show,
       }"
     ></span>
-   
+
     <img
       class="bg_pro"
       src="@/assets/img/mesh-673.png"
@@ -20,7 +20,7 @@
         transition: all 0.5s;
         opacity: 0;
       "
-    >
+    />
     <div class="head">
       <!-- <span class="logo">长 三 角 模 拟 器</span> -->
       <img
@@ -58,8 +58,15 @@
         src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.ntimg.cn%2F20140727%2F6608733_095451721000_2.jpg&refer=http%3A%2F%2Fpic.ntimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1662540904&t=bf172540a1b26f7eb55b539080c3b0a1"
         alt=""
         v-if="userAvatar == null"
+        @click="sendRouterToFather('/user', 3)"
       />
-      <img class="user-topbar" :src="devServer+userAvatar" alt="" v-else />
+      <img
+        @click="sendRouterToFather('/user', 3)"
+        class="user-topbar"
+        :src="devServer + userAvatar"
+        alt=""
+        v-else
+      />
     </div>
   </div>
 </template>
@@ -71,24 +78,21 @@ import { useRoute, useRouter } from "vue-router";
 import graphAPI from "@/api/user/graph";
 import { userAvatar } from "@/assets/user/scienceChoose";
 import { useStore } from "vuex";
-
-const store = useStore();
-const devServer=ref(store.getters.devIpAddress_backup)
-const user_info = JSON.parse(localStorage.getItem("userInfo"));
-if (user_info != null && user_info != undefined) {
-  userAvatar.value = user_info.avatar;
-}
-
-// import dataApi from "@/api/user/data"
-
-// const dataapi=new dataApi()
+import { Encrypt, Decrypt } from "@/util/codeUtil";
 
 const graphapi = new graphAPI();
-if (user_info != undefined) {
+const store = useStore();
+const devServer = ref(store.getters.devIpAddress_backup);
+let user_info = localStorage.getItem("userInfo");
+if (user_info != null && user_info != undefined) {
+  user_info=JSON.parse(Decrypt(user_info))
+  userAvatar.value = user_info.avatar;
   graphapi.initGraph(user_info.id).then((res) => {
     console.log(res);
   });
 }
+
+
 
 const props = defineProps({
   background_show: ref(Boolean),
@@ -99,7 +103,7 @@ const barList = reactive(
   router.options.routes.filter((item) => item.isBar == true)
 );
 const relation = require("@/assets/data/another/relation.json");
-localStorage.setItem("relation", JSON.stringify(relation));
+localStorage.setItem("relation", Encrypt(JSON.stringify(relation)));
 const user = ref();
 const notHome = ref(true);
 const getRootPath = (whole) => {
@@ -149,10 +153,10 @@ watch(
           }
         }
       }, 201);
-      let fromHome = localStorage.getItem("fromHome");
+      let fromHome = Decrypt(localStorage.getItem("fromHome"));
       if (fromHome == "true") {
         setTimeout(() => {
-          localStorage.setItem("fromHome", "false");
+          localStorage.setItem("fromHome", Encrypt("false"));
           location.reload();
         }, 700);
       }
@@ -162,8 +166,6 @@ watch(
 const emit = defineEmits(["RouterFromBar"]);
 const sendRouterToFather = (route1, index) => {
   if (getRootPath(route1) != "") {
-    let user_info = localStorage.getItem("userInfo");
-    console.log(user_info);
     if (
       user_info == null &&
       getRootPath(route1) != "case" &&
@@ -176,10 +178,6 @@ const sendRouterToFather = (route1, index) => {
     // if (index != -1) {
     //     pickup(index);
     //   }
-    setTimeout(() => {
-      // location.reload();
-      console.log(router.options);
-    }, 300);
   }
   // setTimeout(() => {
   //   document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
@@ -215,7 +213,11 @@ setTimeout(searchIndexInRoutes, 100);
   margin-top: 0px;
   right: 1vw;
   // margin-top: 1vh;
-  cursor: default;
+  cursor: pointer;
+  transition: all 1s;
+  &:hover{
+    filter: brightness(1.75);
+  }
 }
 
 .topbar {

@@ -56,8 +56,9 @@ import { ElMessage } from "element-plus";
 import { random } from "lodash";
 import { scienceChoose } from "@/assets/user/scienceChoose";
 import { sciencePro } from "@/assets/data/home/sciencePro";
+import { Decrypt } from "@/util/codeUtil";
 
-const user_info = JSON.parse(localStorage.getItem("userInfo"));
+const user_info = JSON.parse(Decrypt(localStorage.getItem("userInfo")));
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit

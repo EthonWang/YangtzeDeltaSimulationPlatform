@@ -15,16 +15,10 @@ import {useStore} from "vuex";
 const router=useRouter()//路由直接用router.push(...)
 const store=useStore()//vuex直接用store.commit
 const route=useRoute()
-const userInfo=JSON.parse(localStorage.getItem("userInfo"))
 
 const emit=defineEmits(['explore'])
 const explore=()=>{
   emit('explore')
-// if(userInfo!=undefined){
-//   router.push('/user')
-// }else{
-//   router.push('/login')
-// }
 }
 const showIntro=ref(false)
 
@@ -56,6 +50,7 @@ setTimeout(()=>{
 }
 #video{
   width: 100%;
+  height: 100%;
 }
 .videoDesc{
   position: absolute;

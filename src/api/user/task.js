@@ -36,7 +36,7 @@ const tasks = [
                 type: "themetic",
             },
         ],
-    },{
+    }, {
         id: "sdsd7474",
         name: "城市雨洪74747",
         description: "本任务4747作为SWMM模型应用的典型案例，现在共享出来方便大家学习。",
@@ -78,33 +78,36 @@ export default class {
         //     console.log(tasks)
         //     resolve({data:tasks})
         // })
-        return get("/LabTask/getLabTaskList/"+id)
+        return get("/LabTask/getLabTaskList/" + id)
     }
-    deleteTask(task){
-        return get("/LabTask/deleteLabTaskList/"+task.id)
+    deleteTask(task) {
+        return get("/LabTask/deleteLabTaskList/" + task.id)
     }
-    createTask(task){
+    createTask(task) {
         // return new Promise((resolve, reject) => {
         //     tasks.unshift(task)
         //     resolve({data:"成功"})
         // })
-        return post("/LabTask/createLabTask",task)
-        
+        return post("/LabTask/createLabTask", task)
+
     }
-    editTask(task){
-        return post("/LabTask/updateLabTask/"+task.id,task)
+    editTask(task) {
+        return post("/LabTask/updateLabTask/" + task.id, task)
     }
-    addData(task,dataList){
-        for(let i in dataList){
+    addData(task, dataList) {
+        for (let i in dataList) {
             task.dataList.push(dataList[i])
         }
         this.editTask(task)
     }
-    deleteData(task,index){
+    deleteData(task, index) {
         task.dataList.splice(index, 1);
         this.editTask(task)
     }
-    openCaseInLab(userId,caseName){
-        return get("/LabTask/openLabTaskByCase/"+userId+"/"+caseName)
+    openCaseInLab(userId, caseName) {
+        return get("/LabTask/openLabTaskByCase/" + userId + "/" + caseName)
+    }
+    addResultToLabAndDataCenter(dataUrl, userId, labId) {
+        return post("/model/saveModelOutput", { dataUrlList: [dataUrl], labId: labId, userId: userId })
     }
 }

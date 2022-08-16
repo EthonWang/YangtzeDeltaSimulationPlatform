@@ -13,10 +13,10 @@
             </div>
             <div>
               <h2 class="case-name">{{caseInfo.name}}</h2>
-              <p style="font-size: 1.1em;margin-left: 40px"
+              <p style="font-size: 1.1rem;margin-left: 40px"
                  v-if="caseInfo.introduction == null || caseInfo.introduction == ''"
               >暂无简介</p>
-              <p v-else style="font-size: 1.1em;margin-left: 40px">{{caseInfo.introduction}}</p>
+              <p v-else style="font-size: 1.1rem;margin-left: 40px">{{caseInfo.introduction}}</p>
             </div>
           </div>
           <h3 class="typeName">案例描述</h3>
@@ -129,12 +129,13 @@ import EditCaseDraw from "components/Cases/editCaseDraw";
 import {useStore} from "vuex";
 import taskAPI from "@/api/user/task"
 import { ElMessage } from "element-plus/lib/components";
+import { Encrypt,Decrypt } from "@/util/codeUtil"
 
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
 const task_api=new taskAPI()
-const user_info=JSON.parse(localStorage.getItem('userInfo'))
+const user_info=JSON.parse(Decrypt(localStorage.getItem('userInfo')))
 const isAdmin=ref(user_info.email=="opengms@126.com")
 const mdOpenIcon = require("@/assets/img/icon/md-open.png")
 const toCase = (path) => {
@@ -230,7 +231,7 @@ const openInLab=()=>{
     if(lab==null||lab==undefined){
       ElMessage('暂无案例实验')
     }else{
-      localStorage.setItem('task',JSON.stringify(lab))
+      localStorage.setItem('task',Encrypt(JSON.stringify(lab)))
     setTimeout(()=>{
       ElMessage({
         type:'success',
@@ -308,7 +309,7 @@ const openInLab=()=>{
 /*  width: 1em;*/
 /*}*/
 
-@imageHeight: 150px;
+@imageHeight: 160px;
 @imageWidth:240px;
 .caseImageWrap {
   display: flex;
@@ -321,14 +322,14 @@ const openInLab=()=>{
 }
 
 .caseImage {
-  height: 150px;
+  height: 160px;
   width: 240px;
   border-bottom: 1px solid lightgray;
 }
 
 .imageMask {
-  height: 100px;
-  width: 160px;
+  height: 160px;
+  width: 240px;
   opacity: 0;
   position: absolute;
   top: 0;
@@ -467,5 +468,9 @@ const openInLab=()=>{
 }
 .hvr-shutter-out-horizontal:hover:before, .hvr-shutter-out-horizontal:focus:before, .hvr-shutter-out-horizontal:active:before {
   transform: scaleX(1);
+}
+
+/deep/.el-divider--horizontal{
+  margin:18px 0
 }
 </style>

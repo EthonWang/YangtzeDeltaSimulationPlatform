@@ -23,13 +23,14 @@ import axios from "axios";
 import DataState from "components/App/dataState";
 import dataAPI from "@/api/user/data";
 import taskAPI from "@/api/user/task";
+import { Encrypt, Decrypt } from "@/util/codeUtil";
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const dataApi = new dataAPI();
 const taskApi = new taskAPI();
 const loading = ref(false);
-let task = JSON.parse(localStorage.getItem("task"));
+let task = JSON.parse(Decrypt(localStorage.getItem("task")));
 const MDLStatesInfo = ref([]);
 
 const props = defineProps({
@@ -126,7 +127,7 @@ const getMDL = () => {
         }
       }
       MDLStatesInfo.value = states;
-      localStorage.setItem("mdlStatesList", JSON.stringify(states));
+      localStorage.setItem("mdlStatesList", Encrypt(JSON.stringify(states)));
     });
 };
 getMDL();
@@ -167,26 +168,25 @@ const addTestData = (data) => {
 };
 let prepared = false;
 const handleLoadTestData = () => {
-  let taskBody = null
-  let taskItemList=JSON.parse(localStorage.getItem("task")).dataList.filter(
-    (item) => {
+  let taskBody = null;
+  let taskItemList = localStorage.getItem("task");
+  if (taskItemList != null || taskItemList != undefined) {
+    taskItemList = JSON.parse(Decrypt(taskItemList)).dataList.filter((item) => {
       if (item.simularTrait == "task" && item.taskModel == props.model.name) {
         return item;
       }
-    }
-  );
-  
-  if (taskItemList == null || taskItemList == undefined) {
+    });
+  } else {
     ElMessage({
       type: "warning",
       message: "暂未找到历史记录",
     });
     return;
   }
-  let taskItem=taskItemList[taskItemList.length-1]
-  taskBody=taskItem.taskBody
-  console.log('taskBody=',taskBody);
-  
+  let taskItem = taskItemList[taskItemList.length - 1];
+  taskBody = taskItem.taskBody;
+  console.log("taskBody=", taskBody);
+
   ElMessage("正在查询，请稍作等待...");
   loading.value = true;
   let interval = setInterval(() => {
@@ -243,7 +243,6 @@ const handleLoadTestData = () => {
           });
         } else {
           console.log("");
-          
         }
       });
   }, 10000);
@@ -271,7 +270,8 @@ const structXML = (children) => {
         "' kernelType='" +
         child.eventType.toLowerCase() +
         "' value='" +
-        child.value + "' df='15' " +
+        child.value +
+        "' df='15' " +
         " /> ";
     }
   }
@@ -291,30 +291,6 @@ const structXML = (children) => {
   formData.append("xmlData", configFile);
   return dataApi.sendXMLToContainer(formData);
 
-  // let configContent = "<UDXZip><Name>";
-  // for (let index in this.uploadFiles) {
-  //   configContent += "<add value='" + this.uploadFiles[index].name + "' />";
-  //   formData.append("ogmsdata", this.uploadFiles[index].raw);
-  // }
-  // configContent += "</Name>";
-  // if (this.selectValue != null && this.selectValue != "none") {
-  //   configContent += "<DataTemplate type='id'>";
-  //   configContent += this.selectValue;
-  //   configContent += "</DataTemplate>";
-  // } else {
-  //   configContent += "<DataTemplate type='none'>";
-  //   configContent += "</DataTemplate>";
-  // }
-  // configContent += "</UDXZip>";
-  // // console.log(configContent)
-  // let configFile = new File([configContent], "config.udxcfg", {
-  //   type: "text/plain",
-  // });
-  // formData.append("ogmsdata", configFile);
-  // formData.append("name", this.uploadName);
-  // formData.append("userId", this.uid);
-  // formData.append("serverNode", "china");
-  // formData.append("origination", "portal");
 };
 
 const handleInvoke = () => {
@@ -355,7 +331,7 @@ const handleInvoke = () => {
   });
 };
 const handleInvokeNext = () => {
-  task = JSON.parse(localStorage.getItem("task"));
+  task = JSON.parse(Decrypt(localStorage.getItem("task")));
   taskApi.editTask(task).then((res) => {});
   prepared = true;
   if (prepared) {
@@ -424,7 +400,7 @@ const handleInvokeNext = () => {
       return;
     }
     //请求接口调用模型
-    
+
     console.log("json is :", json);
     axios.post("http://172.21.213.44:8999/model/invoke", json).then((res) => {
       console.log("模型运行结果", res.data);
@@ -472,7 +448,7 @@ const handleInvokeNext = () => {
         }
         task.dataList.push(pushData);
         taskApi.editTask(task);
-        localStorage.setItem("task", JSON.stringify(task));
+        localStorage.setItem("task", Encrypt(JSON.stringify(task)));
         let interval = setInterval(() => {
           axios
             .post("http://172.21.213.44:8999/task/taskResult", taskBody)

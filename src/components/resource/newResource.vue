@@ -398,6 +398,7 @@ h1 {
 import { useStore } from "vuex";
 import axios from "axios";
 import "./style.css";
+import { Decrypt } from "@/util/codeUtil";
 // import { get, post, del, put } from "@/axios";
 
 export default {
@@ -568,7 +569,7 @@ export default {
   methods: {
     checkUserRole() {
       //根据userId重新请求后台数据库，验证角色
-      let role = JSON.parse(localStorage.getItem("userInfo")).role;
+      let role = JSON.parse(Decrypt(localStorage.getItem("userInfo"))).role;
       if (role != "admin") {
         this.$router.go(-1);
         this.$Message.error("您不是管理员，没有权限进行该操作！");

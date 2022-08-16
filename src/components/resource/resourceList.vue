@@ -160,10 +160,11 @@ import { ElMessage } from "element-plus";
 import taskApi from "@/api/user/task";
 import { useStore } from "vuex";
 import { randomInt } from "d3-random";
+import { Decrypt } from "@/util/codeUtil";
 
 const store = useStore();
 const dataServer = store.getters.devIpAddress;
-const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+const userInfo = JSON.parse(Decrypt(localStorage.getItem("userInfo")));
 const task_api = new taskApi();
 const show_task = ref(false);
 const show_task_model = ref(false);

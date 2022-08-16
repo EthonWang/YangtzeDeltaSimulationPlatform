@@ -15,8 +15,9 @@ import { useStore } from "vuex";
 import HomeView1 from "./Home/HomeView1.vue";
 import HomeView2 from "./Home/HomeView2.vue";
 import HomeView3 from "./Home/HomeView3.vue";
+import { Encrypt,Decrypt } from "@/util/codeUtil"
 
-localStorage.setItem('fromHome','true')
+localStorage.setItem('fromHome',Encrypt('true'))
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const scrollTop = ref(0);

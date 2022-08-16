@@ -22,7 +22,7 @@
       <br />
       <el-form
         :label-position="labelPosition"
-        label-width="100px"
+        label-width="160px"
         :model="task_data"
         style="max-width: calc(95% - 130px)"
       >
@@ -116,7 +116,7 @@
         label-width="200px"
         :model="task_data"
         style="max-width: 80%"
-        class="data-list demo-form-inline"
+        class="data-list demo-form-inline data-model"
       >
         <h4>数据配置：</h4>
         <template v-for="(data, index) in props.task.dataList" :key="data">
@@ -150,7 +150,7 @@
         label-width="200px"
         :model="task_data"
         style="max-width: 80%"
-        class="data-list demo-form-inline"
+        class="data-list demo-form-inline data-model"
       >
         <h4>模型配置：</h4>
         <template v-for="(data, index) in props.task.dataList" :key="data">
@@ -238,6 +238,7 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { sciencePro } from "@/assets/data/home/sciencePro";
 import taskApi from "@/api/user/task";
+import { Encrypt,Decrypt } from "@/util/codeUtil"
 
 const task_api = new taskApi();
 const router = useRouter(); //路由直接用router.push(...)
@@ -255,7 +256,7 @@ watch(task_data, (newValue, oldValue) => {
 });
 
 const gotoLiboratory = (task) => {
-  localStorage.setItem("task", JSON.stringify(task));
+  localStorage.setItem("task", Encrypt(JSON.stringify(task)));
   router.push("/model");
 };
 
@@ -314,7 +315,7 @@ h2 {
   color: hsl(210, 100%, 40%);
 }
 h4 {
-  font-size: 18px;
+  font-size: 19px;
 }
 .task-public {
   position: absolute;
@@ -376,10 +377,14 @@ h4 {
 // p {
 //   width: calc(80% - 100px);
 // }
-/deep/.el-form--label-left .el-form-item__label {
+/deep/.data-model.el-form--label-left .el-form-item__label {
   text-align: left;
   overflow: hidden !important;
-  line-height: 120%;
+  line-height: 120% !important;
+}
+
+/deep/.el-form--label-left .el-form-item__label {
+    font-size: 17px;
 }
 .data-list {
   transition: all 0.5s;

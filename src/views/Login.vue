@@ -42,6 +42,7 @@ import { useStore } from "vuex";
 import userApi from "@/api/user/user";
 import { ElLoading } from "element-plus";
 import graphAPI from "@/api/user/graph";
+import { Encrypt,Decrypt } from "@/util/codeUtil"
 
 const graphapi = new graphAPI();
 const api = new userApi();
@@ -84,9 +85,9 @@ const toRegister = () => {
 };
 const login = () => {
   api.login(formLabelAlign.email, formLabelAlign.password).then((res1) => {
-    localStorage.setItem("token", res1.data.token);
+    localStorage.setItem("token", Encrypt(res1.data.token));
     api.getUserInfo(formLabelAlign.email).then((res) => {
-      localStorage.setItem("userInfo", JSON.stringify(res.data.data));
+      localStorage.setItem("userInfo", Encrypt(JSON.stringify(res.data.data)));
       const loading = ElLoading.service({
         lock: true,
         text: "Loading",

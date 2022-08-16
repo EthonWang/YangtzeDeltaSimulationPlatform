@@ -865,6 +865,7 @@ import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import ModelConfig from "../App/ModelConfig.vue";
 import ModelTree from "../App/ModelTree.vue";
+import { Encrypt,Decrypt } from "@/util/codeUtil"
 
 var map = null;
 
@@ -975,8 +976,8 @@ export default {
         modelList: [],
         dataList: [],
       },
-      taskInfo: JSON.parse(localStorage.getItem("task")),
-      userInfo: JSON.parse(localStorage.getItem("userInfo")),
+      taskInfo: JSON.parse(Decrypt(localStorage.getItem("task"))),
+      userInfo: JSON.parse(Decrypt(localStorage.getItem("userInfo"))),
       dataServer: useStore().getters.devIpAddress,
     };
   },
@@ -1598,7 +1599,7 @@ export default {
         (res) => {
           // console.log(res.data);
           if (res.data.code == 0) {
-            localStorage.setItem("task", JSON.stringify(res.data.data));
+            localStorage.setItem("task", Encrypt(JSON.stringify(res.data.data)));
             ElMessage({
               type: "success",
               message: "裁剪成功，正在加载数据...",
@@ -1684,8 +1685,6 @@ export default {
         }).then(
           (res) => {
             if (res.data.code == 0) {
-              // localStorage.setItem("task", JSON.stringify(res.data.data));
-              // location.reload();
               if (this.analysisForm.type == "charts") {
                 let chartInfo = {};
                 chartInfo.options = res.data.data;
@@ -1743,7 +1742,7 @@ export default {
         (res) => {
           // console.log(res.data);
           if (res.data.code == 0) {
-            localStorage.setItem("task", JSON.stringify(res.data.data));
+            localStorage.setItem("task", Encrypt(JSON.stringify(res.data.data)));
             let newTxtData =
               res.data.data.dataList[res.data.data.dataList.length - 1];
             let newTxtLayer = {

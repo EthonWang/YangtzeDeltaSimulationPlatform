@@ -78,7 +78,7 @@
                     "
                   >
                     <el-tooltip
-                        effect="light"
+                        effect="dark"
                         placement="bottom"
                         content="查看案例详情"
                     >

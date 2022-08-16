@@ -36,7 +36,7 @@
               ></el-image>
             </template>
           </div>
-          <div v-else>暂无描述</div>
+          <div class="descriptionText" v-else>暂无描述</div>
           <h3 class="typeName">案例数据</h3>
           <el-divider ></el-divider>
           <template v-if="caseInfo.resourceDataList != null">
@@ -63,9 +63,9 @@
                   </div>
                 </template>
               </div>
-            <div v-else>暂无数据</div>
+            <div class="descriptionText" v-else>暂无数据</div>
           </template>
-          <div v-else>暂无数据</div>
+          <div class="descriptionText" v-else>暂无数据</div>
           <h3 class="typeName">相关资料</h3>
           <el-divider ></el-divider>
           <template v-if="caseInfo.relatedResource != null">
@@ -77,16 +77,17 @@
                 </div>
               </template>
             </div>
-            <div v-else>暂无描述</div>
+            <div class="descriptionText" v-else>暂无资料</div>
           </template>
-          <div v-else>暂无描述</div>
+          <div class="descriptionText" v-else>暂无资料</div>
         </div>
       </el-col>
       <el-col :span="4" :offset="1">
         <div class="rightBox1">
-          <div><el-button  class="rightButton hvr-shutter-out-horizontal" plain><span>在实验室中打开</span><ArrowDown style="width: 1em"/></el-button></div>
-          <div><el-button  class="rightButton hvr-shutter-out-horizontal" @click="toCase(caseInfo.path)" plain><span>查看案例</span><ArrowDown style="width: 1em"/></el-button></div>
-          <div><el-button  class="rightButton hvr-shutter-out-horizontal" @click="editCases" plain><span>编辑案例</span><ArrowDown style="width: 1em"/></el-button></div>
+          <div><el-button @click="router.go(-1)" class="rightButton hvr-shutter-out-horizontal" plain><ArrowLeft style="width: 1em"/>&nbsp;<span>返回专题</span></el-button></div>
+          <div><el-button  class="rightButton hvr-shutter-out-horizontal" @click="toCase(caseInfo.path)" plain><View style="width: 1em"/>&nbsp;<span>查看案例</span></el-button></div>
+           <div><el-button @click="openInLab()" class="rightButton hvr-shutter-out-horizontal" plain><DataLine style="width: 1em"/>&nbsp;<span>在实验室中打开</span></el-button></div>
+          <div><el-button v-if="isAdmin" class="rightButton hvr-shutter-out-horizontal" @click="editCases" plain><Setting style="width: 1em"/>&nbsp;<span>编辑案例</span></el-button></div>
           <edit-case-draw
               ref="editCaseRef"
               title="编辑--案例"
@@ -126,15 +127,20 @@ import {post ,get} from "@/request/request_backup";
 import {ElNotification} from "element-plus";
 import EditCaseDraw from "components/Cases/editCaseDraw";
 import {useStore} from "vuex";
+import taskAPI from "@/api/user/task"
+import { ElMessage } from "element-plus/lib/components";
+
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
-
+const task_api=new taskAPI()
+const user_info=JSON.parse(localStorage.getItem('userInfo'))
+const isAdmin=ref(user_info.email=="opengms@126.com")
 const mdOpenIcon = require("@/assets/img/icon/md-open.png")
 const toCase = (path) => {
   router.push("/case/" + path + "/");
 }
-const caseInfo = ref({})
+const caseInfo = ref()
 const baseUrl = store.state.devBackIp;
 const dataServer = store.getters.devIpAddress;
 
@@ -192,7 +198,7 @@ const startSearch = function (searchValue) {
   });
 };
 caseInfo.value = {
-  name:"案例飞走了",
+  name:"暂无案例",
   thumbnail:"/store/themeImg/swmm.62c2a75e443cecf9144a6fb0.png",
   introduction:"",
   path:"SWMM",
@@ -214,6 +220,32 @@ caseInfo.value = {
     },
   ]
 }
+const openInLab=()=>{
+  if(user_info==null||user_info==undefined){
+    ElMessage('请先登录您的账号')
+    router.push('/login')
+  }else{
+    task_api.openCaseInLab(user_info.id,caseInfo.value.name).then((res)=>{
+    let lab=res.data.data
+    if(lab==null||lab==undefined){
+      ElMessage('暂无案例实验')
+    }else{
+      localStorage.setItem('task',JSON.stringify(lab))
+    setTimeout(()=>{
+      ElMessage({
+        type:'success',
+        message:"成功"
+      })
+      router.push('/model')
+    },200)
+    }
+    
+  }).catch((err)=>{
+    ElMessage('暂无案例实验')
+  })
+  }
+  
+}
 </script>
 
 <style lang="less" scoped>
@@ -224,7 +256,7 @@ caseInfo.value = {
   margin-bottom: 70px;
 }
 .case-name{
-  font-size: 1.8em;
+  font-size: 1.8rem;
   margin-left: 40px;
 }
 .data-area{
@@ -276,8 +308,8 @@ caseInfo.value = {
 /*  width: 1em;*/
 /*}*/
 
-@imageHeight: 100px;
-@imageWidth:160px;
+@imageHeight: 150px;
+@imageWidth:240px;
 .caseImageWrap {
   display: flex;
   flex-direction: row;
@@ -289,8 +321,8 @@ caseInfo.value = {
 }
 
 .caseImage {
-  height: 100px;
-  width: 160px;
+  height: 150px;
+  width: 240px;
   border-bottom: 1px solid lightgray;
 }
 
@@ -353,15 +385,17 @@ caseInfo.value = {
   border-left: 8px solid #4ba0ff;
   padding: 0 15px;
   margin-top: 24px;
+  font-size: 1.4rem;
 }
 .authorInfo {
   animation: tracking-in-expand 0.7s cubic-bezier(0.215, 0.61, 0.355, 1) both;
   border-left: 8px solid #609356;
   padding: 0 15px;
   margin-top: 24px;
+  font-size: 1.4rem;
 }
 .font-size-1{
-  font-size: 0.8125rem;
+  font-size: 1rem;
   line-height: 1.5;
   color: #6e6e6e;
   padding: 15px 15px 0 20px;
@@ -375,7 +409,8 @@ caseInfo.value = {
 }
 
 .descriptionText {
-  text-indent: 2em;
+  text-indent: 2rem;
+  font-size: 1.2rem;
 }
 .imageBlock {
   width: 16vw;

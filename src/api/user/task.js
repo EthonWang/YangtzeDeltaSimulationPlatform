@@ -104,4 +104,7 @@ export default class {
         task.dataList.splice(index, 1);
         this.editTask(task)
     }
+    openCaseInLab(userId,caseName){
+        return get("/LabTask/openLabTaskByCase/"+userId+"/"+caseName)
+    }
 }

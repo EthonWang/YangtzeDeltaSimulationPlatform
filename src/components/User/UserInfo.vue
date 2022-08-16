@@ -20,7 +20,7 @@
     :before-upload="beforeUploadAvatar"
     :auto-upload="true"
   >
-   <el-button round style="position: absolute; top: 34%;right: 5%;display: flex;align-items: center;background: hsl(0, 0%, 90%);">
+   <el-button round style="position: absolute; top: 15vw;right: 5%;display: flex;align-items: center;background: hsl(0, 0%, 90%);">
       <el-icon><Camera /></el-icon>&nbsp;更换
     </el-button>
 
@@ -59,9 +59,9 @@
         <el-form-item label="姓名" :label-width="formLabelWidth">
           <el-input v-model="data.name" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="邮箱" :label-width="formLabelWidth">
+        <!-- <el-form-item label="邮箱" :label-width="formLabelWidth">
           <el-input v-model="data.email" autocomplete="off" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="自我介绍" :label-width="formLabelWidth">
           <el-input v-model="data.introduction" autocomplete="off" />
         </el-form-item>
@@ -111,11 +111,11 @@ const data = reactive({
   email: "zzz@myzzz.zzz",
   introduction: "个人介绍是用来介绍自己的，所以要用个人介绍来介绍自己。",
   data_num: 5,
-  instruction: "待输入",
+  instruction: "",
   model_num: 5,
   task_num: 50,
-  phone: "待输入",
-  adress: "待输入",
+  phone: "",
+  adress: "",
 });
 data.name = user_info.name;
 data.email = user_info.email;
@@ -150,7 +150,10 @@ const beforeUploadAvatar=(rawFile)=>{
 const logout = () => {
   localStorage.clear();
   router.push("/login");
-  location.reload();
+  setTimeout(()=>{
+    location.reload();
+  },200)
+  
 };
 const init = () => {
   if (route.path != "/user/data") {
@@ -190,7 +193,8 @@ setTimeout(init, 109);
 // 兼容css
 .img-ava {
   color: aliceblue;
-  width: 85%;
+  width: 16vw;
+  height: 16vw;
   // height: calc( $width + 0px);
   // height: $width;
   margin-right: 8px;

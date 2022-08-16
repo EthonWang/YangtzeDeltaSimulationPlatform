@@ -15,16 +15,6 @@
       </el-col
       >
     </el-row>
-    <el-row class="editDialogRow">
-      <span>所属专题:</span>
-      <el-col :span="20" :offset="1">
-        <el-input
-            v-model="editingCases.theme"
-            placeholder="请输入案例所属专题"
-        ></el-input>
-      </el-col
-      >
-    </el-row>
     <el-row class="editDialogRow"
     ><span>问题简介:</span
     >

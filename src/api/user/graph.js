@@ -99,7 +99,7 @@ export default class {
                     data['symbolSize'] = 10
                     data['value'] = data.description
                     data['type'] = "data"
-
+                    data['private']='mydata'
                     relation.nodes.push(data);
                     relation.links.push({
                         source: data.name,
@@ -135,14 +135,14 @@ export default class {
                     if(data.name==undefined||data.name==null){
                         continue
                     }
-                    relation.nodes.push({
-                        name: data.name,
-                        category: 0,
-                        symbolSize: 10,
-                        value: data.description,
-                        type: "dataFather",
-                        weight: 0
-                    });
+                    data['category'] = 0
+                    data['weight'] = 0
+                    data['symbolSize'] = 15
+                    data['value'] = data.description
+                    data['type'] = "data"
+                    data['private']='resource'
+                    relation.nodes.push(data);
+                   
                     relation.links.push({
                         source: data.name,
                         target: "公开",

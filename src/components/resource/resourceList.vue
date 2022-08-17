@@ -184,7 +184,7 @@ const props = defineProps({
   resList: Array,
 });
 const addDataToTask = (task) => {
-  console.log(selectedRes.value);
+  console.log('selectedRes.value is :',selectedRes.value);
   if ("mdl" in selectedRes.value) {
     // console.log(234);
     let data = selectedRes.value;
@@ -196,7 +196,6 @@ const addDataToTask = (task) => {
     task_api.addData(task, [data]);
   } else {
     let dataList = [];
-    console.log(selectedVisualDataItems.value);
     if (setSelectedVisualDataItemsDataSet.value) {
       //设置集
       let dataSet = {};
@@ -223,6 +222,7 @@ const addDataToTask = (task) => {
         }
       }
       dataSet["simularTrait"] = "data";
+      dataSet["parent"]=selectedRes.value.name
       dataList.push(dataSet);
       // console.log(dataSet);
     } else {
@@ -233,6 +233,7 @@ const addDataToTask = (task) => {
           if (dataName == data.name) {
             console.log(1);
             data["simularTrait"] = "data";
+            data["parent"]=selectedRes.value.name
             dataList.push(data);
           }
         }

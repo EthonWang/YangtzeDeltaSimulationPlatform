@@ -12,12 +12,13 @@ import ViewUIPlus from 'view-ui-plus'
 import 'view-ui-plus/dist/styles/viewuiplus.css'
 import uploader from 'vue-simple-uploader';
 
-
-
 const app = createApp(App);
 app.use(ElementPlus);
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-    app.component(key)
+// for (const [key, component1] of Object.entries(ElementPlusIconsVue)) {
+//     app.component(key, component1)
+// }
+for (const name in ElementPlusIconsVue) {
+    app.component(name, (ElementPlusIconsVue)[name]);
 }
 app.use(store);
 app.use(router);

@@ -115,7 +115,7 @@
               <el-divider style="margin: 22px 0 6px 0;"></el-divider>
             </template>
           </template>
-          <p v-else class="font-size-1">暂无作者信息</p>
+          <p v-else class="font-size-1">暂无版权信息</p>
         </div>
       </el-col>
     </el-row>
@@ -432,7 +432,7 @@ const openInLab=()=>{
   font-size: 1.2rem;
 }
 .imageBlock {
-  width: 75%;
+  width: 50%;
   margin-top: 15px;
   margin-bottom: 15px;
   animation: scale-in-center 0.5s both;

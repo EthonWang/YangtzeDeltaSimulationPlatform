@@ -177,7 +177,7 @@
                   <el-tooltip
                     class="box-item"
                     effect="light"
-                    content="加入实验室"
+                    content="加入所有结果数据到实验室"
                     placement="bottom"
                   >
                     <el-button
@@ -459,23 +459,40 @@ export default {
       }
     },
     loadToLab(event) {
-      if (event.url != undefined) {
-        this.task_api.addResultToLabAndDataCenter(
-          event.url,
-          this.userInfo.id,
-          this.task.id
-        ).then((res)=>{
-          if(res.data==null){
-            ElMessage.error("出错，可能已存在或无数据" );
-          }else{
-            let newTask=res.data.data
-          console.log(newTask);
-          localStorage.setItem("task",Encrypt(JSON.stringify(newTask)))
-          ElMessage({ type: "success", message: "成功加入实验室" });
-          }
-          
-        });
-        
+      if(event.url==undefined){
+        this.$message.error("请先进行实验");
+        return
+      }
+      let outList=this.outEventList(this.state)
+      let outUrlList=[]
+      for(let i in outList){
+        outUrlList.push(outList[i].url)
+      }
+      if (outList[0].url != undefined) {
+        this.task_api
+          .addResultToLabAndDataCenter(
+            outUrlList,
+            this.userInfo.id,
+            this.task.id
+          )
+          .then((res) => {
+            if (res.data == null) {
+              ElMessage.error("出错，可能已存在或无数据");
+            } else {
+              let newTask = res.data;
+              console.log(res);
+              localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
+              ElMessage({ type: "success", message: "成功加入实验室" });
+              let loading = ElLoading.service({
+                lock: true,
+                text: "装载数据中...",
+                background: "rgba(0, 0, 0, 0.7)",
+              });
+              setTimeout(()=>{
+                location.reload()
+              },750)
+            }
+          });
       } else {
         this.$message.error("请先进行实验");
       }

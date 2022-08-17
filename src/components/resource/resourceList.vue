@@ -184,7 +184,7 @@ const props = defineProps({
   resList: Array,
 });
 const addDataToTask = (task) => {
-  console.log('selectedRes.value is :',selectedRes.value);
+  console.log("selectedRes.value is :", selectedRes.value);
   if ("mdl" in selectedRes.value) {
     // console.log(234);
     let data = selectedRes.value;
@@ -222,7 +222,7 @@ const addDataToTask = (task) => {
         }
       }
       dataSet["simularTrait"] = "data";
-      dataSet["parent"]=selectedRes.value.name
+      dataSet["parent"] = selectedRes.value.name;
       dataList.push(dataSet);
       // console.log(dataSet);
     } else {
@@ -233,7 +233,7 @@ const addDataToTask = (task) => {
           if (dataName == data.name) {
             console.log(1);
             data["simularTrait"] = "data";
-            data["parent"]=selectedRes.value.name
+            data["parent"] = selectedRes.value.name;
             dataList.push(data);
           }
         }
@@ -272,9 +272,13 @@ const showMapCard = function (info) {
   // if (info.visualizationBoolean) {
   selectedRes.value = {};
   selectedRes.value = info;
-  setTimeout(() => {
-    mapCardDialogVisible.value = true;
-  }, 200);
+  if ("fileSize" in info) {
+    setTimeout(() => {
+      mapCardDialogVisible.value = true;
+    }, 200);
+  } else {
+    show_task_model.value=true
+  }
 };
 const downloadRes = function (item) {
   if (item.publicBoolean) {

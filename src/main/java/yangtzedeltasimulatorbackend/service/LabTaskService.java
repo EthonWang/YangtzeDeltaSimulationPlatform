@@ -197,4 +197,63 @@ public class LabTaskService {
         }
 
     }
+
+    public JsonResult newLabTxtFile(HttpServletRequest request, String labTaskId) {
+        try{
+            // 1.创建文本文件
+            String txtName = request.getParameter("name");
+            if(txtName.indexOf(".txt") < 0){
+                txtName = txtName + ".txt";
+            }
+            String txtStoreName = txtName.split(".txt")[0] + IdUtil.objectId() + ".txt";
+            String path = dataStoreDir + "/data/" + txtStoreName;
+            File txtFile = new File(path);
+            txtFile.createNewFile();
+            // 2.添加到用户资源
+            String userId = request.getParameter("userId");
+            UserData userData = new UserData();
+            String fileName = txtFile.getName();
+            Long fileSize = txtFile.length();
+            userData.setName(txtName);
+            userData.setType("file");
+            userData.setVisualType("txt");
+            userData.setSize(fileSize.toString());
+            userData.setFileStoreName(txtStoreName);
+            userData.setFileWebAddress("/store/data/" + txtStoreName);
+            userData.setFileRelativePath("/data/" + txtStoreName);
+            userData.setPublicBoolean(false);
+            userData.setVisualizationBoolean(false);
+            userData.setParentId(labTaskId);
+            userData.setUserId(userId);
+            userDataDao.save(userData);
+            // 3.添加到实验室
+            Optional<LabTask> byId1 = labTaskDao.findById(labTaskId);
+            if (!byId1.isPresent()) {
+                return ResultUtils.error("保存失败");
+            }
+            LabTask labTask = byId1.get();
+            List<cn.hutool.json.JSONObject> dataList = labTask.getDataList();
+            cn.hutool.json.JSONObject dataObject = new cn.hutool.json.JSONObject();
+            dataObject.set("id", userData.getId());
+            dataObject.set("name", txtName);
+            dataObject.set("type", "txt");
+            dataObject.set("visualType", "txt");
+            dataObject.set("size", String.valueOf(fileSize));
+            dataObject.set("fileStoreName", txtStoreName);
+            dataObject.set("fileRelativePath", "/data/" + txtStoreName);
+            dataObject.set("fileWebAddress", "/store/data/" + txtStoreName);
+            dataObject.set("visualizationBoolean", false);
+            dataObject.set("publicBoolean", false);
+            dataObject.set("source", "cloud");
+            dataList.add(dataObject);
+            labTask.setDataList(dataList);
+            labTaskDao.save(labTask);
+
+            return ResultUtils.success(labTask);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error();
+        }
+    }
+
 }

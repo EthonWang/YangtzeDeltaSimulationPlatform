@@ -137,16 +137,26 @@ public class ModelController {
         return modelItemService.handleInvoke(lists, email);
     }
 
-    @ApiOperation(value = "上传数据到数据容器")
+    @ApiOperation(value = "上传用户数据到数据容器")
     @GetMapping ("/upToDataContainer")
     public JsonResult upToDataContainer(@RequestParam("userDataId") String userDataId,
-                                        @RequestParam("dataRelativePath") String dataRelativePath ){
+                                        @RequestParam("dataRelativePath") String dataRelativePath){
         return modelItemService.upToDataContainer(userDataId,dataRelativePath);
+    }
+
+    @ApiOperation(value = "上传资源数据到数据容器")
+    @GetMapping ("/upResToDataContainer")
+    public JsonResult upResToDataContainer(@RequestParam("resDataId") String resDataId,
+                                           @RequestParam("taskId") String taskId,
+                                           @RequestParam("userId") String userId,
+                                        @RequestParam("dataRelativePath") String dataRelativePath){
+        return modelItemService.upResToDataContainer(resDataId,taskId,userId,dataRelativePath);
     }
 
     @ApiOperation(value = "上传xml到数据容器")
     @PostMapping(value = "/upXMLToDataContainer")
     public JsonResult upXMLToDataContainer(@RequestPart("xmlData") MultipartFile  upFile) {
+    public JsonResult upXMLToDataContainer(@RequestParam("xmlData") MultipartFile upFile) {
 //        String email="371252847@qq.com";
         return modelItemService.upXMLToDataContainer(upFile);
     }

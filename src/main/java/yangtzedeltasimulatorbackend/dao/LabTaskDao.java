@@ -6,6 +6,7 @@ import yangtzedeltasimulatorbackend.entity.po.Folder;
 import yangtzedeltasimulatorbackend.entity.po.LabTask;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Description
@@ -16,4 +17,6 @@ import java.util.List;
 public interface LabTaskDao extends MongoRepository<LabTask, String> {
 
     List<LabTask> findAllByUserId(String userId);
+
+    Optional<LabTask> findByNameAndUserId(String caseName, String adminUserId);
 }

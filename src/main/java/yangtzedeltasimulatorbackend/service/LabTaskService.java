@@ -1,15 +1,18 @@
 package yangtzedeltasimulatorbackend.service;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.json.JSONObject;
+//import cn.hutool.json.JSONObject;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.stereotype.Service;
 import yangtzedeltasimulatorbackend.dao.LabTaskDao;
 import yangtzedeltasimulatorbackend.dao.TaskDao;
+import yangtzedeltasimulatorbackend.dao.UserDao;
 import yangtzedeltasimulatorbackend.dao.UserDataDao;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
 import yangtzedeltasimulatorbackend.entity.doo.support.TaskData;
@@ -17,6 +20,7 @@ import yangtzedeltasimulatorbackend.entity.dto.TaskCheckDTO;
 import yangtzedeltasimulatorbackend.entity.dto.labTask.CreateLabTaskDTO;
 import yangtzedeltasimulatorbackend.entity.po.LabTask;
 import yangtzedeltasimulatorbackend.entity.po.Task;
+import yangtzedeltasimulatorbackend.entity.po.User;
 import yangtzedeltasimulatorbackend.entity.po.UserData;
 import yangtzedeltasimulatorbackend.utils.ResultUtils;
 import yangtzedeltasimulatorbackend.utils.Utils;
@@ -47,6 +51,8 @@ public class LabTaskService {
     @Autowired
     UserDataDao userDataDao;
 
+    @Autowired
+    UserDao userDao;
 
     public JsonResult createLabTask(CreateLabTaskDTO createLabTaskDTO) {
         try {
@@ -143,9 +149,9 @@ public class LabTaskService {
                 List<JSONObject> dataList = labTask.getDataList();
                 for(JSONObject item : dataList){
                     if(item.get("id").equals(id)){
-                        item.set("fileStoreName",userData.getFileStoreName());
-                        item.set("fileWebAddress",userData.getFileWebAddress());
-                        item.set("fileRelativePath",userData.getFileRelativePath());
+                        item.put("fileStoreName",userData.getFileStoreName());
+                        item.put("fileWebAddress",userData.getFileWebAddress());
+                        item.put("fileRelativePath",userData.getFileRelativePath());
                     }
                 }
                 labTaskDao.save(labTask);
@@ -158,5 +164,37 @@ public class LabTaskService {
         } else{
             return ResultUtils.error("文件修改失败！");
         }
+    }
+
+    public JsonResult getLabTaskByCase(String userId, String caseName) {
+        try {
+            User adminUser=userDao.findByEmail("opengms@126.com").get();
+            String adminUserId=adminUser.getId();
+
+            Optional<LabTask> userLabTaskOptional= labTaskDao.findByNameAndUserId(caseName,userId);
+            if(userLabTaskOptional.isPresent()){
+                return ResultUtils.success(userLabTaskOptional.get());
+            }
+
+            Optional<LabTask> labTaskOptional= labTaskDao.findByNameAndUserId(caseName,adminUserId);
+            if(!labTaskOptional.isPresent()){
+                return ResultUtils.error("实验室不存在");
+            }
+            LabTask labTask=labTaskOptional.get();
+
+            if(userId.equals(adminUserId)){
+                return ResultUtils.success(labTask);
+            }
+
+            LabTask newLabTask=new LabTask();
+            BeanUtils.copyProperties(labTask,newLabTask,"id");
+            newLabTask.setUserId(userId);
+            labTaskDao.save(newLabTask);
+            return ResultUtils.success(newLabTask);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("获取实验室信息失败");
+        }
+
     }
 }

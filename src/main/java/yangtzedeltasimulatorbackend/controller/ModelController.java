@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
+import yangtzedeltasimulatorbackend.entity.dto.model.SaveResultDataDTO;
 import yangtzedeltasimulatorbackend.entity.po.ModelItem;
 import yangtzedeltasimulatorbackend.entity.po.QuestionItem;
 import yangtzedeltasimulatorbackend.service.ModelItemService;
@@ -145,9 +146,16 @@ public class ModelController {
 
     @ApiOperation(value = "上传xml到数据容器")
     @PostMapping(value = "/upXMLToDataContainer")
-    public JsonResult upXMLToDataContainer(@RequestPart MultipartFile  upFile) {
+    public JsonResult upXMLToDataContainer(@RequestPart("xmlData") MultipartFile  upFile) {
 //        String email="371252847@qq.com";
         return modelItemService.upXMLToDataContainer(upFile);
+    }
+
+    @ApiOperation(value = "保存模型运行结果到个人空间和实验室")
+    @PostMapping(value = "/saveModelOutput")
+    public JsonResult saveModelOutput(@RequestBody SaveResultDataDTO saveResultDataDTO) {
+//        String email="371252847@qq.com";
+        return modelItemService.saveModelOutput(saveResultDataDTO);
     }
 
 

@@ -399,4 +399,12 @@ public class Utils {
         return Double.valueOf(df.format(num));
     }
 
+    //从数据容器中下载数据
+//    public static double downloadDataFromRemote(String dataUrl){
+//
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        JSONObject jsonObject = restTemplate.postForObject(dataUrl);
+//    }
+
 }

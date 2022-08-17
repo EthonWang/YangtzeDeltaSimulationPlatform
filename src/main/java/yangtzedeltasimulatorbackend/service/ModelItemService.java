@@ -8,6 +8,7 @@ import cn.hutool.core.util.ZipUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.description.type.TypeDescription;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,13 +20,17 @@ import org.springframework.web.multipart.MultipartFile;
 import yangtzedeltasimulatorbackend.dao.*;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
 import yangtzedeltasimulatorbackend.entity.doo.support.TaskData;
+import yangtzedeltasimulatorbackend.entity.dto.model.SaveResultDataDTO;
+import yangtzedeltasimulatorbackend.entity.dto.user.CreateFolderDTO;
 import yangtzedeltasimulatorbackend.entity.po.*;
+import yangtzedeltasimulatorbackend.utils.MyFileUtils;
 import yangtzedeltasimulatorbackend.utils.ResultUtils;
 import yangtzedeltasimulatorbackend.utils.Utils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -53,6 +58,12 @@ public class ModelItemService {
     @Autowired
     UserDataDao userDataDao;
 
+    @Autowired
+    UserResourceService userResourceService;
+
+    @Autowired
+    LabTaskDao labTaskDao;
+
     @Value("${dataStoreDir}"+"/temp")
     private  String tempDir;
 
@@ -71,6 +82,8 @@ public class ModelItemService {
     String managerServerIpAndPort;
 
 
+    @Value("${dataStoreDir}"+"/data")
+    private  String dataFolder;
 
     public JsonResult saveModelItem(ModelItem modelItem){
         try{
@@ -266,11 +279,11 @@ public class ModelItemService {
         lists.put("username", email);
 
 //        ComputableModel computableModel=computableModelDao.findFirstById(lists.getString("oid"));
-        ModelItem modelItem=modelItemDao.findById(lists.getString("oid")).get();
+        ResourceModel resourceModel=resourceModelDao.findById(lists.getString("oid")).get();
         //长三角这里pid就是md5前端不传了
-        lists.put("pid", modelItem.getMd5());
+        lists.put("pid", resourceModel.getMd5());
 
-        String mdlStr=modelItem.getMdl();
+        String mdlStr=resourceModel.getMdl();
         JSONObject mdlJson= Utils.convertMdl(mdlStr);
         // System.out.println(mdlJson);
         JSONObject mdl=mdlJson.getJSONObject("mdl");
@@ -343,7 +356,7 @@ public class ModelItemService {
         } else {
             Task task = new Task();
             task.setComputableId(lists.getString("oid"));
-            task.setComputableName(modelItem.getModelName());
+            task.setComputableName(resourceModel.getName());
             task.setTaskId(result.getString("tid"));
             task.setEmail(email);
             task.setIntegrate(false);
@@ -365,7 +378,7 @@ public class ModelItemService {
 
             taskDao.save(task);
 
-            modelItemDao.save(modelItem);
+//            resourceModelDao.save(resourceModel);
 
             return ResultUtils.success(result);
         }
@@ -547,6 +560,39 @@ public class ModelItemService {
         }catch (Exception e){
             log.error(e.getMessage());
             return ResultUtils.error("上传数据容器失败");
+        }
+    }
+
+    public JsonResult saveModelOutput(SaveResultDataDTO saveResultDataDTO) {
+        try {
+
+            String labId = saveResultDataDTO.getLabId();
+            String userId = saveResultDataDTO.getUserId();
+
+            Folder folder=new Folder();
+            folder.setParentId(userId);
+            folder.setUserId(userId);
+            Date date = new Date();
+            SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss");
+            folder.setName(dateFormat.format(date)+"_result");
+            userResourceService.createFolder(folder);
+
+            LabTask labTask=labTaskDao.findById(labId).get();
+            List<JSONObject> labDataList = labTask.getDataList();
+
+            List<String> dataUrlList = saveResultDataDTO.getDataUrlList();
+            for(int i=0;i<dataUrlList.size();i++){
+                String dataUrl=dataUrlList.get(i);
+                File file = MyFileUtils.downloadRemoteData(dataUrl, dataFolder);
+                UserData userData=userResourceService.saveDataItem(file,userId,folder.getId());
+                labDataList.add(JSONObject.parseObject(JSONObject.toJSONString(userData)));
+            }
+            labTask.setDataList(labDataList);
+
+            return ResultUtils.success(labTask);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("保存模型结果出错");
         }
     }
 

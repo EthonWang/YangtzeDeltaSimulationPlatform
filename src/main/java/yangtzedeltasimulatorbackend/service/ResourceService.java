@@ -220,7 +220,6 @@ public class ResourceService {
         }
     }
 
-
     public JsonResult deleteResourceData(String resourceDataId) {
         try{
             ResourceData resourceData = resourceDataDao.findById(resourceDataId).get();
@@ -334,7 +333,6 @@ public class ResourceService {
         }
     }
 
-
     public JsonResult deleteResourceModel(String resourceModelId) {
         try{
             resourceModelDao.deleteById(resourceModelId);
@@ -415,17 +413,17 @@ public class ResourceService {
             Optional<LabTask> byId1 = labTaskDao.findById(labTaskId);
             if (!byId1.isPresent()) { return ResultUtils.error("保存失败");}
             LabTask labTask = byId1.get();
-            List<cn.hutool.json.JSONObject> dataList = labTask.getDataList();
-            cn.hutool.json.JSONObject dataObject = new cn.hutool.json.JSONObject();
-            dataObject.set("id", IdUtil.objectId());
-            dataObject.set("name", fileName + ".json");
-            dataObject.set("type","fill");
-            dataObject.set("visualType","geojson");
-            dataObject.set("size",String.valueOf(file.length()));
-            dataObject.set("fileStoreName",file.getName());
-            dataObject.set("fileRelativePath","/data/"+file.getName());
-            dataObject.set("fileWebAddress","/store/data/"+file.getName());
-            dataObject.set("userId",userId);
+            List<JSONObject> dataList = labTask.getDataList();
+            JSONObject dataObject = new JSONObject();
+            dataObject.put("id", IdUtil.objectId());
+            dataObject.put("name", fileName + ".json");
+            dataObject.put("type","fill");
+            dataObject.put("visualType","geojson");
+            dataObject.put("size",String.valueOf(file.length()));
+            dataObject.put("fileStoreName",file.getName());
+            dataObject.put("fileRelativePath","/data/"+file.getName());
+            dataObject.put("fileWebAddress","/store/data/"+file.getName());
+            dataObject.put("userId",userId);
             dataList.add(dataObject);
             labTask.setDataList(dataList);
             labTaskDao.save(labTask);

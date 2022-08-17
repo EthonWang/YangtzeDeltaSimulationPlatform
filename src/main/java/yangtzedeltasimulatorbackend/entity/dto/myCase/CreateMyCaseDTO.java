@@ -16,8 +16,9 @@ public class CreateMyCaseDTO {
     String thumbnail;
     String path;
     String theme;
-
+    String introduction;
     List<JSONObject> description;
-    List<JSONObject> dataList;
+    List<JSONObject> resourceDataList;
     List<JSONObject> caseAuthor;
+    List<JSONObject> relatedResource;
 }

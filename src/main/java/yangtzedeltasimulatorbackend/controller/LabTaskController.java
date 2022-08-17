@@ -30,7 +30,7 @@ public class LabTaskController {
 
     @ApiOperation(value = "新建实验室任务")
     @PostMapping(value = "/createLabTask")
-    JsonResult createLabTask(@RequestBody CreateLabTaskDTO createLabTaskDTO, HttpServletRequest request) {
+    JsonResult createLabTask(@RequestBody CreateLabTaskDTO createLabTaskDTO) {
 //        String userId= TokenUtils.getUserId(request.getHeader("token"));
         return labTaskService.createLabTask(createLabTaskDTO);
     }
@@ -55,10 +55,20 @@ public class LabTaskController {
         return labTaskService.deleteLabTaskList(labTaskId);
     }
 
+
     @ApiOperation(value = "修改文本文件内容")
     @PostMapping("/updateLabTxtFile")
     public JsonResult updateLabTxtFile(HttpServletRequest request){
         return labTaskService.updateLabTxtFile(request);
     }
+
+
+    @ApiOperation(value = "在案例中打开实验室，返回新实验室id")
+    @GetMapping(value = "/openLabTaskByCase/{userId}/{caseName}")
+    JsonResult getLabTaskByCase(@PathVariable("userId") String userId,
+                                @PathVariable("caseName") String caseName ) {
+        return labTaskService.getLabTaskByCase(userId,caseName);
+    }
+
 
 }

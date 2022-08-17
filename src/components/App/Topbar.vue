@@ -173,6 +173,11 @@ watch(
 const emit = defineEmits(["RouterFromBar"]);
 const sendRouterToFather = (route1, index) => {
   if (getRootPath(route1) != "") {
+    user_info = localStorage.getItem("userInfo");
+    if (user_info != null && user_info != undefined) {
+      user_info = JSON.parse(Decrypt(user_info));
+      userAvatar.value = user_info.avatar;
+    }
     if (
       user_info == null &&
       getRootPath(route1) != "case" &&

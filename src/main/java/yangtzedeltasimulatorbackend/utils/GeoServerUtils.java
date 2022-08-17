@@ -82,7 +82,7 @@ public class GeoServerUtils {
      */
     public static boolean PublishShape(String workSpace, String storeName, String layerName, String styleName, String shapePath) {
         /**Geoserver 连接配置**/
-        String url = "http://172.21.213.44:8088/geoserver";
+        String url = "http://172.21.213.92:8089/geoserver";
         String username = "admin";
         String passWord = "geoserver";
         /**Geoserver 连接配置**/
@@ -110,7 +110,8 @@ public class GeoServerUtils {
         if (restDataStore == null) {
             GSShapefileDatastoreEncoder gsShapefileDatastoreEncoder = null;
             try {
-                gsShapefileDatastoreEncoder = new GSShapefileDatastoreEncoder(storeName, new URL("file:" + shapePath));
+                String newShapePath = "F:/YangtzeDataStore/resourceData/" + shapePath.split("/resourceData/")[1];
+                gsShapefileDatastoreEncoder = new GSShapefileDatastoreEncoder(storeName, new URL("file:" + newShapePath));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
                 System.out.println("数据存储创建失败！");
@@ -202,7 +203,7 @@ public class GeoServerUtils {
      */
     public static boolean removeStore(String workSpace, String storeType, String storeName) {
         /**Geoserver 连接配置**/
-        String url = "http://localhost:8050/geoserver";
+        String url = "http://172.21.213.92:8089/geoserver";
         String username = "admin";
         String passWord = "geoserver";
 

@@ -325,7 +325,7 @@ public class ScriptExecService {
 
     public void downloadPic(String path, HttpServletResponse response) {
         try{
-            File file=new File(scriptOutDir + "/" + path);
+            File file=new File(dataResourceDir + "/" + path);
             MyFileUtils.downloadFile(file,response);
         }catch (Exception e){
             log.error(e.getMessage());

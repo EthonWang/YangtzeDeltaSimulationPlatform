@@ -48,10 +48,18 @@ public class ScriptExecController {
     public JsonResult txtAnalysis(@RequestBody TxtAnalysisDTO txtAnalysisDTO, @PathVariable String labTaskId){
         return  scriptExecService.txtAnalysis(txtAnalysisDTO,labTaskId);
     }
-    
+
+    /**
+     * @param path
+     * @param response
+     * @return: void
+     * @Description:  下载数据（pic、json）
+     * @Author: ZhaoYiming
+     * @Date: 2022-8-8 14:12
+     */
     @ApiOperation(value = "下载数据")
-    @GetMapping("/downloadPic/{path}")
-    public void downloadDataItem(@PathVariable("path") String path, HttpServletResponse response) {
+    @GetMapping("/downloadPic")
+    public void downloadDataItem(@RequestParam("path") String path, HttpServletResponse response) {
         scriptExecService.downloadPic(path, response);
     }
 

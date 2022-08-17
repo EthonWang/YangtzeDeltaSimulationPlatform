@@ -212,7 +212,7 @@ public class ResourceService {
                         Long fileSize = item.getLong("fileSize");
                         GeoServerUtils.PublishShape("yangtzeRiver",fileName.split(".shp")[0], fileName.split(".shp")[0], null,path);
                         String geoServerUrl= MessageFormat.format("{0}/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A{1}&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857" +
-                                "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl_SHP,fileName.split(".shp")[0]);
+                                "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl,fileName.split(".shp")[0]);
                         visualDataItem.setName(fileName);
                         visualDataItem.setType("shp");
                         visualDataItem.setVisualType("shp");

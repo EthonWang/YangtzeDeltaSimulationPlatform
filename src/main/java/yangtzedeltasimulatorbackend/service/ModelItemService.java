@@ -533,6 +533,7 @@ public class ModelItemService {
             // CASE 1.资源目录中的资源上传到数据容器 （资源目录中的单个（总的）数据直接添加到 数据容器，dataContainerUrl只临时保留在labTask中）
             // CASE 2.脚本处理后的数据上传数据容器  （脚本处理后理论上属于用户中心资源，有parentId，走的是上边的方法）
             // CASE 3.集数据上传数据容器（根据路径复制出来，打包成压缩包上传，压缩包添加到个人中心，但格式为压缩包，而不是集）
+            // CASE 4.脚本处理后的集数据上传数据容器（目前只支持批量裁剪）
             Optional<LabTask> byId1 = labTaskDao.findById(labTaskId);
             if (!byId1.isPresent()) {
                 return ResultUtils.error("上传失败失败，taskId错误！");
@@ -542,7 +543,7 @@ public class ModelItemService {
             dataList = labTask.getDataList();
             cn.hutool.json.JSONObject resDataInfo = new cn.hutool.json.JSONObject();
             for(cn.hutool.json.JSONObject item : dataList){
-                if(item.getStr("id") == resDataId){
+                if(item.getStr("id") != null && item.getStr("id").equals(resDataId)){
                     resDataInfo = item;
                 }
             }
@@ -565,7 +566,12 @@ public class ModelItemService {
                         String joPath = dataStoreDir + jo.getStr("fileRelativePath");
                         String joName = jo.getStr("name");
                         File originFile = new File(joPath);
-                        File targetFile = new File(tempFolderPath + "/" + joName.replace("_clip",""));
+                        File targetFile;
+                        if(joName.indexOf("_clip") >= 0){
+                            targetFile = new File(tempFolderPath + "/" + joName);
+                        } else {
+                            targetFile = new File(tempFolderPath + "/" + joName.replace("_clip",""));
+                        }
                         targetFile.createNewFile();
                         FileUtils.copyFileUsingStream(originFile,targetFile);
                     }

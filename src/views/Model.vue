@@ -160,7 +160,7 @@
   <el-dialog
     v-model="show_task"
     title="添加数据集到实验室"
-    width="30%"
+    width="50%"
     draggable
   >
     <h3 style="margin-bottom: 15px">选择要添加的资源</h3>
@@ -208,18 +208,14 @@
       style="margin-bottom: 15px"
     />
     <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
-    <el-button
-
-      @click="addtoLab()"
-      style="margin: 5px"
-    >
+    <el-button @click="addtoLab()" style="margin: 5px">
       <el-icon><Monitor /></el-icon> &nbsp;
- 
-      <span>{{ 本实验 }}</span></el-button
+
+      <span> 本实验 </span></el-button
     >
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="show_task = false">取消</el-button>
+        <el-button @click="this.show_task = false">取消</el-button>
         <!-- <el-button type="primary" @click="show_task = false">完成</el-button> -->
       </span>
     </template>
@@ -281,10 +277,11 @@ export default {
       user_info: JSON.parse(Decrypt(localStorage.getItem("userInfo"))),
       router: useRouter(),
       dataRecommend: [],
-      selectedVisualDataItems: ref([]),
-      selectedRes: ref([]),
+      selectedVisualDataItems: [],
+      selectedRes: [],
       setSelectedVisualDataItemsDataSet: false,
-      show_task:false
+      show_task: false,
+      selectedVisualDataItemsRange: [0, 0],
     };
   },
   mounted() {
@@ -294,13 +291,16 @@ export default {
         let haveData = [];
         for (let i = 0; i < this.res_list.length; i++) {
           let name = this.res_list[i].name;
+          if ("parent" in this.res_list[i]) {
+            name = this.res_list[i].parent + "子模块";
+          }
           haveData.push(name);
         }
         console.log(haveData);
         this.dataRecommend = this.graphapi.giveRecommend(haveData);
         console.log("推荐", this.dataRecommend);
         // });
-      }, 800);
+      }, 4000);
     }
 
     let mapType = this.getURLParameter("mapType");
@@ -314,22 +314,51 @@ export default {
   },
 
   methods: {
+    selectedVisualDataItemsRangeChangeBefore(value) {
+      if (this.selectedRes.visualDataItems.length >= 30) {
+        let min = this.selectedVisualDataItemsRange[0];
+        let max = this.selectedVisualDataItemsRange[1];
+        for (let i = 0; i < value.length; i++) {
+          for (
+            let j = 0;
+            j < this.selectedRes.visualDataItems.length;
+            j++
+          ) {
+            if (value[i] == this.selectedRes.visualDataItems[j].name) {
+              if (value.length == 1) {
+                min = max = j;
+              } else {
+                //判断增减
+                if (min >= j) {
+                  min = j;
+                } else if (max <= j) {
+                  max = j;
+                }
+              }
+            }
+          }
+        }
+        this.selectedVisualDataItemsRange = [min, max];
+        this.selectedVisualDataItemsRangeChange([min, max]);
+      }
+    },
     selectedVisualDataItemsRangeChange(value) {
-      this.selectedVisualDataItems.value = [];
-      for (let j = 0; j < this.selectedRes.value.visualDataItems.length; j++) {
+      this.selectedVisualDataItems = [];
+      for (let j = 0; j < this.selectedRes.visualDataItems.length; j++) {
         if (j >= value[0] && j <= value[1]) {
-          this.selectedVisualDataItems.value.push(
-            this.selectedRes.value.visualDataItems[j].name
+          this.selectedVisualDataItems.push(
+            this.selectedRes.visualDataItems[j].name
           );
         }
       }
     },
     recommendShow(data) {
-      
       this.recommendShowOne = data;
-      if(data.private=='resource'){
-        this.show_task=true
-      }else{
+      this.selectedRes=data
+      if (data.private == "resource") {
+        this.show_task = true;
+        console.log(this.show_task);
+      } else {
         this.recommendVisible = true;
       }
     },
@@ -378,31 +407,31 @@ export default {
         delete this.recommendShowOne["id_backup"];
       }
       let dataList = [];
-      console.log(this.selectedVisualDataItems.value);
+      console.log(this.selectedVisualDataItems);
       if (this.recommendShowOne.private == "resource") {
         //如果是来自资源的数据
-        this.selectedRes.value=this.recommendShowOne
+        this.selectedRes = this.recommendShowOne;
         if (this.setSelectedVisualDataItemsDataSet) {
           //设置集
           let dataSet = {};
-          dataSet.createTime = this.selectedRes.value.createTime;
-          dataSet.description = this.selectedRes.value.description;
+          dataSet.createTime = this.selectedRes.createTime;
+          dataSet.description = this.selectedRes.description;
           dataSet.id =
-            this.selectedRes.value.id +
+            this.selectedRes.id +
             Math.floor(Math.random() * 10 + 1).toString();
-          dataSet.name = this.selectedRes.value.name + "_dataSet";
-          dataSet.normalTags = this.selectedRes.value.normalTags;
-          dataSet.problemTags = this.selectedRes.value.problemTags;
-          dataSet.publicBoolean = this.selectedRes.value.publicBoolean;
-          dataSet.type = this.selectedRes.value.type;
+          dataSet.name = this.selectedRes.name + "_dataSet";
+          dataSet.normalTags = this.selectedRes.normalTags;
+          dataSet.problemTags = this.selectedRes.problemTags;
+          dataSet.publicBoolean = this.selectedRes.publicBoolean;
+          dataSet.type = this.selectedRes.type;
           dataSet.visualType = "dataSet";
           dataSet.visualizationBoolean =
-            this.selectedRes.value.visualizationBoolean;
+            this.selectedRes.visualizationBoolean;
           dataSet.dataSetList = [];
-          for (let i in this.selectedVisualDataItems.value) {
-            let dataName = this.selectedVisualDataItems.value[i];
-            for (let j in this.selectedRes.value.visualDataItems) {
-              let data = this.selectedRes.value.visualDataItems[j];
+          for (let i in this.selectedVisualDataItems) {
+            let dataName = this.selectedVisualDataItems[i];
+            for (let j in this.selectedRes.visualDataItems) {
+              let data = this.selectedRes.visualDataItems[j];
               if (dataName == data.name) {
                 dataSet.dataSetList.push(data);
                 dataSet.visualWebAddress = data.visualWebAddress;
@@ -413,10 +442,10 @@ export default {
           dataList.push(dataSet);
           // console.log(dataSet);
         } else {
-          for (let i in this.selectedVisualDataItems.value) {
-            let dataName = this.selectedVisualDataItems.value[i];
-            for (let j in this.selectedRes.value.visualDataItems) {
-              let data = this.selectedRes.value.visualDataItems[j];
+          for (let i in this.selectedVisualDataItems) {
+            let dataName = this.selectedVisualDataItems[i];
+            for (let j in this.selectedRes.visualDataItems) {
+              let data = this.selectedRes.visualDataItems[j];
               if (dataName == data.name) {
                 console.log(1);
                 data["simularTrait"] = "data";
@@ -424,40 +453,36 @@ export default {
               }
             }
           }
-          this.selectedVisualDataItemsRange.value = [0, 0];
-          this.selectedVisualDataItems.value = [];
+          this.selectedVisualDataItemsRange = [0, 0];
+          this.selectedVisualDataItems = [];
         }
         ElMessage({
           type: "success",
           message: "成功加入实验室",
         });
         let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
-        this.task_api.addData(newTask, dataList);
+        this.task_api.addData(newTask, dataList);//传入newTask指针，里面进行push
 
         // this.task_api.addData(newTask, [this.recommendShowOne]);
-        for (let k in dataList) {
-          newTask.dataList.push(this.recommendShowOne);
-        }
+
         localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
       } else {
         //如果是来自个人空间的数据
         let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
         this.task_api.addData(newTask, [this.recommendShowOne]);
-        newTask.dataList.push(this.recommendShowOne);
         localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
       }
 
       this.recommendVisible = false;
-      this.show_task=false
+      this.show_task = false;
       let loading = ElLoading.service({
         lock: true,
         text: "更新实验室数据...",
         background: "rgba(0, 0, 0, 0.7)",
       });
-      setTimeout(()=>{
+      setTimeout(() => {
         location.reload();
-      },500)
-      
+      }, 500);
     },
     switchMap() {
       if (this.mapType == "mapBox") {

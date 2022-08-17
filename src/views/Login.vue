@@ -42,7 +42,7 @@ import { useStore } from "vuex";
 import userApi from "@/api/user/user";
 import { ElLoading } from "element-plus";
 import graphAPI from "@/api/user/graph";
-import { Encrypt,Decrypt } from "@/util/codeUtil"
+import { Encrypt, Decrypt } from "@/util/codeUtil";
 
 const graphapi = new graphAPI();
 const api = new userApi();
@@ -50,6 +50,10 @@ const route = useRoute();
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const labelPosition = ref("top");
+let toLast = localStorage.getItem("toLast");
+if (toLast) {
+  toLast = Decrypt(toLast);
+}
 const formLabelAlign = reactive({
   email: "",
   password: "",
@@ -94,6 +98,7 @@ const login = () => {
         background: "rgba(0, 0, 0, 0.7)",
       });
       graphapi.initGraph(res.data.data.id).then((res) => {
+        console.log("res is ", res);
         setTimeout(() => {
           loading.close();
           // document.getElementsByClassName("user-topbar")[0].style.right = "1vw";
@@ -102,7 +107,13 @@ const login = () => {
           // document.getElementsByClassName("user-info")[0].style.opacity = 1;
           // document.getElementsByClassName("science")[0].style.opacity = 0;
         }, 601);
-        router.push("/user");
+        if (toLast) {
+          router.push(toLast)
+        } else {
+          localStorage.removeItem('toLast')
+          router.push("/user");
+        }
+        
       });
     });
   });

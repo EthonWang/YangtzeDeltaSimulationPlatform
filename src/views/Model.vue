@@ -9,10 +9,7 @@
     <el-button size="small" @click="switchMap" class="mapSwitchButton"
       ><el-icon><Camera /></el-icon>&nbsp;2D/3D
     </el-button>
-    <el-button
-      size="small"
-      @click="this.router.go(-1)"
-      class="backButton"
+    <el-button size="small" @click="this.router.go(-1)" class="backButton"
       ><el-icon><ArrowLeftBold /></el-icon>&nbsp;返回
     </el-button>
     <mapbox-view
@@ -138,11 +135,12 @@
   </el-dialog>
 
   <el-button
-  size="small"
+    size="small"
     style="position: absolute; z-index: 100; top: 75px; left: 295px"
     @click="myDataVisible = true"
     ><el-icon><FolderOpened /></el-icon>&nbsp;我的数据</el-button
   >
+  <!-- 添加单个数据 -->
   <el-dialog v-model="myDataVisible" width="80%" draggable>
     <div style="display: flex">
       <ScienceProblemData style="width: 20vw"></ScienceProblemData>
@@ -151,7 +149,76 @@
 
     <template #footer>
       <span class="dialog-footer">
-        <el-button style="position: relative;z-index: 5;" @click="myDataVisible = false">退出</el-button>
+        <el-button
+          style="position: relative; z-index: 5"
+          @click="myDataVisible = false"
+          >退出</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
+  <el-dialog v-model="show_task" title="添加数据集到实验室" width="30%" draggable>
+    <h3 style="margin-bottom: 15px">选择要添加的资源</h3>
+    <el-scrollbar max-height="35vh">
+      <el-checkbox-group
+        v-model="selectedVisualDataItems"
+        @change="selectedVisualDataItemsRangeChangeBefore"
+      >
+        <el-checkbox
+          :label="item.name"
+          v-for="(item, index) in selectedRes.visualDataItems"
+          :key="index"
+        />
+      </el-checkbox-group>
+    </el-scrollbar>
+    <div
+      class="slider-demo-block"
+      v-if="
+        selectedRes.visualDataItems.length >= 30 &&
+        selectedVisualDataItems.length >= 1
+      "
+    >
+      <span class="demonstration" v-if="selectedVisualDataItems.length == 1"
+        >快速选择</span
+      >
+      <span class="demonstration" v-else
+        >已选择 {{ selectedVisualDataItemsRange[0] }} -
+        {{ selectedVisualDataItemsRange[1] }}</span
+      >
+      <el-slider
+        v-model="selectedVisualDataItemsRange"
+        range
+        :marks="guideMarks"
+        :max="selectedRes.visualDataItems.length"
+        @change="selectedVisualDataItemsRangeChange"
+      />
+    </div>
+    <el-divider border-style="dashed" />
+    <el-checkbox
+      v-if="selectedVisualDataItems.length >= 1"
+      v-model="setSelectedVisualDataItemsDataSet"
+      label="设置为数据集"
+      title="选中后，将会把所选择要添加的资源打包成一个数据集，添加到实验室中"
+      size="large"
+      style="margin-bottom: 15px"
+    />
+    <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
+    <el-button
+      v-for="(task, index) in task_list"
+      :key="task"
+      @click="addDataToTask(task)"
+      style="margin: 5px"
+    >
+      <el-icon><Monitor /></el-icon> &nbsp;
+      <span v-if="index == 0" style="color: hsl(210, 100%, 40%)">{{
+        task.name
+      }}</span
+      ><span v-else>{{ task.name }}</span></el-button
+    >
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="show_task = false">取消</el-button>
+        <!-- <el-button type="primary" @click="show_task = false">完成</el-button> -->
       </span>
     </template>
   </el-dialog>
@@ -174,7 +241,7 @@ import taskApi from "@/api/user/task";
 import { ElMessageBox, ElMessage } from "element-plus";
 import graphAPI from "@/api/user/graph";
 import DataCenter from "@/components/User/UserFunctionCollection/DataCenter.vue";
-import { Encrypt,Decrypt } from "@/util/codeUtil"
+import { Encrypt, Decrypt } from "@/util/codeUtil";
 import ScienceProblemData from "@/components/User/UserFunctionCollection/ScienceProblemData.vue";
 
 export default {
@@ -390,13 +457,19 @@ export default {
       formData.append("visualType", this.txtInfo.data.visualType);
       formData.append("fileStoreName", this.txtInfo.data.fileStoreName);
       formData.append("id", this.txtInfo.data.id);
-      formData.append("taskId", JSON.parse(Decrypt(localStorage.getItem("task"))).id);
+      formData.append(
+        "taskId",
+        JSON.parse(Decrypt(localStorage.getItem("task"))).id
+      );
       axios
         .post(this.dataServer + "/LabTask/updateLabTxtFile", formData)
         .then((res) => {
           if (res.data.code == 0) {
             console.log(res.data.data);
-            localStorage.setItem("task", Encrypt(JSON.stringify(res.data.data)));
+            localStorage.setItem(
+              "task",
+              Encrypt(JSON.stringify(res.data.data))
+            );
             this.$refs.mapBoxView.updateTxtInfo(res.data.data);
             ElMessage({
               type: "success",

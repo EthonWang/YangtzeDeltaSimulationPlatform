@@ -85,7 +85,7 @@
       </span>
     </template>
   </el-dialog>
-  <el-dialog v-model="show_task" title="添加到实验室" width="30%">
+  <el-dialog v-model="show_task" title="添加数据到实验室" width="30%">
     <h3 style="margin-bottom: 15px">选择要添加的资源</h3>
     <el-scrollbar max-height="35vh">
       <el-checkbox-group

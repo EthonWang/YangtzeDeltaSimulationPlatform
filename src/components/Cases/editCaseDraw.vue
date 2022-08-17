@@ -1,7 +1,9 @@
 <template>
   <el-drawer
       v-model="newCasesVisible"
-      :title="title" width="35%"
+      :title="title" 
+      width="40%"
+      style="width: 40%;"
       destroy-on-close="true"
       @open="showCase"
   >

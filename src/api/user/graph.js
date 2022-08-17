@@ -175,66 +175,66 @@ export default class {
                     let father_name = data.name
                     let lastName = ""
 
-                    for (let j = 0; j < publicData[i].visualDataItems.length; j++) {
+                    // for (let j = 0; j < publicData[i].visualDataItems.length; j++) {
 
-                        data = publicData[i].visualDataItems[j];
-                        // data.name = data.name.split(".")[0];
-                        if (data.name == lastName) {
-                            continue
-                        }
+                    //     data = publicData[i].visualDataItems[j];
+                    //     // data.name = data.name.split(".")[0];
+                    //     if (data.name == lastName) {
+                    //         continue
+                    //     }
 
-                        if (publicData[i].visualDataItems[j].problemTags[0] != "" && publicData[i].visualDataItems[j].problemTags != []) {
-                            publicData[i].visualDataItems[j].problemTags = data.problemTags.split(",");
-                        }
-                        if (publicData[i].visualDataItems[j].normalTags[0] != "" && publicData[i].visualDataItems[j].normalTags != []) {
-                            publicData[i].visualDataItems[j].normalTags = data.normalTags.split(",");
-                        }
+                    //     if (publicData[i].visualDataItems[j].problemTags[0] != "" && publicData[i].visualDataItems[j].problemTags != []) {
+                    //         publicData[i].visualDataItems[j].problemTags = data.problemTags.split(",");
+                    //     }
+                    //     if (publicData[i].visualDataItems[j].normalTags[0] != "" && publicData[i].visualDataItems[j].normalTags != []) {
+                    //         publicData[i].visualDataItems[j].normalTags = data.normalTags.split(",");
+                    //     }
 
 
-                        data['category'] = 0
-                        data['weight'] = 0
-                        data['symbolSize'] = 10
-                        data['value'] = data.description
-                        data['type'] = "data"
-                        let data1 = JSON.parse(JSON.stringify(data))
+                    //     data['category'] = 0
+                    //     data['weight'] = 0
+                    //     data['symbolSize'] = 10
+                    //     data['value'] = data.description
+                    //     data['type'] = "data"
+                    //     let data1 = JSON.parse(JSON.stringify(data))
 
-                        relation.nodes.push(data1);
-                        relation.links.push({
-                            source: data.name,
-                            target: "公开",
-                            relation: "隐私"
-                        });
-                        relation.links.push({
-                            source: data.name,
-                            target: father_name,
-                            relation: "父类"
-                        });
-                        if (data.problemTags.length == 0) {
-                            relation.links.push({
-                                source: data.name,
-                                target: "非面向问题类",
-                                relation: "问题归属"
-                            });
-                        } else {
-                            for (let j in data.problemTags) {
-                                let problem = data.problemTags[j].replace("\n", "");
-                                relation.links.push({
-                                    source: data.name,
-                                    target: problem,
-                                    relation: "问题归属"
-                                });
-                            }
-                            for (let j in data.normalTags) {
-                                let problem = data.normalTags[j].replace("\n", "");
-                                relation.links.push({
-                                    source: data.name,
-                                    target: problem,
-                                    relation: "类别归属"
-                                });
-                            }
-                        }
-                        lastName = data.name
-                    }
+                    //     relation.nodes.push(data1);
+                    //     relation.links.push({
+                    //         source: data.name,
+                    //         target: "公开",
+                    //         relation: "隐私"
+                    //     });
+                    //     relation.links.push({
+                    //         source: data.name,
+                    //         target: father_name,
+                    //         relation: "父类"
+                    //     });
+                    //     if (data.problemTags.length == 0) {
+                    //         relation.links.push({
+                    //             source: data.name,
+                    //             target: "非面向问题类",
+                    //             relation: "问题归属"
+                    //         });
+                    //     } else {
+                    //         for (let j in data.problemTags) {
+                    //             let problem = data.problemTags[j].replace("\n", "");
+                    //             relation.links.push({
+                    //                 source: data.name,
+                    //                 target: problem,
+                    //                 relation: "问题归属"
+                    //             });
+                    //         }
+                    //         for (let j in data.normalTags) {
+                    //             let problem = data.normalTags[j].replace("\n", "");
+                    //             relation.links.push({
+                    //                 source: data.name,
+                    //                 target: problem,
+                    //                 relation: "类别归属"
+                    //             });
+                    //         }
+                    //     }
+                    //     lastName = data.name
+                    // }
                 }
                 for (let i in modelList) {
                     let data = modelList[i];
@@ -321,7 +321,6 @@ export default class {
     initGraph(user_id) {
         return new Promise((resolve, reject) => {
             this.getKnowledgeSorce(user_id).then((res) => {
-                console.log(relation)
                 relation.allInDegreeEdge = []
                 relation.allOutDegreeEdge = []
                 relation.edgeNode = new Array(relation.links.length).fill(-1).map(item => new Array(2).fill(-1))
@@ -350,7 +349,7 @@ export default class {
                     relation.allOutDegreeEdge.push(outEdge)
                     relation.allInDegreeEdge.push(inEdge)
                 }
-
+                console.log('ok');
                 resolve("ok")
             })
         })

@@ -4,20 +4,20 @@
       <el-col :offset="2" :span="4">
         <el-card>
           <template #header>
-            <span style="font-size: 20px;font-weight: 800">专题分类</span>
+            <span style="font-size: 20px; font-weight: 800">专题分类</span>
           </template>
           <el-tree
-              ref="treeRef"
-              :data="modelTreeData"
-              node-key="label"
-              @node-click="handleNodeClick"
-              :default-expand-all="true"
-              :highlight-current="true"
+            ref="treeRef"
+            :data="modelTreeData"
+            node-key="label"
+            @node-click="handleNodeClick"
+            :default-expand-all="true"
+            :highlight-current="true"
           >
             <template class="custom-tree-node" v-slot="{ node, data }">
               <span @click="(checked) => getCurrentNode(checked, data)">{{
-                  node.label
-                }}</span>
+                node.label
+              }}</span>
             </template>
           </el-tree>
         </el-card>
@@ -27,15 +27,15 @@
           <el-row style="align-items: center; justify-content: space-between">
             <h2 class="thematicName">{{ thematicName }}</h2>
             <el-icon
-                :size="60"
-                color="#246abd"
-                style="cursor: pointer; margin-right: 15px"
+              :size="60"
+              color="#246abd"
+              style="cursor: pointer; margin-right: 15px"
             >
               <el-tooltip content="编辑专题" placement="top" effect="light">
                 <Edit @click="editThematic" v-if="isAdmin">编辑专题</Edit>
               </el-tooltip>
               <el-tooltip content="添加案例" placement="top" effect="light">
-                <CirclePlus v-if="isAdmin" @click="newCases"/>
+                <CirclePlus v-if="isAdmin" @click="newCases" />
               </el-tooltip>
             </el-icon>
           </el-row>
@@ -46,46 +46,43 @@
             <h3 class="typeName">相关案例</h3>
             <el-divider></el-divider>
             <div
-                style="
+              style="
                 display: flex;
                 align-items: center;
                 width: 100%;
                 flex-wrap: wrap;
               "
             >
-              <template
-                  v-for="(item, key) in themeCase"
-                  :key="key"
-              >
+              <template v-for="(item, key) in themeCase" :key="key">
                 <div class="caseCard">
                   <div class="caseImageWrap">
                     <el-image
-                        class="caseImage"
-                        @click="toCase(item.path)"
-                        :src="baseUrl + item.thumbnail"
-                        fit="fill"
+                      class="caseImage"
+                      @click="goCaseInfo(item.id)"
+                      :src="baseUrl + item.thumbnail"
+                      fit="fill"
                     ></el-image>
                     <div class="imageMask">
-                      <img :src="mdOpenIcon" class="caseIcon"/>
+                      <img :src="mdOpenIcon" class="caseIcon" />
                       <span>打开案例</span>
                     </div>
                   </div>
                   <div
-                      style="
+                    style="
                       display: flex;
                       justify-content: center;
                       padding: 0.5rem;
                     "
                   >
                     <el-tooltip
-                        effect="dark"
-                        placement="bottom"
-                        content="查看案例详情"
+                      effect="dark"
+                      placement="bottom"
+                      content="查看案例详情"
                     >
                       <h4
-                          class="font-size-1"
-                          style="cursor: pointer"
-                          @click="goCaseInfo(item.id)"
+                        class="font-size-1"
+                        style="cursor: pointer"
+                        @click="goCaseInfo(item.id)"
                       >
                         {{ item.name }}
                       </h4>
@@ -96,12 +93,12 @@
             </div>
             <div class="dataBlock">
               <edit-case-draw
-                  ref="createCaseRef"
-                  title="新增案例"
-                  :editing-case-info="createCases"
-                  @saveCase="saveCase"
-                  @cancelCase ="cancelCase"
-                  theme=""
+                ref="createCaseRef"
+                title="新增案例"
+                :editing-case-info="createCases"
+                @saveCase="saveCase"
+                @cancelCase="cancelCase"
+                theme=""
               >
               </edit-case-draw>
             </div>
@@ -110,7 +107,7 @@
             <h3 class="typeName">相关数据</h3>
             <el-divider></el-divider>
             <div
-                style="
+              style="
                 display: flex;
                 align-items: center;
                 width: 100%;
@@ -121,13 +118,13 @@
                 <div class="caseCard">
                   <div class="caseImageWrap">
                     <el-image
-                        class="caseImage"
-                        @click="startSearch(item.name)"
-                        :src="dataServer + item.imgWebAddress"
-                        fit="fill"
+                      class="caseImage"
+                      @click="startSearch(item.name)"
+                      :src="dataServer + item.imgWebAddress"
+                      fit="fill"
                     ></el-image>
                     <div class="imageMask">
-                      <img :src="mdOpenIcon" class="caseIcon"/>
+                      <img :src="mdOpenIcon" class="caseIcon" />
                       <span>查看数据</span>
                     </div>
                   </div>
@@ -139,14 +136,14 @@
                 </div>
               </template>
             </div>
-            <div class="dataBlock">
+            <div class="dataBlock" v-if="isAdmin">
               请在此处上传与该专题相关的数据
               <el-button
-                  :icon="Plus"
-                  @click="router.push('/user/data')"
-                  size="large"
-                  class="hvr-grow"
-                  plain
+                :icon="Plus"
+                @click="router.push('/user/data')"
+                size="large"
+                class="hvr-grow"
+                plain
               ></el-button>
             </div>
           </div>
@@ -155,19 +152,18 @@
             <el-divider></el-divider>
             <div class="descriptionBlock">
               <template
-                  v-for="(item, key) in thematicItem.description"
-                  :key="key"
+                v-for="(item, key) in thematicItem.description"
+                :key="key"
               >
                 <p v-if="item.type == 'text'" class="descriptionText">
                   {{ item.value }}
                 </p>
 
-                  <el-image
-                      class="imageBlock"
-                      v-if="item.type == 'image'"
-                      :src="baseUrl + item.value"
-                  ></el-image>
-
+                <el-image
+                  class="imageBlock"
+                  v-if="item.type == 'image'"
+                  :src="baseUrl + item.value"
+                ></el-image>
               </template>
             </div>
           </div>
@@ -176,39 +172,33 @@
       </el-col>
     </el-row>
     <el-drawer
-        v-model="editDialogVisible"
-        title="编辑问题信息"
-        width="50%"
-        @close="editDialogClose"
-        draggable
+      v-model="editDialogVisible"
+      title="编辑问题信息"
+      width="50%"
+      @close="editDialogClose"
+      draggable
     >
       <el-divider>问题简介</el-divider>
       <el-row class="editDialogRow"
-      ><span>问题名称:</span
-      >
-        <el-col :span="20" :offset="1"
-        >
+        ><span>问题名称:</span>
+        <el-col :span="20" :offset="1">
           <el-input disabled :placeholder="thematicName"></el-input>
-        </el-col
-        >
+        </el-col>
       </el-row>
       <el-row class="editDialogRow"
-      ><span>问题简介:</span
-      >
-        <el-col :span="20" :offset="1"
-        >
+        ><span>问题简介:</span>
+        <el-col :span="20" :offset="1">
           <el-input
-              v-model="editThemeItem.introduction"
-              type="textarea"
-              placeholder="请输入问题简介"
-              :autosize="{ minRows: 2, maxRows: 4 }"
+            v-model="editThemeItem.introduction"
+            type="textarea"
+            placeholder="请输入问题简介"
+            :autosize="{ minRows: 2, maxRows: 4 }"
           ></el-input>
-        </el-col
-        >
+        </el-col>
       </el-row>
       <el-divider>相关案例</el-divider>
       <div
-          style="
+        style="
           display: flex;
           align-items: center;
           flex-wrap: wrap;
@@ -216,120 +206,153 @@
         "
       >
         <template v-for="(item, key) in relatedCases" :key="key">
-          <el-card :body-style="{ padding: '0px' }" style="margin-left: 10px;margin-bottom: 10px">
+          <el-card
+            :body-style="{ padding: '0px' }"
+            style="margin-left: 10px; margin-bottom: 10px"
+          >
             <el-image
-                class="caseImage"
-                :src="baseUrl + item.thumbnail"
-                fit="fill"
+              class="caseImage"
+              :src="baseUrl + item.thumbnail"
+              fit="fill"
             ></el-image>
-              <div style="display: flex;padding: 0 10px 10px 10px;flex-direction: column;align-items: center">
-                <p style="line-height: 2;font-weight: bold;font-size: 0.6em">{{ item.name }}</p>
-                <el-button style="width: 100%" size="small" @click="removeCases(key)">移除
-                </el-button>
-              </div>
+            <div
+              style="
+                display: flex;
+                padding: 0 10px 10px 10px;
+                flex-direction: column;
+                align-items: center;
+              "
+            >
+              <p style="line-height: 2; font-weight: bold; font-size: 0.6em">
+                {{ item.name }}
+              </p>
+              <el-button
+                style="width: 100%"
+                size="small"
+                @click="removeCases(key)"
+                >移除
+              </el-button>
+            </div>
           </el-card>
         </template>
       </div>
       <el-row style="justify-content: center; margin-bottom: 10px">
-        <el-button :icon="Plus" size="large" @click="showAllCases" plain>显示所有案例</el-button>
+        <el-button :icon="Plus" size="large" @click="showAllCases" plain
+          >显示所有案例</el-button
+        >
       </el-row>
-      <el-table v-show="allCasesVisible" :data="tableData" table-layout="auto" style="width: 100%" max-height="300">
+      <el-table
+        v-show="allCasesVisible"
+        :data="tableData"
+        table-layout="auto"
+        style="width: 100%"
+        max-height="300"
+      >
         <el-table-column prop="name" label="案例名称" />
-        <el-table-column prop="path" label="path"  />
-        <el-table-column prop="thumbnail" label="缩略图"  width="80">
+        <el-table-column prop="path" label="path" />
+        <el-table-column prop="thumbnail" label="缩略图" width="80">
           <template #default="scope">
-              <el-image style="width: 100%" :src="baseUrl+scope.row.thumbnail" :preview-src-list="[baseUrl+scope.row.thumbnail]"/>
+            <el-image
+              style="width: 100%"
+              :src="baseUrl + scope.row.thumbnail"
+              :preview-src-list="[baseUrl + scope.row.thumbnail]"
+            />
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="创建时间" width="200" />
         <el-table-column label="操作" width="250" fixed="right">
-          <template #default="scope" >
-            <el-button  type="primary" size="small" @click="addToTheme(scope.row)">添加到专题</el-button>
-            <el-button  type="warning" size="small" @click="deleteCases(scope.row.id)">删除此案例</el-button>
+          <template #default="scope">
+            <el-button
+              type="primary"
+              size="small"
+              @click="addToTheme(scope.row)"
+              >添加到专题</el-button
+            >
+            <el-button
+              type="warning"
+              size="small"
+              @click="deleteCases(scope.row.id)"
+              >删除此案例</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
       <el-divider>问题描述</el-divider>
       <el-row style="justify-content: space-around; margin-bottom: 10px">
         <el-button
-            :icon="Plus"
-            size="large"
-            @click="newDescription('text')"
-            plain
-        >添加文字描述
-        </el-button
-        >
+          :icon="Plus"
+          size="large"
+          @click="newDescription('text')"
+          plain
+          >添加文字描述
+        </el-button>
         <el-button
-            :icon="Plus"
-            size="large"
-            @click="newDescription('image')"
-            plain
-        >添加图片描述
-        </el-button
-        >
+          :icon="Plus"
+          size="large"
+          @click="newDescription('image')"
+          plain
+          >添加图片描述
+        </el-button>
       </el-row>
       <template v-for="(item, key) in description" :key="key">
         <el-row v-if="item.type == 'text'" class="editDialogRow">
           <span>问题描述:</span>
           <el-col :span="20" :offset="1" style="align-items: center">
             <el-input
-                style="width: 90%"
-                v-model="item.value"
-                type="textarea"
-                placeholder="请输入问题描述"
-                :autosize="{ minRows: 2, maxRows: 4 }"
+              style="width: 90%"
+              v-model="item.value"
+              type="textarea"
+              placeholder="请输入问题描述"
+              :autosize="{ minRows: 2, maxRows: 4 }"
             ></el-input>
             <el-icon
-                style="cursor: pointer; margin-left: 2%"
-                @click="deleteDescription('text', key)"
-                :size="20"
+              style="cursor: pointer; margin-left: 2%"
+              @click="deleteDescription('text', key)"
+              :size="20"
             >
-              <Delete
-              />
+              <Delete />
             </el-icon>
           </el-col>
         </el-row>
         <el-row v-if="item.type == 'image'" class="editDialogRow">
           <span>相关图片:</span>
           <el-col
-              style="display: flex; flex-direction: row"
-              :span="20"
-              :offset="1"
+            style="display: flex; flex-direction: row"
+            :span="20"
+            :offset="1"
           >
             <el-input
-                placeholder="请上传案例缩略图"
-                v-model="item.imageName"
-                style="width: 94%"
+              placeholder="请上传案例缩略图"
+              v-model="item.imageName"
+              style="width: 94%"
             ></el-input>
             <el-upload
-                ref="upload"
-                class="upload-demo"
-                :action="baseUrl+'/uploadThemeImg'"
-                :limit="1"
-                method="post"
-                :on-success="uploadDescImg"
-                :on-exceed="handleExceed"
-                :auto-upload="true"
-                :show-file-list="false"
+              ref="upload"
+              class="upload-demo"
+              :action="baseUrl + '/uploadThemeImg'"
+              :limit="1"
+              method="post"
+              :on-success="uploadDescImg"
+              :on-exceed="handleExceed"
+              :auto-upload="true"
+              :show-file-list="false"
             >
               <template #trigger>
                 <el-button
-                    :icon="Upload"
-                    @click="addImage(key)"
-                    type="success"
-                    plain
-                >上传图片
-                </el-button
-                >
+                  :icon="Upload"
+                  @click="addImage(key)"
+                  type="success"
+                  plain
+                  >上传图片
+                </el-button>
               </template>
             </el-upload>
             <el-icon
-                style="cursor: pointer; margin-left: 2%"
-                @click="deleteDescription('image', key)"
-                :size="20"
+              style="cursor: pointer; margin-left: 2%"
+              @click="deleteDescription('image', key)"
+              :size="20"
             >
-              <Delete
-              />
+              <Delete />
             </el-icon>
           </el-col>
         </el-row>
@@ -345,8 +368,8 @@
 </template>
 
 <script setup>
-import {ref, onMounted} from "vue";
-import {useStore} from "vuex";
+import { ref, onMounted } from "vue";
+import { useStore } from "vuex";
 import {
   Plus,
   Edit,
@@ -355,24 +378,32 @@ import {
   Select,
   CirclePlus,
 } from "@element-plus/icons-vue";
-import {ElNotification, ElMessageBox, ElMessage} from "element-plus";
-import {useRouter} from "vue-router";
+import { ElNotification, ElMessageBox, ElMessage } from "element-plus";
+import { useRouter } from "vue-router";
 import axios from "axios";
-import {post ,get} from "@/request/request_backup";
+import { post, get } from "@/request/request_backup";
 import EditCaseDraw from "components/Cases/editCaseDraw";
-import { Encrypt,Decrypt } from "@/util/codeUtil"
+import { Encrypt, Decrypt } from "@/util/codeUtil";
 
 const router = useRouter();
 const store = useStore();
 const dataServer = store.getters.devIpAddress;
 const baseUrl = store.state.devBackIp;
-const user_info = JSON.parse(Decrypt(localStorage.getItem("userInfo")));
-const isAdmin=ref(user_info.email=="opengms@126.com")
+const isAdmin = ref(false);
+
+let user_info = localStorage.getItem("userInfo");
+if (user_info) {
+  user_info = JSON.parse(Decrypt(user_info));
+  if (user_info.email == "opengms@126.com") {
+    isAdmin.value = true;
+  }
+}
+
 const mdOpenIcon = require("@/assets/img/icon/md-open.png");
 
 onMounted(() => {
   thematicName.value = "流域生态环境演变";
-  getThemeInfo("流域生态环境演变","流域水循环及其驱动机制");
+  getThemeInfo("流域生态环境演变", "流域水循环及其驱动机制");
 });
 
 const modelTreeData = ref([]);
@@ -480,60 +511,60 @@ modelTreeData.value = [
   },
 ];
 
-const tableData = ref([])
+const tableData = ref([]);
 const getAllCases = () => {
   tableData.value = [];
-  get('/case/getAllCase').then(res=>{
-    res.data.data.map(item=>{
+  get("/case/getAllCase").then((res) => {
+    res.data.data.map((item) => {
       tableData.value.push({
-        name:item.name,
-        path:item.path,
-        createTime:item.createTime,
-        id:item.id,
-        thumbnail:item.thumbnail
-      })
-    })
-  })
-}
+        name: item.name,
+        path: item.path,
+        createTime: item.createTime,
+        id: item.id,
+        thumbnail: item.thumbnail,
+      });
+    });
+  });
+};
 //添加案例到专题
 const addToTheme = (row) => {
   relatedCases.value.push({
-    name:row.name,
-    path:row.path,
-    thumbnail:row.thumbnail,
-    id:row.id
-  })
-}
+    name: row.name,
+    path: row.path,
+    thumbnail: row.thumbnail,
+    id: row.id,
+  });
+};
 const deleteCases = (id) => {
-  get('/case/deleteCaseById/'+id).then(res=>{
+  get("/case/deleteCaseById/" + id).then((res) => {
     ElNotification({
-      message: '案例已从数据库中删除！',
+      message: "案例已从数据库中删除！",
       type: "success",
     });
     //删除案例后获取更新后的案例列表
     getAllCases();
-  })
-}
+  });
+};
 
 //新增案例
 const createCaseRef = ref();
-const createCases = ref({})
+const createCases = ref({});
 const newCases = () => {
   createCaseRef.value.showCase();
-  createCases.value ={
-    name:"",
-    path:"",
-    thumbnail:"",
-    description:[],
+  createCases.value = {
+    name: "",
+    path: "",
+    thumbnail: "",
+    description: [],
     caseAuthor: [],
-    theme:"",
-    dataList:[]
+    theme: "",
+    dataList: [],
   };
-}
+};
 const saveCase = (data) => {
-  if(data.name != ""){
-    post('/case/createCase',data).then(res=>{
-      if(res.msg == 'Success'){
+  if (data.name != "") {
+    post("/case/createCase", data).then((res) => {
+      if (res.msg == "Success") {
         ElNotification({
           message: res.data,
           type: "success",
@@ -541,14 +572,14 @@ const saveCase = (data) => {
         });
       }
       cancelCase();
-    })
-  }else {
-    alert("请输入案例名称！")
+    });
+  } else {
+    alert("请输入案例名称！");
   }
-}
+};
 const cancelCase = () => {
   createCaseRef.value.cancelCase();
-}
+};
 
 const thematicName = ref("");
 const thematicItem = ref({});
@@ -556,16 +587,15 @@ const editThemeItem = ref({});
 const relatedData = ref([]);
 
 const startSearch = function (searchValue) {
-  if(user_info==null||user_info==undefined){
-    ElMessage('请登录')
-    router.push('/login')
-  }else{
+  if (user_info == null || user_info == undefined) {
+    ElMessage("请登录");
+    router.push("/login");
+  } else {
     router.push({
-    path: "/resourse",
-    query: {searchValue},
-  });
+      path: "/resourse",
+      query: { searchValue },
+    });
   }
-  
 };
 
 let tagClass = "problemTags";
@@ -574,7 +604,7 @@ const getThemeInfo = (thematicName, tagName) => {
     let themeInfo = res.data.data;
     if (themeInfo != null) {
       thematicItem.value = themeInfo;
-      getCaseById(themeInfo.relatedCases)
+      getCaseById(themeInfo.relatedCases);
     } else {
       thematicItem.value = {};
       relatedCases.value = [];
@@ -601,42 +631,42 @@ const getThemeInfo = (thematicName, tagName) => {
     dataType: "json",
     data: DTO,
   }).then(
-      (res) => {
-        relatedData.value = res.data.data.content;
-      },
-      (err) => {
-        console.log(err);
-      }
+    (res) => {
+      relatedData.value = res.data.data.content;
+    },
+    (err) => {
+      console.log(err);
+    }
   );
 };
 
-const themeCase = ref([])
+const themeCase = ref([]);
 const getCaseById = (idList) => {
-  themeCase.value = []
+  themeCase.value = [];
   let body = {
-    ids:idList
-  }
-  post("/getCasesInfo",body).then(res=>{
+    ids: idList,
+  };
+  post("/getCasesInfo", body).then((res) => {
     let caseResult = res.data;
-    caseResult.map(item=>{
+    caseResult.map((item) => {
       themeCase.value.push({
-        name:item.name,
-        path:item.path,
-        thumbnail:item.thumbnail,
-        id:item.id
-      })
-    })
-  })
-}
+        name: item.name,
+        path: item.path,
+        thumbnail: item.thumbnail,
+        id: item.id,
+      });
+    });
+  });
+};
 const toCase = (path) => {
   router.push("/case/" + path + "/");
 };
 const goCaseInfo = (id) => {
   router.push({
-    path:"/caseinfo/",
-    query:{
-      caseId:id
-    }
+    path: "/caseinfo/",
+    query: {
+      caseId: id,
+    },
   });
 };
 const editDialogVisible = ref(false);
@@ -663,28 +693,28 @@ const relatedCases = ref([]);
 
 const removeCases = (key) => {
   ElMessageBox.confirm("确认移除此案例吗？")
-      .then(() => {
-        relatedCases.value.splice(key, 1);
-        ElMessage({
-          type: "success",
-          message: "案例已移除！",
-        });
-      })
-      .catch(() => {
-        ElMessage({
-          type: "info",
-          message: "取消移除！",
-        });
+    .then(() => {
+      relatedCases.value.splice(key, 1);
+      ElMessage({
+        type: "success",
+        message: "案例已移除！",
       });
+    })
+    .catch(() => {
+      ElMessage({
+        type: "info",
+        message: "取消移除！",
+      });
+    });
 };
-const allCasesVisible = ref(false)
+const allCasesVisible = ref(false);
 const showAllCases = () => {
   getAllCases();
-  allCasesVisible.value = true
+  allCasesVisible.value = true;
 };
 const editDialogClose = () => {
   allCasesVisible.value = false;
-}
+};
 
 const description = ref([]);
 const newDescription = (type) => {
@@ -742,7 +772,7 @@ const saveToServer = (bodyData, successMessage) => {
         duration: 10000,
       });
       thematicItem.value = bodyData;
-      getCaseById(bodyData.relatedCases)
+      getCaseById(bodyData.relatedCases);
     }
   });
 };
@@ -767,7 +797,7 @@ const handleNodeClick = (node, node2) => {
   if (node.type == "subProblem") {
     tagName = node2.parent.data.label;
     thematicName.value = node.label;
-    localStorage.setItem('show_themetic',Encrypt(node.label))
+    localStorage.setItem("show_themetic", Encrypt(node.label));
     getThemeInfo(node.label, tagName);
   } else {
     console.log("problem", node);
@@ -779,15 +809,15 @@ allThematic.value = [
   {
     name: "流域生态环境演变",
     introduction:
-        "随着生态环境问题的日益突出,流域生态环境演变研究成为生态环境研究领域的热点。流域生态环境由流域生物群落及非生物自然因素组成的各种生态系统所构成的整体，" +
-        "是“对人类生存和发展有影响的流域中自然因子的综合”。在自然因素与人为因素的共同作用下，生态环境以不同的时间尺度在发展演变。",
+      "随着生态环境问题的日益突出,流域生态环境演变研究成为生态环境研究领域的热点。流域生态环境由流域生物群落及非生物自然因素组成的各种生态系统所构成的整体，" +
+      "是“对人类生存和发展有影响的流域中自然因子的综合”。在自然因素与人为因素的共同作用下，生态环境以不同的时间尺度在发展演变。",
     relatedCases: [
       {
         name: "SWMM",
         path: "SWMM",
         thumbnail: "/img/swmm.2f8c8c5d.png",
         description:
-            "SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。",
+          "SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。",
       },
       {
         name: "长三角降雨预报专题",
@@ -809,14 +839,14 @@ allThematic.value = [
       {
         type: "image",
         value:
-            "/img/%E6%B5%81%E   5%9F%9F%E7%94%9F%E6%80%81%E7%8E%AF%E5%A2%83%E6%BC%94%E5%8F%98.ed4630ac.png",
+          "/img/%E6%B5%81%E   5%9F%9F%E7%94%9F%E6%80%81%E7%8E%AF%E5%A2%83%E6%BC%94%E5%8F%98.ed4630ac.png",
       },
     ],
   },
   {
     name: "流域碳水耦合循环",
     introduction:
-        " 在气候变化背景下,人类和流域生态系统的水平衡及碳平衡已成为首要环境问题。气候变化深刻影响到碳水循环多过程及其多向反馈作用机制,进一步加剧水资源供需矛盾,导致生态系统的碳捕获能力降低。流域碳水循环的研究能够为水资源与生态环境保护规划提供直接支持,还能够为大型水利工程提供依据,具有较为显著的实践意义。",
+      " 在气候变化背景下,人类和流域生态系统的水平衡及碳平衡已成为首要环境问题。气候变化深刻影响到碳水循环多过程及其多向反馈作用机制,进一步加剧水资源供需矛盾,导致生态系统的碳捕获能力降低。流域碳水循环的研究能够为水资源与生态环境保护规划提供直接支持,还能够为大型水利工程提供依据,具有较为显著的实践意义。",
     relatedCases: [
       {
         label: "地质灾害",
@@ -843,21 +873,24 @@ allThematic.value = [
     ],
   },
 ];
-const findParentName=(childName)=>{
-  for(let i in allThematic.value){
-    let parent = allThematic.value[i].label
-    for(let j in allThematic.value[i].children){
-      if(allThematic.value[i].children[j].label==childName){
-        return parent
+const findParentName = (childName) => {
+  for (let i in allThematic.value) {
+    let parent = allThematic.value[i].label;
+    for (let j in allThematic.value[i].children) {
+      if (allThematic.value[i].children[j].label == childName) {
+        return parent;
       }
     }
   }
-  return "流域水循环及其驱动机制"
-}
+  return "流域水循环及其驱动机制";
+};
 setTimeout(() => {
-  const show_name = Decrypt(localStorage.getItem("show_themetic"));
-  thematicName.value = show_name.replace("\n", "");
-  getThemeInfo(show_name,findParentName(show_name));
+  let show_name = localStorage.getItem("show_themetic");
+  if (show_name) {
+    show_name = Decrypt(show_name);
+    thematicName.value = show_name.replace("\n", "");
+    getThemeInfo(show_name, findParentName(show_name));
+  }
 }, 600);
 </script>
 
@@ -868,20 +901,19 @@ setTimeout(() => {
   overflow: scroll;
 }
 @imageHeight: 100px;
-@imageWidth:160px;
+@imageWidth: 160px;
 .caseImageWrap {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   position: relative;
- 
+
   height: @imageHeight;
   width: @imageWidth;
   cursor: pointer;
 }
 
 .caseImage {
- 
   height: @imageHeight;
   width: @imageWidth;
   border-bottom: 1px solid lightgray;
@@ -919,10 +951,10 @@ setTimeout(() => {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.cardText{
+.cardText {
   padding: 0.5rem;
   text-align: center;
-  width:160px;
+  width: 160px;
 }
 
 .caseCard {

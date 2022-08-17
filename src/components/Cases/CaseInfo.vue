@@ -80,11 +80,12 @@
             <div class="descriptionText" v-else>暂无资料</div>
           </template>
           <div class="descriptionText" v-else>暂无资料</div>
+          <div style="margin: 50px;"></div>
         </div>
       </el-col>
       <el-col :span="4" :offset="1">
         <div class="rightBox1">
-          <div><el-button @click="router.go(-1)" class="rightButton hvr-shutter-out-horizontal" plain><ArrowLeft style="width: 1em"/>&nbsp;<span>返回专题</span></el-button></div>
+          <div><el-button @click="router.push('/themetic')" class="rightButton hvr-shutter-out-horizontal" plain><ArrowLeft style="width: 1em"/>&nbsp;<span>返回专题</span></el-button></div>
           <div><el-button  class="rightButton hvr-shutter-out-horizontal" @click="toCase(caseInfo.path)" plain><View style="width: 1em"/>&nbsp;<span>查看案例</span></el-button></div>
            <div><el-button @click="openInLab()" class="rightButton hvr-shutter-out-horizontal" plain><DataLine style="width: 1em"/>&nbsp;<span>在实验室中打开</span></el-button></div>
           <div><el-button v-if="isAdmin" class="rightButton hvr-shutter-out-horizontal" @click="editCases" plain><Setting style="width: 1em"/>&nbsp;<span>编辑案例</span></el-button></div>
@@ -98,7 +99,8 @@
           ></edit-case-draw>
         </div>
         <div>
-          <h3 class="authorInfo">作者</h3>
+          <h3 class="authorInfo">版权信息</h3>
+          <el-divider style="margin: 18px 0 6px 0;"></el-divider>
           <template v-if="caseInfo.caseAuthor.length != 0">
             <template v-for="(item,key) in caseInfo.caseAuthor" :key="key">
               <p class="font-size-1">
@@ -110,6 +112,7 @@
               <p  class="font-size-1">
                 作者邮箱：{{item.email}}
               </p>
+              <el-divider style="margin: 22px 0 6px 0;"></el-divider>
             </template>
           </template>
           <p v-else class="font-size-1">暂无作者信息</p>
@@ -135,8 +138,14 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 const task_api=new taskAPI()
-const user_info=JSON.parse(Decrypt(localStorage.getItem('userInfo')))
-const isAdmin=ref(user_info.email=="opengms@126.com")
+const isAdmin=ref(false)
+let user_info=localStorage.getItem('userInfo')
+if(user_info){
+  user_info=JSON.parse(Decrypt(user_info))
+  isAdmin.value=(user_info.email=="opengms@126.com")
+}
+
+
 const mdOpenIcon = require("@/assets/img/icon/md-open.png")
 const toCase = (path) => {
   router.push("/case/" + path + "/");
@@ -193,10 +202,17 @@ const getResourceDataById = (idList) => {
 }
 //根据数据名称查询数据
 const startSearch = function (searchValue) {
-  router.push({
+  if (user_info) {
+    router.push({
     path: "/resourse",
     query: {searchValue},
   });
+  }else{
+    ElMessage('请您先登录')
+    localStorage.setItem("toLast",Encrypt(route.path))
+    router.push('/login')
+  }
+  
 };
 caseInfo.value = {
   name:"暂无案例",
@@ -254,7 +270,8 @@ const openInLab=()=>{
   top: 65px;
   background-color: white;
   overflow: scroll;
-  margin-bottom: 70px;
+  height: calc(100vh - 65px);
+  margin-bottom: 65px;
 }
 .case-name{
   font-size: 1.8rem;
@@ -380,6 +397,7 @@ const openInLab=()=>{
   margin: 0 0 25px 0;
   letter-spacing: 2px;
   color: #0c7dd8;
+  font-size: 1rem;
 }
 .typeName {
   animation: tracking-in-expand 0.7s cubic-bezier(0.215, 0.61, 0.355, 1) both;
@@ -414,7 +432,7 @@ const openInLab=()=>{
   font-size: 1.2rem;
 }
 .imageBlock {
-  width: 16vw;
+  width: 75%;
   margin-top: 15px;
   margin-bottom: 15px;
   animation: scale-in-center 0.5s both;

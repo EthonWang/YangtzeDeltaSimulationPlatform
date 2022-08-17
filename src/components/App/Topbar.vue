@@ -79,20 +79,19 @@ import graphAPI from "@/api/user/graph";
 import { userAvatar } from "@/assets/user/scienceChoose";
 import { useStore } from "vuex";
 import { Encrypt, Decrypt } from "@/util/codeUtil";
+import { ElLoading } from "element-plus";
 
 const graphapi = new graphAPI();
 const store = useStore();
 const devServer = ref(store.getters.devIpAddress_backup);
 let user_info = localStorage.getItem("userInfo");
 if (user_info != null && user_info != undefined) {
-  user_info=JSON.parse(Decrypt(user_info))
+  user_info = JSON.parse(Decrypt(user_info));
   userAvatar.value = user_info.avatar;
   graphapi.initGraph(user_info.id).then((res) => {
     console.log(res);
   });
 }
-
-
 
 const props = defineProps({
   background_show: ref(Boolean),
@@ -153,12 +152,20 @@ watch(
           }
         }
       }, 201);
-      let fromHome = Decrypt(localStorage.getItem("fromHome"));
-      if (fromHome == "true") {
-        setTimeout(() => {
-          localStorage.setItem("fromHome", Encrypt("false"));
-          location.reload();
-        }, 700);
+      let fromHome = localStorage.getItem("fromHome");
+      if (fromHome != null && fromHome != undefined) {
+        fromHome = Decrypt(fromHome);
+        if (fromHome == "true") {
+          let loading = ElLoading.service({
+            lock: true,
+            text: "清理缓存中...",
+            background: "rgba(0, 0, 0, 0.7)",
+          });
+          setTimeout(() => {
+            localStorage.setItem("fromHome", Encrypt("false"));
+            location.reload();
+          }, 700);
+        }
       }
     }
   }
@@ -215,7 +222,7 @@ setTimeout(searchIndexInRoutes, 100);
   // margin-top: 1vh;
   cursor: pointer;
   transition: all 1s;
-  &:hover{
+  &:hover {
     filter: brightness(1.75);
   }
 }

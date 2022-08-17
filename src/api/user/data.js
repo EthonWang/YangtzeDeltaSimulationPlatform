@@ -73,4 +73,7 @@ export default class {
     sendXMLToContainer(configFile) {
         return post('/model/upXMLToDataContainer', configFile)
     }
+    getAllPublicFile(){
+        return get('/resource/getPublicFile')
+    }
 }

@@ -17,7 +17,9 @@
         <el-button type="primary" @click="createFolder()"
           ><el-icon><folder-add /></el-icon>&nbsp;新建文件夹</el-button
         >
-
+        <el-button type="primary" @click="changePublicState()"
+          ><el-icon><folder-add /></el-icon>&nbsp;公共数据</el-button
+        >
         <el-breadcrumb :separator-icon="ArrowRight" style="margin-left: 2%">
           <el-breadcrumb-item v-for="item in breadcrumbs" :key="item">{{
             item
@@ -179,13 +181,14 @@ import { relation, initRelation } from "@/assets/data/another/relation";
 import FileItem from "./FileItem.vue";
 import { scienceChoose } from "@/assets/user/scienceChoose";
 import { ElLoading } from "element-plus";
-import { Encrypt,Decrypt } from "@/util/codeUtil"
+import { Encrypt, Decrypt } from "@/util/codeUtil";
 
 const userInfo = JSON.parse(Decrypt(localStorage.getItem("userInfo")));
 const task_api = new taskApi();
 const show_task = ref(false);
 const task_list = ref([]);
 const route = useRoute();
+const publicState = ref(false);
 
 // 判断是否在实验室
 const isInLab = ref(false);
@@ -194,7 +197,7 @@ let routeSplit = route.path.split("/");
 if (routeSplit[routeSplit.length - 1] == "") {
   routeSplit.splice(routeSplit.length - 1, 1);
 }
-if (routeSplit[routeSplit.length - 1] == 'model') {
+if (routeSplit[routeSplit.length - 1] == "model") {
   isInLab.value = true;
 }
 const upload_header = { token: Decrypt(localStorage.getItem("token")) };
@@ -208,34 +211,29 @@ const fileList = ref([]);
 // 判断是否在实验室，是的话直接加入当前实验室
 const addToTask = () => {
   if (isInLab.value) {
+    let loading = ElLoading.service({
+      lock: true,
+      text: "Loading",
+      background: "rgba(0, 0, 0, 0.7)",
+    });
     addDataToTask(nowTask.value);
+    setTimeout(() => {
+      loading.close();
+      location.reload();
+    }, 1000);
   } else {
     show_task.value = true;
   }
 };
-const nowTask = ref(JSON.parse(Decrypt(localStorage.getItem("task"))));
+let nowTask = ref(localStorage.getItem("task"));
+if (nowTask.value) {
+  nowTask.value = JSON.parse(Decrypt(nowTask.value));
+}
+
 const addDataToTask = (task) => {
-  let loading = ElLoading.service({
-    lock: true,
-    text: "Loading",
-    background: "rgba(0, 0, 0, 0.7)",
-  });
   let dataList = [];
   for (let i in choosing_files) {
     if (choosing_files[i].type != "folder") {
-      // let data = {
-      //   name: choosing_files[i].name,
-      //   id: choosing_files[i].id,
-      //   source: "cloud",
-      //   type: "data",
-      //   visualizationBoolean: false,
-      //   visualWebAddress: choosing_files[i].visualWebAddress,
-      //   visualType: choosing_files[i].name.split(".")[1],
-      //   geoType: "line",
-      //   fileRelativePath: choosing_files[i].fileRelativePath,
-      //   fileWebAddress: choosing_files[i].fileWebAddress,
-      //   fileStoreName: choosing_files[i].fileStoreName,
-      // };
       let data = choosing_files[i];
       data["source"] = "cloud";
       data["type"] = "data";
@@ -245,19 +243,17 @@ const addDataToTask = (task) => {
       dataList.push(data);
     }
   }
-  ElMessage({
-    type: "success",
-    message: "成功加入实验室",
-  });
+  console.log(task);
   for (let i in dataList) {
     task.dataList.push(dataList[i]);
   }
+  console.log(task);
   task_api.editTask(task).then((res) => {
     localStorage.setItem("task", Encrypt(JSON.stringify(task)));
-    setTimeout(() => {
-      loading.close();
-      location.reload();
-    }, 200);
+    ElMessage({
+      type: "success",
+      message: "成功加入实验室",
+    });
   });
   show_task.value = false;
 };
@@ -311,16 +307,14 @@ watch(
   (newval, oldval) => {
     file_data_choose.value = file_data.value.filter((item) => {
       if (item.problemTags == "" || item.problemTags == []) {
-        
         if (newval.includes("未分类")) {
           return item;
         }
       } else {
         for (let i = 0; i < item.problemTags.length; i++) {
           const el = item.problemTags[i];
-          
+
           if (scienceChoose.value.includes(el)) {
-           
             return item;
           }
         }
@@ -340,15 +334,13 @@ watch(
       } else {
         for (let i = 0; i < item.problemTags.length; i++) {
           const el = item.problemTags[i];
-          
+
           if (scienceChoose.value.includes(el)) {
-            
             return item;
           }
         }
       }
     });
- 
   }
 );
 const breadcrumbs = reactive(["/ 根目录"]);
@@ -443,36 +435,46 @@ const uploadFile = (file_artribute, file_data) => {
   });
 };
 
-const refresh = () => {
-  api.getFile(now_id.value).then((res) => {
-    console.log(res.data[0]);
-    for (let i in res.data) {
-      let data = JSON.parse(JSON.stringify(res.data[i]));
-      data.name = data.name.split(".")[0];
-      if (res.data[i].problemTags[0] != "" && res.data[i].problemTags != []) {
-        res.data[i].problemTags = data.problemTags.split(",");
-        for (let j = 0; j < res.data[i].problemTags.length; j++) {
-          res.data[i].problemTags[j] = res.data[i].problemTags[j].replace(
-            "\n",
-            ""
-          );
-          res.data[i].problemTags[j] = res.data[i].problemTags[j].replace(
-            "\r",
-            ""
-          );
-        }
+const tackleData = (res) => {
+  console.log(res);
+  for (let i in res.data) {
+    let data = JSON.parse(JSON.stringify(res.data[i]));
+    data.name = data.name.split(".")[0];
+    if (res.data[i].problemTags[0] != "" && res.data[i].problemTags != []) {
+      res.data[i].problemTags = data.problemTags.split(",");
+      for (let j = 0; j < res.data[i].problemTags.length; j++) {
+        res.data[i].problemTags[j] = res.data[i].problemTags[j].replace(
+          "\n",
+          ""
+        );
+        res.data[i].problemTags[j] = res.data[i].problemTags[j].replace(
+          "\r",
+          ""
+        );
       }
     }
-    file_data.value = res.data;
-    console.log("file data is :", file_data.value);
-    choose_num.value = 0;
-    choosing_files = [];
-    choosing_files_index = [];
-    ElMessage({
-      type: "success",
-      message: "成功",
-    });
+  }
+  file_data.value = res.data;
+  console.log("file data is :", file_data.value);
+  choose_num.value = 0;
+  choosing_files = [];
+  choosing_files_index = [];
+  ElMessage({
+    type: "success",
+    message: "成功",
   });
+};
+
+const refresh = () => {
+  if (publicState.value) {
+    api.getAllPublicFile().then((res) => {
+      tackleData(res);
+    });
+  } else {
+    api.getFile(now_id.value).then((res) => {
+      tackleData(res);
+    });
+  }
 };
 const comeIn = (file) => {
   last_id.push(now_id.value);
@@ -491,12 +493,11 @@ const back = () => {
 
 const confirmChange = (type, index) => {};
 const downloadData = () => {
- 
   let i = 0;
   //注意：循环请求后台用这个而非for循环
   let downloadInterval = setInterval(() => {
     let file = choosing_files[i];
- 
+
     if (file.type == "folder") {
       ElMessage.error("请选择文件而非文件夹");
     } else {
@@ -571,6 +572,10 @@ const deleteData = () => {
       }
     });
   }
+};
+const changePublicState = () => {
+  publicState.value = !publicState.value;
+  refresh();
 };
 </script>
 

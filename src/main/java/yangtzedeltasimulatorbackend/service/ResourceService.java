@@ -5,6 +5,7 @@ import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ZipUtil;
 import com.alibaba.fastjson.JSONObject;
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import yangtzedeltasimulatorbackend.entity.dto.resource.CreateResourceModelDTO;
 import yangtzedeltasimulatorbackend.entity.dto.resource.CreateResourceSmallFileDTO;
 import yangtzedeltasimulatorbackend.entity.dto.resource.ResourcePageDTO;
 import yangtzedeltasimulatorbackend.entity.po.*;
+import yangtzedeltasimulatorbackend.utils.*;
 import yangtzedeltasimulatorbackend.utils.FileUtils;
 import yangtzedeltasimulatorbackend.utils.GeoServerUtils;
 import yangtzedeltasimulatorbackend.utils.ResultUtils;
@@ -111,9 +113,11 @@ public class ResourceService {
                 }
                 //解压成功后把压缩包给删了
 //                FileUtils.deleteFile(basePath + "/" + workName + "." + suffix);
+                String publish_1st = "false";
+                String tempGeoUrl = "";
                 for (JSONObject item : fileInfo) {
                     String fileName = item.getString("fileName");
-                    if (fileName.indexOf(".tif") != -1){
+                    if (fileName.indexOf(".tif") != -1&& fileName.split(".tif").length == 1){
                         VisualDataItem visualDataItem = new VisualDataItem();
                         String path = item.getString("path");
                         Long fileSize = item.getLong("fileSize");
@@ -134,6 +138,59 @@ public class ResourceService {
                         visualDataItem.setVisualizationBoolean(true);
                         visualDataItem.setFileRelativePath(path.split(dataStoreDir)[1]);
                         visualDataItems.add(visualDataItem);
+                    } else if (fileName.indexOf(".asc") != -1 && fileName.split(".asc").length == 1){
+                        VisualDataItem visualDataItem = new VisualDataItem();
+                        String path = item.getString("path");
+                        Long fileSize = item.getLong("fileSize");
+                        List<String> argvList = new ArrayList<>();
+                        if(fileInfo.size() >= 30 && publish_1st.equals("true")){
+                            //只发布一次
+                            visualDataItem.setName(fileName);
+                            visualDataItem.setType("asc");
+                            visualDataItem.setVisualType("asc");
+                            visualDataItem.setSize(fileSize.toString());
+                            visualDataItem.setFileStoreName(resourceData.getFileStoreName());
+                            visualDataItem.setFileWebAddress(resourceData.getFileWebAddress());
+                            visualDataItem.setProblemTags(resourceData.getProblemTags());
+                            visualDataItem.setNormalTags(resourceData.getNormalTags());
+                            visualDataItem.setUserId(resourceData.getUserEmail());
+                            visualDataItem.setVisualWebAddress(tempGeoUrl);
+                            visualDataItem.setPublicBoolean(true);
+                            visualDataItem.setVisualizationBoolean(true);
+                            visualDataItem.setFileRelativePath(path.split(dataStoreDir)[1]);
+                            visualDataItems.add(visualDataItem);
+                        } else if(fileInfo.size() < 30 || publish_1st.equals("false")) {
+                            //发布多次
+                            argvList.add(path);
+                            argvList.add(path.replace(".asc", ".tif"));
+                            int re = ExecCmdUtils.execPython("asc2tif.py", argvList);
+                            if (re == 0) {
+                                List<String> argvList2 = new ArrayList<>();
+                                argvList2.add(path.replace(".asc", ".tif"));
+                                int re2 = ExecCmdUtils.execPython("tifSetProj.py", argvList2);
+                                if (re2 == 0) {
+                                    publish_1st = "true";
+                                    GeoServerUtils.PublishTiff("yangtzeRiver",fileName.split(".asc")[0].replace(".","_"),path.replace(".asc", ".tif"));
+                                    String geoServerUrl= MessageFormat.format("{0}/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A{1}&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857" +
+                                            "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl,fileName.split(".asc")[0].replace(".","_"));
+                                    tempGeoUrl = geoServerUrl;
+                                    visualDataItem.setName(fileName);
+                                    visualDataItem.setType("asc");
+                                    visualDataItem.setVisualType("asc");
+                                    visualDataItem.setSize(fileSize.toString());
+                                    visualDataItem.setFileStoreName(resourceData.getFileStoreName());
+                                    visualDataItem.setFileWebAddress(resourceData.getFileWebAddress());
+                                    visualDataItem.setProblemTags(resourceData.getProblemTags());
+                                    visualDataItem.setNormalTags(resourceData.getNormalTags());
+                                    visualDataItem.setUserId(resourceData.getUserEmail());
+                                    visualDataItem.setVisualWebAddress(geoServerUrl);
+                                    visualDataItem.setPublicBoolean(true);
+                                    visualDataItem.setVisualizationBoolean(true);
+                                    visualDataItem.setFileRelativePath(path.split(dataStoreDir)[1]);
+                                    visualDataItems.add(visualDataItem);
+                                }
+                            }
+                        }
                     }
                 }
             } else if("shp".equals(resourceData.getVisualType())){
@@ -149,13 +206,13 @@ public class ResourceService {
 //                FileUtils.deleteFile(basePath + "/" + workName + "." + suffix);
                 for (JSONObject item : fileInfo) {
                     String fileName = item.getString("fileName");
-                    if (fileName.indexOf(".shp") != -1){
+                    if (fileName.indexOf(".shp") != -1 && fileName.split(".shp").length == 1){
                         VisualDataItem visualDataItem = new VisualDataItem();
                         String path = item.getString("path");
                         Long fileSize = item.getLong("fileSize");
                         GeoServerUtils.PublishShape("yangtzeRiver",fileName.split(".shp")[0], fileName.split(".shp")[0], null,path);
                         String geoServerUrl= MessageFormat.format("{0}/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A{1}&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857" +
-                                "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl_SHP,fileName.split(".shp")[0]);
+                                "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl,fileName.split(".shp")[0]);
                         visualDataItem.setName(fileName);
                         visualDataItem.setType("shp");
                         visualDataItem.setVisualType("shp");

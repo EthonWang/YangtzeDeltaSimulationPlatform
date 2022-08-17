@@ -71,7 +71,7 @@ public class ScriptExecService {
     }
 
 
-    public JsonResult gdalClip(GDALClipDTO gdalClipDTO, String labTaskId) {
+    public JsonResult gdalClip(GDALClipDTO gdalClipDTO, String labTaskId, String userId) {
         try {
             Boolean isShp = gdalClipDTO.getIsShp();
             String inputPath;
@@ -115,6 +115,7 @@ public class ScriptExecService {
                 userData.setPublicBoolean(true);
                 userData.setVisualizationBoolean(true);
                 userData.setParentId(labTaskId);
+                userData.setUserId(userId);
                 userDataDao.save(userData);
                 //保存到labTask
                 Optional<LabTask> byId1 = labTaskDao.findById(labTaskId);
@@ -124,7 +125,7 @@ public class ScriptExecService {
                 LabTask labTask = byId1.get();
                 List<cn.hutool.json.JSONObject> dataList = labTask.getDataList();
                 cn.hutool.json.JSONObject dataObject = new cn.hutool.json.JSONObject();
-                dataObject.set("id", IdUtil.objectId());
+                dataObject.set("id", userData.getId());
                 dataObject.set("name", fileName);
                 dataObject.set("type", "tif");
                 dataObject.set("visualType", "tif");
@@ -135,12 +136,136 @@ public class ScriptExecService {
                 dataObject.set("visualWebAddress", geoServerUrl);
                 dataObject.set("visualizationBoolean", true);
                 dataObject.set("publicBoolean", true);
+                dataObject.set("source", "cloud");
                 dataList.add(dataObject);
                 labTask.setDataList(dataList);
                 labTaskDao.save(labTask);
 
                 return ResultUtils.success(labTask);
             }
+            return ResultUtils.error();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResultUtils.error();
+        }
+    }
+
+    /**
+     * @param gdalClipDTO
+     * @param labTaskId
+     * @param userId
+     * @return: yangtzedeltasimulatorbackend.entity.doo.JsonResult
+     * @Description:  集的裁剪批量操作
+     * @Author: ZhaoYiming
+     * @Date: 2022-8-3 16:35
+     */
+    public JsonResult gdalClipDataSet(GDALClipDTO gdalClipDTO, String labTaskId, String userId) {
+        try {
+            Boolean isShp = gdalClipDTO.getIsShp();
+            String inputPath;
+            if (isShp) {
+                inputPath = gdalClipDTO.getInputShpPath();
+            } else {
+                inputPath = gdalClipDTO.getInputGeoJson();
+            }
+//            String inputRasterPath = gdalClipDTO.getInputRasterPath();
+            ArrayList<cn.hutool.json.JSONObject> inputRasterList = gdalClipDTO.getInputRasterListPath();
+            //创建批量处理的存放文件夹
+            String outFileName = gdalClipDTO.getOutputTifName();
+            String folderId = IdUtil.objectId();
+            String folderPath = scriptOutDir + "/" + outFileName + folderId;
+            File folderFile = new File(folderPath);
+            folderFile.mkdir();
+
+            // TODO: 2022-8-3  主要针对asc文件的批量处理
+            // 1. asc转tif (原路径）
+            // 2. tif裁剪 （新文件夹下）
+            // 3. tif转asc （新文件夹下）
+            String publish_1st = "false";
+            String tempGeoUrl = "";
+            ArrayList<cn.hutool.json.JSONObject> resultList = new ArrayList<>();
+            for(cn.hutool.json.JSONObject item: inputRasterList){
+                String oldAscPath = dataResourceDir + item.getStr("fileRelativePath");
+                String oldTifPath = oldAscPath.replace(".asc",".tif");
+                // asc2tif
+                List<String> argvList = new ArrayList<>();
+                argvList.add(oldAscPath);
+                argvList.add(oldTifPath);
+                int re = ExecCmdUtils.execPython("asc2tif.py", argvList);
+                if (re == 0) {
+                    // 裁剪
+                    List<String> argvList1 = new ArrayList<>();
+                    argvList1.add(dataResourceDir + inputPath);
+                    argvList1.add(oldTifPath);
+                    String newTifPath = folderPath + "/" + item.getStr("name").replace(".asc","_clip.tif");
+                    argvList1.add(newTifPath);
+                    int re1;
+                    if (isShp) {
+                        re1 = ExecCmdUtils.execPython("GDAL_clip.py", argvList1);
+                    } else {
+                        re1 = ExecCmdUtils.execPython("GDAL_clip_GeoJson.py", argvList1);
+                    }
+                    if (re1 == 0) {
+                        //tif2asc
+                        if(publish_1st.equals("false")){
+                            List<String> argvList3 = new ArrayList<>();
+                            argvList3.add(newTifPath);
+                            int re3 = ExecCmdUtils.execPython("tifSetProj.py", argvList3);
+                            if (re3 == 0) {
+                                publish_1st = "true";
+                                String tempName = IdUtil.objectId() + item.getStr("name").replace(".asc","_clip.tif");
+                                GeoServerUtils.PublishTiff("yangtzeRiver",tempName.split(".tif")[0].replace(".","_"),newTifPath);
+                                String geoServerUrl= MessageFormat.format("{0}/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A{1}&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857" +
+                                        "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl,tempName.split(".tif")[0].replace(".","_"));
+                                tempGeoUrl = geoServerUrl;
+                            }
+                        }
+                        List<String> argvList2 = new ArrayList<>();
+                        argvList2.add(newTifPath);
+                        argvList2.add(newTifPath.replace(".tif",".asc"));
+                        int re2 = ExecCmdUtils.execPython("tif2asc.py", argvList2);
+                        if (re2 == 0){
+                            cn.hutool.json.JSONObject ascObject = new cn.hutool.json.JSONObject();
+                            ascObject.set("name", item.getStr("name").replace(".asc","_clip.asc"));
+                            ascObject.set("fileRelativePath",newTifPath.replace(".tif",".asc").split(dataResourceDir)[1]);
+                            ascObject.set("type","asc");
+                            ascObject.set("visualType", "asc");
+                            ascObject.set("visualWebAddress",tempGeoUrl);
+                            ascObject.set("id",IdUtil.objectId());
+                            resultList.add(ascObject);
+                        }
+                    }
+                }
+            }
+            if(publish_1st.equals("true") && resultList.size() == inputRasterList.size()){
+                //保存到labTask
+                Optional<LabTask> byId1 = labTaskDao.findById(labTaskId);
+                if (!byId1.isPresent()) {
+                    return ResultUtils.error("保存失败");
+                }
+                LabTask labTask = byId1.get();
+                List<cn.hutool.json.JSONObject> dataList = labTask.getDataList();
+                cn.hutool.json.JSONObject dataObject = new cn.hutool.json.JSONObject();
+                dataObject.set("id", IdUtil.objectId());
+                dataObject.set("name", outFileName);
+                dataObject.set("type", "tif");
+                dataObject.set("visualType", "dataSet");
+                dataObject.set("size", "0");
+                dataObject.set("fileStoreName", outFileName + folderId);
+                dataObject.set("fileRelativePath", "/scriptOut/" + outFileName + folderId);
+                dataObject.set("fileWebAddress", "/store/scriptOut/" + outFileName + folderId);
+                dataObject.set("visualWebAddress", tempGeoUrl);
+                dataObject.set("visualizationBoolean", true);
+                dataObject.set("publicBoolean", true);
+                dataObject.set("source", "cloud");
+                dataObject.set("dataSetList", resultList);
+                dataList.add(dataObject);
+                labTask.setDataList(dataList);
+                labTaskDao.save(labTask);
+
+                return ResultUtils.success(labTask);
+            }
+
             return ResultUtils.error();
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -200,7 +325,7 @@ public class ScriptExecService {
 
     public void downloadPic(String path, HttpServletResponse response) {
         try{
-            File file=new File(scriptOutDir + "/" + path);
+            File file=new File(dataResourceDir + "/" + path);
             MyFileUtils.downloadFile(file,response);
         }catch (Exception e){
             log.error(e.getMessage());

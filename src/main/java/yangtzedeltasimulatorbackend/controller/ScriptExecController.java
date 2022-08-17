@@ -34,9 +34,13 @@ public class ScriptExecController {
     }
 
     @ApiOperation(value = "GDAL_clip")
-    @PostMapping("/gdalClip/{labTaskId}")
-    public JsonResult gdalClip(@RequestBody GDALClipDTO gdalClipDTO,  @PathVariable String labTaskId){
-        return  scriptExecService.gdalClip(gdalClipDTO,labTaskId);
+    @PostMapping("/gdalClip/{labTaskId}/{userId}")
+    public JsonResult gdalClip(@RequestBody GDALClipDTO gdalClipDTO,  @PathVariable String labTaskId,  @PathVariable String userId){
+        if (!gdalClipDTO.getInputRasterPath().equals("")){
+            return  scriptExecService.gdalClip(gdalClipDTO,labTaskId, userId);
+        } else {
+            return  scriptExecService.gdalClipDataSet(gdalClipDTO,labTaskId, userId);
+        }
     }
 
     @ApiOperation(value = "txt_analysis")
@@ -44,10 +48,18 @@ public class ScriptExecController {
     public JsonResult txtAnalysis(@RequestBody TxtAnalysisDTO txtAnalysisDTO, @PathVariable String labTaskId){
         return  scriptExecService.txtAnalysis(txtAnalysisDTO,labTaskId);
     }
-    
+
+    /**
+     * @param path
+     * @param response
+     * @return: void
+     * @Description:  下载数据（pic、json）
+     * @Author: ZhaoYiming
+     * @Date: 2022-8-8 14:12
+     */
     @ApiOperation(value = "下载数据")
-    @GetMapping("/downloadPic/{path}")
-    public void downloadDataItem(@PathVariable("path") String path, HttpServletResponse response) {
+    @GetMapping("/downloadPic")
+    public void downloadDataItem(@RequestParam("path") String path, HttpServletResponse response) {
         scriptExecService.downloadPic(path, response);
     }
 

@@ -70,7 +70,7 @@ export const cases_config = [
     {
         problem:"长三角风暴潮模拟",
         path: "stormSurge2",
-        component:() => import("views/CasesView/stromSurge2.vue")
+        component:() => import("views/CasesView/stormSurge3.vue")
     },
     {
         problem:"南京地面淹没模拟系统",

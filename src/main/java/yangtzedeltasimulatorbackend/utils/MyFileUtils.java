@@ -1,6 +1,7 @@
 package yangtzedeltasimulatorbackend.utils;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.log.Log;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -8,8 +9,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -82,6 +84,44 @@ public class MyFileUtils {
             return false;
         }
         return true;
+    }
+
+    public static File downloadRemoteData(String dataUrl,String fileDir) {
+        InputStream ins = null;
+        OutputStream os = null;
+        try{
+            URL url=new URL(dataUrl);
+            URLConnection conn = url.openConnection();
+
+            conn.connect();
+            Map<String, List<String>> headerFields=conn.getHeaderFields();
+            String fileName=headerFields.get("Content-Disposition").get(0).split("=")[1];
+            File file=new File(fileDir, IdUtil.objectId()+"_"+fileName);
+
+                ins= conn.getInputStream();
+                os = new FileOutputStream(file);
+
+                int length = 0;
+                byte[] buffer = new byte[1024];
+                while ((length = ins.read(buffer)) != -1) {
+                    os.write(buffer, 0, length);
+                }
+                return file;
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }finally {
+            try {
+                if (null != os) {
+                    os.close();
+                }
+                if (null != ins) {
+                    ins.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

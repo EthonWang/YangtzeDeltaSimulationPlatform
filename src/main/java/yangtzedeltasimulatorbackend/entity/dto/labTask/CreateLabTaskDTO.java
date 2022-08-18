@@ -1,6 +1,6 @@
 package yangtzedeltasimulatorbackend.entity.dto.labTask;
 
-import cn.hutool.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 import yangtzedeltasimulatorbackend.entity.po.ResourceModel;
 
@@ -22,6 +22,5 @@ public class CreateLabTaskDTO {
     List<JSONObject> dataList;
     List<ResourceModel> modelList;
     String userId;
-
     String labId;
 }

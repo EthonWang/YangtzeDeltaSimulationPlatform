@@ -1,5 +1,6 @@
 package yangtzedeltasimulatorbackend.service;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSONArray;
@@ -50,8 +51,6 @@ public class UserResourceService {
     ResourceModelDao  resourceModelDao;
 
 
-
-
     @Value("${dataStoreDir}"+"/data")
     private  String dataFolder;
 
@@ -90,12 +89,35 @@ public class UserResourceService {
             userData.setType("file");
             userData.setSize(String.format("%.3f",saveFile.length() / 1048576.0) + " MB");
 
-
             userDataDao.save(userData);
             return ResultUtils.success("上传文件成功");
         }catch (Exception e){
             log.error(e.getMessage());
             return ResultUtils.error("上传文件失败");
+        }
+
+    }
+
+    //file 已经存在在data文件里，这里是添加到数据库里
+    public UserData saveDataItem(File file,String userId,String parentId) {
+        try{
+            String fileName = file.getName(); //eg: XXX.js
+            UserData userData =new UserData();
+            userData.setName(fileName);
+            userData.setParentId(parentId);
+            userData.setUserId(userId);
+            userData.setFileRelativePath("/data/"+fileName);
+            userData.setFileWebAddress("/store/data/"+fileName);
+            userData.setFileStoreName(fileName);
+//            dataItem.setType(FileTypeUtil.getType(saveFile));
+            userData.setType("file");
+            userData.setVisualType(FileUtil.extName(fileName));
+            userData.setSize(String.format("%.3f",file.length() / 1048576.0) + " MB");
+            userDataDao.save(userData);
+            return userData;
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return null;
         }
 
     }
@@ -111,6 +133,16 @@ public class UserResourceService {
 
             folder.setUserId(userId);
 //            folder.setType("folder");
+            folderDao.save(folder);
+            return ResultUtils.success("创建文件夹成功");
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("创建文件夹失败");
+        }
+    }
+
+    public JsonResult createFolder(Folder folder) {
+        try{
             folderDao.save(folder);
             return ResultUtils.success("创建文件夹成功");
         }catch (Exception e){

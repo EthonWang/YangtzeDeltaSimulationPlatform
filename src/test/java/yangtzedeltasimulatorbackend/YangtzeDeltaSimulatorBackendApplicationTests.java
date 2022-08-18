@@ -15,24 +15,28 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import yangtzedeltasimulatorbackend.dao.ModelItemDao;
 import yangtzedeltasimulatorbackend.dao.QuestionDao;
 import yangtzedeltasimulatorbackend.entity.po.QuestionItem;
 import yangtzedeltasimulatorbackend.service.LabTaskService;
 import yangtzedeltasimulatorbackend.utils.GeoServerUtils;
+import yangtzedeltasimulatorbackend.utils.MyFileUtils;
 import yangtzedeltasimulatorbackend.utils.Utils;
 
+import javax.swing.text.Style;
 import java.io.*;
 import java.lang.reflect.Member;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Slf4j
 @SpringBootTest
@@ -243,6 +247,14 @@ class YangtzeDeltaSimulatorBackendApplicationTests {
 //        File file=new File("E:\\del\\aaa\\aab4e3f3-d984-4fc8-a2a9-e25b617de2d5.zip");
 //        FileUtil.rename(file,"aaa",true,true);
     }
+
+    @Test
+    void del22(){
+        String url="http://221.226.60.2:8082/data/1d5c8da2-6767-4886-a3d3-b2b4cb708962";
+        File file = MyFileUtils.downloadRemoteData(url, "E://");
+        System.out.println("aa");
+    }
+
 
 
 }

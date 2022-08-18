@@ -1,7 +1,7 @@
 package yangtzedeltasimulatorbackend.entity.po;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.data.annotation.Id;

@@ -20,6 +20,9 @@ public class User extends MyId {
     String password;
     String avatar;
     String introduction;
+    String address;
+    String phone;
+    String institution;
 
     List<String> modelList=new ArrayList<>();
     List<String> dataList=new ArrayList<>();;

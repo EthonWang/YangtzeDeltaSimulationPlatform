@@ -1,12 +1,16 @@
 package yangtzedeltasimulatorbackend.service;
 
+import cn.hutool.core.io.file.FileNameUtil;
+import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import yangtzedeltasimulatorbackend.dao.UserDao;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
 import yangtzedeltasimulatorbackend.entity.dto.user.UserSignUpDTO;
@@ -15,6 +19,7 @@ import yangtzedeltasimulatorbackend.utils.ResultUtils;
 import yangtzedeltasimulatorbackend.utils.TokenUtils;
 
 import javax.jws.soap.SOAPBinding;
+import java.io.File;
 import java.util.Optional;
 
 /**
@@ -29,6 +34,9 @@ public class UserService {
 
     @Autowired
     UserDao userDao;
+
+    @Value("${dataStoreDir}"+"/userImg")
+    private  String userImgFolder;
 
     public JsonResult signUp(UserSignUpDTO userSignUpDTO) {
         try{
@@ -100,14 +108,46 @@ public class UserService {
         try{
             Optional<User> userDB=userDao.findByEmail(userUpdate.getEmail());
             User user=userDB.get();
-
             BeanUtils.copyProperties(userUpdate, user,"id","email","password");
+            userDao.save(user);
 
             return ResultUtils.success(user);
 
         }catch (Exception e){
             log.error(e.getMessage());
             return ResultUtils.error("更新用户信息失败");
+        }
+    }
+
+    public JsonResult uploadUserPic(String userId, MultipartFile upUserPic) {
+        try{
+            User user=userDao.findById(userId).get();
+
+
+            if (upUserPic.isEmpty()) {
+                return ResultUtils.error("img file is empty!!e");
+            }
+
+            String fileName = upUserPic.getOriginalFilename(); //eg: XXX.png
+            String fileMainName= FileNameUtil.mainName(fileName); // XXX
+            String fileExtName=FileNameUtil.extName(fileName); //png
+            String newfileName=fileMainName+"."+ IdUtil.objectId()+"."+fileExtName;
+            File saveImgFile = new File(userImgFolder, newfileName);//eg: E:\\TEMP\\XXX.zip
+
+            upUserPic.transferTo(saveImgFile);
+
+            String imgWebPath="/store/userImg/"+newfileName;
+
+            user.setAvatar(imgWebPath);
+            userDao.save(user);
+
+//            JSONObject o=new JSONObject();
+//            o.put("imgWebPath",imgWebPath);
+
+            return ResultUtils.success("上传用户头像成功");
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("上传图片失败"+e.getMessage());
         }
     }
 }

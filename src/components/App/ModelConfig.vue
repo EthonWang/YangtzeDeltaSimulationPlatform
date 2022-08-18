@@ -290,7 +290,6 @@ const structXML = (children) => {
   console.log("file is :", configFile);
   formData.append("xmlData", configFile);
   return dataApi.sendXMLToContainer(formData);
-
 };
 
 const handleInvoke = () => {
@@ -402,120 +401,161 @@ const handleInvokeNext = () => {
     //请求接口调用模型
 
     console.log("json is :", json);
-    axios.post("http://172.21.213.44:8999/model/invoke", json).then((res) => {
-      console.log("模型运行结果", res.data);
-      let data = res.data.data;
-      let msg = res.data.msg;
-      let code = res.data.code;
-      if (code == -1) {
-        ElNotification({
-          title: "Error",
-          message: msg,
-          type: "error",
-        });
-        return;
-      }
-      if (code == -2) {
-        ElNotification({
-          title: "Error",
-          message: msg,
-          type: "error",
-        });
-        return;
-      }
-      if (data != null) {
-        let taskBody = {
-          ip: "172.21.213.105",
-          port: "8061",
-          tid: data.tid,
-        };
-        let pushData = {
-          taskModel: props.model.name,
-          simularTrait: "task",
-          taskBody: taskBody,
-        };
-        //更新模型运行情况,如果有同模型历史数据，则删除
-        let nameList = [];
-        for (let i = 0; i < task.dataList.length; i++) {
-          const element = task.dataList[i];
-          if (
-            element.simularTrait == "task" &&
-            element.taskModel == props.model.name
-          ) {
-            task.dataList.splice(i, 1);
-            break;
+    axios
+      .post("http://172.21.213.248:8999/model/invoke", json)
+      .then((res) => {
+        console.log("模型运行结果", res.data);
+        let data = res.data.data;
+        let msg = res.data.msg;
+        let code = res.data.code;
+        if ("status" in data) {
+          if (data.status == 500) {
+            loading.value = false;
+            ElNotification({
+              title: "Error status 500",
+              message: msg,
+              type: "error",
+            });
           }
         }
-        task.dataList.push(pushData);
-        taskApi.editTask(task);
-        localStorage.setItem("task", Encrypt(JSON.stringify(task)));
-        let interval = setInterval(() => {
-          axios
-            .post("http://172.21.213.44:8999/task/taskResult", taskBody)
-            .then((res) => {
-              let data = res.data.data.data;
-              let code = res.data.data.data.code;
-              let msg = res.data.data.data.msg;
-              console.log("status", data.status, res.data.data);
-              if (code === -1) {
-                loading.value = false;
-                clearInterval(interval);
-                ElNotification({
-                  title: "Error",
-                  message: msg,
-                  type: "error",
-                });
-              }
-              if (data.status === -1) {
-                loading.value = false;
-                clearInterval(interval);
-                ElNotification({
-                  title: "Error",
-                  message: "Some error occured when the model running!",
-                  type: "error",
-                });
-              } else if (data.status === 2) {
-                clearInterval(interval);
-                ElNotification({
-                  title: "Success",
-                  message: "模型运行成功",
-                  type: "success",
-                  duration: 10000,
-                });
-                loading.value = false;
-                let outputs = data.outputdata;
 
-                outputs.forEach((el) => {
-                  let statename = el.statename;
-                  let eventName = el.event;
-                  let state = MDLStatesInfo.value.find((state) => {
-                    return state.name == statename;
+        if (code == -1) {
+          ElNotification({
+            title: "Error-1",
+            message: msg,
+            type: "error",
+          });
+          loading.value = false;
+          return;
+        }
+        if (code == -2) {
+          ElNotification({
+            title: "Error-2",
+            message: msg,
+            type: "error",
+          });
+          loading.value = false;
+          return;
+        }
+        if (data == null) {
+          ElNotification({
+            title: "Error-dataNull",
+            message: msg,
+            type: "error",
+          });
+          loading.value = false;
+          return;
+        }
+        if (data != null) {
+          let taskBody = {
+            ip: "172.21.213.105",
+            port: "8061",
+            tid: data.tid,
+          };
+          let pushData = {
+            taskModel: props.model.name,
+            simularTrait: "task",
+            taskBody: taskBody,
+          };
+          //更新模型运行情况,如果有同模型历史数据，则删除
+          let nameList = [];
+          for (let i = 0; i < task.dataList.length; i++) {
+            const element = task.dataList[i];
+            if (
+              element.simularTrait == "task" &&
+              element.taskModel == props.model.name
+            ) {
+              task.dataList.splice(i, 1);
+              break;
+            }
+          }
+          task.dataList.push(pushData);
+          taskApi.editTask(task);
+          localStorage.setItem("task", Encrypt(JSON.stringify(task)));
+          let interval = setInterval(() => {
+            axios
+              .post("http://172.21.213.248:8999/task/taskResult", taskBody)
+              .then((res) => {
+                let data = res.data.data.data;
+                let code = res.data.data.data.code;
+                let msg = res.data.data.data.msg;
+                console.log("status", data.status, res.data.data);
+                // if (!("code" in res.data.data)) {
+                //   loading.value = false;
+                //   clearInterval(interval);
+                //   ElNotification({
+                //     title: "Error no code",
+                //     message: msg,
+                //     type: "error",
+                //   });
+                // }
+                if (code === -1) {
+                  loading.value = false;
+                  clearInterval(interval);
+                  ElNotification({
+                    title: "Error",
+                    message: msg,
+                    type: "error",
                   });
-                  if (state == undefined) return;
-                  let event = state.event.find((event) => {
-                    return event.eventName == eventName;
+                }
+                if (data.status === -1) {
+                  loading.value = false;
+                  clearInterval(interval);
+                  ElNotification({
+                    title: "Error",
+                    message: "Some error occured when the model running!",
+                    type: "error",
                   });
-                  if (event == undefined) return;
-                  event.tag = el.tag;
-                  event.suffix = el.suffix;
-                  event.url = el.url;
-                  event.multiple = el.multiple;
-                });
-              } else {
-                console.log("");
-                // loading.value = false;
-              }
-            });
-        }, 5000);
-      } else {
-        loading.value = false;
+                } else if (data.status === 2) {
+                  clearInterval(interval);
+                  ElNotification({
+                    title: "Success",
+                    message: "模型运行成功",
+                    type: "success",
+                    duration: 10000,
+                  });
+                  loading.value = false;
+                  let outputs = data.outputdata;
+
+                  outputs.forEach((el) => {
+                    let statename = el.statename;
+                    let eventName = el.event;
+                    let state = MDLStatesInfo.value.find((state) => {
+                      return state.name == statename;
+                    });
+                    if (state == undefined) return;
+                    let event = state.event.find((event) => {
+                      return event.eventName == eventName;
+                    });
+                    if (event == undefined) return;
+                    event.tag = el.tag;
+                    event.suffix = el.suffix;
+                    event.url = el.url;
+                    event.multiple = el.multiple;
+                  });
+                } else {
+                  console.log("");
+                  // loading.value = false;
+                }
+              });
+          }, 5000);
+        } else {
+          loading.value = false;
+          ElNotification({
+            title: "Error",
+            message: "Inner error happened !",
+            type: "error",
+          });
+        }
+      })
+      .catch((err) => {
         ElNotification({
           title: "Error",
           message: "Inner error happened !",
           type: "error",
         });
-      }
-    });
+        loading.value = false;
+      });
   } else {
     ElNotification({
       title: "Error",

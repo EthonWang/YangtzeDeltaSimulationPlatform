@@ -131,6 +131,7 @@ const searchIndexInRoutes = () => {
     }
   }
 };
+//根据路由routePath的变化做操作
 watch(
   () => route.path,
   (newValue, oldValue) => {

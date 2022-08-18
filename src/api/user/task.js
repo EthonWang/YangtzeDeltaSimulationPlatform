@@ -107,7 +107,7 @@ export default class {
     openCaseInLab(userId, caseName) {
         return get("/LabTask/openLabTaskByCase/" + userId + "/" + caseName)
     }
-    addResultToLabAndDataCenter(dataUrl, userId, labId) {
-        return post("/model/saveModelOutput", { dataUrlList: [dataUrl], labId: labId, userId: userId })
+    addResultToLabAndDataCenter(dataUrlList, userId, labId) {
+        return post("/model/saveModelOutput", { dataUrlList, labId: labId, userId: userId })
     }
 }

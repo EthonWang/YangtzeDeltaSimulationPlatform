@@ -210,7 +210,7 @@ import { onMounted, ref } from "vue";
 import tagTree from "@/components/resource/tagTree.vue";
 import resourceList from "@/components/resource/resourceList.vue";
 export default {
-  name: "resource",
+  name: "Resource",
   props: {},
   components: {
     tagTree,

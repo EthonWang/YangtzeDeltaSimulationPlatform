@@ -576,7 +576,8 @@ public class ModelItemService {
                         FileUtils.copyFileUsingStream(originFile,targetFile);
                     }
                 }
-                String zipPath = userDataDir + "/" + resDataInfo.getStr("name") + ".zip";
+                String zipId = IdUtil.objectId();
+                String zipPath = userDataDir + "/" + resDataInfo.getStr("name") + zipId  + ".zip";
                 File zipFile = new File(zipPath);
                 FileOutputStream zipFos = new FileOutputStream(zipFile);
                 FileUtils.toZip(tempFolderPath, zipFos,true);
@@ -643,7 +644,6 @@ public class ModelItemService {
                     String dataUrl="http://"+ dataContainerIpAndPort +"/data/"+uploadResult.getJSONObject("data").getString("id");
 
                     resDataInfo.set("dataContainerUrl",dataUrl);
-
                     return ResultUtils.success(dataUrl);
                 }else{
                     log.error(uploadResult.getString("message"));

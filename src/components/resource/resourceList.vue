@@ -203,7 +203,7 @@ const addDataToTask = (task) => {
       dataSet.description = selectedRes.value.description;
       dataSet.id =
         selectedRes.value.id + Math.floor(Math.random() * 10 + 1).toString();
-      dataSet.name = selectedRes.value.name + "_dataSet";
+      dataSet.name = selectedRes.value.name + "_dataSet_" + Math.random().toString(36).substr(2,4);
       dataSet.normalTags = selectedRes.value.normalTags;
       dataSet.problemTags = selectedRes.value.problemTags;
       dataSet.publicBoolean = selectedRes.value.publicBoolean;

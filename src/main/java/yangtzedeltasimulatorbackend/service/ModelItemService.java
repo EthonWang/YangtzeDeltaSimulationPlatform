@@ -69,9 +69,6 @@ public class ModelItemService {
     @Autowired
     LabTaskDao labTaskDao;
 
-    @Autowired
-    LabTaskDao labTaskDao;
-
     @Value("${dataStoreDir}"+"/temp")
     private  String tempDir;
 
@@ -290,7 +287,6 @@ public class ModelItemService {
 
 //        ComputableModel computableModel=computableModelDao.findFirstById(lists.getString("oid"));
         ResourceModel resourceModel=resourceModelDao.findById(lists.getString("oid")).get();
-        ResourceModel resourceModel = resourceModelDao.findById(lists.getString("oid")).get();
         //长三角这里pid就是md5前端不传了
         lists.put("pid", resourceModel.getMd5());
 
@@ -555,32 +551,39 @@ public class ModelItemService {
                 return ResultUtils.error("上传失败失败，taskId错误！");
             }
             LabTask labTask = byId1.get();
-            List<cn.hutool.json.JSONObject> dataList = new ArrayList<>();
+            List<JSONObject> dataList = new ArrayList<>();
             dataList = labTask.getDataList();
-            cn.hutool.json.JSONObject resDataInfo = new cn.hutool.json.JSONObject();
-            for(cn.hutool.json.JSONObject item : dataList){
-                if(item.getStr("id") != null && item.getStr("id").equals(resDataId)){
-                    resDataInfo = item;
+            JSONObject resDataInfo = new JSONObject();
+            int flag=-1;
+            for (int i = 0; i < dataList.size(); i++) {
+                if(dataList.get(i).getString("id") != null && dataList.get(i).getString("id").equals(resDataId)){
+                    resDataInfo = dataList.get(i);
+                    flag=i;
                 }
             }
-            if(resDataInfo.getStr("id") == null || resDataInfo.getStr("id").equals("")){
+//            for(JSONObject item : dataList){
+//                if(item.getString("id") != null && item.getString("id").equals(resDataId)){
+//                    resDataInfo = item;
+//                }
+//            }
+            if(resDataInfo.getString("id") == null || resDataInfo.getString("id").equals("")){
                 return ResultUtils.error("上传失败，未找到该数据信息");
             }
             // 判断类型（来自资源目录还是集）
-            if(resDataInfo.getStr("visualType").equals("dataSet")){
+            if(resDataInfo.getString("visualType").equals("dataSet")){
                 //集
                 // 1.创建压缩文件
-                String tempFolderPath = tempDir + "/" + resDataInfo.getStr("name");
+                String tempFolderPath = tempDir + "/" + resDataInfo.getString("name");
                 File tempFolder =new File(tempFolderPath);
                 tempFolder.mkdir();
-                cn.hutool.json.JSONArray dataSetList = new cn.hutool.json.JSONArray();
+                JSONArray dataSetList = new JSONArray();
                 dataSetList = resDataInfo.getJSONArray("dataSetList");
                 if(dataSetList != null){
                     Iterator<Object> it = dataSetList.iterator();
                     while(it.hasNext()){
-                        cn.hutool.json.JSONObject jo = (cn.hutool.json.JSONObject) it.next();
-                        String joPath = dataStoreDir + jo.getStr("fileRelativePath");
-                        String joName = jo.getStr("name");
+                        JSONObject jo = (JSONObject) it.next();
+                        String joPath = dataStoreDir + jo.getString("fileRelativePath");
+                        String joName = jo.getString("name");
                         File originFile = new File(joPath);
                         File targetFile;
                         if(joName.indexOf("_clip") >= 0){
@@ -592,7 +595,8 @@ public class ModelItemService {
                         FileUtils.copyFileUsingStream(originFile,targetFile);
                     }
                 }
-                String zipPath = userDataDir + "/" + resDataInfo.getStr("name") + ".zip";
+                String zipId=IdUtil.objectId();
+                String zipPath = userDataDir + "/" + resDataInfo.getString("name") +zipId+ ".zip";
                 File zipFile = new File(zipPath);
                 FileOutputStream zipFos = new FileOutputStream(zipFile);
                 FileUtils.toZip(tempFolderPath, zipFos,true);
@@ -630,9 +634,16 @@ public class ModelItemService {
                 if(uploadResult.getIntValue("code")==1){
                     String dataUrl="http://"+ dataContainerIpAndPort +"/data/"+uploadResult.getJSONObject("data").getString("id");
 
-                    resDataInfo.set("dataContainerUrl",dataUrl);
+                    resDataInfo.put("dataContainerUrl",dataUrl);
+                    if(flag > -1){
+                        dataList.remove(flag);
+                        dataList.add(resDataInfo);
+                        labTask.setDataList(dataList);
+                        labTaskDao.save(labTask);
+                    }
                     userData.setDataContainerUrl(dataUrl);
                     userDataDao.save(userData);
+
 
                     return ResultUtils.success(dataUrl);
                 }else{
@@ -658,8 +669,13 @@ public class ModelItemService {
                 if(uploadResult.getIntValue("code")==1){
                     String dataUrl="http://"+ dataContainerIpAndPort +"/data/"+uploadResult.getJSONObject("data").getString("id");
 
-                    resDataInfo.set("dataContainerUrl",dataUrl);
-
+                    resDataInfo.put("dataContainerUrl",dataUrl);
+                    if(flag > -1){
+                        dataList.remove(flag);
+                        dataList.add(resDataInfo);
+                        labTask.setDataList(dataList);
+                        labTaskDao.save(labTask);
+                    }
                     return ResultUtils.success(dataUrl);
                 }else{
                     log.error(uploadResult.getString("message"));
@@ -736,7 +752,7 @@ public class ModelItemService {
                 labDataList.add(JSONObject.parseObject(JSONObject.toJSONString(userData)));
             }
             labTask.setDataList(labDataList);
-
+            labTaskDao.save(labTask);
             return ResultUtils.success(labTask);
         }catch (Exception e){
             log.error(e.getMessage());

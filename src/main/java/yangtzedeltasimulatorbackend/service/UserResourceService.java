@@ -1,5 +1,6 @@
 package yangtzedeltasimulatorbackend.service;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSONArray;
@@ -100,7 +101,6 @@ public class UserResourceService {
     //file 已经存在在data文件里，这里是添加到数据库里
     public UserData saveDataItem(File file,String userId,String parentId) {
         try{
-
             String fileName = file.getName(); //eg: XXX.js
             UserData userData =new UserData();
             userData.setName(fileName);
@@ -111,6 +111,7 @@ public class UserResourceService {
             userData.setFileStoreName(fileName);
 //            dataItem.setType(FileTypeUtil.getType(saveFile));
             userData.setType("file");
+            userData.setVisualType(FileUtil.extName(fileName));
             userData.setSize(String.format("%.3f",file.length() / 1048576.0) + " MB");
             userDataDao.save(userData);
             return userData;

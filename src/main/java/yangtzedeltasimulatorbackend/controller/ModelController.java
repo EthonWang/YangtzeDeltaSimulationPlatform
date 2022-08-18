@@ -149,13 +149,12 @@ public class ModelController {
     public JsonResult upResToDataContainer(@RequestParam("resDataId") String resDataId,
                                            @RequestParam("taskId") String taskId,
                                            @RequestParam("userId") String userId,
-                                        @RequestParam("dataRelativePath") String dataRelativePath){
+                                           @RequestParam("dataRelativePath") String dataRelativePath){
         return modelItemService.upResToDataContainer(resDataId,taskId,userId,dataRelativePath);
     }
 
     @ApiOperation(value = "上传xml到数据容器")
     @PostMapping(value = "/upXMLToDataContainer")
-    public JsonResult upXMLToDataContainer(@RequestPart("xmlData") MultipartFile  upFile) {
     public JsonResult upXMLToDataContainer(@RequestParam("xmlData") MultipartFile upFile) {
 //        String email="371252847@qq.com";
         return modelItemService.upXMLToDataContainer(upFile);

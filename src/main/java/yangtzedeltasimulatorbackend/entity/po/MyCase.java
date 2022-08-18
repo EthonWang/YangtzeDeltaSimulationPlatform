@@ -28,9 +28,13 @@ public class MyCase {
     String path;
     String theme;
 
+    String introduction;
+
     List<JSONObject> description;
-    List<JSONObject> dataList;
+    List<JSONObject> resourceDataList;
     List<JSONObject> caseAuthor;
+    List<JSONObject> relatedResource;
+
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     Date createTime=new Date();

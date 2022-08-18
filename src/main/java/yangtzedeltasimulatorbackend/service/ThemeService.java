@@ -100,6 +100,7 @@ public class ThemeService {
             String newfileName=fileMainName+"."+IdUtil.objectId()+"."+fileExtName;
             File saveImgFile = new File(folder, newfileName);//eg: E:\\TEMP\\XXX.zip
 
+
             uploadImg.transferTo(saveImgFile);
 
             String imgWebPath="/store/themeImg/"+newfileName;

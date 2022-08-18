@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
 import yangtzedeltasimulatorbackend.entity.dto.user.UserLoginDTO;
 import yangtzedeltasimulatorbackend.entity.dto.user.UserSignUpDTO;
@@ -50,6 +51,13 @@ public class UserController{
     @PostMapping(value = "/updateUserInfo")
     public JsonResult updateUserInfo(@RequestBody User userUpdate){
         return userService.updateUserInfo(userUpdate);
+    }
+
+    @ApiOperation(value = "上传用户头像")
+    @PostMapping(value = "/uploadUserPic/{userId}")
+    public JsonResult uploadUserPic(@PathVariable("userId") String userId,
+                                    @RequestPart("userPic") MultipartFile upUserPic){
+        return userService.uploadUserPic(userId,upUserPic);
     }
 
 }

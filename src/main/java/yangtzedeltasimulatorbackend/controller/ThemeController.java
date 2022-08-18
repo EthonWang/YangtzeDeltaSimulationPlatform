@@ -48,7 +48,7 @@ public class ThemeController {
         return themeService.uploadThemeImg(uploadImg);
     }
 
-    @ApiOperation(value = "批量查询案例信息")
+    @ApiOperation(value = "专题中批量查询案例信息")
     @PostMapping("/getCasesInfo")
     public JsonResult getCasesInfo(@RequestBody GetCasesDTO getCasesDTO){
         return themeService.getCasesInfo(getCasesDTO);

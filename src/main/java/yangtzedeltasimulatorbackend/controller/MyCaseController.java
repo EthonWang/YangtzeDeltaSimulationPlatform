@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
 import yangtzedeltasimulatorbackend.entity.dto.myCase.CreateMyCaseDTO;
+import yangtzedeltasimulatorbackend.entity.dto.myCase.GetResourceDataDTO;
 import yangtzedeltasimulatorbackend.entity.dto.myCase.UpdateMyCaseDTO;
+import yangtzedeltasimulatorbackend.entity.dto.theme.GetCasesDTO;
 import yangtzedeltasimulatorbackend.service.MyCaseService;
 
 /**
@@ -51,6 +53,12 @@ public class MyCaseController {
                                  @RequestBody UpdateMyCaseDTO updateMyCaseDTO){
         String name=updateMyCaseDTO.getName();
         return myCaseService.updateCase(caseId,updateMyCaseDTO);
+    }
+
+    @ApiOperation(value = "案例中批量查询资源数据信息")
+    @PostMapping("/getResourceDataListInfo")
+    public JsonResult getResourceDataListInfo(@RequestBody GetResourceDataDTO getResourceDataDTO){
+        return myCaseService.getResourceDataListInfo(getResourceDataDTO);
     }
 
 }

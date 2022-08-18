@@ -1,6 +1,6 @@
 package yangtzedeltasimulatorbackend.entity.dto.labTask;
 
-import cn.hutool.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 import yangtzedeltasimulatorbackend.entity.po.ResourceModel;
 
@@ -21,5 +21,4 @@ public class UpdateLabTaskDTO {
     String problemTags="";  //地理问题标签
     List<JSONObject> dataList;
     List<ResourceModel> modelList;
-
 }

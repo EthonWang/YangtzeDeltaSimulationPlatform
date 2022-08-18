@@ -356,6 +356,9 @@ h4 {
 /deep/.el-form--label-left .el-form-item__label {
     font-size: 17px;
 }
+/deep/.el-form-item__content,.el-tag{
+  font-size: 17px;
+}
 .data-list {
   transition: all 0.5s;
   /deep/ .el-form-item {

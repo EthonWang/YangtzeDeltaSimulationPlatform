@@ -17,8 +17,11 @@
         <el-button type="primary" @click="createFolder()"
           ><el-icon><folder-add /></el-icon>&nbsp;新建文件夹</el-button
         >
-        <el-button type="primary" @click="changePublicState()"
-          ><el-icon><folder-add /></el-icon>&nbsp;公共数据</el-button
+        <el-button v-if="!publicState" type="success" plain @click="changePublicState()"
+          ><el-icon><OfficeBuilding /></el-icon>&nbsp;进入共享空间</el-button
+        >
+        <el-button v-if="publicState" type="warning" plain @click="changePublicState()"
+          ><el-icon><UserFilled /></el-icon>进入私人空间</el-button
         >
         <el-breadcrumb :separator-icon="ArrowRight" style="margin-left: 2%">
           <el-breadcrumb-item v-for="item in breadcrumbs" :key="item">{{
@@ -386,7 +389,7 @@ const createFolder = (index = -1) => {
       });
   }
   if (index == -1) {
-    file_data_choose.value.push({
+    file_data_choose.value.unshift({
       id: "5689",
       name: "",
       type: "folder",
@@ -454,7 +457,7 @@ const tackleData = (res) => {
       }
     }
   }
-  file_data.value = res.data;
+  file_data.value = res.data.reverse();
   console.log("file data is :", file_data.value);
   choose_num.value = 0;
   choosing_files = [];
@@ -575,7 +578,7 @@ const deleteData = () => {
 };
 const changePublicState = () => {
   publicState.value = !publicState.value;
-  refresh();
+  // refresh();
 };
 </script>
 

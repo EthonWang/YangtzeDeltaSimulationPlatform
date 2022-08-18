@@ -318,7 +318,7 @@ export default {
           data.parentId != null &&
           data.parentId != undefined &&
           data.parentId != ""
-        ) {
+        ) { //发送数据（非集）获取url
           this.dataApi
             .sendDataToContainer(data.fileRelativePath, data.id)
             .then((res) => {
@@ -345,7 +345,7 @@ export default {
               ElMessage.error("使用数据失败1");
               loading_data.close();
             });
-        } else {
+        } else { //发送数据集 获取url
           this.dataApi
             .sendResDataToContainer(
               data.fileRelativePath,
@@ -482,7 +482,7 @@ export default {
               let newTask = res.data;
               console.log(res);
               localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
-              ElMessage({ type: "success", message: "成功加入实验室" });
+              ElMessage({ type: "success", message: "成功加入"+outUrlList.length+"条数据" });
               let loading = ElLoading.service({
                 lock: true,
                 text: "装载数据中...",
@@ -492,6 +492,8 @@ export default {
                 location.reload()
               },750)
             }
+          }).catch((err)=>{
+            ElMessage.error("出错，未返回数据")
           });
       } else {
         this.$message.error("请先进行实验");

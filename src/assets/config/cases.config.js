@@ -73,6 +73,11 @@ export const cases_config = [
         component:() => import("views/CasesView/stormSurge3.vue")
     },
     {
+        problem:"太湖模拟",
+        path: "TaiHu_FvCom",
+        component:() => import("views/CasesView/TaiHu_FvCom.vue")
+    },
+    {
         problem:"南京地面淹没模拟系统",
         path: "SUFS",
         component:() => import("views/CasesView/SUFS.vue")

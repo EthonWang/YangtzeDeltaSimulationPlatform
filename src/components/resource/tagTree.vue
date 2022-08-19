@@ -2,15 +2,16 @@
   <div class="tagTreeContent">
     <el-row
       class="tagContent fontSet"
-      style="font-weight: 600; font-size: 16px"
+      style="font-weight: 800; font-size: 20px"
     >
       资源分类 （
       <a @click="clearTagClick()" style="cursor: pointer; color: gray">全部</a>
       ）
     </el-row>
+    <!-- <el-divider style="margin: 5px 0 5px 5px;width: 95%;opacity: 0.75;"></el-divider> -->
     <div v-for="(item, index) in tagList" :key="index">
       <el-row class="tagTitle">
-        <el-link @click="tagClick(item, 1)" class="clickStyle">{{
+        <el-link @click="tagClick(item, 1)" class="clickStyle clickTitle">{{
           item.name
         }}</el-link>
       </el-row>
@@ -77,7 +78,7 @@ export default {
       },
       {
         name: "模型",
-        list: ["自然模拟", "人类活动", "综合分析", "其他"],
+        list: ["水文模型", "土壤模型", "大气模型", "生态模型", "社会经济模型", "其他模型"],
       },
       {
         name: "其他",
@@ -111,19 +112,21 @@ export default {
 .tagTreeContent {
   margin: auto;
   width: 100%;
+  border-radius: 15px;
 }
 .tagTitle {
   padding-left: 7px;
   height: 40px;
   line-height: 40px;
-  background-color: rgb(181, 213, 241);
-  /* border: solid 1px black; */
+  background-color: rgba(70, 85, 97,0.2);
+  border-top:1px solid rgba(255, 255, 255,0.5);
 }
 .tagContent {
   padding-left: 7px;
   /* height: 45px; */
   line-height: 40px;
-  background-color: white;
+  background: hsla(220, 100%, 5%,0);
+  /* background-color: white; */
   /* border: solid 1px black; */
 }
 .tagSpan {
@@ -132,12 +135,16 @@ export default {
 .clickStyle {
   cursor: pointer;
 }
+.clickTitle{
+  font-size: 18px !important;
+  font-weight: 500;
+}
 .fontSet {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
     "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: #606266;
+  color: #bec2ca;
   vertical-align: middle;
 }
 </style>

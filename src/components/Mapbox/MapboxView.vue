@@ -22,8 +22,13 @@
 
     <transition-group name="lyric">
       <div class="edit-board" v-if="editBoardShow">
-        <el-collapse v-model="activeNames" @change="handleChange">
+        <el-collapse
+          v-model="activeNames"
+          @change="handleChange"
+          style="position: relative; z-index: 1005"
+        >
           <el-collapse-item title="数据列表" name="data">
+            
             <el-table
               :data="showLayerTableList"
               ref="shpLayerTable"
@@ -37,6 +42,15 @@
                   <el-switch
                     :width="30"
                     v-model="scope.row.show"
+                    v-if="scope.row.visualType!='zip'"
+                    @change="handleLayerShowSwitchChange($event, scope.row)"
+                  >
+                  </el-switch>
+                  <el-switch
+                  v-else
+                  disabled
+                    :width="30"
+                    v-model="falseShow"
                     @change="handleLayerShowSwitchChange($event, scope.row)"
                   >
                   </el-switch>
@@ -113,410 +127,464 @@
                         </el-color-picker>
                       </div>
 
-                      <div class="flex-row-start">
-                        <h3 style="width: 200px">半径（px）:</h3>
-                        <el-input-number
-                          v-model="
-                            showLayerTableList[scope.$index].paint[
-                              'circle-radius'
-                            ]
-                          "
-                          @change="
-                            handlePaintChange(
-                              showLayerTableList[scope.$index]['id'],
-                              'circle-radius',
+                        <div class="flex-row-start">
+                          <h3 style="width: 200px">半径（px）:</h3>
+                          <el-input-number
+                            v-model="
                               showLayerTableList[scope.$index].paint[
                                 'circle-radius'
                               ]
-                            )
-                          "
-                          :min="0"
-                          :max="99999"
-                          size="small"
-                          label="描述文字"
-                        >
-                        </el-input-number>
-                      </div>
+                            "
+                            @change="
+                              handlePaintChange(
+                                showLayerTableList[scope.$index]['id'],
+                                'circle-radius',
+                                showLayerTableList[scope.$index].paint[
+                                  'circle-radius'
+                                ]
+                              )
+                            "
+                            :min="0"
+                            :max="99999"
+                            size="small"
+                            label="描述文字"
+                          >
+                          </el-input-number>
+                        </div>
 
-                      <div class="flex-row-start">
-                        <h3 style="width: 200px">透明度:</h3>
-                        <el-input-number
-                          v-model="
-                            showLayerTableList[scope.$index].paint[
-                              'circle-opacity'
-                            ]
-                          "
-                          @change="
-                            handlePaintChange(
-                              showLayerTableList[scope.$index]['id'],
-                              'circle-opacity',
+                        <div class="flex-row-start">
+                          <h3 style="width: 200px">透明度:</h3>
+                          <el-input-number
+                            v-model="
                               showLayerTableList[scope.$index].paint[
                                 'circle-opacity'
                               ]
-                            )
-                          "
-                          :min="0"
-                          :max="1"
-                          :step="0.1"
-                          size="small"
-                          label="描述文字"
-                        >
-                        </el-input-number>
-                      </div>
-                      <div class="flex-row-start">
-                        <h3 style="width: 200px">模糊度:</h3>
-                        <el-input-number
-                          v-model="
-                            showLayerTableList[scope.$index].paint[
-                              'circle-blur'
-                            ]
-                          "
-                          @change="
-                            handlePaintChange(
-                              showLayerTableList[scope.$index]['id'],
-                              'circle-blur',
+                            "
+                            @change="
+                              handlePaintChange(
+                                showLayerTableList[scope.$index]['id'],
+                                'circle-opacity',
+                                showLayerTableList[scope.$index].paint[
+                                  'circle-opacity'
+                                ]
+                              )
+                            "
+                            :min="0"
+                            :max="1"
+                            :step="0.1"
+                            size="small"
+                            label="描述文字"
+                          >
+                          </el-input-number>
+                        </div>
+                        <div class="flex-row-start">
+                          <h3 style="width: 200px">模糊度:</h3>
+                          <el-input-number
+                            v-model="
                               showLayerTableList[scope.$index].paint[
                                 'circle-blur'
                               ]
-                            )
-                          "
-                          :min="0"
-                          :max="1"
-                          :step="0.1"
-                          size="small"
-                          label="描述文字"
-                        >
-                        </el-input-number>
+                            "
+                            @change="
+                              handlePaintChange(
+                                showLayerTableList[scope.$index]['id'],
+                                'circle-blur',
+                                showLayerTableList[scope.$index].paint[
+                                  'circle-blur'
+                                ]
+                              )
+                            "
+                            :min="0"
+                            :max="1"
+                            :step="0.1"
+                            size="small"
+                            label="描述文字"
+                          >
+                          </el-input-number>
+                        </div>
                       </div>
-                    </div>
 
-                    <!--              线图层编辑-->
-                    <div
-                      v-else-if="
-                        scope.row.type === 'line' &&
-                        scope.row.data.visualType == 'shp'
-                      "
-                    >
-                      <div class="flex-row-start">
-                        <h3 style="width: 200px">颜色:</h3>
-                        <el-input
-                          v-model="
-                            showLayerTableList[scope.$index].paint['line-color']
-                          "
-                          @change="
-                            handlePaintChange(
-                              showLayerTableList[scope.$index]['id'],
-                              'line-color',
+                      <!--              线图层编辑-->
+                      <div
+                        v-else-if="
+                          scope.row.type === 'line' &&
+                          scope.row.data.visualType == 'shp'
+                        "
+                      >
+                        <div class="flex-row-start">
+                          <h3 style="width: 200px">颜色:</h3>
+                          <el-input
+                            v-model="
                               showLayerTableList[scope.$index].paint[
                                 'line-color'
                               ]
-                            )
-                          "
-                          placeholder="something"
-                          size="small"
-                        ></el-input>
-                        <el-color-picker
-                          v-model="
-                            showLayerTableList[scope.$index].paint['line-color']
-                          "
-                          @change="
-                            handlePaintChange(
-                              showLayerTableList[scope.$index]['id'],
-                              'line-color',
+                            "
+                            @change="
+                              handlePaintChange(
+                                showLayerTableList[scope.$index]['id'],
+                                'line-color',
+                                showLayerTableList[scope.$index].paint[
+                                  'line-color'
+                                ]
+                              )
+                            "
+                            placeholder="something"
+                            size="small"
+                          ></el-input>
+                          <el-color-picker
+                            v-model="
                               showLayerTableList[scope.$index].paint[
                                 'line-color'
                               ]
-                            )
-                          "
-                          :predefine="predefineColors"
-                          size="small"
-                        >
-                        </el-color-picker>
-                      </div>
+                            "
+                            @change="
+                              handlePaintChange(
+                                showLayerTableList[scope.$index]['id'],
+                                'line-color',
+                                showLayerTableList[scope.$index].paint[
+                                  'line-color'
+                                ]
+                              )
+                            "
+                            :predefine="predefineColors"
+                            size="small"
+                          >
+                          </el-color-picker>
+                        </div>
 
-                      <div class="flex-row-start">
-                        <h3 style="width: 200px">线宽（px）:</h3>
-                        <el-input-number
-                          v-model="
-                            showLayerTableList[scope.$index].paint['line-width']
-                          "
-                          @change="
-                            handlePaintChange(
-                              showLayerTableList[scope.$index]['id'],
-                              'line-width',
+                        <div class="flex-row-start">
+                          <h3 style="width: 200px">线宽（px）:</h3>
+                          <el-input-number
+                            v-model="
                               showLayerTableList[scope.$index].paint[
                                 'line-width'
                               ]
-                            )
-                          "
-                          :min="0"
-                          :max="99999"
-                          size="small"
-                          label="描述文字"
-                        >
-                        </el-input-number>
-                      </div>
+                            "
+                            @change="
+                              handlePaintChange(
+                                showLayerTableList[scope.$index]['id'],
+                                'line-width',
+                                showLayerTableList[scope.$index].paint[
+                                  'line-width'
+                                ]
+                              )
+                            "
+                            :min="0"
+                            :max="99999"
+                            size="small"
+                            label="描述文字"
+                          >
+                          </el-input-number>
+                        </div>
 
-                      <div class="flex-row-start">
-                        <h3 style="width: 200px">透明度:</h3>
-                        <el-input-number
-                          v-model="
-                            showLayerTableList[scope.$index].paint[
-                              'line-opacity'
-                            ]
-                          "
-                          @change="
-                            handlePaintChange(
-                              showLayerTableList[scope.$index]['id'],
-                              'line-opacity',
+                        <div class="flex-row-start">
+                          <h3 style="width: 200px">透明度:</h3>
+                          <el-input-number
+                            v-model="
                               showLayerTableList[scope.$index].paint[
                                 'line-opacity'
                               ]
-                            )
-                          "
-                          :min="0"
-                          :max="1"
-                          :step="0.1"
-                          size="small"
-                          label="描述文字"
-                        >
-                        </el-input-number>
-                      </div>
-                      <div class="flex-row-start">
-                        <h3 style="width: 200px">模糊度:</h3>
-                        <el-input-number
-                          v-model="
-                            showLayerTableList[scope.$index].paint['line-blur']
-                          "
-                          @change="
-                            handlePaintChange(
-                              showLayerTableList[scope.$index]['id'],
-                              'line-blur',
+                            "
+                            @change="
+                              handlePaintChange(
+                                showLayerTableList[scope.$index]['id'],
+                                'line-opacity',
+                                showLayerTableList[scope.$index].paint[
+                                  'line-opacity'
+                                ]
+                              )
+                            "
+                            :min="0"
+                            :max="1"
+                            :step="0.1"
+                            size="small"
+                            label="描述文字"
+                          >
+                          </el-input-number>
+                        </div>
+                        <div class="flex-row-start">
+                          <h3 style="width: 200px">模糊度:</h3>
+                          <el-input-number
+                            v-model="
                               showLayerTableList[scope.$index].paint[
                                 'line-blur'
                               ]
-                            )
-                          "
-                          :min="0"
-                          :max="1"
-                          :step="0.1"
-                          size="small"
-                          label="描述文字"
-                        >
-                        </el-input-number>
-                      </div>
-                      <div class="flex-row-start">
-                        <h3 style="width: 80px">虚线:</h3>
-                        实:&nbsp;
-                        <el-input-number
-                          v-model="
-                            showLayerTableList[scope.$index].paint[
-                              'line-dasharray'
-                            ][0]
-                          "
-                          @change="
-                            handlePaintChange(
-                              showLayerTableList[scope.$index]['id'],
-                              'line-dasharray',
+                            "
+                            @change="
+                              handlePaintChange(
+                                showLayerTableList[scope.$index]['id'],
+                                'line-blur',
+                                showLayerTableList[scope.$index].paint[
+                                  'line-blur'
+                                ]
+                              )
+                            "
+                            :min="0"
+                            :max="1"
+                            :step="0.1"
+                            size="small"
+                            label="描述文字"
+                          >
+                          </el-input-number>
+                        </div>
+                        <div class="flex-row-start">
+                          <h3 style="width: 80px">虚线:</h3>
+                          实:&nbsp;
+                          <el-input-number
+                            v-model="
                               showLayerTableList[scope.$index].paint[
                                 'line-dasharray'
-                              ]
-                            )
-                          "
-                          :min="0"
-                          size="small"
-                          label="描述文字"
-                        >
-                        </el-input-number>
-                        虚:&nbsp;
-                        <el-input-number
-                          v-model="
-                            showLayerTableList[scope.$index].paint[
-                              'line-dasharray'
-                            ][1]
-                          "
-                          @change="
-                            handlePaintChange(
-                              showLayerTableList[scope.$index]['id'],
-                              'line-dasharray',
+                              ][0]
+                            "
+                            @change="
+                              handlePaintChange(
+                                showLayerTableList[scope.$index]['id'],
+                                'line-dasharray',
+                                showLayerTableList[scope.$index].paint[
+                                  'line-dasharray'
+                                ]
+                              )
+                            "
+                            :min="0"
+                            size="small"
+                            label="描述文字"
+                          >
+                          </el-input-number>
+                          虚:&nbsp;
+                          <el-input-number
+                            v-model="
                               showLayerTableList[scope.$index].paint[
                                 'line-dasharray'
-                              ]
-                            )
-                          "
-                          :min="0"
-                          size="small"
-                          label="描述文字"
-                        >
-                        </el-input-number>
+                              ][1]
+                            "
+                            @change="
+                              handlePaintChange(
+                                showLayerTableList[scope.$index]['id'],
+                                'line-dasharray',
+                                showLayerTableList[scope.$index].paint[
+                                  'line-dasharray'
+                                ]
+                              )
+                            "
+                            :min="0"
+                            size="small"
+                            label="描述文字"
+                          >
+                          </el-input-number>
+                        </div>
                       </div>
-                    </div>
 
-                    <!--              面图层编辑-->
-                    <div
-                      v-else-if="
-                        scope.row.type === 'fill' &&
-                        scope.row.data.visualType == 'geojson'
-                      "
-                    >
-                      <div class="flex-row-start">
-                        <h3 style="width: 200px">颜色:</h3>
-                        <el-input
-                          v-model="
-                            showLayerTableList[scope.$index].paint['fill-color']
-                          "
-                          @change="
-                            handlePaintChange(
-                              showLayerTableList[scope.$index]['id'],
-                              'fill-color',
+                      <!--              面图层编辑-->
+                      <div
+                        v-else-if="
+                          scope.row.type === 'fill' &&
+                          scope.row.data.visualType == 'geojson'
+                        "
+                      >
+                        <div class="flex-row-start">
+                          <h3 style="width: 200px">颜色:</h3>
+                          <el-input
+                            v-model="
                               showLayerTableList[scope.$index].paint[
                                 'fill-color'
                               ]
-                            )
-                          "
-                          placeholder="something"
-                          size="small"
-                        ></el-input>
-                        <el-color-picker
-                          v-model="
-                            showLayerTableList[scope.$index].paint['fill-color']
-                          "
-                          @change="
-                            handlePaintChange(
-                              showLayerTableList[scope.$index]['id'],
-                              'fill-color',
+                            "
+                            @change="
+                              handlePaintChange(
+                                showLayerTableList[scope.$index]['id'],
+                                'fill-color',
+                                showLayerTableList[scope.$index].paint[
+                                  'fill-color'
+                                ]
+                              )
+                            "
+                            placeholder="something"
+                            size="small"
+                          ></el-input>
+                          <el-color-picker
+                            v-model="
                               showLayerTableList[scope.$index].paint[
                                 'fill-color'
                               ]
-                            )
-                          "
-                          :predefine="predefineColors"
-                          size="small"
-                        >
-                        </el-color-picker>
-                      </div>
-                      <div class="flex-row-start">
-                        <h3 style="width: 200px">边线颜色:</h3>
-                        <el-input
-                          v-model="
-                            showLayerTableList[scope.$index].paint[
-                              'fill-outline-color'
-                            ]
-                          "
-                          @change="
-                            handlePaintChange(
-                              showLayerTableList[scope.$index]['id'],
-                              'fill-outline-color',
+                            "
+                            @change="
+                              handlePaintChange(
+                                showLayerTableList[scope.$index]['id'],
+                                'fill-color',
+                                showLayerTableList[scope.$index].paint[
+                                  'fill-color'
+                                ]
+                              )
+                            "
+                            :predefine="predefineColors"
+                            size="small"
+                          >
+                          </el-color-picker>
+                        </div>
+                        <div class="flex-row-start">
+                          <h3 style="width: 200px">边线颜色:</h3>
+                          <el-input
+                            v-model="
                               showLayerTableList[scope.$index].paint[
                                 'fill-outline-color'
                               ]
-                            )
-                          "
-                          placeholder="something"
-                          size="small"
-                        ></el-input>
-                        <el-color-picker
-                          v-model="
-                            showLayerTableList[scope.$index].paint[
-                              'fill-outline-color'
-                            ]
-                          "
-                          @change="
-                            handlePaintChange(
-                              showLayerTableList[scope.$index]['id'],
-                              'fill-outline-color',
+                            "
+                            @change="
+                              handlePaintChange(
+                                showLayerTableList[scope.$index]['id'],
+                                'fill-outline-color',
+                                showLayerTableList[scope.$index].paint[
+                                  'fill-outline-color'
+                                ]
+                              )
+                            "
+                            placeholder="something"
+                            size="small"
+                          ></el-input>
+                          <el-color-picker
+                            v-model="
                               showLayerTableList[scope.$index].paint[
                                 'fill-outline-color'
                               ]
-                            )
-                          "
-                          :predefine="predefineColors"
-                          size="small"
-                        >
-                        </el-color-picker>
-                      </div>
-                      <div class="flex-row-start">
-                        <h3 style="width: 200px">透明度:</h3>
-                        <el-input-number
-                          v-model="
-                            showLayerTableList[scope.$index].paint[
-                              'fill-opacity'
-                            ]
-                          "
-                          @change="
-                            handlePaintChange(
-                              showLayerTableList[scope.$index]['id'],
-                              'fill-opacity',
+                            "
+                            @change="
+                              handlePaintChange(
+                                showLayerTableList[scope.$index]['id'],
+                                'fill-outline-color',
+                                showLayerTableList[scope.$index].paint[
+                                  'fill-outline-color'
+                                ]
+                              )
+                            "
+                            :predefine="predefineColors"
+                            size="small"
+                          >
+                          </el-color-picker>
+                        </div>
+                        <div class="flex-row-start">
+                          <h3 style="width: 200px">透明度:</h3>
+                          <el-input-number
+                            v-model="
                               showLayerTableList[scope.$index].paint[
                                 'fill-opacity'
                               ]
-                            )
+                            "
+                            @change="
+                              handlePaintChange(
+                                showLayerTableList[scope.$index]['id'],
+                                'fill-opacity',
+                                showLayerTableList[scope.$index].paint[
+                                  'fill-opacity'
+                                ]
+                              )
+                            "
+                            :min="0"
+                            :max="1"
+                            :step="0.1"
+                            size="small"
+                            label="描述文字"
+                          >
+                          </el-input-number>
+                        </div>
+                        <div
+                          class="flex-row-start"
+                          v-if="
+                            showLayerTableList[scope.$index].startEditor !=
+                            undefined
                           "
-                          :min="0"
-                          :max="1"
-                          :step="0.1"
-                          size="small"
-                          label="描述文字"
                         >
-                        </el-input-number>
+                          <h3 style="width: 200px">矢量编辑:</h3>
+                          <el-switch
+                            :width="30"
+                            v-model="
+                              showLayerTableList[scope.$index].startEditor
+                            "
+                            @change="layer2JsonEditor($event, scope.row)"
+                          ></el-switch>
+                        </div>
+                        <div
+                          class="flex-row-start"
+                          v-if="
+                            showLayerTableList[scope.$index].startEditor !=
+                            undefined
+                          "
+                        >
+                          <h3 style="width: 200px">保存文件:</h3>
+                          <el-button
+                            :width="30"
+                            @click="saveGeoJson2UserSpace(scope.row)"
+                            >保存</el-button
+                          >
+                        </div>
                       </div>
-                      <div
-                        class="flex-row-start"
-                        v-if="
-                          showLayerTableList[scope.$index].startEditor !=
-                          undefined
-                        "
-                      >
-                        <h3 style="width: 200px">矢量编辑:</h3>
-                        <el-switch
-                          :width="30"
-                          v-model="showLayerTableList[scope.$index].startEditor"
-                          @change="layer2JsonEditor($event, scope.row)"
-                        ></el-switch>
+                      <!--              栅格层编辑-->
+                      <div v-else-if="scope.row.data.visualType == 'tif'"></div>
+                      <!--              栅格层编辑-->
+                      <div v-else-if="scope.row.data.visualType == 'dataSet'">
+                        <el-scrollbar max-height="40vh">
+                          <el-table
+                            :data="scope.row.data.dataSetList"
+                            style="width: 100%"
+                          >
+                            <el-table-column
+                              prop="visualType"
+                              label="Type"
+                              width="60"
+                            />
+                            <el-table-column
+                              prop="name"
+                              label="Name"
+                              width="200"
+                            />
+                          </el-table>
+                        </el-scrollbar>
                       </div>
-                      <div
-                        class="flex-row-start"
-                        v-if="
-                          showLayerTableList[scope.$index].startEditor !=
-                          undefined
-                        "
-                      >
-                        <h3 style="width: 200px">保存文件:</h3>
+                      <!--              文本编辑-->
+                      <div v-else-if="scope.row.data.visualType == 'txt'">
+                        <div class="flex-row-start">
+                          <el-button
+                            :width="30"
+                            @click="openTxtEditor(scope.row)"
+                            >打开文本编辑器</el-button
+                          >
+                        </div>
+                      </div>
+                      <template #reference>
                         <el-button
-                          :width="30"
-                          @click="saveGeoJson2UserSpace(scope.row)"
-                          >保存</el-button
+                          size="small"
+                          type="success"
+                          @click="handleLayerEdit(scope.$index, scope.row)"
                         >
-                      </div>
-                    </div>
-                    <!--              栅格层编辑-->
-                    <div v-else-if="scope.row.data.visualType == 'tif'"></div>
-                    <!--              文本编辑-->
-                    <div v-else-if="scope.row.data.visualType == 'txt'">
-                      <div class="flex-row-start">
-                        <el-button :width="30" @click="openTxtEditor(scope.row)"
-                          >打开文本编辑器</el-button
-                        >
-                      </div>
-                    </div>
-                    <template #reference>
-                      <el-button
-                        size="small"
-                        type="success"
-                        @click="handleLayerEdit(scope.$index, scope.row)"
-                      >
-                        编辑
-                      </el-button>
-                    </template>
-                  </el-popover>
-                </template>
-              </el-table-column>
-            </el-table>
+                          编辑
+                        </el-button>
+                      </template>
+                    </el-popover>
+                  </template>
+                </el-table-column>
+              </el-table>
+            
           </el-collapse-item>
-          <!-- <el-collapse-item title="模型列表" name="model">
-            <el-table
+          <el-collapse-item
+            title="模型列表"
+            name="model"
+            style="position: relative; z-index: 1005"
+          >
+            <ModelTree
+              style="
+                width: 100%;
+                height: 100%;
+                position: relative;
+                z-index: 1005;
+              "
+              @getCheckData="getCheckData"
+              @getCheckChart="getCheckChart"
+              @getCheckTif="getCheckTif"
+              @getCheckJson="getCheckJson"
+            ></ModelTree>
+
+            <!-- <el-table
               :data="
-                showLayerTableList.filter((item) => item.simularType == 'model')
+                showLayerTableList.filter((item) => item.simularTrait == 'model')
               "
               ref="shpLayerTable"
               row-key="nameId"
@@ -553,8 +621,8 @@
                   <el-button>使用</el-button>
                 </template>
               </el-table-column>
-            </el-table>
-          </el-collapse-item> -->
+            </el-table> -->
+          </el-collapse-item>
         </el-collapse>
       </div>
     </transition-group>
@@ -629,8 +697,14 @@
       :on-change="clipFormChange(clipForm.inputFeaturesName, 'raster')"
     >
       <div v-for="(item, index) in showLayerTableList" :key="index">
-        <Radio :label="item.name" v-if="item.visualType == 'tif'">
-          <span>{{ item.name }}</span>
+        <Radio
+          :label="item.name"
+          v-if="item.visualType == 'tif' || item.visualType == 'dataSet'"
+        >
+          <span v-if="item.visualType == 'tif'">{{ item.name }}</span>
+          <span v-if="item.visualType == 'dataSet'"
+            >{{ item.name }} (批量操作)</span
+          >
         </Radio>
       </div>
     </RadioGroup>
@@ -650,18 +724,126 @@
       </div>
     </RadioGroup>
   </Modal>
+  <Modal v-model="analysisModal" draggable sticky scrollable :mask="false">
+    <template #header>
+      <Icon type="logo-buffer" size="18" />
+      <span style="margin-left: 5px; font-size: 18px">数据分析</span>
+    </template>
+    <Form :model="analysisForm" label-position="top">
+      <FormItem label="分析方法">
+        <RadioGroup v-model="analysisForm.type">
+          <Radio label="charts">趋势分析</Radio>
+          <Radio label="raster">统计分析</Radio>
+          <Radio label="other">其他</Radio>
+        </RadioGroup>
+      </FormItem>
+      <FormItem label="输入要素">
+        <Input
+          v-model="analysisForm.inputFeaturesName"
+          style="width: 90%"
+          readonly
+        ></Input>
+        <Button
+          :size="buttonSize"
+          icon="ios-folder-open"
+          style="margin-left: 15px"
+          @click="selectAnalysisFeatures(analysisForm.type)"
+        ></Button>
+      </FormItem>
+      <FormItem label="输出形式" v-if="analysisForm.type == 'charts'">
+        <RadioGroup v-model="analysisForm.chartsType">
+          <Radio label="line">折线图</Radio>
+          <Radio label="bar">柱状图</Radio>
+          <Radio label="pie">饼图</Radio>
+          <Radio label="scatter">散点图</Radio>
+        </RadioGroup>
+      </FormItem>
+      <FormItem label="统计时间" v-if="analysisForm.type == 'raster'">
+        <Input v-model="analysisForm.dateNum" style="width: 90%"></Input>
+      </FormItem>
+    </Form>
+    <template #footer>
+      <Button @click="analysisModal = false">取消</Button>
+      <Button type="primary" @click="commitAnalysis()">开始分析</Button>
+    </template>
+  </Modal>
+  <Modal v-model="newTxtModal">
+    <template #header>
+      <Icon type="md-square" size="18" />
+      <span style="margin-left: 5px; font-size: 18px">新建文本文件</span>
+    </template>
+    <span>名称：</span>
+    <Input v-model="newTxtFileName" style="width: 90%"></Input>
+    <template #footer>
+      <Button @click="newTxtModal = false">取消</Button>
+      <Button type="primary" @click="commitNewTxt()">确定创建</Button>
+    </template>
+  </Modal>
   <Modal
-    v-model="analysisModal"
+    v-model="analysisSelectFeaturesModal"
     draggable
     sticky
     scrollable
     :mask="false"
-    @on-ok="ok"
-    @on-cancel="cancel"
+    :closable="false"
   >
     <template #header>
-      <Icon type="md-buffer" size="18" />
-      <span style="margin-left: 5px; font-size: 18px">数据分析</span>
+      <Icon type="logo-buffer" size="18" />
+      <span style="margin-left: 5px; font-size: 18px">数据分析 - 选择数据</span>
+    </template>
+    <Alert
+      type="warning"
+      show-icon
+      closable
+      v-if="analysisForm.type == 'charts'"
+    >
+      A success prompt
+      <template #desc
+        >Content of prompt. Content of prompt. Content of prompt. Content of
+        prompt.
+      </template>
+    </Alert>
+    <RadioGroup
+      v-model="analysisForm.inputFeaturesName"
+      vertical
+      v-if="analysisForm.type == 'charts'"
+      :on-change="analysisFormChange(analysisForm.inputFeaturesName, 'charts')"
+    >
+      <div v-for="(item, index) in showLayerTableList" :key="index">
+        <Radio :label="item.name" v-if="item.visualType == 'txt'">
+          <span>{{ item.name }}</span>
+        </Radio>
+      </div>
+    </RadioGroup>
+    <Alert
+      type="warning"
+      show-icon
+      closable
+      v-if="analysisForm.type == 'raster'"
+    >
+      A success prompt
+      <template #desc
+        >Content of prompt. Content of prompt. Content of prompt. Content of
+        prompt.
+      </template>
+    </Alert>
+    <RadioGroup
+      v-model="analysisForm.inputFeaturesName"
+      vertical
+      v-if="analysisForm.type == 'raster'"
+      :on-change="analysisFormChange(analysisForm.inputFeaturesName, 'raster')"
+    >
+      <div v-for="(item, index) in showLayerTableList" :key="index">
+        <Radio :label="item.name" v-if="item.visualType == 'nc'">
+          <span>{{ item.name }}</span>
+        </Radio>
+      </div>
+    </RadioGroup>
+    <template #footer>
+      <Button @click="analysisSelectFeaturesModal = false">取消</Button>
+      <Button type="primary" @click="analysisSelectFeaturesModal = false"
+        >确定</Button
+      >
     </template>
   </Modal>
 </template>
@@ -682,15 +864,20 @@ import { toRaw } from "@vue/reactivity";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import ModelConfig from "../App/ModelConfig.vue";
+import ModelTree from "../App/ModelTree.vue";
+import { Encrypt,Decrypt } from "@/util/codeUtil"
 
 var map = null;
 
 export default {
   name: "MapboxView",
   props: ["shpShowList"], //shpShowList为前端勾选的要展示在地图上的shp，格式为[{name:"",type:"",nameId:""}]
-
+  components: {
+    ModelTree,
+  },
   data() {
     return {
+      falseShow:false,
       modelId: ref("7887988"),
       refModelConfig: ref(),
       showCenter: "-90,17",
@@ -773,14 +960,24 @@ export default {
         outputFeaturesName: "",
       },
       analysisModal: false,
+      analysisSelectFeaturesModal: false,
+      analysisForm: {
+        inputFeaturesName: "",
+        inputTxtPath: "",
+        type: "charts",
+        chartsType: "line",
+        dateNum: "",
+      },
+      newTxtModal: false,
+      newTxtFileName: "",
 
-      activeNames: "data",
+      activeNames: ["data", "model"],
       resList: {
         modelList: [],
         dataList: [],
       },
-      taskInfo: JSON.parse(localStorage.getItem("task")),
-      userInfo: JSON.parse(localStorage.getItem("userInfo")),
+      taskInfo: JSON.parse(Decrypt(localStorage.getItem("task"))),
+      userInfo: JSON.parse(Decrypt(localStorage.getItem("userInfo"))),
       dataServer: useStore().getters.devIpAddress,
     };
   },
@@ -825,7 +1022,9 @@ export default {
     let that = this;
     setTimeout(function () {
       that.filterResList();
-      that.initShpShowList();
+      setTimeout(() => {
+        that.initShpShowList();
+      }, 500);
     }, 500);
   },
 
@@ -905,6 +1104,7 @@ export default {
     },
     filterResList() {
       for (let i = 0; i < this.taskInfo.dataList.length; i++) {
+        if (this.taskInfo.dataList[i].simularTrait=='task'){continue}
         if (this.taskInfo.dataList[i].type == "model") {
           this.resList.modelList.push(this.taskInfo.dataList[i]);
         } else {
@@ -916,14 +1116,16 @@ export default {
     initShpShowList() {
       // console.log(this.resList);
       for (let i = 0; i < this.resList.dataList.length; i++) {
-        console.log('simular :',this.resList.dataList[i]);
-        if(this.resList.dataList[i].mdl!=undefined){
-          continue
+        console.log("simular :", this.resList.dataList[i]);
+        if (this.resList.dataList[i].mdl != undefined) {
+          continue;
         }
         if (
           this.resList.dataList[i].visualType == "shp" ||
           this.resList.dataList[i].visualType == "tif" ||
-          this.resList.dataList[i].visualType == "geojson"
+          this.resList.dataList[i].visualType == "geojson" ||
+          this.resList.dataList[i].visualType == "dataSet" ||
+          this.resList.dataList[i].visualType == "asc"
         ) {
           this.addLayerToMap(
             JSON.parse(JSON.stringify(this.resList.dataList[i]))
@@ -944,6 +1146,7 @@ export default {
         }
       }
     },
+    //更新数据用这个
     addLayerToMap(newShpInfo) {
       //添加数据源
       if (newShpInfo.visualType == "shp") {
@@ -963,7 +1166,11 @@ export default {
         };
         this.showLayerTableList.push(newLayer);
         map.addLayer(newLayer);
-      } else if (newShpInfo.visualType == "tif") {
+      } else if (
+        newShpInfo.visualType == "tif" ||
+        newShpInfo.visualType == "dataSet" ||
+        newShpInfo.visualType == "asc"
+      ) {
         map.addSource(newShpInfo.name + "_" + newShpInfo.id, {
           type: "raster",
           tiles: [newShpInfo.visualWebAddress],
@@ -1030,12 +1237,13 @@ export default {
     handleEditBoardShow(val) {
       if (val) {
         this.editBoardShow = true;
-        document.getElementsByClassName("model-tree")[0].style.opacity='1'
-        document.getElementsByClassName("model-tree")[0].style.transform='';
+        document.getElementsByClassName("model-tree")[0].style.opacity = "1";
+        document.getElementsByClassName("model-tree")[0].style.transform = "";
       } else {
         this.editBoardShow = false;
-        document.getElementsByClassName("model-tree")[0].style.opacity='0'
-        document.getElementsByClassName("model-tree")[0].style.transform='scaleY(0.1)';
+        document.getElementsByClassName("model-tree")[0].style.opacity = "0";
+        document.getElementsByClassName("model-tree")[0].style.transform =
+          "scaleY(0.1)";
       }
     },
 
@@ -1109,13 +1317,13 @@ export default {
       unionButtonObj.classList =
         "mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_union ivu-icon ivu-icon-md-square";
       unionButtonObj.id = "mapbox-gl-draw_union";
-      unionButtonObj.title = "联合";
+      unionButtonObj.title = "新建文本文件";
       unionButtonObj.style.fontSize = "16px";
       drawBox.appendChild(unionButtonObj);
       unionButtonObj.addEventListener(
         "click",
         (e) => {
-          that.clipModalShow();
+          that.newTxtModalShow();
         },
         true
       );
@@ -1126,8 +1334,8 @@ export default {
       polygonButton.setAttribute("title", "绘制多边形");
       const trashButton = document.querySelector(".mapbox-gl-draw_trash");
       trashButton.setAttribute("title", "删除图形");
-      // const combineButton = document.querySelector(".mapbox-gl-draw_combine");
-      // combineButton.setAttribute("title", "合并");
+      const combineButton = document.querySelector(".mapbox-gl-draw_union");
+      combineButton.setAttribute("title", "新建文本文件");
       // const uncombineButton = document.querySelector(
       //   ".mapbox-gl-draw_uncombine"
       // );
@@ -1312,8 +1520,13 @@ export default {
     clipFormChange(name, type) {
       for (let i = 0; i < this.showLayerTableList.length; i++) {
         if (this.showLayerTableList[i].name == name && type == "raster") {
-          this.clipForm.inputRaster =
-            this.showLayerTableList[i].data.fileRelativePath;
+          if (this.showLayerTableList[i].visualType == "tif") {
+            this.clipForm.inputRaster =
+              this.showLayerTableList[i].data.fileRelativePath;
+          } else if (this.showLayerTableList[i].visualType == "dataSet") {
+            this.clipForm.inputRasterList =
+              this.showLayerTableList[i].data.dataSetList;
+          }
         } else if (this.showLayerTableList[i].name == name && type == "shp") {
           if (
             this.showLayerTableList[i].data.fileRelativePath != undefined &&
@@ -1333,6 +1546,7 @@ export default {
       // console.log(this.clipForm);
     },
     commitClip() {
+      console.log(this.clipForm);
       let res = {};
       if (
         !this.clipForm.isShp &&
@@ -1350,9 +1564,21 @@ export default {
       } else {
         GDALClipDTO.inputGeoJson = res.fileRelativePath;
       }
-      GDALClipDTO.inputRasterPath = this.clipForm.inputRaster;
+      if (
+        this.clipForm.inputRaster != "" &&
+        this.clipForm.inputFeaturesName.indexOf("_dataSet") < 0
+      ) {
+        GDALClipDTO.inputRasterPath = this.clipForm.inputRaster;
+      } else {
+        //集操作
+        GDALClipDTO.inputRasterPath = "";
+        GDALClipDTO.inputRasterListPath = this.clipForm.inputRasterList;
+      }
       GDALClipDTO.outputTifName = this.clipForm.outputFeaturesName;
-      if (GDALClipDTO.outputTifName.indexOf(".tif") < 0) {
+      if (
+        GDALClipDTO.outputTifName.indexOf(".tif") < 0 &&
+        this.clipForm.inputFeaturesName.indexOf("_dataSet") < 0
+      ) {
         GDALClipDTO.outputTifName = GDALClipDTO.outputTifName + ".tif";
       }
       GDALClipDTO.isShp = this.clipForm.isShp;
@@ -1361,14 +1587,19 @@ export default {
         message: "裁剪中，请稍等！",
       });
       axios({
-        url: this.dataServer + "/script/gdalClip/" + this.taskInfo.id,
+        url:
+          this.dataServer +
+          "/script/gdalClip/" +
+          this.taskInfo.id +
+          "/" +
+          this.userInfo.id,
         method: "post",
         data: GDALClipDTO,
       }).then(
         (res) => {
           // console.log(res.data);
           if (res.data.code == 0) {
-            localStorage.setItem("task", JSON.stringify(res.data.data));
+            localStorage.setItem("task", Encrypt(JSON.stringify(res.data.data)));
             ElMessage({
               type: "success",
               message: "裁剪成功，正在加载数据...",
@@ -1387,6 +1618,18 @@ export default {
     },
     openTxtEditor(info) {
       this.$emit("openTxtEditor", info);
+    },
+    getCheckData(data) {
+      this.$emit("getCheckData", data);
+    },
+    getCheckTif(data) {
+      this.$emit("getCheckTif", data);
+    },
+    getCheckChart(data) {
+      this.$emit("getCheckChart", data);
+    },
+    getCheckJson(data) {
+      this.$emit("getCheckJson", data);
     },
     updateTxtInfo(res) {
       for (let i = 0; i < res.dataList.length; i++) {
@@ -1411,6 +1654,125 @@ export default {
     analysisModalShow() {
       this.analysisModal = true;
     },
+    selectAnalysisFeatures(type) {
+      this.analysisSelectFeaturesModal = true;
+    },
+    analysisFormChange(name, type) {
+      for (let i = 0; i < this.showLayerTableList.length; i++) {
+        if (this.showLayerTableList[i].name == name && type == "charts") {
+          this.analysisForm.inputTxtPath =
+            this.showLayerTableList[i].data.fileRelativePath;
+        } else if (
+          this.showLayerTableList[i].name == name &&
+          type == "raster"
+        ) {
+          this.analysisForm.inputTxtPath =
+            this.showLayerTableList[i].data.fileRelativePath;
+        }
+      }
+      console.log(JSON.parse(JSON.stringify(this.analysisForm)));
+    },
+    commitAnalysis() {
+      if (this.analysisForm.inputTxtPath != "") {
+        ElMessage({
+          type: "info",
+          message: "正在统计分析中，请稍等！",
+        });
+        axios({
+          url: this.dataServer + "/script/txtAnalysis/" + this.taskInfo.id,
+          method: "post",
+          data: this.analysisForm,
+        }).then(
+          (res) => {
+            if (res.data.code == 0) {
+              if (this.analysisForm.type == "charts") {
+                let chartInfo = {};
+                chartInfo.options = res.data.data;
+                chartInfo.name = this.analysisForm.inputFeaturesName;
+                chartInfo.id = this.analysisForm.inputTxtPath.substring(
+                  this.analysisForm.inputTxtPath.length - 28,
+                  this.analysisForm.inputTxtPath.length - 4
+                );
+                chartInfo.mapDataType = "chart";
+                chartInfo.chartsType = this.analysisForm.chartsType;
+                this.$emit("getCheckChart", chartInfo);
+                this.analysisModal = false;
+              } else if (this.analysisForm.type == "raster") {
+                let chartInfo = {};
+                chartInfo.options = res.data.data;
+                chartInfo.name = this.analysisForm.inputFeaturesName;
+                chartInfo.id = this.analysisForm.inputTxtPath.substring(
+                  this.analysisForm.inputTxtPath.length - 28,
+                  this.analysisForm.inputTxtPath.length - 4
+                );
+                chartInfo.mapDataType = "raster";
+                chartInfo.dateNum = this.analysisForm.dateNum;
+                this.$emit("getCheckChart", chartInfo);
+                this.analysisModal = false;
+              }
+            }
+          },
+          (err) => {
+            ElMessage({
+              type: "error",
+              message: "分析失败，请重试！",
+            });
+            console.log(err);
+          }
+        );
+      } else {
+        ElMessage({
+          type: "error",
+          message: "提交失败，请检查数据并重试！",
+        });
+      }
+    },
+    newTxtModalShow() {
+      this.newTxtModal = true;
+    },
+    commitNewTxt() {
+      let formData = new FormData();
+      formData.append("userId", this.userInfo.id);
+      formData.append("name", this.newTxtFileName);
+      axios({
+        url: this.dataServer + "/LabTask/newLabTxtFile/" + this.taskInfo.id,
+        method: "post",
+        data: formData,
+      }).then(
+        (res) => {
+          // console.log(res.data);
+          if (res.data.code == 0) {
+            localStorage.setItem("task", Encrypt(JSON.stringify(res.data.data)));
+            let newTxtData =
+              res.data.data.dataList[res.data.data.dataList.length - 1];
+            let newTxtLayer = {
+              show: true,
+              name: newTxtData.name,
+              id: newTxtData.id,
+              type: newTxtData.type,
+              visualType: newTxtData.visualType,
+              filter: ["all"],
+              data: newTxtData,
+              // "source-layer": "default"
+            };
+            this.showLayerTableList.push(newTxtLayer);
+            this.newTxtFileName = "";
+            this.newTxtModal = false;
+            ElMessage({
+              type: "success",
+              message: "创建成功！",
+            });
+          }
+        },
+        (err) => {
+          ElMessage({
+            type: "error",
+            message: "创建失败，请重试！",
+          });
+          console.log(err);
+        }
+      );
+    },
   },
 };
 </script>
@@ -1433,7 +1795,7 @@ export default {
 
 .map-zoom-lnglat {
   position: absolute;
-  bottom: 60px;
+  bottom: 30px;
   right: 50px;
   z-index: 99;
   /*background-color: #ffffff !important;*/
@@ -1444,7 +1806,7 @@ export default {
   position: absolute;
   top: 110px;
   left: 40px;
-  z-index: 99;
+  z-index: 1009;
   background-color: white;
   width: 350px;
   height: auto;
@@ -1463,19 +1825,30 @@ export default {
 /deep/.mapboxgl-ctrl-top-right {
   margin-top: 3.5%;
 }
-
-/deep/.el-collapse-item__header.is-active {
-    border-bottom-color: transparent;
-    font-size: 16px;
-    font-weight: 900;
+/deep/.mapboxgl-ctrl-scale {
+  position: absolute;
+  right: 42px;
+  bottom: 50px;
 }
 
+/deep/.el-collapse-item__header.is-active {
+  border-bottom-color: transparent;
+  font-size: 16px;
+  font-weight: 900;
+}
+/deep/.el-collapse-item__content {
+  padding-bottom: 0;
+  position: relative;
+  z-index: 1002;
+  max-height:40vh !important;
+  overflow: scroll !important;
+}
 .lyric-enter-from,
 .lyric-leave-to {
   opacity: 0.1;
   transform-origin: 100% 0;
   transform: scaleY(0.1);
-  
+
   // height: 10px;
   // width: 84px;
 }

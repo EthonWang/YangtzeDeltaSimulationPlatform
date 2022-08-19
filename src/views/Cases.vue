@@ -2,7 +2,7 @@
   <div class="about">
     <!-- <span class="color-change"></span> -->
     <div class="cases-page">
-        <router-view style="width: 100%; height: 97.5%"></router-view>
+        <router-view style="width: 100%; height: 100%"></router-view>
     </div>
   </div>
 </template>
@@ -39,7 +39,7 @@ const store = useStore(); //vuex直接用store.commit
 }
 .cases-page {
   position: absolute;
-  top: 7.46vh;
+  top: 65px;
   left: 0px;
   height: calc(100vh - $top);
   width: calc(100% - $left);

@@ -26,7 +26,7 @@
           <el-row class="row">
             <el-col :span="24">
               <div style="height:100px;background-color: #ffffff;border: 1px solid #DCDCDC;">
-                <p class="blockTitle"><span>{{area}}</span>排名信息概览（前五）</p>
+                <p class="blockTitle"><span>{{area}}</span>排名信息概览（前四）</p>
                 <div id="valueGroup" style="width: 95%;margin-left: 10px;display: flex;align-items: center;height: 80px;justify-content: space-around">
                   <template v-for="(item,key) in rankPart" :key="key">
                     <div style="height:60px;padding: 5px">

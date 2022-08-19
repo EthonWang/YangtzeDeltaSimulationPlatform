@@ -61,7 +61,6 @@ const deleteData = () => {
   emit("deleteData");
 };
 const comeIn=()=>{
-  console.log(props.file)
   emit("comeIn_r",props.file)
 }
 

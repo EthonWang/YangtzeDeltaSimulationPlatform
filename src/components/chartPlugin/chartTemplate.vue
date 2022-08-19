@@ -9,16 +9,22 @@
   >
     <div class="window">
       <div class="window-header">
-        {{ data.label }}
-        <!-- <button class="window-header-close" @click="closeWindow" title="close">
+        {{ data.name }}
+        <button class="window-header-close" @click="closeWindow" title="close">
           X
-        </button> -->
+        </button>
       </div>
       <div class="window-body">
         <chart-without-options
           :chartOptions="chartOptions"
-          :chartId="data.dataSourceId"
-          v-if=" data.mapDataType == 'chart'"
+          :chartId="data.id + data.chartsType"
+          v-if="data.mapDataType == 'chart'"
+        />
+        <chart-with-png
+          :imgPath="dataServer + '/store/scriptOut/' + chartOptions"
+          :chartId="data.id + data.dateNum"
+          @downloadPic="downloadPic"
+          v-if="data.mapDataType == 'raster'"
         />
         <!-- <timeline-chart v-if="data.chartType == 'singleWithTimeline'"/>
           <rainfall-and-flow-relationship-chart v-if="data.chartType == 'doubleWithTimeline'"/>
@@ -31,10 +37,11 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useStore } from "vuex";
 import { onMounted, ref } from "vue";
 import chartWithoutOptions from "./plugins/chartWithoutOptin.vue";
-import axios from "axios";
+import chartWithPng from "./plugins/chartWithPng.vue";
+import { get, post } from "@/request/request";
 // import timelineChart from "./plugins/timelineChart.vue";
 // import rainfallAndFlowRelationshipChart from "./plugins/rainfallAndFlowRelationshipChart.vue";
 // import stackedLine from "./plugins/stackedLine.vue";
@@ -47,6 +54,7 @@ export default {
   },
   components: {
     chartWithoutOptions,
+    chartWithPng,
     // timelineChart,
     // rainfallAndFlowRelationshipChart,
     // stackedLine,
@@ -56,29 +64,29 @@ export default {
   setup(props, ctx) {
     let chartOptions = ref({});
     const store = useStore();
-    const dataServer = store.getters.devIpAddress;
+    const dataServer = store.state.devIpAddress;
     const getChartData = () => {
-      axios
-        .get(
-          dataServer + "/store" +
-            props.data.path
-        )
-        .then((res) => {
-          chartOptions.value = res.data;
-          // console.log(res);
-          chartOptions.value = res.data;
-        //   console.log("chartOptions", chartOptions.value);
-        });
+      // console.log(JSON.stringify(props.data.options));
+      if (props.data.mapDataType == "chart") {
+        chartOptions.value = JSON.parse(JSON.stringify(props.data.options));
+      } else if (props.data.mapDataType == "raster") {
+        chartOptions.value = props.data.options;
+      }
     };
     getChartData();
-    onMounted(() => {
-    });
+    onMounted(() => {});
     const closeWindow = function () {
-      ctx.emit("closeChart", props.data.dataSourceId);
+      ctx.emit("closeChart", props.data.id);
+    };
+    const downloadPic = (path) => {
+      window.location.href =
+        dataServer + "/script/downloadPic?path=" + path;
     };
     return {
       closeWindow,
       chartOptions,
+      dataServer,
+      downloadPic,
     };
   },
 };
@@ -87,7 +95,7 @@ export default {
 <style>
 .window {
   width: 600px;
-  height: 400px;
+  height: 450px;
   border: 1px solid #747474;
   border-radius: 1%;
   position: absolute;
@@ -110,9 +118,11 @@ export default {
   margin-right: 10px;
   margin-top: 5px;
   height: 20px;
+  line-height: 20px;
+  width: 20px;
 }
 .window-body {
-  height: 370px;
+  height: 420px;
   width: 600px;
 }
 </style>

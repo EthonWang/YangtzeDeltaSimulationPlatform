@@ -40,11 +40,12 @@
 <script setup>
 import { reactive, ref, defineProps, defineExpose, } from "vue";
 import { useRouter } from "vue-router";
+import { Encrypt,Decrypt } from "@/util/codeUtil"
 
 const router=useRouter()
 
 const toThemetic=()=>{
-  localStorage.setItem("show_themetic",tittle.value)
+  localStorage.setItem("show_themetic",Encrypt(tittle.value))
   router.push("/themetic")
 }
 

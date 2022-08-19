@@ -15,9 +15,8 @@
           >{{ jsonData.name }}</el-descriptions-item
         >
         <el-descriptions-item label="类型" label-align="center" align="center"
-          ><el-tag size="small">{{
-            jsonData.type
-          }}</el-tag></el-descriptions-item
+          ><el-tag v-if="jsonData.type == 'data'" size="small">数据</el-tag
+          ><el-tag v-else size="small">模型</el-tag></el-descriptions-item
         >
         <el-descriptions-item
           label="作者"
@@ -58,9 +57,14 @@
           label-align="center"
           align="center"
         >
-          <el-link v-for="(item, index) in jsonData.visualDataItems" :key="index" @click="showVisualDataItems(index)">{{ item.name }}</el-link>
-        </el-descriptions-item
-        >
+          <el-link
+            v-for="(item, index) in jsonData.visualDataItems"
+            :key="index"
+            @click="showVisualDataItems(index)"
+            style="color: black; margin-left: 5px;"
+            >{{ item.name }}</el-link
+          >
+        </el-descriptions-item>
       </el-descriptions>
     </el-scrollbar>
   </el-card>
@@ -68,7 +72,7 @@
 
 <script>
 import mapboxgl from "mapbox-gl";
-import {useStore} from "vuex"
+import { useStore } from "vuex";
 
 import { ElMessage } from "element-plus";
 import { ElNotification } from "element-plus";
@@ -131,7 +135,7 @@ export default {
         map.removeSource(this.newShpInfo.name + "_" + this.newShpInfo.id);
       }
       this.newShpInfo = value;
-      this.addLayerToMap(value,0);
+      this.addLayerToMap(value, 0);
       console.log(map);
       map.flyTo({
         center: [119.5, 31.5],
@@ -212,7 +216,7 @@ export default {
 
       let that = this;
       setTimeout(function () {
-        that.addLayerToMap(that.newShpInfo,0);
+        that.addLayerToMap(that.newShpInfo, 0);
       }, 1500);
     },
     addLayerToMap(data, index) {
@@ -278,11 +282,11 @@ export default {
         });
       }
     },
-    showVisualDataItems(index){
+    showVisualDataItems(index) {
       map.removeLayer(this.newShpInfo.id);
       map.removeSource(this.newShpInfo.name + "_" + this.newShpInfo.id);
       let value = this.newShpInfo;
-      this.addLayerToMap(value,index);
+      this.addLayerToMap(value, index);
     },
   },
 };
@@ -309,6 +313,7 @@ export default {
   top: 75px;
   width: 27%;
   height: 45vh;
+  background: white !important;
 }
 .scrollbar-demo-item {
   display: flex;

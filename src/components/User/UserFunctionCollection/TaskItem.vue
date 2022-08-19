@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="task-item">
-      <h3 v-if="!edit_task">{{ props.task.name }}实验</h3>
+      <h2 v-if="!edit_task"><span>实验室：</span>{{ props.task.name }}</h2>
       <el-input
         style="
           width: 40%;
@@ -22,7 +22,7 @@
       <br />
       <el-form
         :label-position="labelPosition"
-        label-width="100px"
+        label-width="160px"
         :model="task_data"
         style="max-width: calc(95% - 130px)"
       >
@@ -108,20 +108,21 @@
         style="float: left; margin-right: 5px"
         >选择并添加<strong>公共资源</strong></el-button
       >
-      <br /><br />
+      <br />
+      <div style="margin: 30px"></div>
       <el-form
         :inline="true"
         :label-position="labelPosition"
         label-width="200px"
         :model="task_data"
         style="max-width: 80%"
-        class="data-list demo-form-inline"
+        class="data-list demo-form-inline data-model"
       >
         <h4>数据配置：</h4>
         <template v-for="(data, index) in props.task.dataList" :key="data">
           <el-form-item
             :label="data.name.slice(0, 25)"
-            v-if="data.simularTrait != 'model'"
+            v-if="data.simularTrait != 'model' && data.simularTrait != 'task'"
           >
             <el-button
               type="success"
@@ -142,13 +143,14 @@
           </el-form-item>
         </template>
       </el-form>
+      <div style="margin: 15px"></div>
       <el-form
         :inline="true"
         :label-position="labelPosition"
         label-width="200px"
         :model="task_data"
         style="max-width: 80%"
-        class="data-list demo-form-inline"
+        class="data-list demo-form-inline data-model"
       >
         <h4>模型配置：</h4>
         <template v-for="(data, index) in props.task.dataList" :key="data">
@@ -187,13 +189,8 @@
         ><el-icon><CloseBold /></el-icon>&nbsp; 删除本实验</el-button
       >
     </div>
-    <el-dialog
-      v-model="centerDialogVisible"
-      title="删除实验"
-      width="30%"
-      center
-    >
-      <span>删除后将无法回复，确认删除？</span>
+    <el-dialog v-model="centerDialogVisible" title="删除实验" width="30%">
+      <span>删除后无法恢复，确认删除？</span>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="centerDialogVisible = false">取消</el-button>
@@ -211,6 +208,7 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { sciencePro } from "@/assets/data/home/sciencePro";
 import taskApi from "@/api/user/task";
+import { Encrypt,Decrypt } from "@/util/codeUtil"
 
 const task_api = new taskApi();
 const router = useRouter(); //路由直接用router.push(...)
@@ -228,7 +226,7 @@ watch(task_data, (newValue, oldValue) => {
 });
 
 const gotoLiboratory = (task) => {
-  localStorage.setItem("task", JSON.stringify(task));
+  localStorage.setItem("task", Encrypt(JSON.stringify(task)));
   router.push("/model");
 };
 
@@ -258,12 +256,12 @@ const confirmEdit = () => {
 const options = Array.from({ length: sciencePro.length }).map((_, idx) => {
   const label = idx;
   return {
-    value: sciencePro[label].name,
-    label: sciencePro[label].name,
+    value: sciencePro[label].name.replace("\n", ""),
+    label: sciencePro[label].name.replace("\n", ""),
     children: Array.from({ length: sciencePro[label].children.length }).map(
       (_, idx1) => ({
-        value: sciencePro[label].children[idx1].name,
-        label: sciencePro[label].children[idx1].name,
+        value: sciencePro[label].children[idx1].name.replace("\n", ""),
+        label: sciencePro[label].children[idx1].name.replace("\n", ""),
       })
     ),
   };
@@ -282,6 +280,13 @@ const handleClose = (tag) => {
 
 <style lang="less" scoped>
 // 兼容css
+h2 {
+  font-size: 22px;
+  color: hsl(210, 100%, 40%);
+}
+h4 {
+  font-size: 19px;
+}
 .task-public {
   position: absolute;
   top: 15px;
@@ -299,12 +304,12 @@ const handleClose = (tag) => {
 }
 .task-item {
   position: relative;
-  border: 0.5px solid rgba(206, 206, 206, 0.5);
+  border: 1px solid rgba(206, 206, 206, 0.75);
   width: 100%;
   padding: 2% 5% 35px 5%;
   transition: all 0.5s;
   &:hover {
-    border: 0.5px solid rgba(81, 113, 255, 0.5);
+    border: 1px solid rgba(81, 113, 255, 0.85);
   }
   strong {
     color: hsl(210, 100%, 60%);
@@ -342,16 +347,25 @@ const handleClose = (tag) => {
 // p {
 //   width: calc(80% - 100px);
 // }
-/deep/.el-form--label-left .el-form-item__label {
+/deep/.data-model.el-form--label-left .el-form-item__label {
   text-align: left;
   overflow: hidden !important;
+  line-height: 120% !important;
+}
+
+/deep/.el-form--label-left .el-form-item__label {
+    font-size: 17px;
+}
+/deep/.el-form-item__content,.el-tag{
+  font-size: 17px;
 }
 .data-list {
   transition: all 0.5s;
   /deep/ .el-form-item {
     transition: all 0.5s;
     --font-size: 14px;
-    margin-bottom: 0px;
+    margin-bottom: 5px;
+    margin-top: 5px;
     margin-right: 10%;
     animation: come 1s linear 1;
     @keyframes come {

@@ -1,6 +1,22 @@
 <template>
   <div class="main">
     <div class="search" v-if="searchPage">
+      <el-button
+        style="
+          position: absolute;
+          right: 1%;
+          top: 1%;
+          z-index: 10;
+          border: 0px;
+          opacity: 0.35;
+          background-color: transparent;
+        "
+        v-if="isAdmin"
+        @click="router.push('/newResource')"
+        plain
+        type="info"
+        >新建资源条目</el-button
+      >
       <el-row style="padding-top: 7%">
         <div style="margin: auto; display: flex">
           <h1
@@ -136,7 +152,11 @@
                   <!-- <span class="fontSet">仅显示支持下载的数据</span> -->
                 </div>
                 <div class="sortResult">
-                  <span class="fontSet">共检索到 {{ dataNum }} 条数据资源，{{modelNum}}条模型资源</span>
+                  <span class="fontSet"
+                    >共检索到 {{ dataNum }} 条数据资源，{{
+                      modelNum
+                    }}条模型资源</span
+                  >
                 </div>
               </el-row>
             </div>
@@ -168,7 +188,9 @@
                   <p>请联系管理员上传相应的数据资源</p>
                 </template>
               </el-result>
-              <el-divider v-if="selectedTag.length == 0 || selectedTag[0] == '专题'"></el-divider>
+              <el-divider
+                v-if="selectedTag.length == 0 || selectedTag[0] == '专题'"
+              ></el-divider>
               <resource-list
                 :resList="modelList"
                 v-if="
@@ -202,215 +224,197 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import tagTree from "@/components/resource/tagTree.vue";
 import resourceList from "@/components/resource/resourceList.vue";
-export default {
-  name: "Resource",
-  props: {},
-  components: {
-    tagTree,
-    resourceList,
-  },
-  setup(props, ctx) {
-    const router = useRouter();
-    let searchPage = ref(true);
-    let searchValue = ref("");
-    let selectedTag = ref([]);
-    let questionsSelectValue = ref("");
-    let resList = ref([]);
-    let modelList = ref([]);
-    let sortField = ref("relativity"); //默认相关，共有relativity、timeUp、timeDown、sizeUp、sizeDown五类
-    let dataNum = ref(0);
-    let modelNum = ref(0);
-    let visualChecked = ref(false);
-    let downloadChecked = ref(false);
-    const restaurants = ref([]);
-    const store = useStore();
-    const dataServer = store.getters.devIpAddress;
-    onMounted(() => {
-      getRouteValue();
-      getAutocompleteList();
-    });
-    const getRouteValue = () => {
-      let routerValue = router.currentRoute.value.query.searchValue;
-      if (routerValue != undefined) {
-        searchValue.value = routerValue;
-        startSearch();
+import { Decrypt } from "@/util/codeUtil";
+
+const router = useRouter();
+const isAdmin = ref("false");
+let user_info = localStorage.getItem("userInfo");
+if (user_info) {
+  user_info = JSON.parse(Decrypt(user_info));
+  if (user_info.email == "opengms@126.com") {
+    isAdmin.value = true;
+  }
+}
+let searchPage = ref(true);
+let searchValue = ref("");
+let selectedTag = ref([]);
+let questionsSelectValue = ref("");
+let resList = ref([]);
+let modelList = ref([]);
+let sortField = ref("relativity"); //默认相关，共有relativity、timeUp、timeDown、sizeUp、sizeDown五类
+let dataNum = ref(0);
+let modelNum = ref(0);
+let visualChecked = ref(false);
+let downloadChecked = ref(false);
+const restaurants = ref([]);
+const store = useStore();
+const dataServer = store.getters.devIpAddress_backup;
+onMounted(() => {
+  getRouteValue();
+  getAutocompleteList();
+});
+const getRouteValue = () => {
+  let routerValue = router.currentRoute.value.query.searchValue;
+  if (routerValue != undefined) {
+    searchValue.value = routerValue;
+    startSearch();
+  }
+};
+let getAutocompleteList = function () {
+  let DTO = {
+    asc: false,
+    page: 1,
+    pageSize: 50,
+    searchText: "",
+    sortField: "createTime",
+    tagClass: "problemTags",
+    tagName: "",
+  };
+  axios({
+    url: dataServer + "/getResourceDataList",
+    method: "post",
+    //忽略contentType
+    contentType: false,
+    //取消序列换 formData本来就是序列化好的
+    processData: false,
+    dataType: "json",
+    data: DTO,
+  }).then(
+    (res) => {
+      let list = res.data.data.content;
+      for (let i = 0; i < list.length; i++) {
+        restaurants.value.push({
+          value: list[i].name,
+          label: list[i].name,
+        });
       }
-    };
-    let getAutocompleteList = function () {
-      let DTO = {
-        asc: false,
-        page: 1,
-        pageSize: 50,
-        searchText: "",
-        sortField: "createTime",
-        tagClass: "problemTags",
-        tagName: "",
-      };
-      axios({
-        url: dataServer + "/getResourceDataList",
-        method: "post",
-        //忽略contentType
-        contentType: false,
-        //取消序列换 formData本来就是序列化好的
-        processData: false,
-        dataType: "json",
-        data: DTO,
-      }).then(
-        (res) => {
-          let list = res.data.data.content;
-          for (let i = 0; i < list.length; i++) {
-            restaurants.value.push({
-              value: list[i].name,
-              label: list[i].name,
-            });
-          }
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-    };
-    const querySearch = (queryString, cb) => {
-      const results = queryString
-        ? restaurants.value.filter(createFilter(queryString))
-        : restaurants.value;
-      // call callback function to return suggestions
-      cb(results);
-    };
-    const createFilter = (queryString) => {
-      return (restaurant) => {
-        return (
-          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) >= 0
-        );
-      };
-    };
-    let startSearch = function () {
-      let tagClass = "problemTags";
-      let tagName = "";
-      if (selectedTag.value.length == 0) {
-        tagClass = "problemTags";
-        tagName = "";
-      } else if (selectedTag.value[0] == "专题") {
-        tagClass = "problemTags";
-        if (selectedTag.value.length == 1) {
-          tagName = "";
-        } else {
-          tagName = selectedTag.value[1];
-        }
-      } else {
-        tagClass = "normalTags";
-        if (selectedTag.value.length == 1) {
-          tagName = "";
-        } else {
-          tagName = selectedTag.value[1];
-        }
-      }
-      let DTO = {
-        asc: false,
-        page: 1,
-        pageSize: 16,
-        searchText: searchValue.value,
-        sortField: "createTime",
-        tagClass: tagClass,
-        tagName: tagName,
-      };
-      axios({
-        url: dataServer + "/getResourceDataList",
-        method: "post",
-        //忽略contentType
-        contentType: false,
-        //取消序列换 formData本来就是序列化好的
-        processData: false,
-        dataType: "json",
-        data: DTO,
-      }).then(
-        (res) => {
-          searchPage.value = false;
-          resList.value = res.data.data.content;
-          dataNum.value = res.data.data.totalElements;
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-      axios({
-        url: dataServer + "/getResourceModelList",
-        method: "post",
-        //忽略contentType
-        contentType: false,
-        //取消序列换 formData本来就是序列化好的
-        processData: false,
-        dataType: "json",
-        data: DTO,
-      }).then(
-        (res) => {
-          searchPage.value = false;
-          modelList.value = res.data.data.content;
-          modelNum.value = res.data.data.totalElements;
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-    };
-    const clearSearch = function () {
-      searchValue.value = "";
-      visualChecked.value = false;
-      downloadChecked.value = false;
-      selectedTag.value = [];
-      startSearch();
-    };
-    const tagClick = function (data) {
-      selectedTag.value = data;
-      startSearch();
-    };
-    let sortByField = function (type) {
-      if (type == "relativity") {
-        sortField.value = "relativity";
-      } else if (type == "time") {
-        if (sortField.value == "timeDown") {
-          sortField.value = "timeUp";
-        } else if (sortField.value == "timeUp") {
-          sortField.value = "relativity";
-        } else {
-          sortField.value = "timeDown";
-        }
-      } else if (type == "size") {
-        if (sortField.value == "sizeDown") {
-          sortField.value = "sizeUp";
-        } else if (sortField.value == "sizeUp") {
-          sortField.value = "relativity";
-        } else {
-          sortField.value = "sizeDown";
-        }
-      }
-    };
-    return {
-      searchPage,
-      searchValue,
-      startSearch,
-      tagClick,
-      selectedTag,
-      questionsSelectValue,
-      dataNum,
-      sortField,
-      sortByField,
-      resList,
-      modelList,
-      modelNum,
-      visualChecked,
-      downloadChecked,
-      clearSearch,
-      querySearch,
-    };
-  },
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
+};
+const querySearch = (queryString, cb) => {
+  const results = queryString
+    ? restaurants.value.filter(createFilter(queryString))
+    : restaurants.value;
+  // call callback function to return suggestions
+  cb(results);
+};
+const createFilter = (queryString) => {
+  return (restaurant) => {
+    return (
+      restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) >= 0
+    );
+  };
+};
+let startSearch = function () {
+  let tagClass = "problemTags";
+  let tagName = "";
+  if (selectedTag.value.length == 0) {
+    tagClass = "problemTags";
+    tagName = "";
+  } else if (selectedTag.value[0] == "专题") {
+    tagClass = "problemTags";
+    if (selectedTag.value.length == 1) {
+      tagName = "";
+    } else {
+      tagName = selectedTag.value[1];
+    }
+  } else {
+    tagClass = "normalTags";
+    if (selectedTag.value.length == 1) {
+      tagName = "";
+    } else {
+      tagName = selectedTag.value[1];
+    }
+  }
+  let DTO = {
+    asc: false,
+    page: 1,
+    pageSize: 16,
+    searchText: searchValue.value,
+    sortField: "createTime",
+    tagClass: tagClass,
+    tagName: tagName,
+  };
+  axios({
+    url: dataServer + "/getResourceDataList",
+    method: "post",
+    //忽略contentType
+    contentType: false,
+    //取消序列换 formData本来就是序列化好的
+    processData: false,
+    dataType: "json",
+    data: DTO,
+  }).then(
+    (res) => {
+      searchPage.value = false;
+      resList.value = res.data.data.content;
+      dataNum.value = res.data.data.totalElements;
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
+  axios({
+    url: dataServer + "/getResourceModelList",
+    method: "post",
+    //忽略contentType
+    contentType: false,
+    //取消序列换 formData本来就是序列化好的
+    processData: false,
+    dataType: "json",
+    data: DTO,
+  }).then(
+    (res) => {
+      searchPage.value = false;
+      modelList.value = res.data.data.content;
+      modelNum.value = res.data.data.totalElements;
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
+};
+const clearSearch = function () {
+  searchValue.value = "";
+  visualChecked.value = false;
+  downloadChecked.value = false;
+  selectedTag.value = [];
+  startSearch();
+};
+const tagClick = function (data) {
+  selectedTag.value = data;
+  startSearch();
+};
+let sortByField = function (type) {
+  if (type == "relativity") {
+    sortField.value = "relativity";
+  } else if (type == "time") {
+    if (sortField.value == "timeDown") {
+      sortField.value = "timeUp";
+    } else if (sortField.value == "timeUp") {
+      sortField.value = "relativity";
+    } else {
+      sortField.value = "timeDown";
+    }
+  } else if (type == "size") {
+    if (sortField.value == "sizeDown") {
+      sortField.value = "sizeUp";
+    } else if (sortField.value == "sizeUp") {
+      sortField.value = "relativity";
+    } else {
+      sortField.value = "sizeDown";
+    }
+  }
 };
 </script>
 
@@ -498,7 +502,7 @@ export default {
   height: 50px;
   margin-left: 15px;
 }
-.sortResult{
+.sortResult {
   margin-right: 25px;
 }
 .sortCheckBox {

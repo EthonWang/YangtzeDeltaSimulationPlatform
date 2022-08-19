@@ -115,8 +115,6 @@
 <script setup>
 //采用vue2写法的话把setup去掉，
 import {
-  reactive,
-  computed,
   ref,
   onMounted,
   defineProps,
@@ -174,7 +172,7 @@ setTimeout(() => {
     series: [
       {
         type: "bar",
-        data: [1, 2, 3, 4],
+        data: [1, 1, 0, 1],
         coordinateSystem: "polar",
         name: "模型",
         stack: "a",

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="task-item">
-      <h2 v-if="!edit_task"><span>实验：</span>{{ props.task.name }}</h2>
+      <h2 v-if="!edit_task"><span>实验室：</span>{{ props.task.name }}</h2>
       <el-input
         style="
           width: 40%;

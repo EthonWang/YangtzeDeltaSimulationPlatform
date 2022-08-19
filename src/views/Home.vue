@@ -25,8 +25,8 @@ import HomeView3 from "./Home/HomeView3.vue";
 import { Encrypt, Decrypt } from "@/util/codeUtil";
 
 setTimeout(() => {
-  localStorage.setItem("fromHome", Encrypt("false"));
-}, 10000);
+  localStorage.setItem("fromHome", Encrypt("true"));
+}, 8500);
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit

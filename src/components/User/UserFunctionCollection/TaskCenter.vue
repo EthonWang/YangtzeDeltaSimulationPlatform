@@ -2,7 +2,7 @@
   <div style="width: 100%; height: 100%">
     <div style="margin-bottom: -10px">
       <el-button type="primary" @click="dialogFormVisible=true" style="width: 100%"
-        ><el-icon><folder-add /></el-icon>&nbsp;新建实验</el-button
+        ><el-icon><folder-add /></el-icon>&nbsp;新建实验室</el-button
       >
     </div>
     <el-divider></el-divider>

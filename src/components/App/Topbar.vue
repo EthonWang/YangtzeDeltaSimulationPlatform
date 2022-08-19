@@ -78,7 +78,6 @@
 </template>
 
 <script setup>
-import { userInfo } from "os";
 import { reactive, computed, ref, defineEmits, defineProps, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import graphAPI from "@/api/user/graph";

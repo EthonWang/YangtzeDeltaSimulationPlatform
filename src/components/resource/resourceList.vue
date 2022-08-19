@@ -167,7 +167,7 @@ import { randomInt } from "d3-random";
 import { Decrypt } from "@/util/codeUtil";
 
 const store = useStore();
-const dataServer = store.getters.devIpAddress;
+const dataServer = store.getters.devIpAddress_backup;
 const userInfo = JSON.parse(Decrypt(localStorage.getItem("userInfo")));
 const task_api = new taskApi();
 const show_task = ref(false);

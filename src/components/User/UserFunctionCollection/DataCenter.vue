@@ -47,7 +47,7 @@
       <div
         v-loading="loading"
         element-loading-text="切换数据空间"
-        element-loading-background="rgba(122, 122, 122, 0.2)"
+        element-loading-background="hsla(210, 50%, 15%, 0.6)"
         class="file-container"
         :class="{ public_file_container: publicState }"
       >
@@ -198,14 +198,14 @@
 
     <el-dialog
       v-model="moveSpanShow"
-      title="选择移动到的文件夹"
+      title="移动到"
       width="40%"
       :before-close="handleClose"
     >
       <el-button
         @click="moveData({ id: last_id[last_id.length - 1] })"
         style="margin: 5px"
-        v-if="last_id.length!=0"
+        v-if="last_id.length != 0"
       >
         <img
           src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKgAAACoCAMAAABDlVWGAAAAwFBMVEUAAAD/2Ur/20z/203/40X//3j/yiX/zCv/3lD/2kv/yib/yiX/yib/2kr/2kr/yiX/2kv/2kv/yyb/2UT/1Tv/20H/yib/2kr/yib/2kr/yiX/20v/2kr/3Uz/5Vj/2kr/ySX/ySX/yiX/2Ur/20v/2Uz/ySj/zSf/20z/ySb/2kv/2Ur/2Ur/2Uv/yiX/0DX/yib/2Uz/yiX/yyf/20v/ySf/2kr/ySf/20z/2Uz/yyb/4k7/////2Ur/ySX/zS9+lhVZAAAAPXRSTlMAr1RGBQKWFw2o9PHt69/YiYBpKyIT+/bLwIFfWDMJ8OPHv7ePbEdBP+DU0tG8uKmnopCEd3duVU02NhoBsiz/2wAAAaxJREFUeNrt1GdSIzEQQOE2nuhsnCNhgWVzDoQW978V8J/CowkSqnrfCV5J3S0AAAAAAAAAXhVdJefDjjlg3vuw/L7+l4ovadI1NoY/b8WDaN0x1oZ/MnEsPTOldH/NxKXJqSmrdxyLM+mpqWA5FUeiM1NJ7724sTYVzY/FhbRjKksiaV5iavC1+dKoa+qQSNOuTD1emNM3+PNP5k3v/rmpSW8qjRqauixjadLzcQpiTE19uqk06KFG39oHXU8yKUedO8m3WRChTxbjLIxQ1f42kFDVURxIqLbiQEJ1FEqobkIJ7WeBhOoolNDFLJBQ3YQS2goldBEHEqp3oYTuQgn9H0roEaGEEkoooYQSSiihhBZHKKGEEkoooYQSSqgNQgkllFBCCSWUUEJtEEoooYQSSiihhBJqg9DD+urVtRT1Wb2aSlHv1Ku9FDVWnz5JYRP1aSzFDdSjnRR3qf6sxELk8UlvxMaR+pKLnQv142MmdmI/t7Q/FVv7XN0bTMTe/VhdW82klN0XdWmwiaWsdn6ijqwu91JF1P47+tFqVn7xezsTAAAAAAAAAK97BM+evOtMrXyJAAAAAElFTkSuQmCC"
@@ -216,9 +216,11 @@
       >
 
       <el-button
-        v-for="folder in file_data_choose.filter(
-          (item) => item.type == 'folder'
-        )"
+        v-for="folder in file_data_choose.filter((item) => {
+          if (item.type == 'folder' && !choosing_files.includes(item)) {
+            return item;
+          }
+        })"
         :key="folder"
         @click="moveData(folder)"
         style="margin: 5px"
@@ -311,13 +313,13 @@ if (nowTask.value) {
 
 const addDataToTask = (task) => {
   let dataList = [];
-  for (let i in choosing_files) {
-    if (choosing_files[i].type != "folder") {
-      let data = choosing_files[i];
+  for (let i in choosing_files.value.value) {
+    if (choosing_files.value.value[i].type != "folder") {
+      let data = choosing_files.value.value[i];
       data["source"] = "cloud";
       data["type"] = "data";
       data["visualizationBoolean"] = false;
-      data["visualType"] = choosing_files[i].name.split(".")[1];
+      data["visualType"] = choosing_files.value.value[i].name.split(".")[1];
       data["geoType"] = "line";
       dataList.push(data);
     }
@@ -536,7 +538,7 @@ const tackleData = (res) => {
   file_data.value = res.data.reverse();
   console.log("file data is :", file_data.value);
   choose_num.value = 0;
-  choosing_files = [];
+  choosing_files.value = [];
   choosing_files_index = [];
   ElMessage({
     type: "success",
@@ -563,7 +565,7 @@ const comeIn = (file) => {
 };
 const back = () => {
   if (last_id.length == 0) {
-    ElMessage('已是最上级目录')
+    ElMessage("已是最上级");
     return;
   }
   now_id.value = last_id.pop();
@@ -576,7 +578,7 @@ const downloadData = () => {
   let i = 0;
   //注意：循环请求后台用这个而非for循环
   let downloadInterval = setInterval(() => {
-    let file = choosing_files[i];
+    let file = choosing_files.value[i];
 
     if (file.type == "folder") {
       ElMessage.error("请选择文件而非文件夹");
@@ -589,7 +591,7 @@ const downloadData = () => {
       });
     }
     i++;
-    if (i >= choosing_files.length) {
+    if (i >= choosing_files.value.length) {
       clearInterval(downloadInterval);
     }
   }, 500);
@@ -613,7 +615,7 @@ let last_click = 0;
 const show_file = ref(file_data.value[0]);
 
 const choose_num = ref(0);
-let choosing_files = [];
+let choosing_files = ref([]);
 let choosing_files_index = [];
 
 const choose = (file, index) => {
@@ -624,7 +626,7 @@ const choose = (file, index) => {
       ].style.backgroundColor = "";
     }
     choosing_files_index = [];
-    choosing_files = [];
+    choosing_files.value = [];
     choose_num.value = 0;
     return;
   }
@@ -637,7 +639,7 @@ const choose = (file, index) => {
   }
   document.getElementsByClassName("file")[index].style.backgroundColor =
     "hsl(210,100%,85%)";
-  choosing_files.push(file);
+  choosing_files.value.push(file);
   choosing_files_index.push(index);
   choose_num.value++;
 };
@@ -650,10 +652,10 @@ const cancelChoose = (e) => {
 };
 
 const deleteData = () => {
-  for (let i in choosing_files) {
-    api.deleteFile(choosing_files[i]).then((res) => {
-      if (i == choosing_files.length - 1) {
-        choosing_files = [];
+  for (let i in choosing_files.value) {
+    api.deleteFile(choosing_files.value[i]).then((res) => {
+      if (i == choosing_files.value.length - 1) {
+        choosing_files.value = [];
         choosing_files_index = [];
         refresh();
       }
@@ -676,20 +678,17 @@ const showMoveSpan = () => {
 const moveData = (targetFolder) => {
   // show_file.value.parentId = targetFolder.id;
   let i = 0;
-  let loading1 = ElLoading.service({
-    lock: true,
-    text: "移动数据中...",
-    background: "rgba(0, 0, 0, 0.7)",
-  });
+  loading.value = true;
+  moveSpanShow.value = false;
   let moveOneData = setInterval(() => {
-    choosing_files[i].parentId = targetFolder.id;
-    api.editFile(choosing_files[i]).then((res) => {});
+    choosing_files.value[i].parentId = targetFolder.id;
+    api.editFile(choosing_files.value[i]).then((res) => {});
     i++;
-    if (i == choosing_files.length) {
+    if (i == choosing_files.value.value.length) {
       setTimeout(() => {
-        loading1.close();
+        loading.value = false;
         refresh();
-        moveSpanShow.value = false;
+
         clearInterval(moveOneData);
       }, 500);
     }

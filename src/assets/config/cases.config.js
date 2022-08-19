@@ -31,6 +31,11 @@ export const cases_config = [
         problem:"长三角工业创新环境",
         path: "IndustrialInnovation",
         component:() => import("views/CasesView/IndustrialInnovation.vue")
+    },
+    {
+        problem:"大陆板块漂移",
+        path: "plate",
+        component:() => import("views/CasesView/PlateDrift.vue")
     }
     // {
     //     problem:"湖泊水环境监测",

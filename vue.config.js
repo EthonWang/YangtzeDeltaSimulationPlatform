@@ -12,14 +12,14 @@ module.exports = {
     chainWebpack: (config) => {
         const oneOfsMap = config.module.rule("less").oneOfs.store;
         oneOfsMap.forEach(item => {
-          item
-            .use("style-resources-loader")
-            .loader("style-resources-loader")
-            .options({
-              // or an array : ["./path/to/vars.less", "./path/to/mixins.less"] 这里的路径不能使用@，否则会报错
-              patterns: "./src/assets/css/common.less"
-            })
-            .end()
+            item
+                .use("style-resources-loader")
+                .loader("style-resources-loader")
+                .options({
+                    // or an array : ["./path/to/vars.less", "./path/to/mixins.less"] 这里的路径不能使用@，否则会报错
+                    patterns: "./src/assets/css/common.less"
+                })
+                .end()
         })
         // 配置路径别名
         config.resolve.alias
@@ -45,20 +45,20 @@ module.exports = {
             // new CopyWebpackPlugin([ { from: path.join(cesiumSource, 'Widgets'), to: 'Widgets'}]),
             // new CopyWebpackPlugin([ { from: path.join(cesiumSource, 'ThirdParty/Workers'), to: 'ThirdParty/Workers'}]),
             new webpack.DefinePlugin({
-                CESIUM_BASE_URL: JSON.stringify('./')
+                CESIUM_BASE_URL: JSON.stringify('/')
             })
         ],
         module: {
-            unknownContextCritical : false,
+            unknownContextCritical: false,
             rules: [],
         },
     },
-    css:{
-        loaderOptions:{
-            less:{
-                javascriptEnabled:true,//允许链式调用的换行
+    css: {
+        loaderOptions: {
+            less: {
+                javascriptEnabled: true,//允许链式调用的换行
             }
-       }
+        }
     },
     devServer: {
         open: true,
@@ -74,7 +74,7 @@ module.exports = {
                 timeout: 3600000,
                 changOrigin: true,
                 pathRewrite: {
-                    '^/back':'',
+                    '^/back': '',
                 },
             },
             "/back_backup": {
@@ -108,12 +108,12 @@ module.exports = {
         // before: (app) => { },
     },
 
-pluginOptions: {
-    'style-resources-loader': {
-      preProcessor: 'less',
-              patterns: []
+    pluginOptions: {
+        'style-resources-loader': {
+            preProcessor: 'less',
+            patterns: []
+        }
     }
-  }
 
 
 };

@@ -1,3 +1,5 @@
+<!-- 设计人：张子卓 -->
+<!-- 功能：介绍个人实验室的基本信息与用法 -->
 <template>
   <div class="about">
     <div style="height: 100%; width: 100%;">
@@ -16,18 +18,6 @@
             <img :src="config.img" style="width: 100%;" alt="">
           </div>
         </el-carousel-item>
-        <!-- <el-carousel-item
-          style="height: 100%"
-          v-for="item in props.picture"
-          :key="item"
-        >
-          <el-image
-            style="height: 100%; width: 100%"
-            :src="item"
-            :fit="fill"
-            alt=""
-          />
-        </el-carousel-item> -->
       </el-carousel>
     </div>
   </div>
@@ -52,7 +42,7 @@ const configs = reactive([
   {
     tittle: "我的数据",
     sum_des:"我的数据总量",
-    des: "我的数据云盘，用于存储我在各个科研实验中使用的数据。",
+    des: "我的数据云盘，用于存储我在各个科研实验中使用的数据。会自动保存您进行实验后的结果数据。您也可分享您的数据。",
     edit_des: false,
     img:require("@/assets/img/DATA.png"),
     all: allResourceNum.privateDataNum,

@@ -73,7 +73,7 @@
     <span
       style="font-size: 16px; width: 90%; overflow-x: hidden"
       v-if="!file.rename"
-      >{{ getFileName(file).slice(0, 25) }}
+      >{{ getFileName(file).slice(0, 20) }}
     </span>
     <span style="font-size: 16px; width: 100%; display: flex" v-if="file.rename"
       ><el-input
@@ -206,6 +206,7 @@ watch(
   float: left;
   height: 220px;
   width: $height * 3/4;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;

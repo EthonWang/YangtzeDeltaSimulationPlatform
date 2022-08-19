@@ -1,3 +1,7 @@
+<!-- ·主题：展示资源列表 -->
+<!-- ·设计人：赵义明、张子卓 -->
+<!-- ·功能 -->
+<!-- 1.平台数据与平台模型的展示 -->
 <template>
   <el-row>
     <el-col :span="6" v-for="(item, index) in props.resList" :key="index">

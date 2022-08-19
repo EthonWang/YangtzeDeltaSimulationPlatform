@@ -109,6 +109,7 @@ import { useStore } from "vuex";
 import * as Cesium from "Cesium";
 import axios from "axios";
 import url from "@/assets/raster_Topography_410.00Ma.png";
+import { mapGetters } from "vuex";
 // import
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
@@ -164,6 +165,9 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapGetters(["devIpAddress"]),
+  },
   components: {},
   created() {
     this.InitTimelist();
@@ -196,9 +200,14 @@ export default {
       this.viewer.zoomTo(shp);
     },
     async requirePngData() {
+      const urll =
+        this.devIpAddress +
+        "/store/platecase_img/raster_Topography_" +
+        this.time +
+        ".00Ma.png";
       const data = await axios({
         method: "GET",
-        url: "/case/img_1/raster_Topography_" + this.time + ".00Ma.png",
+        url: urll,
         responseType: "arraybuffer",
       })
         .then((response) => {
@@ -394,10 +403,15 @@ export default {
     },
     requiredata() {
       let that = this;
+      const urll =
+        this.devIpAddress +
+        "/store/platecase_img/raster_Topography_" +
+        this.time +
+        ".00Ma.png";
       if ((this.time < 410) & (this.time > 0)) {
         const data = axios({
           method: "GET",
-          url: "/case/img_1/raster_Topography_" + this.time + ".00Ma.png",
+          url: urll,
           responseType: "arraybuffer",
         })
           .then((response) => {

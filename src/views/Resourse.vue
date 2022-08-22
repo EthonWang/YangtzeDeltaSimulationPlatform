@@ -1,6 +1,22 @@
 <template>
   <div class="main">
     <div class="search" v-if="searchPage">
+<!--      <el-button-->
+<!--        style="-->
+<!--          position: absolute;-->
+<!--          right: 1%;-->
+<!--          top: 1%;-->
+<!--          z-index: 10;-->
+<!--          border: 0px;-->
+<!--          opacity: 0.35;-->
+<!--          background-color: transparent;-->
+<!--        "-->
+<!--        v-if="isAdmin"-->
+<!--        @click="router.push('/newResource')"-->
+<!--        plain-->
+<!--        type="info"-->
+<!--        >新建资源条目</el-button-->
+<!--      >-->
       <el-row style="padding-top: 7%">
         <div style="margin: auto; display: flex">
           <h1

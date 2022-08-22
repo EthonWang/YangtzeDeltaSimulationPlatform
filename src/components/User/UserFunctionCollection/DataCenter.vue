@@ -1,46 +1,81 @@
+<!-- ·主题：数据中心 -->
+<!-- ·设计人：张子卓 -->
+<!-- ·功能： -->
+<!-- 1.个人空间数据的存储、展示、上传、下载、编辑、删除、移动 -->
+<!-- 2.数据关系图谱的查看 -->
+<!-- 3.数据加入实验室 -->
 <template>
   <div style="height: 100%; width: 100%">
     <div class="file-controller" style="">
       <div class="file-operation">
-        <!-- <el-button @click="showScience" id="expand"
-        style="border: 0;"
-      ><el-icon style="transform: scale(2) rotateY(180deg);"><Expand /></el-icon></el-button> -->
-        <el-button round @click="back"
+        <el-button
+          v-if="!publicState"
+          type="success"
+          plain
+          @click="changePublicState()"
+          ><el-icon><OfficeBuilding /></el-icon>&nbsp;共享空间</el-button
+        >
+        <el-button
+          v-if="publicState"
+          type="warning"
+          plain
+          @click="changePublicState()"
+          ><el-icon><UserFilled /></el-icon>私人空间</el-button
+        >
+        <el-button v-if="!publicState" round @click="back"
           ><el-icon><d-arrow-left /></el-icon>&nbsp;返回</el-button
         >
-        <el-button round @click="refresh"
+        <el-button v-if="!publicState" round @click="refresh"
           ><el-icon><Refresh /></el-icon>&nbsp;刷新</el-button
         >
-        <el-button type="primary" @click="dialogVisible = true"
+        <el-button
+          v-if="!publicState"
+          type="primary"
+          @click="dialogVisible = true"
           ><el-icon><Sort /></el-icon>&nbsp;上传数据</el-button
         >
-        <el-button type="primary" @click="createFolder()"
+        <el-button v-if="!publicState" type="primary" @click="createFolder()"
           ><el-icon><folder-add /></el-icon>&nbsp;新建文件夹</el-button
         >
-        <el-button type="primary" @click="changePublicState()"
-          ><el-icon><folder-add /></el-icon>&nbsp;公共数据</el-button
-        >
+
         <el-breadcrumb :separator-icon="ArrowRight" style="margin-left: 2%">
           <el-breadcrumb-item v-for="item in breadcrumbs" :key="item">{{
             item
           }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-      <div class="file-container">
+      <div
+        v-loading="loading"
+        element-loading-text="切换数据空间"
+        element-loading-background="hsla(210, 50%, 15%, 0.6)"
+        class="file-container"
+        :class="{ public_file_container: publicState }"
+      >
         <div
-          style="position: fixed; width: 100%; height: 100%"
+          style="
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            overflow: scroll;
+          "
+          @click="cancelChoose($event)"
+        >
+          <FileItem
+            v-for="(file, index) in file_data_choose"
+            :key="file"
+            :prop_file="file"
+            :prop_index="index"
+            @choose_f="choose(file, index)"
+            @comeIn_f="comeIn(file)"
+            @create-folder_f="createFolder(index)"
+            @contextmenu.prevent="rightClick($event, file, index)"
+          ></FileItem>
+        </div>
+
+        <!-- <div
+          style="position: absolute; width: 100%; height: 100%;z-index: 2;"
           @click="choose(null, -1)"
-        ></div>
-        <FileItem
-          v-for="(file, index) in file_data_choose"
-          :key="file"
-          :prop_file="file"
-          :prop_index="index"
-          @choose_f="choose(file, index)"
-          @comeIn_f="comeIn(file)"
-          @create-folder_f="createFolder(index)"
-          @contextmenu.prevent="rightClick($event, file, index)"
-        ></FileItem>
+        ></div> -->
       </div>
     </div>
     <RightClick
@@ -57,10 +92,12 @@
         style="width: 100%; height: 100%"
         :file="show_file"
         :num="choose_num"
+        :publicState="publicState"
         @update:file="show_file = $event"
         @deleteData="deleteData"
         @downloadData1="downloadData"
         @addToTask="addToTask()"
+        @showMoveSpan="showMoveSpan()"
       ></FileDetail>
     </div>
     <el-dialog
@@ -155,7 +192,50 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="show_task = false">取消</el-button>
-          <el-button type="primary" @click="show_task = false">完成</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <el-dialog
+      v-model="moveSpanShow"
+      title="移动到"
+      width="40%"
+      :before-close="handleClose"
+    >
+      <el-button
+        @click="moveData({ id: last_id[last_id.length - 1] })"
+        style="margin: 5px"
+        v-if="last_id.length != 0"
+      >
+        <img
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKgAAACoCAMAAABDlVWGAAAAwFBMVEUAAAD/2Ur/20z/203/40X//3j/yiX/zCv/3lD/2kv/yib/yiX/yib/2kr/2kr/yiX/2kv/2kv/yyb/2UT/1Tv/20H/yib/2kr/yib/2kr/yiX/20v/2kr/3Uz/5Vj/2kr/ySX/ySX/yiX/2Ur/20v/2Uz/ySj/zSf/20z/ySb/2kv/2Ur/2Ur/2Uv/yiX/0DX/yib/2Uz/yiX/yyf/20v/ySf/2kr/ySf/20z/2Uz/yyb/4k7/////2Ur/ySX/zS9+lhVZAAAAPXRSTlMAr1RGBQKWFw2o9PHt69/YiYBpKyIT+/bLwIFfWDMJ8OPHv7ePbEdBP+DU0tG8uKmnopCEd3duVU02NhoBsiz/2wAAAaxJREFUeNrt1GdSIzEQQOE2nuhsnCNhgWVzDoQW978V8J/CowkSqnrfCV5J3S0AAAAAAAAAXhVdJefDjjlg3vuw/L7+l4ovadI1NoY/b8WDaN0x1oZ/MnEsPTOldH/NxKXJqSmrdxyLM+mpqWA5FUeiM1NJ7724sTYVzY/FhbRjKksiaV5iavC1+dKoa+qQSNOuTD1emNM3+PNP5k3v/rmpSW8qjRqauixjadLzcQpiTE19uqk06KFG39oHXU8yKUedO8m3WRChTxbjLIxQ1f42kFDVURxIqLbiQEJ1FEqobkIJ7WeBhOoolNDFLJBQ3YQS2goldBEHEqp3oYTuQgn9H0roEaGEEkoooYQSSiihhBZHKKGEEkoooYQSSqgNQgkllFBCCSWUUEJtEEoooYQSSiihhBJqg9DD+urVtRT1Wb2aSlHv1Ku9FDVWnz5JYRP1aSzFDdSjnRR3qf6sxELk8UlvxMaR+pKLnQv142MmdmI/t7Q/FVv7XN0bTMTe/VhdW82klN0XdWmwiaWsdn6ijqwu91JF1P47+tFqVn7xezsTAAAAAAAAAK97BM+evOtMrXyJAAAAAElFTkSuQmCC"
+          alt=""
+          style="width: 20px"
+        />
+        &nbsp; >><span>移动至上级目录</span></el-button
+      >
+
+      <el-button
+        v-for="folder in file_data_choose.filter((item) => {
+          if (item.type == 'folder' && !choosing_files.includes(item)) {
+            return item;
+          }
+        })"
+        :key="folder"
+        @click="moveData(folder)"
+        style="margin: 5px"
+      >
+        <img
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKgAAACoCAMAAABDlVWGAAAAwFBMVEUAAAD/2Ur/20z/203/40X//3j/yiX/zCv/3lD/2kv/yib/yiX/yib/2kr/2kr/yiX/2kv/2kv/yyb/2UT/1Tv/20H/yib/2kr/yib/2kr/yiX/20v/2kr/3Uz/5Vj/2kr/ySX/ySX/yiX/2Ur/20v/2Uz/ySj/zSf/20z/ySb/2kv/2Ur/2Ur/2Uv/yiX/0DX/yib/2Uz/yiX/yyf/20v/ySf/2kr/ySf/20z/2Uz/yyb/4k7/////2Ur/ySX/zS9+lhVZAAAAPXRSTlMAr1RGBQKWFw2o9PHt69/YiYBpKyIT+/bLwIFfWDMJ8OPHv7ePbEdBP+DU0tG8uKmnopCEd3duVU02NhoBsiz/2wAAAaxJREFUeNrt1GdSIzEQQOE2nuhsnCNhgWVzDoQW978V8J/CowkSqnrfCV5J3S0AAAAAAAAAXhVdJefDjjlg3vuw/L7+l4ovadI1NoY/b8WDaN0x1oZ/MnEsPTOldH/NxKXJqSmrdxyLM+mpqWA5FUeiM1NJ7724sTYVzY/FhbRjKksiaV5iavC1+dKoa+qQSNOuTD1emNM3+PNP5k3v/rmpSW8qjRqauixjadLzcQpiTE19uqk06KFG39oHXU8yKUedO8m3WRChTxbjLIxQ1f42kFDVURxIqLbiQEJ1FEqobkIJ7WeBhOoolNDFLJBQ3YQS2goldBEHEqp3oYTuQgn9H0roEaGEEkoooYQSSiihhBZHKKGEEkoooYQSSqgNQgkllFBCCSWUUEJtEEoooYQSSiihhBJqg9DD+urVtRT1Wb2aSlHv1Ku9FDVWnz5JYRP1aSzFDdSjnRR3qf6sxELk8UlvxMaR+pKLnQv142MmdmI/t7Q/FVv7XN0bTMTe/VhdW82klN0XdWmwiaWsdn6ijqwu91JF1P47+tFqVn7xezsTAAAAAAAAAK97BM+evOtMrXyJAAAAAElFTkSuQmCC"
+          alt=""
+          style="width: 20px"
+        />
+        &nbsp; ><span>{{ folder.name }}</span></el-button
+      >
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="moveSpanShow = false">取消</el-button>
         </span>
       </template>
     </el-dialog>
@@ -189,6 +269,7 @@ const show_task = ref(false);
 const task_list = ref([]);
 const route = useRoute();
 const publicState = ref(false);
+const loading = ref(false);
 
 // 判断是否在实验室
 const isInLab = ref(false);
@@ -232,13 +313,13 @@ if (nowTask.value) {
 
 const addDataToTask = (task) => {
   let dataList = [];
-  for (let i in choosing_files) {
-    if (choosing_files[i].type != "folder") {
-      let data = choosing_files[i];
+  for (let i in choosing_files.value.value) {
+    if (choosing_files.value.value[i].type != "folder") {
+      let data = choosing_files.value.value[i];
       data["source"] = "cloud";
       data["type"] = "data";
       data["visualizationBoolean"] = false;
-      data["visualType"] = choosing_files[i].name.split(".")[1];
+      data["visualType"] = choosing_files.value.value[i].name.split(".")[1];
       data["geoType"] = "line";
       dataList.push(data);
     }
@@ -386,7 +467,7 @@ const createFolder = (index = -1) => {
       });
   }
   if (index == -1) {
-    file_data_choose.value.push({
+    file_data_choose.value.unshift({
       id: "5689",
       name: "",
       type: "folder",
@@ -454,10 +535,10 @@ const tackleData = (res) => {
       }
     }
   }
-  file_data.value = res.data;
+  file_data.value = res.data.reverse();
   console.log("file data is :", file_data.value);
   choose_num.value = 0;
-  choosing_files = [];
+  choosing_files.value = [];
   choosing_files_index = [];
   ElMessage({
     type: "success",
@@ -468,7 +549,7 @@ const tackleData = (res) => {
 const refresh = () => {
   if (publicState.value) {
     api.getAllPublicFile().then((res) => {
-      tackleData(res);
+      tackleData(res.data);
     });
   } else {
     api.getFile(now_id.value).then((res) => {
@@ -484,6 +565,7 @@ const comeIn = (file) => {
 };
 const back = () => {
   if (last_id.length == 0) {
+    ElMessage("已是最上级");
     return;
   }
   now_id.value = last_id.pop();
@@ -496,7 +578,7 @@ const downloadData = () => {
   let i = 0;
   //注意：循环请求后台用这个而非for循环
   let downloadInterval = setInterval(() => {
-    let file = choosing_files[i];
+    let file = choosing_files.value[i];
 
     if (file.type == "folder") {
       ElMessage.error("请选择文件而非文件夹");
@@ -509,7 +591,7 @@ const downloadData = () => {
       });
     }
     i++;
-    if (i >= choosing_files.length) {
+    if (i >= choosing_files.value.length) {
       clearInterval(downloadInterval);
     }
   }, 500);
@@ -533,7 +615,7 @@ let last_click = 0;
 const show_file = ref(file_data.value[0]);
 
 const choose_num = ref(0);
-let choosing_files = [];
+let choosing_files = ref([]);
 let choosing_files_index = [];
 
 const choose = (file, index) => {
@@ -544,7 +626,7 @@ const choose = (file, index) => {
       ].style.backgroundColor = "";
     }
     choosing_files_index = [];
-    choosing_files = [];
+    choosing_files.value = [];
     choose_num.value = 0;
     return;
   }
@@ -557,16 +639,23 @@ const choose = (file, index) => {
   }
   document.getElementsByClassName("file")[index].style.backgroundColor =
     "hsl(210,100%,85%)";
-  choosing_files.push(file);
+  choosing_files.value.push(file);
   choosing_files_index.push(index);
   choose_num.value++;
 };
 
+const cancelChoose = (e) => {
+  let firstClass = e.path[1].classList[0];
+  if (firstClass != "file") {
+    choose(null, -1);
+  }
+};
+
 const deleteData = () => {
-  for (let i in choosing_files) {
-    api.deleteFile(choosing_files[i]).then((res) => {
-      if (i == choosing_files.length - 1) {
-        choosing_files = [];
+  for (let i in choosing_files.value) {
+    api.deleteFile(choosing_files.value[i]).then((res) => {
+      if (i == choosing_files.value.length - 1) {
+        choosing_files.value = [];
         choosing_files_index = [];
         refresh();
       }
@@ -575,7 +664,35 @@ const deleteData = () => {
 };
 const changePublicState = () => {
   publicState.value = !publicState.value;
+  loading.value = true;
+  setTimeout(() => {
+    loading.value = false;
+  }, 1000);
   refresh();
+};
+
+const moveSpanShow = ref(false);
+const showMoveSpan = () => {
+  moveSpanShow.value = true;
+};
+const moveData = (targetFolder) => {
+  // show_file.value.parentId = targetFolder.id;
+  let i = 0;
+  loading.value = true;
+  moveSpanShow.value = false;
+  let moveOneData = setInterval(() => {
+    choosing_files.value[i].parentId = targetFolder.id;
+    api.editFile(choosing_files.value[i]).then((res) => {});
+    i++;
+    if (i == choosing_files.value.value.length) {
+      setTimeout(() => {
+        loading.value = false;
+        refresh();
+
+        clearInterval(moveOneData);
+      }, 500);
+    }
+  }, 900);
 };
 </script>
 
@@ -619,11 +736,20 @@ const changePublicState = () => {
   top: 10%;
   height: 89%;
   left: 0;
-  border: 1px solid rgba(197, 197, 197, 0.8);
+  border: 2px solid rgba(197, 197, 197, 0.8);
   width: 99%;
   border-radius: 5px;
   overflow: scroll;
   //   display: flex;
+}
+.public_file_container {
+  transition: all 1s;
+  border: 2px solid rgb(15, 177, 0);
+  background-color: rgba(15, 177, 0, 0.15);
+  box-shadow: 0px 0px 6px #00e6f6;
+}
+/deep/.el-loading-mask {
+  height: 100%;
 }
 </style>
 

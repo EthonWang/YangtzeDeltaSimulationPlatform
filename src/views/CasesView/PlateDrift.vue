@@ -475,7 +475,7 @@ export default {
           });
         // if(this.mode)
         // this.viewer.dataSources.removeAll();
-        this.requireJsonData("/case/all.json");
+        // this.requireJsonData("/case/all.json");
         const imageryLayers = this.viewer.scene.imageryLayers;
         imagelayer = new Cesium.SingleTileImageryProvider({
           url: this.imageUrl,

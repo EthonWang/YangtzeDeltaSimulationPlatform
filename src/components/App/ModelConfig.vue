@@ -1,3 +1,6 @@
+<!-- ·设计人：于晶晶、张子卓 -->
+<!-- ·功能： -->
+<!-- 1.模型运行接口、获取上次模型运行结果 -->
 <template>
   <el-row
     class="modelConfigBox"
@@ -167,6 +170,7 @@ const addTestData = (data) => {
   });
 };
 let prepared = false;
+//叫做testdata，实际上已经迭代为获取上次实验结果
 const handleLoadTestData = () => {
   let taskBody = null;
   let taskItemList = localStorage.getItem("task");

@@ -1,3 +1,7 @@
+<!-- ·主题：个人空间概览 -->
+<!-- ·设计人：张子卓 -->
+<!-- ·功能 -->
+<!-- 介绍个人实验室（个人空间） -->
 <template>
   <div class="about">
     <div style="height: 100%; width: 100%; text-align: center">

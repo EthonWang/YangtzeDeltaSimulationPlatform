@@ -128,6 +128,7 @@ h1 {
             <RadioGroup v-model="formInline.resType" style="width: 80%">
               <Radio label="data" style="font-size: 14px">数据资源</Radio>
               <Radio label="model" style="font-size: 14px">模型资源</Radio>
+              <Radio label="item" style="font-size: 14px">条目数据</Radio>
               <Radio label="other" style="font-size: 14px">其他资源</Radio>
             </RadioGroup>
           </FormItem>
@@ -234,10 +235,22 @@ h1 {
             </div>
           </FormItem>
           <FormItem
+            prop="linkURL"
+            label="linkURL"
+            :label-width="150"
+            v-if="formInline.resType == 'item'"
+          >
+            <Input
+              v-model="formInline.linkURL"
+              type="textarea"
+              placeholder="输入linkURL..."
+            />
+          </FormItem>
+          <FormItem
             prop="file"
             label="资源上传"
             :label-width="150"
-            v-if="formInline.resType != 'model'"
+            v-if="formInline.resType == 'data'"
           >
             <div style="width: 80%">
               <uploader
@@ -379,7 +392,7 @@ h1 {
                 >取消</Button
               >
               <Button
-                v-if="formInline.resType == 'data'"
+                v-if="formInline.resType == 'data' || formInline.resType == 'item'"
                 type="success"
                 @click="validateCreateProject('formInline')"
                 style="margin-left: 15px; width: 150px"
@@ -611,8 +624,8 @@ export default {
       //
       //     }
       //   });
-      console.log(this.formInline);
-      console.log(this.uploaderRes);
+      // console.log(this.formInline);
+      // console.log(this.uploaderRes);
       if (
         this.formInline.workName != "" &&
         this.formInline.visualType != "" &&
@@ -630,6 +643,14 @@ export default {
         this.formInline.resType == "model" &&
         this.formInline.md5 != "" &&
         this.formInline.mdl != ""
+      ) {
+        this.commitProjectData();
+      } else if (
+        this.formInline.workName != "" &&
+        this.formInline.problemTags != [] &&
+        this.formInline.tagList != [] &&
+        this.formInline.resType == "item" &&
+        this.formInline.linkURL != ""
       ) {
         this.commitProjectData();
       } else {
@@ -703,6 +724,45 @@ export default {
 
         axios({
           url: this.dataServer + "/createResourceModel",
+          method: "post",
+          //忽略contentType
+          contentType: false,
+          //取消序列换 formData本来就是序列化好的
+          processData: false,
+          dataType: "json",
+          data: formData,
+        }).then(
+          (res) => {
+            console.log(res.data);
+            this.$router.go(-1);
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+      } else if (this.formInline.resType == "item"){
+        let formData = new FormData();
+        let info = {};
+        info.name = this.formInline.workName;
+        info.description = this.formInline.description;
+        info.type = "data";
+        info.normalTags = this.formInline.tagList.toString();
+        info.problemTags = this.formInline.problemTags.toString();
+        info.publicBoolean = false;
+        info.visualizationBoolean = false;
+        info.visualType = this.formInline.visualType;
+        info.geoType = this.formInline.geoType;
+        info.fileWebAddress = this.formInline.linkURL;
+
+        formData.append("imgFile", this.imageFile);
+        // formData.append("visualFile", this.toUploadVisualFiles[0]);
+        formData.append(
+          "info",
+          new Blob([JSON.stringify(info)], { type: "application/json" })
+        );
+
+        axios({
+          url: this.dataServer + "/saveResourceItemFile",
           method: "post",
           //忽略contentType
           contentType: false,

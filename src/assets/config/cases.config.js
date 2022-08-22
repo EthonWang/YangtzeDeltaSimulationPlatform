@@ -78,6 +78,11 @@ export const cases_config = [
         component:() => import("views/CasesView/TaiHu_FvCom.vue")
     },
     {
+        problem:"板块漂移案例",
+        path: "PlateDrift",
+        component:() => import("views/CasesView/PlateDrift.vue")
+    },
+    {
         problem:"南京地面淹没模拟系统",
         path: "SUFS",
         component:() => import("views/CasesView/SUFS.vue")

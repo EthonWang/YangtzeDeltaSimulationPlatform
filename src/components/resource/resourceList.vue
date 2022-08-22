@@ -17,14 +17,24 @@
             type="primary"
             effect="dark"
             @click="showMapCard(item)"
+            v-if="item.visualizationBoolean"
             >查看</el-button
           >
           <el-button
             type="primary"
-            v-if="'fileSize' in item"
+            v-if="'fileSize' in item && item.visualizationBoolean"
             class="downloadButton"
             @click="downloadRes(item)"
             >下载</el-button
+          >
+          <el-button
+            class="downloadButton"
+            style="margin-left: 2px"
+            type="primary"
+            effect="dark"
+            @click="turn2blank(item.fileWebAddress)"
+            v-if="!item.visualizationBoolean && item.fileWebAddress != ''"
+            >查看</el-button
           >
           <div class="fontSet" style="margin: 5px 0" v-if="'fileSize' in item">
             <span>{{ filterSizeType(item.fileSize) }}</span
@@ -39,7 +49,14 @@
     </el-col>
   </el-row>
   <el-row class="resListPagination">
-    <el-pagination background layout="prev, pager, next" :total="5">
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :total="props.dataNum"
+      @current-change="pageChange"
+      @next-click="pageNext"
+      @prev-click="pagePrev"
+    >
     </el-pagination>
   </el-row>
   <el-dialog
@@ -153,7 +170,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, defineProps, computed } from "vue";
+import { onMounted, ref, defineProps, computed, defineEmits } from "vue";
 import { ElMessageBox } from "element-plus";
 import MapboxCard from "../Mapbox/MapboxCard.vue";
 import { ElMessage } from "element-plus";
@@ -174,6 +191,8 @@ const selectedVisualDataItemsRange = ref([0, 0]);
 const setSelectedVisualDataItemsDataSet = ref(false);
 const mapCardDialogVisible = ref(false);
 const selectedRes = ref({});
+const changPageCount = ref(0);
+const emit = defineEmits(["pageChange","pageNext","pagePrev"]);
 task_api.getTaskList(userInfo.id).then((res) => {
   for (let i = res.data.data.length - 1; i >= 0; i--) {
     task_list.value.push(res.data.data[i]);
@@ -182,7 +201,22 @@ task_api.getTaskList(userInfo.id).then((res) => {
 
 const props = defineProps({
   resList: Array,
+  dataNum: Number,
 });
+
+const pageChange = (value) => {
+  if(value != 1 || changPageCount.value > 0){
+    emit('pageChange',value);
+    changPageCount.value = changPageCount.value + 1;
+  }
+  
+};
+const pageNext = (value) => {
+  emit('pageNext',value)
+};
+const pagePrev = (value) => {
+  emit('pagePrev',value)
+};
 const addDataToTask = (task) => {
   console.log("selectedRes.value is :", selectedRes.value);
   if ("mdl" in selectedRes.value) {
@@ -203,7 +237,10 @@ const addDataToTask = (task) => {
       dataSet.description = selectedRes.value.description;
       dataSet.id =
         selectedRes.value.id + Math.floor(Math.random() * 10 + 1).toString();
-      dataSet.name = selectedRes.value.name + "_dataSet_" + Math.random().toString(36).substr(2,4);
+      dataSet.name =
+        selectedRes.value.name +
+        "_dataSet_" +
+        Math.random().toString(36).substr(2, 4);
       dataSet.normalTags = selectedRes.value.normalTags;
       dataSet.problemTags = selectedRes.value.problemTags;
       dataSet.publicBoolean = selectedRes.value.publicBoolean;
@@ -277,7 +314,7 @@ const showMapCard = function (info) {
       mapCardDialogVisible.value = true;
     }, 200);
   } else {
-    show_task_model.value=true
+    show_task_model.value = true;
   }
 };
 const downloadRes = function (item) {
@@ -292,11 +329,14 @@ const downloadRes = function (item) {
     });
   }
 };
+const turn2blank = function (url) {
+  location.href = url;
+};
 const go2Model = function () {
   location.href = "/model";
 };
 const filterSizeType = function (value) {
-  if (value === 0) return "0 B";
+  if (value === "0") return "unknown";
   let k = 1024;
   let sizes = ["B", "KB", "MB", "GB"];
   let i = Math.floor(Math.log(value) / Math.log(k));

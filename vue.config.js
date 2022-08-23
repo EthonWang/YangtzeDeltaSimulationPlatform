@@ -8,7 +8,6 @@ function resolve(dir) {
 }
 
 module.exports = {
-
     chainWebpack: (config) => {
         const oneOfsMap = config.module.rule("less").oneOfs.store;
         oneOfsMap.forEach(item => {

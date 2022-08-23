@@ -11,8 +11,8 @@
         "
       >
         <!--        <span style="background: transparent" class="border-box">长三角综合模拟器</span>-->
-        <dv-border-box8 dur="3" style="width: 23%; padding: 3px"
-          >长三角综合模拟平台</dv-border-box8
+        <dv-border-box8 dur="3" style="width: 33%; padding: 3px"
+          >长三角地理系统建模与模拟</dv-border-box8
         >
       </h1>
       <div

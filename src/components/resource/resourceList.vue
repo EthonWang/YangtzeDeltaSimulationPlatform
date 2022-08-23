@@ -8,9 +8,16 @@
       <el-card class="resListCard">
         <div class="imageBox">
           <el-image
+            :src="item.imgWebAddress"
+            class="image"
+            :fit="contain"
+            v-if="item.imgWebAddress.indexOf('http://') >= 0"
+          ></el-image>
+          <el-image
             :src="dataServer + item.imgWebAddress"
             class="image"
             :fit="contain"
+            v-else
           ></el-image>
         </div>
         <div style="padding: 7px">

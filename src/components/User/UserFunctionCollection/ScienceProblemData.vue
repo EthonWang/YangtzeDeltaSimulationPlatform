@@ -3,7 +3,7 @@
 <!-- 1.应用于个人空间“我的数据”与“我的实验”的科学问题组织与筛选 -->
 <template>
   <div style="background-color: white">
-    <h2>科学问题分类</h2>
+    <h2>科学专题分类</h2>
     <el-tree
       style="width: 100%; height: 95%; background: white"
       :data="data"

@@ -28,14 +28,18 @@
       "
     />
     <div class="head">
+      
       <!-- <span class="logo">长 三 角 模 拟 器</span> -->
+      
+      <img style="width: 150px;margin-left: 25px;margin-right: 15px;" src="@/assets/app/logo.png" alt="" />
       <img
         src="../../assets/globle.svg"
         id="logo"
         style="
           transition: all 1s;
           height: 70%;
-          margin-left: 1.5vw;
+          margin-left: 15px;
+          margin-right: 15px;
           margin-top: 0px;
           color: white;
           position: relative;
@@ -241,9 +245,9 @@ setTimeout(searchIndexInRoutes, 100);
 .topbar {
   // margin-left: 20px;
   width: 100%;
-  position: absolute;
+  position: relative;
   // left: calc(17% + 50px);
-  left: 4vw;
+  // left: 4vw;
   transition: all 1s;
 }
 
@@ -349,8 +353,8 @@ setTimeout(searchIndexInRoutes, 100);
   color: white;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  position: relative;
+  justify-content: flex-start;
+  position: absolute;
   z-index: 10;
   // transition: all 2s;
 }

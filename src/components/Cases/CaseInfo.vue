@@ -106,10 +106,10 @@
               <p class="font-size-1">
                 作者：{{item.name}}
               </p>
-              <p  class="font-size-1">
+              <p v-if="item.workPlace != ''"  class="font-size-1">
                 作者单位：{{item.workPlace}}
               </p>
-              <p  class="font-size-1">
+              <p v-if="item.email != ''"  class="font-size-1">
                 作者邮箱：{{item.email}}
               </p>
               <el-divider style="margin: 22px 0 6px 0;"></el-divider>
@@ -159,6 +159,7 @@ const editCaseRef = ref();
 const updateCases = ref({})
 const editCases = () => {
   editCaseRef.value.showCase();
+  console.log("案例信息",caseInfo.value)
   updateCases.value = JSON.parse(JSON.stringify(caseInfo.value));
 }
 const saveCase = (data) => {
@@ -212,7 +213,7 @@ const startSearch = function (searchValue) {
     localStorage.setItem("toLast",Encrypt(route.path))
     router.push('/login')
   }
-  
+
 };
 caseInfo.value = {
   name:"暂无案例",

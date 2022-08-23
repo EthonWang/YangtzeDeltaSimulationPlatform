@@ -1,7 +1,7 @@
 import { get, post } from "@/request/request_backup"
 import { useStore } from "vuex"
 
-const dataServer = "http://172.21.213.44:8999";
+const dataServer = "http://172.21.213.248:8999";
 // 上传文件
 export default class {
     getAllFile(user_id) {
@@ -57,6 +57,9 @@ export default class {
 
     moveFile() { }
     editFile(data) {
+        if(typeof(data.problemTags)!='string'){
+            data.problemTags=data.problemTags.toString()
+        }
         if (data.type == 'file') {
             return post('/resource/updateUserDataItem', data)
         }
@@ -74,6 +77,6 @@ export default class {
         return post('/model/upXMLToDataContainer', configFile)
     }
     getAllPublicFile(){
-        return get('/resource/getPublicFile')
+        return get('/resource/getAllPublicUserData')
     }
 }

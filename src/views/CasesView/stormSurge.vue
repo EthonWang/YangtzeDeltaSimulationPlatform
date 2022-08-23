@@ -151,7 +151,7 @@ export default {
     // this.addTsImg();
     setTimeout(() => {
       that.addTsImg();
-    }, 500);
+    }, 1000);
   },
   watch: {
     btnIsPlay(val) {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="task-item">
-      <h2 v-if="!edit_task"><span>实验：</span>{{ props.task.name }}</h2>
+      <h2 v-if="!edit_task"><span>实验室：</span>{{ props.task.name }}</h2>
       <el-input
         style="
           width: 40%;
@@ -355,6 +355,9 @@ h4 {
 
 /deep/.el-form--label-left .el-form-item__label {
     font-size: 17px;
+}
+/deep/.el-form-item__content,.el-tag{
+  font-size: 17px;
 }
 .data-list {
   transition: all 0.5s;

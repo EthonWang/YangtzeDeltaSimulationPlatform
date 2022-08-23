@@ -157,7 +157,12 @@
       </span>
     </template>
   </el-dialog>
-  <el-dialog v-model="show_task" title="添加数据集到实验室" width="30%" draggable>
+  <el-dialog
+    v-model="show_task"
+    title="添加数据集到实验室"
+    width="50%"
+    draggable
+  >
     <h3 style="margin-bottom: 15px">选择要添加的资源</h3>
     <el-scrollbar max-height="35vh">
       <el-checkbox-group
@@ -203,21 +208,14 @@
       style="margin-bottom: 15px"
     />
     <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
-    <el-button
-      v-for="(task, index) in task_list"
-      :key="task"
-      @click="addDataToTask(task)"
-      style="margin: 5px"
-    >
+    <el-button @click="addtoLab()" style="margin: 5px">
       <el-icon><Monitor /></el-icon> &nbsp;
-      <span v-if="index == 0" style="color: hsl(210, 100%, 40%)">{{
-        task.name
-      }}</span
-      ><span v-else>{{ task.name }}</span></el-button
+
+      <span> 本实验 </span></el-button
     >
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="show_task = false">取消</el-button>
+        <el-button @click="this.show_task = false">取消</el-button>
         <!-- <el-button type="primary" @click="show_task = false">完成</el-button> -->
       </span>
     </template>
@@ -238,7 +236,7 @@ import chartTemplate from "../components/chartPlugin/chartTemplate.vue";
 import ModelTree from "components/App/ModelTree";
 import txtEditor from "../components/Mapbox/labUtils/wangEditorBox.vue";
 import taskApi from "@/api/user/task";
-import { ElMessageBox, ElMessage } from "element-plus";
+import { ElMessageBox, ElMessage, ElLoading } from "element-plus";
 import graphAPI from "@/api/user/graph";
 import DataCenter from "@/components/User/UserFunctionCollection/DataCenter.vue";
 import { Encrypt, Decrypt } from "@/util/codeUtil";
@@ -279,6 +277,11 @@ export default {
       user_info: JSON.parse(Decrypt(localStorage.getItem("userInfo"))),
       router: useRouter(),
       dataRecommend: [],
+      selectedVisualDataItems: [],
+      selectedRes: [],
+      setSelectedVisualDataItemsDataSet: false,
+      show_task: false,
+      selectedVisualDataItemsRange: [0, 0],
     };
   },
   mounted() {
@@ -288,13 +291,16 @@ export default {
         let haveData = [];
         for (let i = 0; i < this.res_list.length; i++) {
           let name = this.res_list[i].name;
+          if ("parent" in this.res_list[i]) {
+            name = this.res_list[i].parent + "子模块";
+          }
           haveData.push(name);
         }
         console.log(haveData);
         this.dataRecommend = this.graphapi.giveRecommend(haveData);
         console.log("推荐", this.dataRecommend);
         // });
-      }, 800);
+      }, 4000);
     }
 
     let mapType = this.getURLParameter("mapType");
@@ -308,9 +314,53 @@ export default {
   },
 
   methods: {
+    selectedVisualDataItemsRangeChangeBefore(value) {
+      if (this.selectedRes.visualDataItems.length >= 30) {
+        let min = this.selectedVisualDataItemsRange[0];
+        let max = this.selectedVisualDataItemsRange[1];
+        for (let i = 0; i < value.length; i++) {
+          for (
+            let j = 0;
+            j < this.selectedRes.visualDataItems.length;
+            j++
+          ) {
+            if (value[i] == this.selectedRes.visualDataItems[j].name) {
+              if (value.length == 1) {
+                min = max = j;
+              } else {
+                //判断增减
+                if (min >= j) {
+                  min = j;
+                } else if (max <= j) {
+                  max = j;
+                }
+              }
+            }
+          }
+        }
+        this.selectedVisualDataItemsRange = [min, max];
+        this.selectedVisualDataItemsRangeChange([min, max]);
+      }
+    },
+    selectedVisualDataItemsRangeChange(value) {
+      this.selectedVisualDataItems = [];
+      for (let j = 0; j < this.selectedRes.visualDataItems.length; j++) {
+        if (j >= value[0] && j <= value[1]) {
+          this.selectedVisualDataItems.push(
+            this.selectedRes.visualDataItems[j].name
+          );
+        }
+      }
+    },
     recommendShow(data) {
-      this.recommendVisible = true;
       this.recommendShowOne = data;
+      this.selectedRes=data
+      if (data.private == "resource") {
+        this.show_task = true;
+        console.log(this.show_task);
+      } else {
+        this.recommendVisible = true;
+      }
     },
     showRecommend() {
       let dom = document.getElementsByClassName("level");
@@ -356,14 +406,83 @@ export default {
         this.recommendShowOne["id"] = this.recommendShowOne["id_backup"];
         delete this.recommendShowOne["id_backup"];
       }
+      let dataList = [];
+      console.log(this.selectedVisualDataItems);
+      if (this.recommendShowOne.private == "resource") {
+        //如果是来自资源的数据
+        this.selectedRes = this.recommendShowOne;
+        if (this.setSelectedVisualDataItemsDataSet) {
+          //设置集
+          let dataSet = {};
+          dataSet.createTime = this.selectedRes.createTime;
+          dataSet.description = this.selectedRes.description;
+          dataSet.id =
+            this.selectedRes.id +
+            Math.floor(Math.random() * 10 + 1).toString();
+          dataSet.name = this.selectedRes.name + "_dataSet";
+          dataSet.normalTags = this.selectedRes.normalTags;
+          dataSet.problemTags = this.selectedRes.problemTags;
+          dataSet.publicBoolean = this.selectedRes.publicBoolean;
+          dataSet.type = this.selectedRes.type;
+          dataSet.visualType = "dataSet";
+          dataSet.visualizationBoolean =
+            this.selectedRes.visualizationBoolean;
+          dataSet.dataSetList = [];
+          for (let i in this.selectedVisualDataItems) {
+            let dataName = this.selectedVisualDataItems[i];
+            for (let j in this.selectedRes.visualDataItems) {
+              let data = this.selectedRes.visualDataItems[j];
+              if (dataName == data.name) {
+                dataSet.dataSetList.push(data);
+                dataSet.visualWebAddress = data.visualWebAddress;
+              }
+            }
+          }
+          dataSet["simularTrait"] = "data";
+          dataList.push(dataSet);
+          // console.log(dataSet);
+        } else {
+          for (let i in this.selectedVisualDataItems) {
+            let dataName = this.selectedVisualDataItems[i];
+            for (let j in this.selectedRes.visualDataItems) {
+              let data = this.selectedRes.visualDataItems[j];
+              if (dataName == data.name) {
+                console.log(1);
+                data["simularTrait"] = "data";
+                dataList.push(data);
+              }
+            }
+          }
+          this.selectedVisualDataItemsRange = [0, 0];
+          this.selectedVisualDataItems = [];
+        }
+        ElMessage({
+          type: "success",
+          message: "成功加入实验室",
+        });
+        let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
+        this.task_api.addData(newTask, dataList);//传入newTask指针，里面进行push
 
-      let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
+        // this.task_api.addData(newTask, [this.recommendShowOne]);
 
-      this.task_api.addData(newTask, [this.recommendShowOne]);
-      newTask.dataList.push(this.recommendShowOne);
-      localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
+        localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
+      } else {
+        //如果是来自个人空间的数据
+        let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
+        this.task_api.addData(newTask, [this.recommendShowOne]);
+        localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
+      }
+
       this.recommendVisible = false;
-      location.reload();
+      this.show_task = false;
+      let loading = ElLoading.service({
+        lock: true,
+        text: "更新实验室数据...",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      setTimeout(() => {
+        location.reload();
+      }, 500);
     },
     switchMap() {
       if (this.mapType == "mapBox") {

@@ -1,6 +1,6 @@
 import { get, post } from "@/request/request"
 import { relation, initRelation } from "@/assets/data/another/relation"
-import { Encrypt,Decrypt } from "@/util/codeUtil"
+import { Encrypt, Decrypt } from "@/util/codeUtil"
 
 // 上传文件
 export default class {
@@ -11,6 +11,7 @@ export default class {
         this.weight = []
     }
     giveRecommend(knownName = []) {
+        console.log(relation);
         relation.weight = new Array(relation.nodes.length).fill(0)
         let sourceNodes = []
         for (let i = 0; i < knownName.length; i++) {
@@ -65,7 +66,7 @@ export default class {
         let output = []
         for (let i = 0; i < relation.nodes.length; i++) {
             if (output.length >= 5) { break }
-            if ("type" in relation.nodes[i]) {
+            if (("type" in relation.nodes[i]) && !("parent" in relation.nodes[i])) {
                 if (relation.nodes[i].type == "data") {
                     output.push(relation.nodes[i])
                 }
@@ -99,7 +100,7 @@ export default class {
                     data['symbolSize'] = 10
                     data['value'] = data.description
                     data['type'] = "data"
-
+                    data['private'] = 'mydata'
                     relation.nodes.push(data);
                     relation.links.push({
                         source: data.name,
@@ -132,16 +133,31 @@ export default class {
                     if (publicData[i].normalTags[0] != "" && publicData[i].normalTags != []) {
                         publicData[i].normalTags = data.normalTags.split(",");
                     }
-                    if(data.name==undefined||data.name==null){
+                    if (data.name == undefined || data.name == null) {
                         continue
                     }
+                    data['category'] = 0
+                    data['weight'] = 0
+                    data['symbolSize'] = 15
+                    data['value'] = data.description
+                    data['type'] = "data"
+                    data['private'] = 'resource'
+                    relation.nodes.push(data);
                     relation.nodes.push({
-                        name: data.name,
                         category: 0,
+                        weight: 0,
                         symbolSize: 10,
-                        value: data.description,
-                        type: "dataFather",
-                        weight: 0
+                        name:data.name + "子模块",
+                        parent:data.name,
+                        value: data.name + "的数据子模块",
+                        type: "data",
+                        private: "resource",
+                        Recommend: false,
+                    })
+                    relation.links.push({
+                        source: data.name + "子模块",
+                        target: data.name,
+                        relation: "双亲节点"
                     });
                     relation.links.push({
                         source: data.name,
@@ -238,7 +254,7 @@ export default class {
                 }
                 for (let i in modelList) {
                     let data = modelList[i];
-                    if(data.name==undefined||data.name==null){
+                    if (data.name == undefined || data.name == null) {
                         continue
                     }
                     console.log(data.name);
@@ -305,12 +321,12 @@ export default class {
                     }
 
                 }
-                let obj={}
-                relation.nodes.forEach((item)=>obj[item.name]=item)
-                let a=[]
-                for(let key in obj){a.push(obj[key])}
-                console.log("a is :",a);
-                relation.nodes=a
+                let obj = {}
+                relation.nodes.forEach((item) => obj[item.name] = item)
+                let a = []
+                for (let key in obj) { a.push(obj[key]) }
+                console.log("a is :", a);
+                relation.nodes = a
                 resolve("ok")
             }).catch((err) => {
                 reject("error")
@@ -329,8 +345,8 @@ export default class {
                     let inEdge = []
                     let node = relation.nodes[i]
                     //暂时改变id的key值，调用的时候改回来
-                    if('id' in node){
-                        node['id_backup']=node['id']
+                    if ('id' in node) {
+                        node['id_backup'] = node['id']
                         delete node['id']
                     }
 

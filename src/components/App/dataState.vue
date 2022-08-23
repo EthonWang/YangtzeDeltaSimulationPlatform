@@ -1,3 +1,8 @@
+<!-- ·设计人：于晶晶、张子卓 -->
+<!-- ·功能： -->
+<!-- 1.识别模型配置项，提供配置项的前端操作与数据装载； -->
+<!-- 2.提供模型结果数据下载 -->
+<!-- 3.提供模型运行结果（实验结果）保存到个人空间与实验室 -->
 <template>
   <el-divider>
     <div class="modelState">
@@ -177,7 +182,7 @@
                   <el-tooltip
                     class="box-item"
                     effect="light"
-                    content="加入实验室"
+                    content="加入所有结果数据到实验室"
                     placement="bottom"
                   >
                     <el-button
@@ -318,7 +323,7 @@ export default {
           data.parentId != null &&
           data.parentId != undefined &&
           data.parentId != ""
-        ) {
+        ) { //发送数据（非集）获取url
           this.dataApi
             .sendDataToContainer(data.fileRelativePath, data.id)
             .then((res) => {
@@ -345,7 +350,7 @@ export default {
               ElMessage.error("使用数据失败1");
               loading_data.close();
             });
-        } else {
+        } else { //发送数据集 获取url
           this.dataApi
             .sendResDataToContainer(
               data.fileRelativePath,
@@ -459,23 +464,42 @@ export default {
       }
     },
     loadToLab(event) {
-      if (event.url != undefined) {
-        this.task_api.addResultToLabAndDataCenter(
-          event.url,
-          this.userInfo.id,
-          this.task.id
-        ).then((res)=>{
-          if(res.data==null){
-            ElMessage.error("出错，可能已存在或无数据" );
-          }else{
-            let newTask=res.data.data
-          console.log(newTask);
-          localStorage.setItem("task",Encrypt(JSON.stringify(newTask)))
-          ElMessage({ type: "success", message: "成功加入实验室" });
-          }
-          
-        });
-        
+      if(event.url==undefined){
+        this.$message.error("请先进行实验");
+        return
+      }
+      let outList=this.outEventList(this.state)
+      let outUrlList=[]
+      for(let i in outList){
+        outUrlList.push(outList[i].url)
+      }
+      if (outList[0].url != undefined) {
+        this.task_api
+          .addResultToLabAndDataCenter(
+            outUrlList,
+            this.userInfo.id,
+            this.task.id
+          )
+          .then((res) => {
+            if (res.data == null) {
+              ElMessage.error("出错，可能已存在或无数据");
+            } else {
+              let newTask = res.data;
+              console.log(res);
+              localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
+              ElMessage({ type: "success", message: "成功加入"+outUrlList.length+"条数据" });
+              let loading = ElLoading.service({
+                lock: true,
+                text: "装载数据中...",
+                background: "rgba(0, 0, 0, 0.7)",
+              });
+              setTimeout(()=>{
+                location.reload()
+              },750)
+            }
+          }).catch((err)=>{
+            ElMessage.error("出错，未返回数据")
+          });
       } else {
         this.$message.error("请先进行实验");
       }

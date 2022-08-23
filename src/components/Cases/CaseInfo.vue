@@ -72,8 +72,8 @@
             <div class="data-area"  v-if="caseInfo.relatedResource.length != 0">
               <template v-for="(item,key) in caseInfo.relatedResource" :key="key">
                 <div class="data-item">
-                  <el-link  style="font-size: 0.9375rem" :href="item.url" type="primary" target="_blank">{{item.name}}<el-icon><Link></Link></el-icon></el-link>
-                  <p style="color: #6e6e6e;font-size: 0.8125rem">{{item.description}}</p>
+                  <el-link  style="font-size: 1.1rem" :href="item.url" type="primary" target="_blank">{{item.name}}<el-icon><Link></Link></el-icon></el-link>
+                  <p style="color: #6e6e6e;font-size: 1rem">{{item.description}}</p>
                 </div>
               </template>
             </div>
@@ -115,7 +115,7 @@
               <el-divider style="margin: 22px 0 6px 0;"></el-divider>
             </template>
           </template>
-          <p v-else class="font-size-1">暂无作者信息</p>
+          <p v-else class="font-size-1">暂无版权信息</p>
         </div>
       </el-col>
     </el-row>
@@ -442,7 +442,7 @@ const openInLab=()=>{
   font-size: 1.2rem;
 }
 .imageBlock {
-  width: 75%;
+  width: 50%;
   margin-top: 15px;
   margin-bottom: 15px;
   animation: scale-in-center 0.5s both;

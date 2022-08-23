@@ -81,22 +81,34 @@
         ></el-button>
       </span>
 
-      <span>创建时间：{{ props.file.time }}</span
+      <span>创建时间：{{ props.file.createTime }}</span
       ><br />
-      <span>数据类型：{{ props.file.name.split(".")[1] }}</span
+      <span
+        >数据类型：{{
+          props.file.name.split(".")[props.file.name.split(".").length - 1]
+        }}</span
       ><br />
-      <span>数据作者：{{ props.file.author }}</span
+      <span>数据大小：{{ props.file.size }}</span
       ><br />
       <el-button
         style="margin-top: 10%; width: 100%"
         @click="dialogFormVisible = true"
-        ><el-icon><EditPen /></el-icon>&nbsp;描述数据</el-button
+        v-if="!props.publicState"
+        ><el-icon><EditPen /></el-icon>&nbsp;编辑数据</el-button
       ><br />
+
       <el-button
         text
         @click="dialogVisible1 = !dialogVisible1"
         style="margin-top: 2%; width: 100%"
+        v-if="!props.publicState"
         ><el-icon><Share /></el-icon>&nbsp;关系图谱</el-button
+      ><br />
+            <el-button
+        style="margin-top: 2%; width: 100%"
+        @click="emit('showMoveSpan')"
+        v-if="!props.publicState"
+        ><el-icon><Van /></el-icon>&nbsp;移动数据({{ props.num }})</el-button
       ><br />
       <el-button
         style="margin-top: 2%; width: 100%"
@@ -118,6 +130,7 @@
         style="margin-top: 2%; width: 100%"
         type="danger"
         @click="deleteData"
+        v-if="!props.publicState"
         ><el-icon><Delete /></el-icon>&nbsp;删除数据({{ props.num }})</el-button
       ><br />
     </div>
@@ -154,7 +167,11 @@
             show-checkbox
           />
         </el-form-item>
-        <el-form-item label="开放情况" :label-width="formLabelWidth">
+        <el-form-item
+          label="开放情况"
+          v-if="props.file.type != 'folder'"
+          :label-width="formLabelWidth"
+        >
           <el-switch
             v-model="form.publicBoolean"
             class="mb-2"
@@ -202,12 +219,14 @@ const api = new Api();
 const props = defineProps({
   file: Object,
   num: Number,
+  publicState: Boolean,
 });
 const emit = defineEmits([
   "update:file",
   "deleteData",
   "downloadData1",
   "addToTask",
+  "showMoveSpan",
 ]);
 const deleteData = () => {
   emit("deleteData");

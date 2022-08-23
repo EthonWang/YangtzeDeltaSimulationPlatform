@@ -12,7 +12,7 @@ const config = {
 
 const request = axios.create({
   baseURL: config.baseUrl.dev,
-  timeout: 1200000,
+  timeout: 12000000,
 });
 request.interceptors.request.use(config => {
     if (localStorage.getItem('token')) {

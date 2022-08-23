@@ -1,3 +1,7 @@
+<!-- ·主题：展示资源列表 -->
+<!-- ·设计人：赵义明、张子卓 -->
+<!-- ·功能 -->
+<!-- 1.平台数据与平台模型的展示 -->
 <template>
   <el-row>
     <el-col :span="6" v-for="(item, index) in props.resList" :key="index">
@@ -163,7 +167,7 @@ import { randomInt } from "d3-random";
 import { Decrypt } from "@/util/codeUtil";
 
 const store = useStore();
-const dataServer = store.getters.devIpAddress;
+const dataServer = store.getters.devIpAddress_backup;
 const userInfo = JSON.parse(Decrypt(localStorage.getItem("userInfo")));
 const task_api = new taskApi();
 const show_task = ref(false);
@@ -184,7 +188,7 @@ const props = defineProps({
   resList: Array,
 });
 const addDataToTask = (task) => {
-  console.log(selectedRes.value);
+  console.log("selectedRes.value is :", selectedRes.value);
   if ("mdl" in selectedRes.value) {
     // console.log(234);
     let data = selectedRes.value;
@@ -196,7 +200,6 @@ const addDataToTask = (task) => {
     task_api.addData(task, [data]);
   } else {
     let dataList = [];
-    console.log(selectedVisualDataItems.value);
     if (setSelectedVisualDataItemsDataSet.value) {
       //设置集
       let dataSet = {};
@@ -204,7 +207,7 @@ const addDataToTask = (task) => {
       dataSet.description = selectedRes.value.description;
       dataSet.id =
         selectedRes.value.id + Math.floor(Math.random() * 10 + 1).toString();
-      dataSet.name = selectedRes.value.name + "_dataSet";
+      dataSet.name = selectedRes.value.name + "_dataSet_" + Math.random().toString(36).substr(2,4);
       dataSet.normalTags = selectedRes.value.normalTags;
       dataSet.problemTags = selectedRes.value.problemTags;
       dataSet.publicBoolean = selectedRes.value.publicBoolean;
@@ -223,6 +226,7 @@ const addDataToTask = (task) => {
         }
       }
       dataSet["simularTrait"] = "data";
+      dataSet["parent"] = selectedRes.value.name;
       dataList.push(dataSet);
       // console.log(dataSet);
     } else {
@@ -233,6 +237,7 @@ const addDataToTask = (task) => {
           if (dataName == data.name) {
             console.log(1);
             data["simularTrait"] = "data";
+            data["parent"] = selectedRes.value.name;
             dataList.push(data);
           }
         }
@@ -271,9 +276,13 @@ const showMapCard = function (info) {
   // if (info.visualizationBoolean) {
   selectedRes.value = {};
   selectedRes.value = info;
-  setTimeout(() => {
-    mapCardDialogVisible.value = true;
-  }, 200);
+  if ("fileSize" in info) {
+    setTimeout(() => {
+      mapCardDialogVisible.value = true;
+    }, 200);
+  } else {
+    show_task_model.value=true
+  }
 };
 const downloadRes = function (item) {
   if (item.publicBoolean) {

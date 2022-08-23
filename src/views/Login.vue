@@ -12,6 +12,7 @@
         :model="formLabelAlign"
         :rules="rules"
         style="min-width: 460px"
+        ref="ruleFormRef"
       >
         <el-form-item label="请输入邮箱" prop="email">
           <el-input v-model="formLabelAlign.email" />
@@ -24,7 +25,7 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="success" style="width: 100%" @click="login"
+          <el-button type="success" style="width: 100%" @click="login(ruleFormRef)"
             >登录</el-button
           ><br /><br />
           <el-button @click="toRegister" style="width: 100%">注册</el-button>
@@ -40,9 +41,10 @@ import { reactive, computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import userApi from "@/api/user/user";
-import { ElLoading } from "element-plus";
+import { ElLoading, ElNotification } from "element-plus";
 import graphAPI from "@/api/user/graph";
 import { Encrypt, Decrypt } from "@/util/codeUtil";
+import { ElMessage } from "element-plus/lib/components";
 
 const graphapi = new graphAPI();
 const api = new userApi();
@@ -50,6 +52,7 @@ const route = useRoute();
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const labelPosition = ref("top");
+const ruleFormRef=ref()
 let toLast = localStorage.getItem("toLast");
 if (toLast) {
   toLast = Decrypt(toLast);
@@ -76,8 +79,8 @@ const rules = reactive({
   ],
 });
 
-if ("user" in route.query) {
-  const new_user = JSON.parse(route.query.user);
+if ("user" in route.query) { //自动填充注册信息
+  const new_user = JSON.parse(Decrypt(route.query.user));
   if (new_user != null) {
     formLabelAlign.email = new_user.email;
     formLabelAlign.password = new_user.password;
@@ -87,35 +90,54 @@ if ("user" in route.query) {
 const toRegister = () => {
   router.push("/register");
 };
-const login = () => {
-  api.login(formLabelAlign.email, formLabelAlign.password).then((res1) => {
-    localStorage.setItem("token", Encrypt(res1.data.token));
-    api.getUserInfo(formLabelAlign.email).then((res) => {
-      localStorage.setItem("userInfo", Encrypt(JSON.stringify(res.data.data)));
-      const loading = ElLoading.service({
-        lock: true,
-        text: "Loading",
-        background: "rgba(0, 0, 0, 0.7)",
-      });
-      graphapi.initGraph(res.data.data.id).then((res) => {
-        console.log("res is ", res);
-        setTimeout(() => {
-          loading.close();
-          // document.getElementsByClassName("user-topbar")[0].style.right = "1vw";
-          // document.getElementById("logo").style.marginLeft = "2vw";
-          // document.getElementsByClassName("topbar")[0].style.left = "5vw";
-          // document.getElementsByClassName("user-info")[0].style.opacity = 1;
-          // document.getElementsByClassName("science")[0].style.opacity = 0;
-        }, 601);
-        if (toLast) {
-          router.push(toLast)
-        } else {
-          localStorage.removeItem('toLast')
-          router.push("/user");
+const login = (formEl) => {
+  if (!formEl) {
+    return;
+  }
+  formEl.validate((valid, fields) => {
+    if (valid) {
+      api.login(formLabelAlign.email, formLabelAlign.password).then((res1) => {
+        if(res1.data==null){
+          ElNotification({
+            title: "Error",
+            message: res1.msg,
+            type: "error",
+          });
         }
-        
+        localStorage.setItem("token", Encrypt(res1.data.token));
+        api.getUserInfo(formLabelAlign.email).then((res) => {
+          localStorage.setItem(
+            "userInfo",
+            Encrypt(JSON.stringify(res.data.data))
+          );
+          const loading = ElLoading.service({
+            lock: true,
+            text: "Loading",
+            background: "rgba(0, 0, 0, 0.7)",
+          });
+          graphapi.initGraph(res.data.data.id).then((res) => {
+            console.log("res is ", res);
+            setTimeout(() => {
+              loading.close();
+              // document.getElementsByClassName("user-topbar")[0].style.right = "1vw";
+              // document.getElementById("logo").style.marginLeft = "2vw";
+              // document.getElementsByClassName("topbar")[0].style.left = "5vw";
+              // document.getElementsByClassName("user-info")[0].style.opacity = 1;
+              // document.getElementsByClassName("science")[0].style.opacity = 0;
+            }, 601);
+            if (toLast) {
+              router.push(toLast);
+            } else {
+              localStorage.removeItem("toLast");
+              router.push("/user");
+            }
+          });
+        });
       });
-    });
+    } else {
+      ElMessage.error('信息验证失败')
+      console.log("error submit!", fields);
+    }
   });
 };
 </script>

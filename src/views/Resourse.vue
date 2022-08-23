@@ -1,6 +1,22 @@
 <template>
   <div class="main">
     <div class="search" v-if="searchPage">
+      <el-button
+        style="
+          position: absolute;
+          right: 1%;
+          top: 1%;
+          z-index: 10;
+          border: 0px;
+          opacity: 0.35;
+          background-color: transparent;
+        "
+        v-if="isAdmin"
+        @click="router.push('/newResource')"
+        plain
+        type="info"
+        >新建资源条目</el-button
+      >
       <el-row style="padding-top: 7%">
         <div style="margin: auto; display: flex">
           <h1
@@ -135,17 +151,71 @@
                   >
                   <!-- <span class="fontSet">仅显示支持下载的数据</span> -->
                 </div>
-                <div>
-                  <span class="fontSet">共 {{ dataNum }} 条数据</span>
+                <div class="sortResult">
+                  <span class="fontSet"
+                    >共检索到 {{ dataNum }} 条数据资源，{{
+                      modelNum
+                    }}条模型资源</span
+                  >
                 </div>
               </el-row>
             </div>
           </el-row>
           <el-row>
             <div class="resourceList">
-              <resource-list :resList="resList"></resource-list>
-              <el-divider></el-divider>
-              <resource-list :resList="modelList"></resource-list>
+              <resource-list
+                :resList="resList"
+                v-if="
+                  resList.length > 0 &&
+                  (selectedTag.length == 0 ||
+                    selectedTag[0] == '专题' ||
+                    selectedTag[0] == '数据')
+                "
+              ></resource-list>
+              <el-result
+                icon="info"
+                v-if="
+                  resList.length == 0 &&
+                  (selectedTag.length == 0 ||
+                    selectedTag[0] == '专题' ||
+                    selectedTag[0] == '数据')
+                "
+              >
+                <template #title>
+                  <p style="color: rgb(131, 124, 124)">没有相关数据资源</p>
+                </template>
+                <template #sub-title>
+                  <p>请联系管理员上传相应的数据资源</p>
+                </template>
+              </el-result>
+              <el-divider
+                v-if="selectedTag.length == 0 || selectedTag[0] == '专题'"
+              ></el-divider>
+              <resource-list
+                :resList="modelList"
+                v-if="
+                  modelList.length > 0 &&
+                  (selectedTag.length == 0 ||
+                    selectedTag[0] == '专题' ||
+                    selectedTag[0] == '模型')
+                "
+              ></resource-list>
+              <el-result
+                icon="info"
+                v-if="
+                  modelList.length == 0 &&
+                  (selectedTag.length == 0 ||
+                    selectedTag[0] == '专题' ||
+                    selectedTag[0] == '模型')
+                "
+              >
+                <template #title>
+                  <p style="color: rgb(131, 124, 124)">没有相关模型资源</p>
+                </template>
+                <template #sub-title>
+                  <p>请联系管理员上传相应的模型资源</p>
+                </template></el-result
+              >
             </div>
           </el-row>
         </el-col>
@@ -154,207 +224,197 @@
   </div>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script setup>
+import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import tagTree from "@/components/resource/tagTree.vue";
 import resourceList from "@/components/resource/resourceList.vue";
-export default {
-  name: "resource",
-  props: {},
-  components: {
-    tagTree,
-    resourceList,
-  },
-  setup(props, ctx) {
-    const router = useRouter();
-    let searchPage = ref(true);
-    let searchValue = ref("");
-    let selectedTag = ref([]);
-    let questionsSelectValue = ref("");
-    let resList = ref([]);
-    let modelList=ref([]);
-    let sortField = ref("relativity"); //默认相关，共有relativity、timeUp、timeDown、sizeUp、sizeDown五类
-    let dataNum = ref(0);
-    let modelNum=ref(0);
-    let visualChecked = ref(false);
-    let downloadChecked = ref(false);
-    const restaurants = ref([]);
-    const store = useStore();
-    const dataServer = store.getters.devIpAddress;
-    onMounted(() => {
-      getRouteValue();
-      getAutocompleteList();
-    });
-    const getRouteValue = () => {
-      let routerValue = router.currentRoute.value.query.searchValue;
-      if(routerValue != undefined){
-        searchValue.value = routerValue;
-        startSearch();
+import { Decrypt } from "@/util/codeUtil";
+
+const router = useRouter();
+const isAdmin = ref("false");
+let user_info = localStorage.getItem("userInfo");
+if (user_info) {
+  user_info = JSON.parse(Decrypt(user_info));
+  if (user_info.email == "opengms@126.com") {
+    isAdmin.value = true;
+  }
+}
+let searchPage = ref(true);
+let searchValue = ref("");
+let selectedTag = ref([]);
+let questionsSelectValue = ref("");
+let resList = ref([]);
+let modelList = ref([]);
+let sortField = ref("relativity"); //默认相关，共有relativity、timeUp、timeDown、sizeUp、sizeDown五类
+let dataNum = ref(0);
+let modelNum = ref(0);
+let visualChecked = ref(false);
+let downloadChecked = ref(false);
+const restaurants = ref([]);
+const store = useStore();
+const dataServer = store.getters.devIpAddress_backup;
+onMounted(() => {
+  getRouteValue();
+  getAutocompleteList();
+});
+const getRouteValue = () => {
+  let routerValue = router.currentRoute.value.query.searchValue;
+  if (routerValue != undefined) {
+    searchValue.value = routerValue;
+    startSearch();
+  }
+};
+let getAutocompleteList = function () {
+  let DTO = {
+    asc: false,
+    page: 1,
+    pageSize: 50,
+    searchText: "",
+    sortField: "createTime",
+    tagClass: "problemTags",
+    tagName: "",
+  };
+  axios({
+    url: dataServer + "/getResourceDataList",
+    method: "post",
+    //忽略contentType
+    contentType: false,
+    //取消序列换 formData本来就是序列化好的
+    processData: false,
+    dataType: "json",
+    data: DTO,
+  }).then(
+    (res) => {
+      let list = res.data.data.content;
+      for (let i = 0; i < list.length; i++) {
+        restaurants.value.push({
+          value: list[i].name,
+          label: list[i].name,
+        });
       }
+    },
+    (err) => {
+      console.log(err);
     }
-    let getAutocompleteList = function () {
-      let DTO = {
-        asc: false,
-        page: 1,
-        pageSize: 50,
-        searchText: "",
-        sortField: "createTime",
-        tagClass: "problemTags",
-        tagName: "",
-      };
-      axios({
-        url: dataServer +  "/getResourceDataList",
-        method: "post",
-        //忽略contentType
-        contentType: false,
-        //取消序列换 formData本来就是序列化好的
-        processData: false,
-        dataType: "json",
-        data: DTO,
-      }).then(
-        (res) => {
-          let list = res.data.data.content;
-          for (let i = 0; i < list.length; i++) {
-            restaurants.value.push({
-              value: list[i].name,
-              label: list[i].name,
-            });
-          }
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-    };
-    const querySearch = (queryString, cb) => {
-      const results = queryString
-        ? restaurants.value.filter(createFilter(queryString))
-        : restaurants.value;
-      // call callback function to return suggestions
-      cb(results);
-    };
-    const createFilter = (queryString) => {
-      return (restaurant) => {
-        return (
-          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) >=
-          0
-        );
-      };
-    };
-    let startSearch = function () {
-      let tagClass = "problemTags";
-      let tagName = "";
-      if (selectedTag.value.length == 0) {
-        tagClass = "problemTags";
-      } else if (selectedTag.value[0] == "专题") {
-        tagClass = "problemTags";
-        tagName = selectedTag.value[1];
-      } else {
-        tagClass = "normalTags";
-        tagName = selectedTag.value[1];
-      }
-      let DTO = {
-        asc: false,
-        page: 1,
-        pageSize: 16,
-        searchText: searchValue.value,
-        sortField: "createTime",
-        tagClass: tagClass,
-        tagName: tagName,
-      };
-      axios({
-        url: dataServer +  "/getResourceDataList",
-        method: "post",
-        //忽略contentType
-        contentType: false,
-        //取消序列换 formData本来就是序列化好的
-        processData: false,
-        dataType: "json",
-        data: DTO,
-      }).then(
-        (res) => {
-          searchPage.value = false;
-          resList.value = res.data.data.content;
-          dataNum.value = res.data.data.totalElements;
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-      axios({
-        url: dataServer +  "/getResourceModelList",
-        method: "post",
-        //忽略contentType
-        contentType: false,
-        //取消序列换 formData本来就是序列化好的
-        processData: false,
-        dataType: "json",
-        data: DTO,
-      }).then(
-        (res) => {
-          searchPage.value = false;
-          modelList.value = res.data.data.content;
-          modelNum.value = res.data.data.totalElements;
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-    };
-    const clearSearch = function () {
-      searchValue.value = "";
-      visualChecked.value = false;
-      downloadChecked.value = false;
-      selectedTag.value = [];
-      startSearch();
-    };
-    const tagClick = function (data) {
-      selectedTag.value = data;
-      startSearch();
-    };
-    let sortByField = function (type) {
-      if (type == "relativity") {
-        sortField.value = "relativity";
-      } else if (type == "time") {
-        if (sortField.value == "timeDown") {
-          sortField.value = "timeUp";
-        } else if (sortField.value == "timeUp") {
-          sortField.value = "relativity";
-        } else {
-          sortField.value = "timeDown";
-        }
-      } else if (type == "size") {
-        if (sortField.value == "sizeDown") {
-          sortField.value = "sizeUp";
-        } else if (sortField.value == "sizeUp") {
-          sortField.value = "relativity";
-        } else {
-          sortField.value = "sizeDown";
-        }
-      }
-    };
-    return {
-      searchPage,
-      searchValue,
-      startSearch,
-      tagClick,
-      selectedTag,
-      questionsSelectValue,
-      dataNum,
-      sortField,
-      sortByField,
-      resList,
-      modelList,
-      modelNum,
-      visualChecked,
-      downloadChecked,
-      clearSearch,
-      querySearch,
-    };
-  },
+  );
+};
+const querySearch = (queryString, cb) => {
+  const results = queryString
+    ? restaurants.value.filter(createFilter(queryString))
+    : restaurants.value;
+  // call callback function to return suggestions
+  cb(results);
+};
+const createFilter = (queryString) => {
+  return (restaurant) => {
+    return (
+      restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) >= 0
+    );
+  };
+};
+let startSearch = function () {
+  let tagClass = "problemTags";
+  let tagName = "";
+  if (selectedTag.value.length == 0) {
+    tagClass = "problemTags";
+    tagName = "";
+  } else if (selectedTag.value[0] == "专题") {
+    tagClass = "problemTags";
+    if (selectedTag.value.length == 1) {
+      tagName = "";
+    } else {
+      tagName = selectedTag.value[1];
+    }
+  } else {
+    tagClass = "normalTags";
+    if (selectedTag.value.length == 1) {
+      tagName = "";
+    } else {
+      tagName = selectedTag.value[1];
+    }
+  }
+  let DTO = {
+    asc: false,
+    page: 1,
+    pageSize: 16,
+    searchText: searchValue.value,
+    sortField: "createTime",
+    tagClass: tagClass,
+    tagName: tagName,
+  };
+  axios({
+    url: dataServer + "/getResourceDataList",
+    method: "post",
+    //忽略contentType
+    contentType: false,
+    //取消序列换 formData本来就是序列化好的
+    processData: false,
+    dataType: "json",
+    data: DTO,
+  }).then(
+    (res) => {
+      searchPage.value = false;
+      resList.value = res.data.data.content;
+      dataNum.value = res.data.data.totalElements;
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
+  axios({
+    url: dataServer + "/getResourceModelList",
+    method: "post",
+    //忽略contentType
+    contentType: false,
+    //取消序列换 formData本来就是序列化好的
+    processData: false,
+    dataType: "json",
+    data: DTO,
+  }).then(
+    (res) => {
+      searchPage.value = false;
+      modelList.value = res.data.data.content;
+      modelNum.value = res.data.data.totalElements;
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
+};
+const clearSearch = function () {
+  searchValue.value = "";
+  visualChecked.value = false;
+  downloadChecked.value = false;
+  selectedTag.value = [];
+  startSearch();
+};
+const tagClick = function (data) {
+  selectedTag.value = data;
+  startSearch();
+};
+let sortByField = function (type) {
+  if (type == "relativity") {
+    sortField.value = "relativity";
+  } else if (type == "time") {
+    if (sortField.value == "timeDown") {
+      sortField.value = "timeUp";
+    } else if (sortField.value == "timeUp") {
+      sortField.value = "relativity";
+    } else {
+      sortField.value = "timeDown";
+    }
+  } else if (type == "size") {
+    if (sortField.value == "sizeDown") {
+      sortField.value = "sizeUp";
+    } else if (sortField.value == "sizeUp") {
+      sortField.value = "relativity";
+    } else {
+      sortField.value = "sizeDown";
+    }
+  }
 };
 </script>
 
@@ -396,16 +456,16 @@ export default {
   // border-radius: 5px !important;
   box-shadow: 2px 4px 12px rgba(255, 255, 255, 0.5);
   // background-color: rgb(239, 143, 17);
-  background: hsla(220, 100%, 5%,0.3);
+  background: hsla(220, 100%, 5%, 0.3);
 }
 .indexBox {
-  background: hsla(220, 100%, 5%,0.3);
+  background: hsla(220, 100%, 5%, 0.3);
   margin-left: 10px;
   height: 120px;
   width: 100%;
-  padding:10px 0 5px 5px ;
+  padding: 10px 0 5px 5px;
   border-bottom: solid 0.1px rgb(176, 174, 174);
-  box-shadow: 2px 2px 6px rgba(255,255,255,0.5) !important;
+  box-shadow: 2px 2px 6px rgba(255, 255, 255, 0.5) !important;
   // background-color: rgb(95, 239, 17);
 }
 .searchBox {
@@ -430,17 +490,20 @@ export default {
   width: 20vw;
 }
 .sortBox {
+  width: 100%;
   height: 50px;
   // background-color: white;
   display: flex;
   align-items: center;
-  // justify-content: space-around;
+  justify-content: space-between;
   // flex-direction: column;
 }
 .sortMoudle {
-  width: 90%;
   height: 50px;
   margin-left: 15px;
+}
+.sortResult {
+  margin-right: 25px;
 }
 .sortCheckBox {
   margin-left: 10px;
@@ -475,30 +538,31 @@ export default {
   line-height: 50px;
   margin-left: 15px;
   font-weight: 600;
+  color: rgb(131, 124, 124);
 }
 .selectedTagFont {
   font-weight: 550;
   color: rgb(131, 124, 124);
 }
 /deep/.el-col-19 {
-width: 87%;
-max-width:87%;
-position: absolute;
-left: 20%;
+  width: 87%;
+  max-width: 87%;
+  position: absolute;
+  left: 20%;
 }
 /deep/.el-col-5 {
-    max-width: 20.8333333333%;
-    flex: 0 0 20.8333333333%;
-    margin-left: -5vw;
+  max-width: 20.8333333333%;
+  flex: 0 0 20.8333333333%;
+  margin-left: -5vw;
 }
-/deep/.el-card{
+/deep/.el-card {
   // background: hsl(220, 100%, 5%);
-  background: hsl(0,0,75%);
+  background: hsl(0, 0, 75%);
   // color: white;
   // border:0px;
-  box-shadow: 2px 2px 8px rgba(255,255,255,0.5) !important;
+  box-shadow: 2px 2px 8px rgba(255, 255, 255, 0.5) !important;
 }
-/deep/.el-link{
+/deep/.el-link {
   color: rgba(255, 255, 255, 0.8);
 }
 </style>

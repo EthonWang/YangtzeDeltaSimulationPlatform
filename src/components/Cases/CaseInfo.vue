@@ -4,8 +4,8 @@
       <el-col :span="11" :offset="4">
         <div>
           <div style="display: flex">
-            <div class="caseImageWrap">
-              <el-image class="caseImage" @click="toCase(caseInfo.path)"  :src="baseUrl+caseInfo.thumbnail" fit="fill"></el-image>
+            <div class="caseImageWrap" @click="toCase(caseInfo.path)">
+              <el-image class="caseImage"   :src="baseUrl+caseInfo.thumbnail" fit="fill"></el-image>
               <div class="imageMask">
                 <img :src="mdOpenIcon" class="caseIcon">
                 <span >查看案例</span>
@@ -13,10 +13,10 @@
             </div>
             <div>
               <h2 class="case-name">{{caseInfo.name}}</h2>
-              <p style="font-size: 1.1rem;margin-left: 40px"
+              <p style="font-size: 1.1rem;margin-left: 40px;"
                  v-if="caseInfo.introduction == null || caseInfo.introduction == ''"
               >暂无简介</p>
-              <p v-else style="font-size: 1.1rem;margin-left: 40px">{{caseInfo.introduction}}</p>
+              <p v-else style="font-size: 1.1rem;margin-left: 40px;">{{caseInfo.introduction}}</p>
             </div>
           </div>
           <h3 class="typeName">案例描述</h3>
@@ -148,7 +148,16 @@ if(user_info){
 
 const mdOpenIcon = require("@/assets/img/icon/md-open.png")
 const toCase = (path) => {
-  router.push("/case/" + path + "/");
+  if(path == ""){
+    ElMessage({
+      type:"info",
+      message:"暂无"
+    })
+    return;
+  }else {
+    router.push("/case/" + path + "/");
+  }
+
 }
 const caseInfo = ref()
 const baseUrl = store.state.devBackIp;
@@ -342,7 +351,7 @@ const openInLab=()=>{
 .caseImage {
   height: @imageHeight;
   width: @imageWidth;
-  border-bottom: 1px solid lightgray;
+  border: 1px solid lightgray;
 }
 
 .imageMask {
@@ -437,7 +446,7 @@ const openInLab=()=>{
   margin-top: 15px;
   margin-bottom: 15px;
   animation: scale-in-center 0.5s both;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  //box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 @keyframes scale-in-center {
   0% {

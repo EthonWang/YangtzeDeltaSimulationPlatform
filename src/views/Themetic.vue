@@ -67,13 +67,7 @@
                       <span>打开案例</span>
                     </div>
                   </div>
-                  <div
-                    style="
-                      display: flex;
-                      justify-content: center;
-                      padding: 0.5rem;
-                    "
-                  >
+                  <div class="cardText">
                     <el-tooltip
                       effect="dark"
                       placement="bottom"

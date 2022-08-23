@@ -81,16 +81,6 @@ export const cases_config = [
         problem:"测试案例",
         path: "testCase",
         component:() => import("views/CasesView/testCase.vue")
-    },
-    {
-        problem:"水质参数生物光学分类反演",
-        path: "FCMm",
-        component:() => import("views/CasesView/FCMm.vue")
-    },
-    {
-        problem:"全国流域数据模拟",
-        path: "ChinaWaterShedModel",
-        component:() => import("views/CasesView/ChinaWaterShedModel.vue")
     }
     // {
     //     problem:"湖泊水环境监测",

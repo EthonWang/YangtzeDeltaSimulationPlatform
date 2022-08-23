@@ -8,9 +8,16 @@
       <el-card class="resListCard">
         <div class="imageBox">
           <el-image
+            :src="item.imgWebAddress"
+            class="image"
+            :fit="contain"
+            v-if="item.imgWebAddress.indexOf('http://') >= 0"
+          ></el-image>
+          <el-image
             :src="dataServer + item.imgWebAddress"
             class="image"
             :fit="contain"
+            v-else
           ></el-image>
         </div>
         <div style="padding: 7px">
@@ -22,6 +29,15 @@
             effect="dark"
             @click="showMapCard(item)"
             v-if="item.visualizationBoolean"
+            >查看</el-button
+          >
+          <el-button
+            class="downloadButton"
+            style="margin-left: 2px"
+            type="primary"
+            effect="dark"
+            @click="showMapCard(item)"
+            v-if="item.md5 != undefined && item.md5 != ''"
             >查看</el-button
           >
           <el-button
@@ -37,7 +53,7 @@
             type="primary"
             effect="dark"
             @click="turn2blank(item.fileWebAddress)"
-            v-if="!item.visualizationBoolean && item.fileWebAddress != ''"
+            v-if="!item.visualizationBoolean && item.fileWebAddress != '' && item.md5 == undefined"
             >查看</el-button
           >
           <div class="fontSet" style="margin: 5px 0" v-if="'fileSize' in item">

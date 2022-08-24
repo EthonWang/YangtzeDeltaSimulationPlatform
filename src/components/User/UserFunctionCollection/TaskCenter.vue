@@ -14,6 +14,7 @@
         :task="task"
         @update:task="task = $event"
         @delete-task="deleteTask(task)"
+        @refresh="refresh"
       ></TaskItem>
     </div>
 

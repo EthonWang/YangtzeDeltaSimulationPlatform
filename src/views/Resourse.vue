@@ -106,7 +106,7 @@
                   class="searchInput"
                 ></el-input>
 
-                <el-button class="searchButton" @click="startSearch()"
+                <el-button class="searchButton" @click="beforeStartSearch()"
                   >搜索</el-button
                 >
                 <el-button class="searchButton" @click="clearSearch()"
@@ -141,12 +141,18 @@
                     <span v-if="sortField == 'sizeUp'">▲</span>
                   </el-link>
                   <el-divider direction="vertical"></el-divider>
-                  <el-checkbox v-model="visualChecked" class="sortCheckBox"
+                  <el-checkbox
+                    v-model="visualChecked"
+                    class="sortCheckBox"
+                    @change="visualCheckedChange"
                     >仅显示支持可视化的数据</el-checkbox
                   >
                   <!-- <span class="fontSet">仅显示支持可视化的数据</span> -->
                   <el-divider direction="vertical"></el-divider>
-                  <el-checkbox v-model="downloadChecked" class="sortCheckBox"
+                  <el-checkbox
+                    v-model="downloadChecked"
+                    class="sortCheckBox"
+                    @change="downloadCheckedChange"
                     >仅显示公开下载的数据</el-checkbox
                   >
                   <!-- <span class="fontSet">仅显示支持下载的数据</span> -->
@@ -165,12 +171,11 @@
             <div class="resourceList">
               <resource-list
                 :resList="resList"
-                v-if="
-                  resList.length > 0 &&
-                  (selectedTag.length == 0 ||
-                    selectedTag[0] == '专题' ||
-                    selectedTag[0] == '数据')
-                "
+                :dataNum="dataNum"
+               
+                @pageChange="dataPageChange"
+                @pageNext="dataPageNext"
+                @pagePrev="dataPagePrev"
               ></resource-list>
               <el-result
                 icon="info"
@@ -193,12 +198,16 @@
               ></el-divider>
               <resource-list
                 :resList="modelList"
+                :dataNum="modelNum"
                 v-if="
                   modelList.length > 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
                     selectedTag[0] == '模型')
                 "
+                @pageChange="modelPageChange"
+                @pageNext="modelPageNext"
+                @pagePrev="modelPagePrev"
               ></resource-list>
               <el-result
                 icon="info"
@@ -233,7 +242,6 @@ import tagTree from "@/components/resource/tagTree.vue";
 import resourceList from "@/components/resource/resourceList.vue";
 import { Decrypt } from "@/util/codeUtil";
 
-const router = useRouter();
 const isAdmin = ref("false");
 let user_info = localStorage.getItem("userInfo");
 if (user_info) {
@@ -242,6 +250,7 @@ if (user_info) {
     isAdmin.value = true;
   }
 }
+const router = useRouter();
 let searchPage = ref(true);
 let searchValue = ref("");
 let selectedTag = ref([]);
@@ -253,9 +262,11 @@ let dataNum = ref(0);
 let modelNum = ref(0);
 let visualChecked = ref(false);
 let downloadChecked = ref(false);
+let dataPageNum = ref(1);
+let modelPageNum = ref(1);
 const restaurants = ref([]);
 const store = useStore();
-const dataServer = store.getters.devIpAddress_backup;
+const dataServer = store.getters.devIpAddress;
 onMounted(() => {
   getRouteValue();
   getAutocompleteList();
@@ -315,6 +326,15 @@ const createFilter = (queryString) => {
     );
   };
 };
+const beforeStartSearch = () => {
+  if (visualChecked.value || downloadChecked.value) {
+    dataPageNum.value = 1;
+    searchDataByVisualChecked();
+  } else {
+    dataPageNum.value = 1;
+    startSearch();
+  }
+};
 let startSearch = function () {
   let tagClass = "problemTags";
   let tagName = "";
@@ -336,9 +356,9 @@ let startSearch = function () {
       tagName = selectedTag.value[1];
     }
   }
-  let DTO = {
+  let dataDTO = {
     asc: false,
-    page: 1,
+    page: dataPageNum.value,
     pageSize: 16,
     searchText: searchValue.value,
     sortField: "createTime",
@@ -353,7 +373,7 @@ let startSearch = function () {
     //取消序列换 formData本来就是序列化好的
     processData: false,
     dataType: "json",
-    data: DTO,
+    data: dataDTO,
   }).then(
     (res) => {
       searchPage.value = false;
@@ -364,6 +384,15 @@ let startSearch = function () {
       console.log(err);
     }
   );
+  let modelDTO = {
+    asc: false,
+    page: modelPageNum.value,
+    pageSize: 16,
+    searchText: searchValue.value,
+    sortField: "createTime",
+    tagClass: tagClass,
+    tagName: tagName,
+  };
   axios({
     url: dataServer + "/getResourceModelList",
     method: "post",
@@ -372,7 +401,7 @@ let startSearch = function () {
     //取消序列换 formData本来就是序列化好的
     processData: false,
     dataType: "json",
-    data: DTO,
+    data: modelDTO,
   }).then(
     (res) => {
       searchPage.value = false;
@@ -393,7 +422,13 @@ const clearSearch = function () {
 };
 const tagClick = function (data) {
   selectedTag.value = data;
-  startSearch();
+  if (visualChecked.value || downloadChecked.value) {
+    dataPageNum.value = 1;
+    searchDataByVisualChecked();
+  } else {
+    dataPageNum.value = 1;
+    startSearch();
+  }
 };
 let sortByField = function (type) {
   if (type == "relativity") {
@@ -415,6 +450,101 @@ let sortByField = function (type) {
       sortField.value = "sizeDown";
     }
   }
+};
+const dataPageChange = (value) => {
+  // console.log(value);
+  dataPageNum.value = value;
+  if (visualChecked.value || downloadChecked.value) {
+    searchDataByVisualChecked();
+  } else {
+    startSearch();
+  }
+};
+const dataPageNext = (value) => {
+  // console.log(value);
+};
+const dataPagePrev = (value) => {
+  // console.log(value);
+};
+const modelPageChange = (value) => {
+  // console.log(value);
+  // console.log(value);
+  modelPageNum.value = value;
+  startSearch();
+};
+const modelPageNext = (value) => {
+  // console.log(value);
+};
+const modelPagePrev = (value) => {
+  // console.log(value);
+};
+const visualCheckedChange = () => {
+  if (visualChecked.value || downloadChecked.value) {
+    dataPageNum.value = 1;
+    searchDataByVisualChecked();
+  } else {
+    dataPageNum.value = 1;
+    startSearch();
+  }
+};
+const downloadCheckedChange = () => {
+  if (visualChecked.value || downloadChecked.value) {
+    dataPageNum.value = 1;
+    searchDataByVisualChecked();
+  } else {
+    dataPageNum.value = 1;
+    startSearch();
+  }
+};
+const searchDataByVisualChecked = () => {
+  let tagClass = "problemTags";
+  let tagName = "";
+  if (selectedTag.value.length == 0) {
+    tagClass = "problemTags";
+    tagName = "";
+  } else if (selectedTag.value[0] == "专题") {
+    tagClass = "problemTags";
+    if (selectedTag.value.length == 1) {
+      tagName = "";
+    } else {
+      tagName = selectedTag.value[1];
+    }
+  } else {
+    tagClass = "normalTags";
+    if (selectedTag.value.length == 1) {
+      tagName = "";
+    } else {
+      tagName = selectedTag.value[1];
+    }
+  }
+  let dataDTO = {
+    asc: false,
+    page: dataPageNum.value,
+    pageSize: 16,
+    searchText: searchValue.value,
+    sortField: "createTime",
+    tagClass: tagClass,
+    tagName: tagName,
+  };
+  axios({
+    url: dataServer + "/getResourceDataListByVisualChecked",
+    method: "post",
+    //忽略contentType
+    contentType: false,
+    //取消序列换 formData本来就是序列化好的
+    processData: false,
+    dataType: "json",
+    data: dataDTO,
+  }).then(
+    (res) => {
+      searchPage.value = false;
+      resList.value = res.data.data.content;
+      dataNum.value = res.data.data.totalElements;
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
 };
 </script>
 

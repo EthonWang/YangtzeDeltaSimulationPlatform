@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Matrix3 } from "../math/m3";
 import { Matrix4 } from "../math/m4";
 
@@ -10,6 +11,7 @@ type Vector4 = [number, number, number, number]
  */
 class RManager<T> {
     //** objetc dict : [key-name]: object */
+    // eslint-disable-next-line
     public cMap: {[key: string]: T};
     public idMap: string[];
     public num: number;

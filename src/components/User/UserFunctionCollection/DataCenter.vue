@@ -313,13 +313,13 @@ if (nowTask.value) {
 
 const addDataToTask = (task) => {
   let dataList = [];
-  for (let i in choosing_files.value.value) {
-    if (choosing_files.value.value[i].type != "folder") {
-      let data = choosing_files.value.value[i];
+  for (let i in choosing_files.value) {
+    if (choosing_files.value[i].type != "folder") {
+      let data = choosing_files.value[i];
       data["source"] = "cloud";
       data["type"] = "data";
       data["visualizationBoolean"] = false;
-      data["visualType"] = choosing_files.value.value[i].name.split(".")[1];
+      data["visualType"] = choosing_files.value[i].name.split(".")[1];
       data["geoType"] = "line";
       dataList.push(data);
     }
@@ -684,7 +684,7 @@ const moveData = (targetFolder) => {
     choosing_files.value[i].parentId = targetFolder.id;
     api.editFile(choosing_files.value[i]).then((res) => {});
     i++;
-    if (i == choosing_files.value.value.length) {
+    if (i == choosing_files.value.length) {
       setTimeout(() => {
         loading.value = false;
         refresh();

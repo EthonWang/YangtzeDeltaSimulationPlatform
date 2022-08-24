@@ -108,7 +108,6 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import * as Cesium from "cesium/Cesium";
 import axios from "axios";
-import url from "@/assets/raster_Topography_410.00Ma.png";
 // import
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
@@ -147,7 +146,6 @@ export default {
       mode: "3D",
       stat: true,
       gridIsshown: false,
-      imageUrl: url,
       options: [
         {
           value: "3D",
@@ -162,6 +160,8 @@ export default {
           label: "哥伦布视图",
         },
       ],
+      dataServer: useStore().state.devIpAddress,
+      imageUrl:"/store/platecase_img/raster_Topography_410.00Ma.png",
     };
   },
   components: {},
@@ -169,6 +169,7 @@ export default {
     this.InitTimelist();
   },
   mounted() {
+    this.imageUrl = this.dataServer + this.imageUrl;
     this.Init();
   },
   updated() {
@@ -198,7 +199,7 @@ export default {
     async requirePngData() {
       const data = await axios({
         method: "GET",
-        url: "/case/img_1/raster_Topography_" + this.time + ".00Ma.png",
+        url: this.dataServer + "/store/platecase_img/raster_Topography_" + this.time + ".00Ma.png",
         responseType: "arraybuffer",
       })
         .then((response) => {
@@ -397,7 +398,7 @@ export default {
       if ((this.time < 410) & (this.time > 0)) {
         const data = axios({
           method: "GET",
-          url: "/case/img_1/raster_Topography_" + this.time + ".00Ma.png",
+          url: this.dataServer + "/store/platecase_img/raster_Topography_" + this.time + ".00Ma.png",
           responseType: "arraybuffer",
         })
           .then((response) => {
@@ -455,7 +456,7 @@ export default {
       } else {
         const data = axios({
           method: "GET",
-          url: "/case/img_1/raster_Topography_" + this.time + ".00Ma.png",
+          url: this.dataServer + "/store/platecase_img/raster_Topography_" + this.time + ".00Ma.png",
           responseType: "arraybuffer",
         })
           .then((response) => {

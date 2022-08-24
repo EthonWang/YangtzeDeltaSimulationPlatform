@@ -350,7 +350,7 @@ const downloadRes = function (item) {
   }
 };
 const turn2blank = function (url) {
-  location.href = url;
+  window.open(url);
 };
 const go2Model = function () {
   location.href = "/model";

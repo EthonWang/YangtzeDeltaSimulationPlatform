@@ -1,22 +1,22 @@
 <template>
   <div class="main">
     <div class="search" v-if="searchPage">
-<!--      <el-button-->
-<!--        style="-->
-<!--          position: absolute;-->
-<!--          right: 1%;-->
-<!--          top: 1%;-->
-<!--          z-index: 10;-->
-<!--          border: 0px;-->
-<!--          opacity: 0.35;-->
-<!--          background-color: transparent;-->
-<!--        "-->
-<!--        v-if="isAdmin"-->
-<!--        @click="router.push('/newResource')"-->
-<!--        plain-->
-<!--        type="info"-->
-<!--        >新建资源条目</el-button-->
-<!--      >-->
+      <el-button
+        style="
+          position: absolute;
+          right: 1%;
+          top: 1%;
+          z-index: 10;
+          border: 0px;
+          opacity: 0.35;
+          background-color: transparent;
+        "
+        v-if="isAdmin"
+        @click="router.push('/newResource')"
+        plain
+        type="info"
+        >新建资源条目</el-button
+      >
       <el-row style="padding-top: 7%">
         <div style="margin: auto; display: flex">
           <h1
@@ -172,12 +172,7 @@
               <resource-list
                 :resList="resList"
                 :dataNum="dataNum"
-                v-if="
-                  resList.length > 0 &&
-                  (selectedTag.length == 0 ||
-                    selectedTag[0] == '专题' ||
-                    selectedTag[0] == '数据')
-                "
+               
                 @pageChange="dataPageChange"
                 @pageNext="dataPageNext"
                 @pagePrev="dataPagePrev"
@@ -238,348 +233,318 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import tagTree from "@/components/resource/tagTree.vue";
 import resourceList from "@/components/resource/resourceList.vue";
-export default {
-  name: "Resource",
-  props: {},
-  components: {
-    tagTree,
-    resourceList,
-  },
-  setup(props, ctx) {
-    const router = useRouter();
-    let searchPage = ref(true);
-    let searchValue = ref("");
-    let selectedTag = ref([]);
-    let questionsSelectValue = ref("");
-    let resList = ref([]);
-    let modelList = ref([]);
-    let sortField = ref("relativity"); //默认相关，共有relativity、timeUp、timeDown、sizeUp、sizeDown五类
-    let dataNum = ref(0);
-    let modelNum = ref(0);
-    let visualChecked = ref(false);
-    let downloadChecked = ref(false);
-    let dataPageNum = ref(1);
-    let modelPageNum = ref(1);
-    const restaurants = ref([]);
-    const store = useStore();
-    const dataServer = store.getters.devIpAddress;
-    onMounted(() => {
-      getRouteValue();
-      getAutocompleteList();
-    });
-    const getRouteValue = () => {
-      let routerValue = router.currentRoute.value.query.searchValue;
-      if (routerValue != undefined) {
-        searchValue.value = routerValue;
-        startSearch();
+import { Decrypt } from "@/util/codeUtil";
+
+const isAdmin = ref("false");
+let user_info = localStorage.getItem("userInfo");
+if (user_info) {
+  user_info = JSON.parse(Decrypt(user_info));
+  if (user_info.email == "opengms@126.com") {
+    isAdmin.value = true;
+  }
+}
+const router = useRouter();
+let searchPage = ref(true);
+let searchValue = ref("");
+let selectedTag = ref([]);
+let questionsSelectValue = ref("");
+let resList = ref([]);
+let modelList = ref([]);
+let sortField = ref("relativity"); //默认相关，共有relativity、timeUp、timeDown、sizeUp、sizeDown五类
+let dataNum = ref(0);
+let modelNum = ref(0);
+let visualChecked = ref(false);
+let downloadChecked = ref(false);
+let dataPageNum = ref(1);
+let modelPageNum = ref(1);
+const restaurants = ref([]);
+const store = useStore();
+const dataServer = store.getters.devIpAddress;
+onMounted(() => {
+  getRouteValue();
+  getAutocompleteList();
+});
+const getRouteValue = () => {
+  let routerValue = router.currentRoute.value.query.searchValue;
+  if (routerValue != undefined) {
+    searchValue.value = routerValue;
+    startSearch();
+  }
+};
+let getAutocompleteList = function () {
+  let DTO = {
+    asc: false,
+    page: 1,
+    pageSize: 50,
+    searchText: "",
+    sortField: "createTime",
+    tagClass: "problemTags",
+    tagName: "",
+  };
+  axios({
+    url: dataServer + "/getResourceDataList",
+    method: "post",
+    //忽略contentType
+    contentType: false,
+    //取消序列换 formData本来就是序列化好的
+    processData: false,
+    dataType: "json",
+    data: DTO,
+  }).then(
+    (res) => {
+      let list = res.data.data.content;
+      for (let i = 0; i < list.length; i++) {
+        restaurants.value.push({
+          value: list[i].name,
+          label: list[i].name,
+        });
       }
-    };
-    let getAutocompleteList = function () {
-      let DTO = {
-        asc: false,
-        page: 1,
-        pageSize: 50,
-        searchText: "",
-        sortField: "createTime",
-        tagClass: "problemTags",
-        tagName: "",
-      };
-      axios({
-        url: dataServer + "/getResourceDataList",
-        method: "post",
-        //忽略contentType
-        contentType: false,
-        //取消序列换 formData本来就是序列化好的
-        processData: false,
-        dataType: "json",
-        data: DTO,
-      }).then(
-        (res) => {
-          let list = res.data.data.content;
-          for (let i = 0; i < list.length; i++) {
-            restaurants.value.push({
-              value: list[i].name,
-              label: list[i].name,
-            });
-          }
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-    };
-    const querySearch = (queryString, cb) => {
-      const results = queryString
-        ? restaurants.value.filter(createFilter(queryString))
-        : restaurants.value;
-      // call callback function to return suggestions
-      cb(results);
-    };
-    const createFilter = (queryString) => {
-      return (restaurant) => {
-        return (
-          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) >= 0
-        );
-      };
-    };
-    const beforeStartSearch = () => {
-      if (visualChecked.value || downloadChecked.value) {
-        dataPageNum.value = 1;
-        searchDataByVisualChecked();
-      } else {
-        dataPageNum.value = 1;
-        startSearch();
-      }
-    };
-    let startSearch = function () {
-      let tagClass = "problemTags";
-      let tagName = "";
-      if (selectedTag.value.length == 0) {
-        tagClass = "problemTags";
-        tagName = "";
-      } else if (selectedTag.value[0] == "专题") {
-        tagClass = "problemTags";
-        if (selectedTag.value.length == 1) {
-          tagName = "";
-        } else {
-          tagName = selectedTag.value[1];
-        }
-      } else {
-        tagClass = "normalTags";
-        if (selectedTag.value.length == 1) {
-          tagName = "";
-        } else {
-          tagName = selectedTag.value[1];
-        }
-      }
-      let dataDTO = {
-        asc: false,
-        page: dataPageNum.value,
-        pageSize: 16,
-        searchText: searchValue.value,
-        sortField: "createTime",
-        tagClass: tagClass,
-        tagName: tagName,
-      };
-      axios({
-        url: dataServer + "/getResourceDataList",
-        method: "post",
-        //忽略contentType
-        contentType: false,
-        //取消序列换 formData本来就是序列化好的
-        processData: false,
-        dataType: "json",
-        data: dataDTO,
-      }).then(
-        (res) => {
-          searchPage.value = false;
-          resList.value = res.data.data.content;
-          dataNum.value = res.data.data.totalElements;
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-      let modelDTO = {
-        asc: false,
-        page: modelPageNum.value,
-        pageSize: 16,
-        searchText: searchValue.value,
-        sortField: "createTime",
-        tagClass: tagClass,
-        tagName: tagName,
-      };
-      axios({
-        url: dataServer + "/getResourceModelList",
-        method: "post",
-        //忽略contentType
-        contentType: false,
-        //取消序列换 formData本来就是序列化好的
-        processData: false,
-        dataType: "json",
-        data: modelDTO,
-      }).then(
-        (res) => {
-          searchPage.value = false;
-          modelList.value = res.data.data.content;
-          modelNum.value = res.data.data.totalElements;
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-    };
-    const clearSearch = function () {
-      searchValue.value = "";
-      visualChecked.value = false;
-      downloadChecked.value = false;
-      selectedTag.value = [];
-      startSearch();
-    };
-    const tagClick = function (data) {
-      selectedTag.value = data;
-      if (visualChecked.value || downloadChecked.value) {
-        dataPageNum.value = 1;
-        searchDataByVisualChecked();
-      } else {
-        dataPageNum.value = 1;
-        startSearch();
-      }
-    };
-    let sortByField = function (type) {
-      if (type == "relativity") {
-        sortField.value = "relativity";
-      } else if (type == "time") {
-        if (sortField.value == "timeDown") {
-          sortField.value = "timeUp";
-        } else if (sortField.value == "timeUp") {
-          sortField.value = "relativity";
-        } else {
-          sortField.value = "timeDown";
-        }
-      } else if (type == "size") {
-        if (sortField.value == "sizeDown") {
-          sortField.value = "sizeUp";
-        } else if (sortField.value == "sizeUp") {
-          sortField.value = "relativity";
-        } else {
-          sortField.value = "sizeDown";
-        }
-      }
-    };
-    const dataPageChange = (value) => {
-      // console.log(value);
-      dataPageNum.value = value;
-      if (visualChecked.value || downloadChecked.value) {
-        searchDataByVisualChecked();
-      } else {
-        startSearch();
-      }
-    };
-    const dataPageNext = (value) => {
-      // console.log(value);
-    };
-    const dataPagePrev = (value) => {
-      // console.log(value);
-    };
-    const modelPageChange = (value) => {
-      // console.log(value);
-      // console.log(value);
-      modelPageNum.value = value;
-      startSearch();
-    };
-    const modelPageNext = (value) => {
-      // console.log(value);
-    };
-    const modelPagePrev = (value) => {
-      // console.log(value);
-    };
-    const visualCheckedChange = () => {
-      if (visualChecked.value || downloadChecked.value) {
-        dataPageNum.value = 1;
-        searchDataByVisualChecked();
-      } else {
-        dataPageNum.value = 1;
-        startSearch();
-      }
-    };
-    const downloadCheckedChange = () => {
-      if (visualChecked.value || downloadChecked.value) {
-        dataPageNum.value = 1;
-        searchDataByVisualChecked();
-      } else {
-        dataPageNum.value = 1;
-        startSearch();
-      }
-    };
-    const searchDataByVisualChecked = () => {
-      let tagClass = "problemTags";
-      let tagName = "";
-      if (selectedTag.value.length == 0) {
-        tagClass = "problemTags";
-        tagName = "";
-      } else if (selectedTag.value[0] == "专题") {
-        tagClass = "problemTags";
-        if (selectedTag.value.length == 1) {
-          tagName = "";
-        } else {
-          tagName = selectedTag.value[1];
-        }
-      } else {
-        tagClass = "normalTags";
-        if (selectedTag.value.length == 1) {
-          tagName = "";
-        } else {
-          tagName = selectedTag.value[1];
-        }
-      }
-      let dataDTO = {
-        asc: false,
-        page: dataPageNum.value,
-        pageSize: 16,
-        searchText: searchValue.value,
-        sortField: "createTime",
-        tagClass: tagClass,
-        tagName: tagName,
-      };
-      axios({
-        url: dataServer + "/getResourceDataListByVisualChecked",
-        method: "post",
-        //忽略contentType
-        contentType: false,
-        //取消序列换 formData本来就是序列化好的
-        processData: false,
-        dataType: "json",
-        data: dataDTO,
-      }).then(
-        (res) => {
-          searchPage.value = false;
-          resList.value = res.data.data.content;
-          dataNum.value = res.data.data.totalElements;
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-    };
-    return {
-      searchPage,
-      searchValue,
-      beforeStartSearch,
-      startSearch,
-      tagClick,
-      selectedTag,
-      questionsSelectValue,
-      dataNum,
-      sortField,
-      sortByField,
-      resList,
-      modelList,
-      modelNum,
-      visualChecked,
-      downloadChecked,
-      clearSearch,
-      querySearch,
-      dataPageNum,
-      modelPageNum,
-      dataPageChange,
-      dataPageNext,
-      dataPagePrev,
-      modelPageChange,
-      modelPageNext,
-      modelPagePrev,
-      visualCheckedChange,
-      downloadCheckedChange,
-      searchDataByVisualChecked,
-    };
-  },
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
+};
+const querySearch = (queryString, cb) => {
+  const results = queryString
+    ? restaurants.value.filter(createFilter(queryString))
+    : restaurants.value;
+  // call callback function to return suggestions
+  cb(results);
+};
+const createFilter = (queryString) => {
+  return (restaurant) => {
+    return (
+      restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) >= 0
+    );
+  };
+};
+const beforeStartSearch = () => {
+  if (visualChecked.value || downloadChecked.value) {
+    dataPageNum.value = 1;
+    searchDataByVisualChecked();
+  } else {
+    dataPageNum.value = 1;
+    startSearch();
+  }
+};
+let startSearch = function () {
+  let tagClass = "problemTags";
+  let tagName = "";
+  if (selectedTag.value.length == 0) {
+    tagClass = "problemTags";
+    tagName = "";
+  } else if (selectedTag.value[0] == "专题") {
+    tagClass = "problemTags";
+    if (selectedTag.value.length == 1) {
+      tagName = "";
+    } else {
+      tagName = selectedTag.value[1];
+    }
+  } else {
+    tagClass = "normalTags";
+    if (selectedTag.value.length == 1) {
+      tagName = "";
+    } else {
+      tagName = selectedTag.value[1];
+    }
+  }
+  let dataDTO = {
+    asc: false,
+    page: dataPageNum.value,
+    pageSize: 16,
+    searchText: searchValue.value,
+    sortField: "createTime",
+    tagClass: tagClass,
+    tagName: tagName,
+  };
+  axios({
+    url: dataServer + "/getResourceDataList",
+    method: "post",
+    //忽略contentType
+    contentType: false,
+    //取消序列换 formData本来就是序列化好的
+    processData: false,
+    dataType: "json",
+    data: dataDTO,
+  }).then(
+    (res) => {
+      searchPage.value = false;
+      resList.value = res.data.data.content;
+      dataNum.value = res.data.data.totalElements;
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
+  let modelDTO = {
+    asc: false,
+    page: modelPageNum.value,
+    pageSize: 16,
+    searchText: searchValue.value,
+    sortField: "createTime",
+    tagClass: tagClass,
+    tagName: tagName,
+  };
+  axios({
+    url: dataServer + "/getResourceModelList",
+    method: "post",
+    //忽略contentType
+    contentType: false,
+    //取消序列换 formData本来就是序列化好的
+    processData: false,
+    dataType: "json",
+    data: modelDTO,
+  }).then(
+    (res) => {
+      searchPage.value = false;
+      modelList.value = res.data.data.content;
+      modelNum.value = res.data.data.totalElements;
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
+};
+const clearSearch = function () {
+  searchValue.value = "";
+  visualChecked.value = false;
+  downloadChecked.value = false;
+  selectedTag.value = [];
+  startSearch();
+};
+const tagClick = function (data) {
+  selectedTag.value = data;
+  if (visualChecked.value || downloadChecked.value) {
+    dataPageNum.value = 1;
+    searchDataByVisualChecked();
+  } else {
+    dataPageNum.value = 1;
+    startSearch();
+  }
+};
+let sortByField = function (type) {
+  if (type == "relativity") {
+    sortField.value = "relativity";
+  } else if (type == "time") {
+    if (sortField.value == "timeDown") {
+      sortField.value = "timeUp";
+    } else if (sortField.value == "timeUp") {
+      sortField.value = "relativity";
+    } else {
+      sortField.value = "timeDown";
+    }
+  } else if (type == "size") {
+    if (sortField.value == "sizeDown") {
+      sortField.value = "sizeUp";
+    } else if (sortField.value == "sizeUp") {
+      sortField.value = "relativity";
+    } else {
+      sortField.value = "sizeDown";
+    }
+  }
+};
+const dataPageChange = (value) => {
+  // console.log(value);
+  dataPageNum.value = value;
+  if (visualChecked.value || downloadChecked.value) {
+    searchDataByVisualChecked();
+  } else {
+    startSearch();
+  }
+};
+const dataPageNext = (value) => {
+  // console.log(value);
+};
+const dataPagePrev = (value) => {
+  // console.log(value);
+};
+const modelPageChange = (value) => {
+  // console.log(value);
+  // console.log(value);
+  modelPageNum.value = value;
+  startSearch();
+};
+const modelPageNext = (value) => {
+  // console.log(value);
+};
+const modelPagePrev = (value) => {
+  // console.log(value);
+};
+const visualCheckedChange = () => {
+  if (visualChecked.value || downloadChecked.value) {
+    dataPageNum.value = 1;
+    searchDataByVisualChecked();
+  } else {
+    dataPageNum.value = 1;
+    startSearch();
+  }
+};
+const downloadCheckedChange = () => {
+  if (visualChecked.value || downloadChecked.value) {
+    dataPageNum.value = 1;
+    searchDataByVisualChecked();
+  } else {
+    dataPageNum.value = 1;
+    startSearch();
+  }
+};
+const searchDataByVisualChecked = () => {
+  let tagClass = "problemTags";
+  let tagName = "";
+  if (selectedTag.value.length == 0) {
+    tagClass = "problemTags";
+    tagName = "";
+  } else if (selectedTag.value[0] == "专题") {
+    tagClass = "problemTags";
+    if (selectedTag.value.length == 1) {
+      tagName = "";
+    } else {
+      tagName = selectedTag.value[1];
+    }
+  } else {
+    tagClass = "normalTags";
+    if (selectedTag.value.length == 1) {
+      tagName = "";
+    } else {
+      tagName = selectedTag.value[1];
+    }
+  }
+  let dataDTO = {
+    asc: false,
+    page: dataPageNum.value,
+    pageSize: 16,
+    searchText: searchValue.value,
+    sortField: "createTime",
+    tagClass: tagClass,
+    tagName: tagName,
+  };
+  axios({
+    url: dataServer + "/getResourceDataListByVisualChecked",
+    method: "post",
+    //忽略contentType
+    contentType: false,
+    //取消序列换 formData本来就是序列化好的
+    processData: false,
+    dataType: "json",
+    data: dataDTO,
+  }).then(
+    (res) => {
+      searchPage.value = false;
+      resList.value = res.data.data.content;
+      dataNum.value = res.data.data.totalElements;
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
 };
 </script>
 

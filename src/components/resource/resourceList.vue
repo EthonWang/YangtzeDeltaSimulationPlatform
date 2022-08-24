@@ -73,6 +73,7 @@
       background
       layout="prev, pager, next"
       :total="props.dataNum"
+      :page-size="16"
       @current-change="pageChange"
       @next-click="pageNext"
       @prev-click="pagePrev"
@@ -225,6 +226,7 @@ const props = defineProps({
 });
 
 const pageChange = (value) => {
+  console.log(value);
   if(value != 1 || changPageCount.value > 0){
     emit('pageChange',value);
     changPageCount.value = changPageCount.value + 1;

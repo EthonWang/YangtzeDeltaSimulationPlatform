@@ -172,7 +172,12 @@
               <resource-list
                 :resList="resList"
                 :dataNum="dataNum"
-               
+                v-if="
+                  resList.length > 0 &&
+                  (selectedTag.length == 0 ||
+                    selectedTag[0] == '专题' ||
+                    selectedTag[0] == '数据')
+                "
                 @pageChange="dataPageChange"
                 @pageNext="dataPageNext"
                 @pagePrev="dataPagePrev"
@@ -418,6 +423,7 @@ const clearSearch = function () {
   visualChecked.value = false;
   downloadChecked.value = false;
   selectedTag.value = [];
+  dataPageNum.value = 1;
   startSearch();
 };
 const tagClick = function (data) {

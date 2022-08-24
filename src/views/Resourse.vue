@@ -285,7 +285,7 @@ export default {
       let DTO = {
         asc: false,
         page: 1,
-        pageSize: 50,
+        pageSize: 300,
         searchText: "",
         sortField: "createTime",
         tagClass: "problemTags",
@@ -421,6 +421,7 @@ export default {
       visualChecked.value = false;
       downloadChecked.value = false;
       selectedTag.value = [];
+      dataPageNum.value = 1;
       startSearch();
     };
     const tagClick = function (data) {

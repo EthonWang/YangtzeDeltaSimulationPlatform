@@ -81,7 +81,7 @@
       <el-button
         v-if="!edit_task"
         style="float: left; margin-right: 5px"
-        @click="router.push('/user/data')"
+        @click="myDataVisible = true"
         >选择并添加<strong>我的云端</strong>数据</el-button
       >
       <!-- <el-upload
@@ -189,12 +189,26 @@
         ><el-icon><CloseBold /></el-icon>&nbsp; 删除本实验</el-button
       >
     </div>
+    <!-- 删除实验确认 -->
     <el-dialog v-model="centerDialogVisible" title="删除实验" width="30%">
       <span>删除后无法恢复，确认删除？</span>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="centerDialogVisible = false">取消</el-button>
           <el-button type="danger" @click="deleteTask()">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <!-- 添加我的数据 -->
+    <el-dialog v-model="myDataVisible" width="60%" draggable @close="refresh">
+      <DataCenter style="width: 40vw; height: 60vh"></DataCenter>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            style="position: relative; z-index: 5"
+            @click="myDataVisible = false"
+            >退出</el-button
+          >
         </span>
       </template>
     </el-dialog>
@@ -208,7 +222,9 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { sciencePro } from "@/assets/data/home/sciencePro";
 import taskApi from "@/api/user/task";
-import { Encrypt,Decrypt } from "@/util/codeUtil"
+import { Encrypt, Decrypt } from "@/util/codeUtil";
+import DataCenter from "@/components/User/UserFunctionCollection/DataCenter.vue";
+import ScienceProblemData from "@/components/User/UserFunctionCollection/ScienceProblemData.vue";
 
 const task_api = new taskApi();
 const router = useRouter(); //路由直接用router.push(...)
@@ -217,7 +233,7 @@ const props = defineProps({
   task: reactive(Object),
 });
 const centerDialogVisible = ref(false);
-const emit = defineEmits(["update:task", "deleteTask"]);
+const emit = defineEmits(["update:task", "deleteTask","refresh"]);
 const task_data = ref(props.task);
 const edit_task = ref(false);
 watch(task_data, (newValue, oldValue) => {
@@ -225,6 +241,10 @@ watch(task_data, (newValue, oldValue) => {
   //   console.log(newValue);
 });
 
+const refresh=()=>{
+  emit("refresh")
+}
+const myDataVisible = ref(false);
 const gotoLiboratory = (task) => {
   localStorage.setItem("task", Encrypt(JSON.stringify(task)));
   router.push("/model");
@@ -354,9 +374,10 @@ h4 {
 }
 
 /deep/.el-form--label-left .el-form-item__label {
-    font-size: 17px;
+  font-size: 17px;
 }
-/deep/.el-form-item__content,.el-tag{
+/deep/.el-form-item__content,
+.el-tag {
   font-size: 17px;
 }
 .data-list {
@@ -379,6 +400,20 @@ h4 {
       }
     }
   }
+}
+
+/deep/.file-container[data-v-017137ce] {
+  width: 92%;
+}
+/deep/.file-operation[data-v-017137ce] {
+  width: 92%;
+}
+/deep/.file-controller[data-v-017137ce] {
+  height: calc(98% - 60px);
+}
+/deep/.file-detail-controller[data-v-017137ce] {
+  height: calc(98% - 120px);
+  right: 3%;
 }
 </style>
 

@@ -240,7 +240,7 @@
 
 <script setup>
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { useRouter,useRoute } from "vue-router";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import tagTree from "@/components/resource/tagTree.vue";
@@ -256,6 +256,13 @@ if (user_info) {
   }
 }
 const router = useRouter();
+const route=useRoute();
+if(route.path=="/user/task"){
+  setTimeout(()=>{
+    startSearch()
+  },300)
+  
+}
 let searchPage = ref(true);
 let searchValue = ref("");
 let selectedTag = ref([]);

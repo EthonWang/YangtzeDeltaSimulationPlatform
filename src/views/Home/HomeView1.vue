@@ -65,7 +65,7 @@
             style="margin-top: 3vh; width: 100%"
             type="primary"
           >
-            <el-icon><Bottom /></el-icon>&nbsp;探索科学问题
+            <el-icon><Bottom /></el-icon>&nbsp;探索科学专题
           </button>
         </div>
       </div>

@@ -48,7 +48,7 @@ export default {
   setup(props, ctx) {
     let tagList = [
       {
-        name: "专题",
+        name: "专题相关",
         list: [
           "流域水循环及其驱动机制",
           "全球变化与区域环境演化",
@@ -57,7 +57,7 @@ export default {
         ],
       },
       {
-        name: "数据",
+        name: "数据相关",
         list: [
           "基础地理",
           "土地利用/覆盖",
@@ -77,7 +77,7 @@ export default {
         ],
       },
       {
-        name: "模型",
+        name: "模型相关",
         list: ["水文模型", "土壤模型", "大气模型", "生态模型", "社会经济模型", "其他模型"],
       },
       {

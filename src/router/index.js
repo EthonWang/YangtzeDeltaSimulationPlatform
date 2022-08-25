@@ -19,16 +19,16 @@ const routes = [
   },
   {
     isBar: true,
-    path: "/themetic",
-    name: "专题",
-    component: () => import("../views/Themetic.vue"),
+    path: "/resourse",
+    name: "资源",
+    component: () => import("../views/Resourse.vue"),
     children: []
   },
   {
     isBar: true,
-    path: "/resourse",
-    name: "资源",
-    component: () => import("../views/Resourse.vue"),
+    path: "/themetic",
+    name: "专题",
+    component: () => import("../views/Themetic.vue"),
     children: []
   },
   {

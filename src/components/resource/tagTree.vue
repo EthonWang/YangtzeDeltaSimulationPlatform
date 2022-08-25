@@ -34,8 +34,8 @@
     </el-row>
     <div v-if="hotsearchData.length > 0">
       <el-row class="tagContent" v-for="(item, index) in hotsearchData" :key="index">
-        <a class="hotsearch-item-a" @click="hotsearchClick(index)"
-          >{{index + 1}}. {{ hotsearchData[index].name }}</a
+        <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
+          >{{index + 1}}. {{ item.name }}</a
         >
       </el-row>
     </div>
@@ -119,8 +119,8 @@ export default {
       }
       ctx.emit("tagClick", emitData);
     };
-    const hotsearchClick = (index) => {
-      ctx.emit("hotsearchClick", index);
+    const hotsearchClick = (value) => {
+      ctx.emit("hotsearchClick", value);
     };
     return {
       tagList,

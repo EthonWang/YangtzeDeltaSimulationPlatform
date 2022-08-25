@@ -69,11 +69,75 @@
           >
         </div>
       </el-row>
-      <!-- <el-row style="padding-top: 3%">
-        <div style="width: 30%; margin: auto; color: white;">
-          <h4>热门搜索></h4>
+      <el-row style="padding-top: 3%">
+        <div style="width: 37%; margin: auto; color: white">
+          <h3>热门搜索></h3>
+          <ul
+            style="
+              display: block;
+              margin-left: 5px;
+              font-size: 16px;
+              margin-top: 10px;
+            "
+            v-if="hotsearchData.length > 0"
+          >
+            <li class="hotsearch-item odd" data-index="0">
+              <Icon
+                type="md-flame"
+                style="color: rgb(255, 102, 0); margin-right: 5px"
+              />
+              <a class="hotsearch-item-a" @click="hotsearchClick(0)"
+                >1. {{hotsearchData[0].name}}</a
+              >
+            </li>
+            <li class="hotsearch-item even" data-index="3">
+              <Icon
+                type="md-flame"
+                style="color: rgb(255, 102, 0); margin-right: 5px"
+              />
+              <a class="hotsearch-item-a" @click="hotsearchClick(3)"
+                >4. {{hotsearchData[3].name}}</a
+              >
+            </li>
+            <li class="hotsearch-item odd" data-index="1">
+              <Icon
+                type="md-flame"
+                style="color: rgb(255, 102, 0); margin-right: 5px"
+              />
+              <a class="hotsearch-item-a" @click="hotsearchClick(1)"
+                >2. {{hotsearchData[1].name}}</a
+              >
+            </li>
+            <li class="hotsearch-item even" data-index="4">
+              <Icon
+                type="md-flame"
+                style="color: rgb(255, 102, 0); margin-right: 5px"
+              />
+              <a class="hotsearch-item-a" @click="hotsearchClick(4)"
+                >5. {{hotsearchData[4].name}}</a
+              >
+            </li>
+            <li class="hotsearch-item odd" data-index="2">
+              <Icon
+                type="md-flame"
+                style="color: rgb(255, 102, 0); margin-right: 5px"
+              />
+              <a class="hotsearch-item-a" @click="hotsearchClick(2)"
+                >3. {{hotsearchData[2].name}}</a
+              >
+            </li>
+            <li class="hotsearch-item even" data-index="5">
+              <Icon
+                type="md-flame"
+                style="color: rgb(255, 102, 0); margin-right: 5px"
+              />
+              <a class="hotsearch-item-a" @click="hotsearchClick(5)"
+                >6. {{hotsearchData[5].name}}</a
+              >
+            </li>
+          </ul>
         </div>
-      </el-row> -->
+      </el-row>
     </div>
     <div class="content" v-else>
       <el-row>
@@ -270,10 +334,12 @@ let downloadChecked = ref(false);
 let dataPageNum = ref(1);
 let modelPageNum = ref(1);
 const restaurants = ref([]);
+const hotsearchData = ref([]);
 const store = useStore();
 const dataServer = store.getters.devIpAddress;
 onMounted(() => {
   getRouteValue();
+  getHotsearchList();
   getAutocompleteList();
 });
 const getRouteValue = () => {
@@ -282,6 +348,20 @@ const getRouteValue = () => {
     searchValue.value = routerValue;
     startSearch();
   }
+};
+const getHotsearchList = () => {
+  axios({
+    url: dataServer + "/getResByDataView",
+    method: "get",
+  }).then(
+    (res) => {
+      // console.log(res.data.data);
+      hotsearchData.value = res.data.data;
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
 };
 let getAutocompleteList = function () {
   let DTO = {
@@ -552,6 +632,10 @@ const searchDataByVisualChecked = () => {
     }
   );
 };
+const hotsearchClick = (index) => {
+  searchValue.value = hotsearchData.value[index].name;
+  startSearch();
+};
 </script>
 
 <style lang="less" scoped>
@@ -560,7 +644,19 @@ const searchDataByVisualChecked = () => {
   height: 50px;
   margin: auto;
 }
-
+.hotsearch-item {
+  width: 50%;
+  float: left;
+  height: 36px;
+  line-height: 36px;
+  list-style: none;
+}
+.hotsearch-item-a {
+  color: white;
+}
+.hotsearch-item-a:hover {
+  color: rgb(64, 158, 255);
+}
 .startSearchButton {
   margin-left: 2%;
   width: 12%;

@@ -78,11 +78,20 @@ export default class {
     getKnowledgeSorce(user_id) {
         return new Promise((resolve, reject) => {
             post("/resource/getUserAllResource?userId=" + user_id,).then((res) => {
-                localStorage.setItem("allResourceNum", Encrypt(JSON.stringify({
+                let PlantNum={
                     privateDataNum: res.data.personalData.length,
                     modelNum: res.data.modelList.length,
-                    themeNum: res.data.themeList.length
-                })))
+                    themeNum: res.data.themeList.length,
+                    disasterNum:0,
+                    globalNum:0,
+                    riverNum:0,
+                    cityNum:0,
+                    disasterModelNum:0,
+                    globalModelNum:0,
+                    riverModelNum:0,
+                    cityModelNum:0,
+                }
+                
                 let personalData = res.data.personalData
                 let publicData = res.data.publicData
                 let modelList = res.data.modelList
@@ -135,6 +144,15 @@ export default class {
                     }
                     if (data.name == undefined || data.name == null) {
                         continue
+                    }
+                    if (data.problemTags[0]=="长三角灾害响应与治理") {
+                        PlantNum.disasterNum++
+                    }else if(data.problemTags[0]=="全球变化与区域环境演化"){
+                        PlantNum.globalNum++
+                    }else if(data.problemTags[0]=="流域水循环及其驱动机制"){
+                        PlantNum.riverNum++
+                    }else if(data.problemTags[0]=="长三角城市化与人地关系协调发展"){
+                        PlantNum.cityNum++
                     }
                     data['category'] = 0
                     data['weight'] = 0
@@ -252,12 +270,28 @@ export default class {
                     //     lastName = data.name
                     // }
                 }
+                
                 for (let i in modelList) {
                     let data = modelList[i];
+                    if (modelList[i].problemTags[0] != "" && modelList[i].problemTags != []) {
+                        modelList[i].problemTags = data.problemTags.split(",");
+                    }
+                    if (modelList[i].normalTags[0] != "" && modelList[i].normalTags != []) {
+                        modelList[i].normalTags = data.normalTags.split(",");
+                    }
                     if (data.name == undefined || data.name == null) {
                         continue
                     }
-                    console.log(data.name);
+
+                    if (data.problemTags[0]=="长三角灾害响应与治理") {
+                        PlantNum.disasterModelNum++
+                    }else if(data.problemTags[0]=="全球变化与区域环境演化"){
+                        PlantNum.globalModelNum++
+                    }else if(data.problemTags[0]=="流域水循环及其驱动机制"){
+                        PlantNum.riverModelNum++
+                    }else if(data.problemTags[0]=="长三角城市化与人地关系协调发展"){
+                        PlantNum.cityModelNum++
+                    }
                     relation.nodes.push({
                         name: data.name,
                         category: 1,
@@ -321,11 +355,13 @@ export default class {
                     }
 
                 }
+                //操作结束后存储资源总数
+                console.log('资源统计',PlantNum);
+                localStorage.setItem("allResourceNum", Encrypt(JSON.stringify(PlantNum)))
                 let obj = {}
                 relation.nodes.forEach((item) => obj[item.name] = item)
                 let a = []
                 for (let key in obj) { a.push(obj[key]) }
-                console.log("a is :", a);
                 relation.nodes = a
                 resolve("ok")
             }).catch((err) => {

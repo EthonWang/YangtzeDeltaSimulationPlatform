@@ -114,19 +114,17 @@
 
 <script setup>
 //采用vue2写法的话把setup去掉，
-import {
-  ref,
-  onMounted,
-  defineProps,
-  defineEmits,
-} from "vue";
+import { ref, onMounted, defineProps, defineEmits } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import MapCharts from "components/Home/MapCharts.vue";
 import * as echarts from "echarts";
+import { Decrypt } from "@/util/codeUtil";
+import axios from "axios";
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
+const dataServer = store.getters.devIpAddress;
 const props = defineProps({
   show: Boolean,
 });
@@ -141,8 +139,38 @@ const home1 = ref();
 const toSci = () => {
   emit("toSci");
 };
-
+let hotsearchData = [];
+const getHotsearchList = () => {
+  return axios({
+    url: dataServer + "/getResByDataView",
+    method: "get",
+  }).then(
+    (res) => {
+      hotsearchData = res.data.data;
+      console.log(hotsearchData);
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
+};
+getHotsearchList();
 setTimeout(() => {
+  let resourceNum = [0, 0, 0, 0];
+  let resourceModelNum = [0, 0, 0, 0];
+  let allResourceNum = localStorage.getItem("allResourceNum");
+  if (allResourceNum) {
+    allResourceNum = JSON.parse(Decrypt(allResourceNum));
+    resourceNum[0] = allResourceNum.disasterNum;
+    resourceNum[1] = allResourceNum.globalNum;
+    resourceNum[2] = allResourceNum.riverNum;
+    resourceNum[3] = allResourceNum.cityNum;
+    resourceModelNum[0] = allResourceNum.disasterModelNum;
+    resourceModelNum[1] = allResourceNum.globalModelNum;
+    resourceModelNum[2] = allResourceNum.riverModelNum;
+    resourceModelNum[3] = allResourceNum.cityModelNum;
+  }
+
   var chartDom1 = document.getElementById("main1");
   var myChart1 = echarts.init(chartDom1, "dark");
   var option1;
@@ -164,7 +192,7 @@ setTimeout(() => {
     },
     angleAxis: {
       type: "category",
-      data: ["灾害", "环境", "城市", "流域"],
+      data: ["灾害", "环境", "流域", "城市"],
     },
     radiusAxis: {},
     polar: {},
@@ -172,7 +200,7 @@ setTimeout(() => {
     series: [
       {
         type: "bar",
-        data: [1, 1, 0, 1],
+        data: resourceModelNum,
         coordinateSystem: "polar",
         name: "模型",
         stack: "a",
@@ -182,7 +210,7 @@ setTimeout(() => {
       },
       {
         type: "bar",
-        data: [2, 5, 1, 5],
+        data: resourceNum,
         coordinateSystem: "polar",
         name: "数据",
         stack: "a",
@@ -205,10 +233,9 @@ setTimeout(() => {
   var xAxisData = [];
   var data1 = [];
   var data2 = [];
-  for (var i = 0; i < 100; i++) {
-    xAxisData.push("A" + i);
-    data1.push((Math.sin(i / 5) * (i / 5 - 10) + i / 6) * 5);
-    data2.push((Math.cos(i / 5) * (i / 5 - 10) + i / 6) * 5);
+  for (let i in hotsearchData) {
+    data2.push(hotsearchData[i].pageviews);
+    xAxisData.push(hotsearchData[i].name)
   }
   option2 = {
     title: {
@@ -216,7 +243,7 @@ setTimeout(() => {
     },
     backgroundColor: "transparent",
     legend: {
-      data: ["模型", "数据"],
+      data: ["数据"],
     },
     toolbox: {
       // y: 'bottom',
@@ -239,17 +266,17 @@ setTimeout(() => {
     },
     yAxis: {},
     series: [
-      {
-        name: "模型",
-        type: "bar",
-        data: data1,
-        emphasis: {
-          focus: "series",
-        },
-        animationDelay: function (idx) {
-          return idx * 10;
-        },
-      },
+      // {
+      //   name: "模型",
+      //   type: "bar",
+      //   data: data1,
+      //   emphasis: {
+      //     focus: "series",
+      //   },
+      //   animationDelay: function (idx) {
+      //     return idx * 10;
+      //   },
+      // },
       {
         name: "数据",
         type: "bar",

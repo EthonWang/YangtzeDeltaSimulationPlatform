@@ -52,7 +52,7 @@
             style="margin-left: 2px"
             type="primary"
             effect="dark"
-            @click="turn2blank(item.fileWebAddress)"
+            @click="opemWebUrlData(item.fileWebAddress)"
             v-if="
               !item.visualizationBoolean &&
               item.fileWebAddress != '' &&
@@ -366,6 +366,21 @@ const downloadRes = function (item) {
     });
   }
 };
+const opemWebUrlData=(url)=>{
+  ElMessageBox.confirm('即将前往国家地球科学数据中心长江三角洲分中心', '外站数据', {
+
+    confirmButtonText: '前往',
+    cancelButtonText:'取消',
+  }).then(() => {
+      turn2blank(url)
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消操作',
+      })
+    })
+}
 const turn2blank = function (url) {
   window.open(url);
 };

@@ -219,7 +219,7 @@
                     v-model="downloadChecked"
                     class="sortCheckBox"
                     @change="downloadCheckedChange"
-                    >仅显示公开下载的数据</el-checkbox
+                    >仅显示可直接使用的数据</el-checkbox
                   >
                   <!-- <span class="fontSet">仅显示支持下载的数据</span> -->
                 </div>
@@ -242,7 +242,7 @@
                   resList.length > 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
-                    selectedTag[0] == '数据')
+                    selectedTag[0] == '数据资源')
                 "
                 @pageChange="dataPageChange"
                 @pageNext="dataPageNext"
@@ -254,7 +254,7 @@
                   resList.length == 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
-                    selectedTag[0] == '数据')
+                    selectedTag[0] == '数据资源')
                 "
               >
                 <template #title>
@@ -274,7 +274,7 @@
                   modelList.length > 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
-                    selectedTag[0] == '模型')
+                    selectedTag[0] == '模型资源')
                 "
                 @pageChange="modelPageChange"
                 @pageNext="modelPageNext"
@@ -286,7 +286,7 @@
                   modelList.length == 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
-                    selectedTag[0] == '模型')
+                    selectedTag[0] == '模型资源')
                 "
               >
                 <template #title>

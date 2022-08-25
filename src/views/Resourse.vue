@@ -166,8 +166,12 @@
                         class="colreacherimg"
                         :title="item.name"
                         v-else
-                      /></div
-                  ></a>
+                      />
+                      <div class="imgBoxTitle">
+                        {{ item.name }}
+                      </div>
+                    </div></a
+                  >
                 </li>
               </ul>
             </div>
@@ -356,7 +360,7 @@
 
 <script setup>
 import { useStore } from "vuex";
-import { useRouter,useRoute } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import tagTree from "@/components/resource/tagTree.vue";
@@ -372,12 +376,11 @@ if (user_info) {
   }
 }
 const router = useRouter();
-const route=useRoute();
-if(route.path=="/user/task"){
-  setTimeout(()=>{
-    startSearch()
-  },300)
-  
+const route = useRoute();
+if (route.path == "/user/task") {
+  setTimeout(() => {
+    startSearch();
+  }, 300);
 }
 let searchPage = ref(true);
 let searchValue = ref("");
@@ -711,7 +714,7 @@ const resHandleScroll = (e) => {
 };
 const back2StartPage = () => {
   searchPage.value = true;
-}
+};
 </script>
 
 <style lang="less" scoped>
@@ -856,7 +859,7 @@ const back2StartPage = () => {
   position: relative;
   width: 80%;
   margin: 30px auto;
-  height: 160px;
+  height: 170px;
   overflow: hidden;
 }
 #div1 ul {
@@ -895,11 +898,25 @@ const back2StartPage = () => {
   border-radius: 10px;
   height: 130px;
 }
-.colreacherimg:hover {
+.imgBoxTitle {
   width: 175px;
-  border-radius: 5px;
-  height: 135px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgb(131, 124, 124);
 }
+.imgBox:hover {
+  .colreacherimg {
+    width: 175px;
+    border-radius: 5px;
+    height: 135px;
+  }
+  .imgBoxTitle{
+    font-size: 16px;
+    color: white;
+  }
+}
+
 /deep/.el-col-19 {
   width: 87%;
   max-width: 87%;

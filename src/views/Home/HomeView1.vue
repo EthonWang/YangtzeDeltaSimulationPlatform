@@ -178,6 +178,7 @@ setTimeout(() => {
     title: {
       text: "资源分布情况",
     },
+    dataInterval: [0, 10, 30, 50, 100, 150, 200, 10000],
     toolbox: {
       // y: 'bottom',
       feature: {
@@ -192,9 +193,46 @@ setTimeout(() => {
     },
     angleAxis: {
       type: "category",
-      data: ["灾害", "环境", "流域", "城市"],
+      data: [
+        "灾害响应与治理",
+        "全球变化与\n区域环境演化",
+        "流域水循环\n及其驱动机制",
+        "城市化与人地关系\n协调发展",
+      ],
     },
-    radiusAxis: {},
+    radiusAxis: {
+      type: "value",
+      axisLabel: {
+        formatter: (v, i) => {
+          if (i === 0) {
+            v = '0';
+          }
+          if (i === 1) {
+            v = '10';
+          }
+          if (i === 2) {
+            v = '30';
+          }
+          if (i === 3) {
+            v = '50';
+          }
+          if (i === 4) {
+            v = '200';
+          }
+          if (i === 5) {
+            v = '1000';
+          }
+          if (i === 6) {
+            v = '5000';
+          }
+          if (i === 7) {
+            v = '12000';
+          }
+          return v;
+        }
+      
+      },
+    },
     polar: {},
     backgroundColor: "transparent",
     series: [
@@ -203,7 +241,7 @@ setTimeout(() => {
         data: resourceModelNum,
         coordinateSystem: "polar",
         name: "模型",
-        stack: "a",
+        // stack: "a",
         emphasis: {
           focus: "series",
         },
@@ -213,7 +251,7 @@ setTimeout(() => {
         data: resourceNum,
         coordinateSystem: "polar",
         name: "数据",
-        stack: "a",
+        // stack: "a",
         emphasis: {
           focus: "series",
         },
@@ -235,7 +273,7 @@ setTimeout(() => {
   var data2 = [];
   for (let i in hotsearchData) {
     data2.push(hotsearchData[i].pageviews);
-    xAxisData.push(hotsearchData[i].name)
+    xAxisData.push(hotsearchData[i].name);
   }
   option2 = {
     title: {

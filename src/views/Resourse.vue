@@ -211,7 +211,7 @@
                     v-model="visualChecked"
                     class="sortCheckBox"
                     @change="visualCheckedChange"
-                    >仅显示支持可视化的数据</el-checkbox
+                    >仅显示支持<span style="color: hsl(190, 100%, 50%);">可视化</span>的数据</el-checkbox
                   >
                   <!-- <span class="fontSet">仅显示支持可视化的数据</span> -->
                   <el-divider direction="vertical"></el-divider>
@@ -219,7 +219,7 @@
                     v-model="downloadChecked"
                     class="sortCheckBox"
                     @change="downloadCheckedChange"
-                    >仅显示可直接使用的数据</el-checkbox
+                    >仅显示<span style="color: hsl(190, 100%, 50%);">本站数据</span></el-checkbox
                   >
                   <!-- <span class="fontSet">仅显示支持下载的数据</span> -->
                 </div>

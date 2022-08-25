@@ -367,7 +367,7 @@ const downloadRes = function (item) {
   }
 };
 const opemWebUrlData=(url)=>{
-  ElMessageBox.confirm('即将前往国家地球科学数据中心长江三角洲分中心', '外站数据', {
+  ElMessageBox.confirm('即将前往“国家地球科学数据中心-长江三角洲分中心”，您可下载数据后上传到 [ 实验室 - 我的数据 ] 中使用。', '外站数据', {
 
     confirmButtonText: '前往',
     cancelButtonText:'取消',

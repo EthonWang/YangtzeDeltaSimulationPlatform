@@ -53,7 +53,11 @@
             type="primary"
             effect="dark"
             @click="turn2blank(item.fileWebAddress)"
-            v-if="!item.visualizationBoolean && item.fileWebAddress != '' && item.md5 == undefined"
+            v-if="
+              !item.visualizationBoolean &&
+              item.fileWebAddress != '' &&
+              item.md5 == undefined
+            "
             >查看</el-button
           >
           <div class="fontSet" style="margin: 5px 0" v-if="'fileSize' in item">
@@ -191,6 +195,7 @@
 </template>
 
 <script setup>
+import axios from "axios";
 import { onMounted, ref, defineProps, computed, defineEmits } from "vue";
 import { ElMessageBox } from "element-plus";
 import MapboxCard from "../Mapbox/MapboxCard.vue";
@@ -201,7 +206,7 @@ import { randomInt } from "d3-random";
 import { Decrypt } from "@/util/codeUtil";
 
 const store = useStore();
-const dataServer = store.getters.devIpAddress_backup;
+const dataServer = store.getters.devIpAddress;
 const userInfo = JSON.parse(Decrypt(localStorage.getItem("userInfo")));
 const task_api = new taskApi();
 const show_task = ref(false);
@@ -213,7 +218,7 @@ const setSelectedVisualDataItemsDataSet = ref(false);
 const mapCardDialogVisible = ref(false);
 const selectedRes = ref({});
 const changPageCount = ref(0);
-const emit = defineEmits(["pageChange","pageNext","pagePrev"]);
+const emit = defineEmits(["pageChange", "pageNext", "pagePrev"]);
 task_api.getTaskList(userInfo.id).then((res) => {
   for (let i = res.data.data.length - 1; i >= 0; i--) {
     task_list.value.push(res.data.data[i]);
@@ -227,17 +232,16 @@ const props = defineProps({
 
 const pageChange = (value) => {
   console.log(value);
-  if(value != 1 || changPageCount.value > 0){
-    emit('pageChange',value);
+  if (value != 1 || changPageCount.value > 0) {
+    emit("pageChange", value);
     changPageCount.value = changPageCount.value + 1;
   }
-  
 };
 const pageNext = (value) => {
-  emit('pageNext',value)
+  emit("pageNext", value);
 };
 const pagePrev = (value) => {
-  emit('pagePrev',value)
+  emit("pagePrev", value);
 };
 const addDataToTask = (task) => {
   console.log("selectedRes.value is :", selectedRes.value);
@@ -332,6 +336,17 @@ const showMapCard = function (info) {
   selectedRes.value = {};
   selectedRes.value = info;
   if ("fileSize" in info) {
+    axios({
+      url: dataServer + "/resDataView/" + info.id,
+      method: "get",
+    }).then(
+      (res) => {
+        console.log(res.data.data)
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
     setTimeout(() => {
       mapCardDialogVisible.value = true;
     }, 200);

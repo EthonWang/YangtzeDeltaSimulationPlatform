@@ -158,7 +158,7 @@
             {{ tag }}
           </el-tag>
         </el-form-item> -->
-        <el-form-item label="科学问题" :label-width="formLabelWidth">
+        <el-form-item label="科学专题" :label-width="formLabelWidth">
           <el-tree-select
             :popper-append-to-body="false"
             v-model="form.problemTags"

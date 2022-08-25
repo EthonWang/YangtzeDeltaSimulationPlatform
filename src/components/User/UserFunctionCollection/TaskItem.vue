@@ -104,7 +104,7 @@
 
       <el-button
         v-if="!edit_task"
-        @click="router.push('/resourse')"
+        @click="ResourseVisible = true"
         style="float: left; margin-right: 5px"
         >选择并添加<strong>公共资源</strong></el-button
       >
@@ -212,6 +212,22 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 添加平台数据 -->
+    <div class="resourceDialog">
+      <el-dialog v-model="ResourseVisible" width="100%" draggable @close="refresh">
+      <Resourse style="width: 100vw; height: 60vh"></Resourse>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            style="position: relative; z-index: 5"
+            @click="ResourseVisible = false"
+            >退出</el-button
+          >
+        </span>
+      </template>
+    </el-dialog>
+    </div>
+    
   </div>
 </template>
 
@@ -225,6 +241,7 @@ import taskApi from "@/api/user/task";
 import { Encrypt, Decrypt } from "@/util/codeUtil";
 import DataCenter from "@/components/User/UserFunctionCollection/DataCenter.vue";
 import ScienceProblemData from "@/components/User/UserFunctionCollection/ScienceProblemData.vue";
+import Resourse from "@/views/Resourse.vue"
 
 const task_api = new taskApi();
 const router = useRouter(); //路由直接用router.push(...)
@@ -236,6 +253,7 @@ const centerDialogVisible = ref(false);
 const emit = defineEmits(["update:task", "deleteTask","refresh"]);
 const task_data = ref(props.task);
 const edit_task = ref(false);
+const ResourseVisible=ref(false)
 watch(task_data, (newValue, oldValue) => {
   emit("update:task", newValue);
   //   console.log(newValue);
@@ -414,6 +432,17 @@ h4 {
 /deep/.file-detail-controller[data-v-017137ce] {
   height: calc(98% - 120px);
   right: 3%;
+}
+
+.resourceDialog/deep/.el-dialog{
+  padding: 0;
+  background:#1b233a;
+  .el-dialog__body{
+    padding: 0;
+    .main{
+      margin-top: 20px;
+    }
+  }
 }
 </style>
 

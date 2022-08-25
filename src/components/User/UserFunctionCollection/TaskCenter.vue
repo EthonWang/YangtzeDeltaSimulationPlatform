@@ -23,7 +23,7 @@
       <el-form-item label="输入实验名称" :label-width="formLabelWidth">
         <el-input v-model="newTaskName" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="面向科学问题" :label-width="formLabelWidth">
+      <el-form-item label="面向科学专题" :label-width="formLabelWidth">
             <el-tree-select
               :popper-append-to-body="false"
               v-model="newTaskProblem"
@@ -85,16 +85,14 @@ watch(
   (newval, oldval) => {
     tasks.value = task_origin.value.filter((item) => {
       if (item.problemTags == "" || item.problemTags == []) {
-        console.log(newval.includes("未分类"));
         if (newval.includes("未分类")) {
           return item;
         }
       } else {
         for (let i = 0; i < item.problemTags.length; i++) {
           const el = item.problemTags[i];
-          console.log(el, scienceChoose.value.includes(el));
           if (scienceChoose.value.includes(el)) {
-            console.log(item);
+
             return item;
           }
         }
@@ -114,15 +112,12 @@ watch(
       } else {
         for (let i = 0; i < item.problemTags.length; i++) {
           const el = item.problemTags[i];
-          console.log(el, scienceChoose.value.includes(el));
           if (scienceChoose.value.includes(el)) {
-            console.log(item);
             return item;
           }
         }
       }
     });
-    console.log(tasks.value);
   }
 );
 

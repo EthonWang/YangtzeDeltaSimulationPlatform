@@ -52,6 +52,7 @@
                 width: 100%;
                 flex-wrap: wrap;
               "
+              v-if="themeCase.length != 0"
             >
               <template v-for="(item, key) in themeCase" :key="key">
                 <div class="caseCard">
@@ -85,6 +86,7 @@
                 </div>
               </template>
             </div>
+            <div class="descriptionText" v-else>待补充</div>
             <div class="dataBlock">
               <edit-case-draw
                 ref="createCaseRef"
@@ -430,6 +432,10 @@ modelTreeData.value = [
         label: "湖泊水环境监测",
         type: "subProblem",
       },
+      {
+        label: "其他",
+        type: "subProblem",
+      },
     ],
   },
   {
@@ -455,6 +461,10 @@ modelTreeData.value = [
         label: "土壤氮转化过程及其环境效应",
         type: "subProblem",
       },
+      {
+        label: "其他",
+        type: "subProblem",
+      },
     ],
   },
   {
@@ -474,6 +484,10 @@ modelTreeData.value = [
       },
       {
         label: "大气污染",
+        type: "subProblem",
+      },
+      {
+        label: "其他",
         type: "subProblem",
       },
     ],
@@ -507,6 +521,10 @@ modelTreeData.value = [
       },
       {
         label: "城市群发展",
+        type: "subProblem",
+      },
+      {
+        label: "其他",
         type: "subProblem",
       },
     ],

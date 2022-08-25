@@ -104,7 +104,7 @@
         :data="options"
         multiple
         show-checkbox
-        placeholder="选择科学问题"
+        placeholder="选择科学专题"
       />
     </div>
     

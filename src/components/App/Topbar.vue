@@ -90,6 +90,12 @@ import { useStore } from "vuex";
 import { Encrypt, Decrypt } from "@/util/codeUtil";
 import { ElLoading } from "element-plus";
 
+const props = defineProps({
+  background_show: ref(Boolean),
+});
+const router = useRouter();
+const route = useRoute();
+
 const graphapi = new graphAPI();
 const store = useStore();
 const devServer = ref(store.getters.devIpAddress_backup);
@@ -102,11 +108,7 @@ if (user_info != null && user_info != undefined) {
   });
 }
 
-const props = defineProps({
-  background_show: ref(Boolean),
-});
-const router = useRouter();
-const route = useRoute();
+
 const barList = reactive(
   router.options.routes.filter((item) => item.isBar == true)
 );

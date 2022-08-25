@@ -3,7 +3,7 @@
 <!-- 1.应用于个人空间“我的数据”与“我的实验”的科学问题组织与筛选 -->
 <template>
   <div style="background-color: white">
-    <h2>科学专题分类</h2>
+    <h2>科学专题筛选</h2>
     <el-tree
       style="width: 100%; height: 95%; background: white"
       :data="data"
@@ -11,7 +11,7 @@
       node-key="label"
       :default-expanded-keys="[
         '全选',
-        '灾害响应与治理',
+        '长三角灾害响应与治理',
         '全球变化与区域环境演化',
         '流域水循环及驱动机制',
         '城市化与人地关系协调发展',
@@ -66,7 +66,7 @@ const data = [
       },
       {
         id: 1,
-        label: "灾害响应与治理",
+        label: "长三角灾害响应与治理",
         children: [
           {
             id: 11,

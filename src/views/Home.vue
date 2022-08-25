@@ -71,7 +71,7 @@ const mousedown = () => {
   ) {
     explore();
   } else if (
-    document.getElementsByClassName("container")[0].style.width == "55vw"
+    document.getElementsByClassName("container")[0].style.width == "900px"
   ) {
     document.getElementsByClassName("container")[0].style.width = "100vw";
     setTimeout(() => {
@@ -101,7 +101,7 @@ setTimeout(() => {
 }, 100);
 const explore = () => {
   home_scroll_listen.value.scrollTop = window.innerHeight;
-  document.getElementsByClassName("container")[0].style.width = "55vw";
+  document.getElementsByClassName("container")[0].style.width = "900px";
   setTimeout(() => {
     document.getElementsByClassName("bg")[0].style.opacity = "0";
     document.getElementsByClassName("user-topbar")[0].style.opacity = "0";

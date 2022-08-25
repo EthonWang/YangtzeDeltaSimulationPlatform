@@ -269,7 +269,7 @@
                     v-model="downloadChecked"
                     class="sortCheckBox"
                     @change="downloadCheckedChange"
-                    >仅显示公开下载的数据</el-checkbox
+                    >仅显示可直接使用的数据</el-checkbox
                   >
                   <!-- <span class="fontSet">仅显示支持下载的数据</span> -->
                 </div>
@@ -292,7 +292,7 @@
                   resList.length > 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
-                    selectedTag[0] == '数据')
+                    selectedTag[0] == '数据资源')
                 "
                 @pageChange="dataPageChange"
                 @pageNext="dataPageNext"
@@ -304,7 +304,7 @@
                   resList.length == 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
-                    selectedTag[0] == '数据')
+                    selectedTag[0] == '数据资源')
                 "
               >
                 <template #title>
@@ -324,7 +324,7 @@
                   modelList.length > 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
-                    selectedTag[0] == '模型')
+                    selectedTag[0] == '模型资源')
                 "
                 @pageChange="modelPageChange"
                 @pageNext="modelPageNext"
@@ -336,7 +336,7 @@
                   modelList.length == 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
-                    selectedTag[0] == '模型')
+                    selectedTag[0] == '模型资源')
                 "
               >
                 <template #title>
@@ -356,7 +356,7 @@
 
 <script setup>
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { useRouter,useRoute } from "vue-router";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import tagTree from "@/components/resource/tagTree.vue";
@@ -372,6 +372,13 @@ if (user_info) {
   }
 }
 const router = useRouter();
+const route=useRoute();
+if(route.path=="/user/task"){
+  setTimeout(()=>{
+    startSearch()
+  },300)
+  
+}
 let searchPage = ref(true);
 let searchValue = ref("");
 let selectedTag = ref([]);

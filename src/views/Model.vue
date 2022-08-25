@@ -319,11 +319,7 @@ export default {
         let min = this.selectedVisualDataItemsRange[0];
         let max = this.selectedVisualDataItemsRange[1];
         for (let i = 0; i < value.length; i++) {
-          for (
-            let j = 0;
-            j < this.selectedRes.visualDataItems.length;
-            j++
-          ) {
+          for (let j = 0; j < this.selectedRes.visualDataItems.length; j++) {
             if (value[i] == this.selectedRes.visualDataItems[j].name) {
               if (value.length == 1) {
                 min = max = j;
@@ -354,7 +350,7 @@ export default {
     },
     recommendShow(data) {
       this.recommendShowOne = data;
-      this.selectedRes=data
+      this.selectedRes = data;
       if (data.private == "resource") {
         this.show_task = true;
         console.log(this.show_task);
@@ -402,87 +398,92 @@ export default {
       this.recommendList = !this.recommendList;
     },
     addtoLab() {
-      if ("id_backup" in this.recommendShowOne) {
-        this.recommendShowOne["id"] = this.recommendShowOne["id_backup"];
-        delete this.recommendShowOne["id_backup"];
-      }
-      let dataList = [];
-      console.log(this.selectedVisualDataItems);
-      if (this.recommendShowOne.private == "resource") {
-        //如果是来自资源的数据
-        this.selectedRes = this.recommendShowOne;
-        if (this.setSelectedVisualDataItemsDataSet) {
-          //设置集
-          let dataSet = {};
-          dataSet.createTime = this.selectedRes.createTime;
-          dataSet.description = this.selectedRes.description;
-          dataSet.id =
-            this.selectedRes.id +
-            Math.floor(Math.random() * 10 + 1).toString();
-          dataSet.name = this.selectedRes.name + "_dataSet";
-          dataSet.normalTags = this.selectedRes.normalTags;
-          dataSet.problemTags = this.selectedRes.problemTags;
-          dataSet.publicBoolean = this.selectedRes.publicBoolean;
-          dataSet.type = this.selectedRes.type;
-          dataSet.visualType = "dataSet";
-          dataSet.visualizationBoolean =
-            this.selectedRes.visualizationBoolean;
-          dataSet.dataSetList = [];
-          for (let i in this.selectedVisualDataItems) {
-            let dataName = this.selectedVisualDataItems[i];
-            for (let j in this.selectedRes.visualDataItems) {
-              let data = this.selectedRes.visualDataItems[j];
-              if (dataName == data.name) {
-                dataSet.dataSetList.push(data);
-                dataSet.visualWebAddress = data.visualWebAddress;
-              }
-            }
-          }
-          dataSet["simularTrait"] = "data";
-          dataList.push(dataSet);
-          // console.log(dataSet);
-        } else {
-          for (let i in this.selectedVisualDataItems) {
-            let dataName = this.selectedVisualDataItems[i];
-            for (let j in this.selectedRes.visualDataItems) {
-              let data = this.selectedRes.visualDataItems[j];
-              if (dataName == data.name) {
-                console.log(1);
-                data["simularTrait"] = "data";
-                dataList.push(data);
-              }
-            }
-          }
-          this.selectedVisualDataItemsRange = [0, 0];
-          this.selectedVisualDataItems = [];
+      //长三角数据中心的数据
+      if (this.recommendShowOne.visualizationBoolean == false) {
+        window.open(this.recommendShowOne.fileWebAddress);
+      } else { //我们平台的数据 公共+私有
+        if ("id_backup" in this.recommendShowOne) {
+          this.recommendShowOne["id"] = this.recommendShowOne["id_backup"];
+          delete this.recommendShowOne["id_backup"];
         }
-        ElMessage({
-          type: "success",
-          message: "成功加入实验室",
+        let dataList = [];
+        console.log(this.selectedVisualDataItems);
+        if (this.recommendShowOne.private == "resource") {
+          //如果是来自资源的数据
+          this.selectedRes = this.recommendShowOne;
+          if (this.setSelectedVisualDataItemsDataSet) {
+            //设置集
+            let dataSet = {};
+            dataSet.createTime = this.selectedRes.createTime;
+            dataSet.description = this.selectedRes.description;
+            dataSet.id =
+              this.selectedRes.id +
+              Math.floor(Math.random() * 10 + 1).toString();
+            dataSet.name = this.selectedRes.name + "_dataSet";
+            dataSet.normalTags = this.selectedRes.normalTags;
+            dataSet.problemTags = this.selectedRes.problemTags;
+            dataSet.publicBoolean = this.selectedRes.publicBoolean;
+            dataSet.type = this.selectedRes.type;
+            dataSet.visualType = "dataSet";
+            dataSet.visualizationBoolean =
+              this.selectedRes.visualizationBoolean;
+            dataSet.dataSetList = [];
+            for (let i in this.selectedVisualDataItems) {
+              let dataName = this.selectedVisualDataItems[i];
+              for (let j in this.selectedRes.visualDataItems) {
+                let data = this.selectedRes.visualDataItems[j];
+                if (dataName == data.name) {
+                  dataSet.dataSetList.push(data);
+                  dataSet.visualWebAddress = data.visualWebAddress;
+                }
+              }
+            }
+            dataSet["simularTrait"] = "data";
+            dataList.push(dataSet);
+            // console.log(dataSet);
+          } else {
+            for (let i in this.selectedVisualDataItems) {
+              let dataName = this.selectedVisualDataItems[i];
+              for (let j in this.selectedRes.visualDataItems) {
+                let data = this.selectedRes.visualDataItems[j];
+                if (dataName == data.name) {
+                  console.log(1);
+                  data["simularTrait"] = "data";
+                  dataList.push(data);
+                }
+              }
+            }
+            this.selectedVisualDataItemsRange = [0, 0];
+            this.selectedVisualDataItems = [];
+          }
+          ElMessage({
+            type: "success",
+            message: "成功加入实验室",
+          });
+          let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
+          this.task_api.addData(newTask, dataList); //传入newTask指针，里面进行push
+
+          // this.task_api.addData(newTask, [this.recommendShowOne]);
+
+          localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
+        } else {
+          //如果是来自个人空间的数据
+          let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
+          this.task_api.addData(newTask, [this.recommendShowOne]);
+          localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
+        }
+
+        this.recommendVisible = false;
+        this.show_task = false;
+        let loading = ElLoading.service({
+          lock: true,
+          text: "更新实验室数据...",
+          background: "rgba(0, 0, 0, 0.7)",
         });
-        let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
-        this.task_api.addData(newTask, dataList);//传入newTask指针，里面进行push
-
-        // this.task_api.addData(newTask, [this.recommendShowOne]);
-
-        localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
-      } else {
-        //如果是来自个人空间的数据
-        let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
-        this.task_api.addData(newTask, [this.recommendShowOne]);
-        localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
+        setTimeout(() => {
+          location.reload();
+        }, 500);
       }
-
-      this.recommendVisible = false;
-      this.show_task = false;
-      let loading = ElLoading.service({
-        lock: true,
-        text: "更新实验室数据...",
-        background: "rgba(0, 0, 0, 0.7)",
-      });
-      setTimeout(() => {
-        location.reload();
-      }, 500);
     },
     switchMap() {
       if (this.mapType == "mapBox") {

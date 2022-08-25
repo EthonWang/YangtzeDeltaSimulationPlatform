@@ -57,7 +57,7 @@
               :fetch-suggestions="querySearch"
               :trigger-on-focus="false"
               clearable
-              placeholder=" 请输入想要检索的内容..."
+              placeholder=" 请输入想要检索的数据和模型..."
               @select="handleSelect"
               class="startSearchInput"
               size="large"
@@ -67,6 +67,12 @@
               class="startSearchButton"
               @click="startSearch()"
               >检索</el-button
+            >
+            <el-button
+              type="info"
+              class="startSearchButton"
+              @click="startSearch()"
+              >更多...</el-button
             >
           </div>
         </el-row>
@@ -87,7 +93,7 @@
                   type="md-flame"
                   style="color: rgb(255, 102, 0); margin-right: 5px"
                 />
-                <a class="hotsearch-item-a" @click="hotsearchClick(0)"
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
                   >1. {{ hotsearchData[0].name }}</a
                 >
               </li>
@@ -96,7 +102,7 @@
                   type="md-flame"
                   style="color: rgb(255, 102, 0); margin-right: 5px"
                 />
-                <a class="hotsearch-item-a" @click="hotsearchClick(3)"
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
                   >4. {{ hotsearchData[3].name }}</a
                 >
               </li>
@@ -105,7 +111,7 @@
                   type="md-flame"
                   style="color: rgb(255, 102, 0); margin-right: 5px"
                 />
-                <a class="hotsearch-item-a" @click="hotsearchClick(1)"
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
                   >2. {{ hotsearchData[1].name }}</a
                 >
               </li>
@@ -114,7 +120,7 @@
                   type="md-flame"
                   style="color: rgb(255, 102, 0); margin-right: 5px"
                 />
-                <a class="hotsearch-item-a" @click="hotsearchClick(4)"
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
                   >5. {{ hotsearchData[4].name }}</a
                 >
               </li>
@@ -123,7 +129,7 @@
                   type="md-flame"
                   style="color: rgb(255, 102, 0); margin-right: 5px"
                 />
-                <a class="hotsearch-item-a" @click="hotsearchClick(2)"
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
                   >3. {{ hotsearchData[2].name }}</a
                 >
               </li>
@@ -132,11 +138,39 @@
                   type="md-flame"
                   style="color: rgb(255, 102, 0); margin-right: 5px"
                 />
-                <a class="hotsearch-item-a" @click="hotsearchClick(5)"
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
                   >6. {{ hotsearchData[5].name }}</a
                 >
               </li>
             </ul>
+          </div>
+        </el-row>
+        <el-row style="padding-top: 3%">
+          <div
+            style="width: 100%; margin: auto; border-radius: 20px"
+            class="el-row"
+          >
+            <div id="div1" v-if="carouselList.length > 0">
+              <ul>
+                <li v-for="(item, index) in carouselList" :key="index">
+                  <a @click="hotsearchClick(item.name)"
+                    ><div class="imgBox">
+                      <img
+                        :src="item.imgWebAddress"
+                        class="colreacherimg"
+                        :title="item.name"
+                        v-if="item.imgWebAddress.indexOf('http://') >= 0"
+                      />
+                      <img
+                        :src="dataServer + item.imgWebAddress"
+                        class="colreacherimg"
+                        :title="item.name"
+                        v-else
+                      /></div
+                  ></a>
+                </li>
+              </ul>
+            </div>
           </div>
         </el-row>
       </div>
@@ -146,7 +180,11 @@
         <el-col :span="5">
           <!-- <el-affix :offset="105"> -->
           <div class="tagTree">
-            <tag-tree @tagClick="tagClick" @hotsearchClick="hotsearchClick" :hotsearchData="hotsearchData"></tag-tree>
+            <tag-tree
+              @tagClick="tagClick"
+              @hotsearchClick="hotsearchClick"
+              :hotsearchData="hotsearchData"
+            ></tag-tree>
           </div>
           <!-- </el-affix> -->
         </el-col>
@@ -154,6 +192,18 @@
           <el-row>
             <div class="indexBox">
               <el-row class="searchBox">
+                <span
+                  ><Icon
+                    type="ios-arrow-back"
+                    :size="25"
+                    style="
+                      color: white;
+                      line-height: 50px;
+                      margin-left: 10px;
+                      cursor: pointer;
+                    "
+                    @click="back2StartPage()"
+                /></span>
                 <div v-if="selectedTag.length > 0" class="selectedTag">
                   当前选择：<span class="selectedTagFont">{{
                     selectedTag[0]
@@ -336,6 +386,7 @@ let downloadChecked = ref(false);
 let dataPageNum = ref(1);
 let modelPageNum = ref(1);
 const restaurants = ref([]);
+const carouselList = ref([]);
 const hotsearchData = ref([]);
 const store = useStore();
 const dataServer = store.getters.devIpAddress;
@@ -389,6 +440,7 @@ let getAutocompleteList = function () {
   }).then(
     (res) => {
       let list = res.data.data.content;
+      carouselList.value = list;
       for (let i = 0; i < list.length; i++) {
         restaurants.value.push({
           value: list[i].name,
@@ -636,8 +688,8 @@ const searchDataByVisualChecked = () => {
     }
   );
 };
-const hotsearchClick = (index) => {
-  searchValue.value = hotsearchData.value[index].name;
+const hotsearchClick = (value) => {
+  searchValue.value = value;
   startSearch();
 };
 const resHandleScroll = (e) => {
@@ -650,11 +702,14 @@ const resHandleScroll = (e) => {
     console.log("up");
   }
 };
+const back2StartPage = () => {
+  searchPage.value = true;
+}
 </script>
 
 <style lang="less" scoped>
 .startSearchBox {
-  width: 40%;
+  width: 50%;
   height: 50px;
   margin: auto;
 }
@@ -673,7 +728,7 @@ const resHandleScroll = (e) => {
 }
 .startSearchButton {
   margin-left: 2%;
-  width: 12%;
+  width: 10%;
   height: 40px;
   font-size: 0.94vw;
   vertical-align: top;
@@ -790,6 +845,54 @@ const resHandleScroll = (e) => {
   font-weight: 550;
   color: rgb(131, 124, 124);
 }
+#div1 {
+  position: relative;
+  width: 80%;
+  margin: 30px auto;
+  height: 160px;
+  overflow: hidden;
+}
+#div1 ul {
+  width: 1000%;
+  position: absolute;
+  left: 0;
+  animation: move1 120s infinite linear;
+}
+#div1 ul:hover {
+  animation-play-state: paused;
+}
+#div1 a {
+  position: absolute;
+  z-index: 2;
+  text-decoration: none;
+  /*top: 45%;*/
+  /*display: none;*/
+}
+#div1 ul li {
+  padding: 5px;
+  list-style: none;
+  width: 200px;
+  height: 160px;
+  float: left;
+}
+@keyframes move1 {
+  from {
+    margin-left: 0;
+  }
+  to {
+    margin-left: -7560px;
+  }
+}
+.colreacherimg {
+  width: 170px;
+  border-radius: 10px;
+  height: 130px;
+}
+.colreacherimg:hover {
+  width: 175px;
+  border-radius: 5px;
+  height: 135px;
+}
 /deep/.el-col-19 {
   width: 87%;
   max-width: 87%;
@@ -815,7 +918,7 @@ const resHandleScroll = (e) => {
 <style>
 .startSearchInput {
   margin-left: 2%;
-  width: 80%;
+  width: 70%;
   height: 40px;
   font-size: 0.94vw;
 }

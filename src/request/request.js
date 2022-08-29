@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Decrypt } from "@/util/codeUtil";
 
 const config = {
   baseUrl: {
@@ -11,11 +12,11 @@ const config = {
 
 const request = axios.create({
   baseURL: config.baseUrl.dev,
-  timeout: 60000,
+  timeout: 12000000,
 });
 request.interceptors.request.use(config => {
     if (localStorage.getItem('token')) {
-        config.headers.Token = localStorage.getItem('token')
+        config.headers.Token = Decrypt(localStorage.getItem('token'))
     }
     return config
 }, err => {

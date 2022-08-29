@@ -4,6 +4,7 @@
       <source  src="@/assets/introduce/introduce.mp4" type="video/mp4">
     </video>
   <el-button class="explore" @click="explore()">开始探索</el-button>
+  <span class="videoDesc">*视频素材来自央视新闻</span>
   </div>
 </template>
 
@@ -14,16 +15,10 @@ import {useStore} from "vuex";
 const router=useRouter()//路由直接用router.push(...)
 const store=useStore()//vuex直接用store.commit
 const route=useRoute()
-const userInfo=JSON.parse(localStorage.getItem("userInfo"))
 
 const emit=defineEmits(['explore'])
 const explore=()=>{
   emit('explore')
-// if(userInfo!=undefined){
-//   router.push('/user')
-// }else{
-//   router.push('/login')
-// }
 }
 const showIntro=ref(false)
 
@@ -46,7 +41,7 @@ setTimeout(()=>{
 .explore{
   position: absolute;
   left: 47%;
-  top: 75%;
+  top: 55%;
   background: transparent;
   color: white;
   font-size: 25px;
@@ -55,5 +50,12 @@ setTimeout(()=>{
 }
 #video{
   width: 100%;
+  height: 100%;
+}
+.videoDesc{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: #beb3b3;
 }
 </style>

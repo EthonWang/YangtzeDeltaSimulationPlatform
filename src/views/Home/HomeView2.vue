@@ -79,12 +79,15 @@ const props = defineProps({
 watch(
   () => props.show,
   (newval, oldval) => {
-    console.log(newval);
     if (newval) {
       setTimeout(()=>{
         document.getElementsByClassName("bg")[0].style.display = "none";
-      document.getElementsByClassName("container")[0].style.background =
-        "hsl(206, 100%, 42%)";
+      // document.getElementsByClassName("container")[0].style.background =
+      //   "hsl(206, 100%, 42%)";
+       document.getElementsByClassName("container")[0].style.background =
+        "transparent";
+        document.getElementsByClassName("bg_pro")[0].style.opacity =
+        "1";
       },200)
       
     } else {
@@ -92,6 +95,8 @@ setTimeout(()=>{
       document.getElementsByClassName("bg")[0].style.display = "block";
       document.getElementsByClassName("container")[0].style.background =
         "#24292f3b";
+        document.getElementsByClassName("bg_pro")[0].style.opacity =
+        "0";
         },500)
     }
   }
@@ -100,9 +105,7 @@ const recieveProblem = (name, path, des) => {
   new_data.value.pic = require("@/" + path);
   new_data.value.des = des;
   new_data.value.name = name;
-  console.log(des);
   visibility.value.scrollingSpan();
-  console.log(path);
 
   ElMessage({
     message: name,

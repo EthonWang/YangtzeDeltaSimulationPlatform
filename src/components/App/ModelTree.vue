@@ -24,7 +24,7 @@
             >{{ node.label }}</el-checkbox
           >
         </span>
-        <span v-else>{{ data.name }} 模型</span>
+        <span v-else>{{ data.name }}</span>
         <span style="position: absolute; right: 26px; margin-left: 50px">
           <el-button
             style=""
@@ -178,7 +178,7 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { Upload, Download, Setting, Document } from "@element-plus/icons-vue";
 import ModelConfig from "components/App/ModelConfig";
-
+import { Decrypt } from "@/util/codeUtil";
 import axios from "axios";
 const emit = defineEmits(["getCheckData", "getCheckChart"]);
 const props = defineProps({
@@ -192,13 +192,13 @@ const drawer = ref(false);
 const drawerTitle = ref("");
 const modelId = ref("62d0167ca5c5e9a1ecf975fa");
 const model = ref({});
-// model.value=JSON.parse(localStorage.getItem('task')).dataList[1]
+// model.value=JSON.parse(Decrypt(localStorage.getItem('task'))).dataList[1]
 let tempModelId = "";
 const refModelConfig = ref();
 const openModelConfig = (modelName, dataModelId, data) => {
   drawer.value = true;
   model.value = data;//传到modelconfig
-  drawerTitle.value = data.name + "模型 配置与运行";
+  drawerTitle.value = data.name + " 配置与运行";
   tempModelId = dataModelId;
 };
 const handleOpenDraw = () => {
@@ -216,7 +216,7 @@ const InvokeModel = () => {
   refModelConfig.value.handleInvoke();
 };
 const modelTreeData = ref([]);
-const task = JSON.parse(localStorage.getItem("task"));
+const task = JSON.parse(Decrypt(localStorage.getItem("task")));
 const getTreeData = () => {
   for (let i = 0; i < task.dataList.length; i++) {
     console.log(task.dataList[i]);

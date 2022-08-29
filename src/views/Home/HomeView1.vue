@@ -1,9 +1,19 @@
 <template>
   <div ref="home1" class="home1">
     <div class="container">
-      <h1 style="margin-top: 3.75%; position: relative; z-index: 2;display:flex;justify-content: center;">
-<!--        <span style="background: transparent" class="border-box">长三角综合模拟器</span>-->
-        <dv-border-box8 dur="3" style="width: 20%;padding: 3px">长三角综合模拟器</dv-border-box8>
+      <h1
+        style="
+          margin-top: 3.75%;
+          position: relative;
+          z-index: 2;
+          display: flex;
+          justify-content: center;
+        "
+      >
+        <!--        <span style="background: transparent" class="border-box">长三角综合模拟器</span>-->
+        <dv-border-box8 dur="3" style="width: 33%; padding: 3px"
+          >长三角虚拟地理实验平台</dv-border-box8
+        >
       </h1>
       <div
         style="
@@ -11,25 +21,25 @@
           width: 100vw;
           height: 5vh;
           top: 17vh;
-          z-index:2;
+          z-index: 2;
           display: flex;
           justify-content: space-around;
         "
       >
-        <div size="large" class="border-box flowbtn"
-          >灾害响应与治理</div>
-        <div size="large" class="border-box flowbtn"
-          >全球变化与区域环境演化</div
-        >
-        <div size="large" class="border-box flowbtn"
-          >城市化与人地关系协调发展</div
-        >
+        <div size="large" class="border-box flowbtn">灾害响应与治理</div>
+        <div size="large" class="border-box flowbtn">
+          全球变化与区域环境演化
+        </div>
+        <div size="large" class="border-box flowbtn">
+          城市化与人地关系协调发展
+        </div>
         <div
           size="large"
           class="border-box flowbtn"
           style="margin-right: 0 !important"
-          >流域水循环及驱动机制</div
         >
+          流域水循环及驱动机制
+        </div>
       </div>
 
       <div
@@ -38,7 +48,7 @@
       >
         <el-divider style="margin: 5px 0 5px 0"></el-divider>
         <p>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长三角模拟器汇聚了大量长江三角洲区域的地理模型和数据资源，用以揭示区域水循环及其内部驱动机理的水循环，阐明全球气候变化条件下区域环境演化规律，以及长三角城市化与人地关系相互作用的互动互馈机制的综合集成模型，实现区域灾害的快速响应与治理，服务于长三角高质量一体化发展国家战略。
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长三角模拟平台汇聚了大量长江三角洲区域的地理模型和数据资源，用以揭示区域水循环及其内部驱动机理的水循环，阐明全球气候变化条件下区域环境演化规律，以及长三角城市化与人地关系相互作用的互动互馈机制的综合集成模型，实现区域灾害的快速响应与治理，服务于长三角高质量一体化发展国家战略。
         </p>
         <el-divider style="margin: 15px 0 -5px 0"></el-divider>
         <div class="login">
@@ -54,14 +64,14 @@
             class="button-87"
             style="margin-top: 3vh; width: 100%"
             type="primary"
-           ><el-icon><Bottom /></el-icon>&nbsp;探索科学问题</button
           >
+            <el-icon><Bottom /></el-icon>&nbsp;探索科学专题
+          </button>
         </div>
       </div>
       <div class="data-charts">
         <div id="main1"></div>
-                <div id="main2"></div>
-
+        <div id="main2"></div>
       </div>
       <div class="merge-earth"></div>
       <MapCharts class="earth"></MapCharts>
@@ -104,21 +114,17 @@
 
 <script setup>
 //采用vue2写法的话把setup去掉，
-import {
-  reactive,
-  computed,
-  ref,
-  onMounted,
-  defineProps,
-  defineEmits,
-} from "vue";
+import { ref, onMounted, defineProps, defineEmits } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import MapCharts from "components/Home/MapCharts.vue";
-import * as echarts from 'echarts';
+import * as echarts from "echarts";
+import { Decrypt } from "@/util/codeUtil";
+import axios from "axios";
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
+const dataServer = store.getters.devIpAddress;
 const props = defineProps({
   show: Boolean,
 });
@@ -133,163 +139,227 @@ const home1 = ref();
 const toSci = () => {
   emit("toSci");
 };
-
+let hotsearchData = [];
+const getHotsearchList = () => {
+  return axios({
+    url: dataServer + "/getResByDataView",
+    method: "get",
+  }).then(
+    (res) => {
+      hotsearchData = res.data.data;
+      console.log(hotsearchData);
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
+};
+getHotsearchList();
 setTimeout(() => {
-  var chartDom1 = document.getElementById('main1');
-var myChart1 = echarts.init(chartDom1, 'dark');
-var option1;
-option1 = {
-  title: {
-    text: '资源分布情况'
-  },
-  toolbox: {
-    // y: 'bottom',
-    feature: {
-      magicType: {
-        type: ['stack']
-      },
-      dataView: {},
-      saveAsImage: {
-        pixelRatio: 2
-      }
-    }
-  },
-  angleAxis: {
-    type: 'category',
-    data: ['灾害', '环境', '城市', '流域']
-  },
-  radiusAxis: {},
-  polar: {},
-  backgroundColor:"transparent",
-  series: [
-    {
-      type: 'bar',
-      data: [1, 2, 3, 4],
-      coordinateSystem: 'polar',
-      name: '模型',
-      stack: 'a',
-      emphasis: {
-        focus: 'series'
-      }
-    },
-    {
-      type: 'bar',
-      data: [2, 5, 1, 5],
-      coordinateSystem: 'polar',
-      name: '数据',
-      stack: 'a',
-      emphasis: {
-        focus: 'series'
-      }
-    },
-  ],
-  legend: {
-    show: true,
-    data: ['模型', '数据']
+  let resourceNum = [0, 0, 0, 0];
+  let resourceModelNum = [0, 0, 0, 0];
+  let allResourceNum = localStorage.getItem("allResourceNum");
+  if (allResourceNum) {
+    allResourceNum = JSON.parse(Decrypt(allResourceNum));
+    resourceNum[0] = allResourceNum.disasterNum;
+    resourceNum[1] = allResourceNum.globalNum;
+    resourceNum[2] = allResourceNum.riverNum;
+    resourceNum[3] = allResourceNum.cityNum;
+    resourceModelNum[0] = allResourceNum.disasterModelNum;
+    resourceModelNum[1] = allResourceNum.globalModelNum;
+    resourceModelNum[2] = allResourceNum.riverModelNum;
+    resourceModelNum[3] = allResourceNum.cityModelNum;
   }
-};
 
-option1 && myChart1.setOption(option1);
-
-
-var chartDom2 = document.getElementById('main2');
-var myChart2 = echarts.init(chartDom2, 'dark');
-var option2;
-var xAxisData = [];
-var data1 = [];
-var data2 = [];
-for (var i = 0; i < 100; i++) {
-  xAxisData.push('A' + i);
-  data1.push((Math.sin(i / 5) * (i / 5 - 10) + i / 6) * 5);
-  data2.push((Math.cos(i / 5) * (i / 5 - 10) + i / 6) * 5);
-}
-option2 = {
-  title: {
-    text: '资源使用情况'
-  },
-  backgroundColor:"transparent",
-  legend: {
-    data: ['模型', '数据']
-  },
-  toolbox: {
-    // y: 'bottom',
-    feature: {
-      magicType: {
-        type: ['stack']
-      },
-      dataView: {},
-      saveAsImage: {
-        pixelRatio: 2
-      }
-    }
-  },
-  tooltip: {},
-  xAxis: {
-    data: xAxisData,
-    splitLine: {
-      show: false
-    }
-  },
-  yAxis: {},
-  series: [
-    {
-      name: '模型',
-      type: 'bar',
-      data: data1,
-      emphasis: {
-        focus: 'series'
-      },
-      animationDelay: function (idx) {
-        return idx * 10;
-      }
+  var chartDom1 = document.getElementById("main1");
+  var myChart1 = echarts.init(chartDom1, "dark");
+  var option1;
+  option1 = {
+    title: {
+      text: "资源分布情况",
     },
-    {
-      name: '数据',
-      type: 'bar',
-      data: data2,
-      emphasis: {
-        focus: 'series'
+    dataInterval: [0, 10, 30, 50, 100, 150, 200, 10000],
+    toolbox: {
+      // y: 'bottom',
+      feature: {
+        magicType: {
+          type: ["stack"],
+        },
+        dataView: {},
+        saveAsImage: {
+          pixelRatio: 2,
+        },
       },
-      animationDelay: function (idx) {
-        return idx * 10 + 100;
-      }
-    }
-  ],
-  animationEasing: 'elasticOut',
-  animationDelayUpdate: function (idx) {
-    return idx * 5;
+    },
+    angleAxis: {
+      type: "category",
+      data: [
+        "灾害响应与治理",
+        "全球变化与\n区域环境演化",
+        "流域水循环\n及其驱动机制",
+        "城市化与人地关系\n协调发展",
+      ],
+    },
+    radiusAxis: {
+      type: "value",
+      axisLabel: {
+        formatter: (v, i) => {
+          if (i === 0) {
+            v = '0';
+          }
+          if (i === 1) {
+            v = '10';
+          }
+          if (i === 2) {
+            v = '30';
+          }
+          if (i === 3) {
+            v = '50';
+          }
+          if (i === 4) {
+            v = '200';
+          }
+          if (i === 5) {
+            v = '1000';
+          }
+          if (i === 6) {
+            v = '5000';
+          }
+          if (i === 7) {
+            v = '12000';
+          }
+          return v;
+        }
+      
+      },
+    },
+    polar: {},
+    backgroundColor: "transparent",
+    series: [
+      {
+        type: "bar",
+        data: resourceModelNum,
+        coordinateSystem: "polar",
+        name: "模型",
+        // stack: "a",
+        emphasis: {
+          focus: "series",
+        },
+      },
+      {
+        type: "bar",
+        data: resourceNum,
+        coordinateSystem: "polar",
+        name: "数据",
+        // stack: "a",
+        emphasis: {
+          focus: "series",
+        },
+      },
+    ],
+    legend: {
+      show: true,
+      data: ["模型", "数据"],
+    },
+  };
+
+  option1 && myChart1.setOption(option1);
+
+  var chartDom2 = document.getElementById("main2");
+  var myChart2 = echarts.init(chartDom2, "dark");
+  var option2;
+  var xAxisData = [];
+  var data1 = [];
+  var data2 = [];
+  for (let i in hotsearchData) {
+    data2.push(hotsearchData[i].pageviews);
+    xAxisData.push(hotsearchData[i].name);
   }
-};
-option2 && myChart2.setOption(option2);
+  option2 = {
+    title: {
+      text: "资源使用情况",
+    },
+    backgroundColor: "transparent",
+    legend: {
+      data: ["数据"],
+    },
+    toolbox: {
+      // y: 'bottom',
+      feature: {
+        magicType: {
+          type: ["stack"],
+        },
+        dataView: {},
+        saveAsImage: {
+          pixelRatio: 2,
+        },
+      },
+    },
+    tooltip: {},
+    xAxis: {
+      data: xAxisData,
+      splitLine: {
+        show: false,
+      },
+    },
+    yAxis: {},
+    series: [
+      // {
+      //   name: "模型",
+      //   type: "bar",
+      //   data: data1,
+      //   emphasis: {
+      //     focus: "series",
+      //   },
+      //   animationDelay: function (idx) {
+      //     return idx * 10;
+      //   },
+      // },
+      {
+        name: "数据",
+        type: "bar",
+        data: data2,
+        emphasis: {
+          focus: "series",
+        },
+        animationDelay: function (idx) {
+          return idx * 10 + 100;
+        },
+      },
+    ],
+    animationEasing: "elasticOut",
+    animationDelayUpdate: function (idx) {
+      return idx * 5;
+    },
+  };
+  option2 && myChart2.setOption(option2);
 }, 2000);
 </script>
 
 <style lang="less" scoped>
 @beside-bg: rgba(40, 40, 40, 0.5);
 
-
-
- /* CSS */
+/* CSS */
 .button-87 {
- margin: 10px;
- padding: 10px 10px;
- text-align: center;
- text-transform: uppercase;
- transition: 0.5s;
- background-size: 200% auto;
- color: white;
- border-radius: 10px;
- display: block;
- border: 0px;
- font-weight: 700;
- box-shadow: 0px 0px 14px -7px #0093E9;
- background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
- cursor: pointer;
- user-select: none;
- -webkit-user-select: none;
- touch-action: manipulation;
+  font-size: 1vw;
+  margin: 10px;
+  padding: 10px 10px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  border-radius: 10px;
+  display: block;
+  border: 0px;
+  font-weight: 700;
+  box-shadow: 0px 0px 14px -7px #0093e9;
+  background-image: linear-gradient(160deg, #0093e9 0%, #80d0c7 100%);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
 }
-
 
 .button-87:hover {
   background-position: right center;
@@ -310,7 +380,7 @@ option2 && myChart2.setOption(option2);
     font-size: 1.1vw;
     display: flex;
     justify-content: center;
-    cursor:text;
+    cursor: text;
   }
   .triangle {
     position: absolute;
@@ -331,7 +401,7 @@ option2 && myChart2.setOption(option2);
     background: @beside-bg;
     right: 1vw;
     top: 25vh;
-    padding:10px;
+    padding: 10px;
     z-index: 2;
     border-radius: 5%;
     transform: scale(1) perspective(1200px) rotateY(-15deg);
@@ -369,10 +439,10 @@ option2 && myChart2.setOption(option2);
   left: 1vw;
   top: 25vh;
   width: 18.55vw;
-  height: 65vh;
+  height: fit-content;
   transition: all 1s;
   padding: 20px 20px;
-    border-radius: 5%;
+  border-radius: 5%;
   transform: scale(1) perspective(1200px) rotateY(15deg);
   h1 {
     color: white;
@@ -535,11 +605,11 @@ option2 && myChart2.setOption(option2);
   }
 }
 
-#main1{
+#main1 {
   width: 100%;
   height: 50%;
 }
-#main2{
+#main2 {
   width: 100%;
   height: 50%;
 }

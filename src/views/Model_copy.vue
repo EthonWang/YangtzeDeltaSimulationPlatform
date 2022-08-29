@@ -40,6 +40,8 @@ import MapboxView from "../components/Mapbox/MapboxView";
 import Cesium from "../components/cesium/cesium.vue";
 import chartTemplate from "../components/chartPlugin/chartTemplate.vue";
 import ModelTree from "components/App/ModelTree";
+import { Decrypt } from "@/util/codeUtil";
+
 export default {
   components: {
     ModelTree,
@@ -49,7 +51,7 @@ export default {
   },
   data() {
     return {
-      data_list:JSON.parse(localStorage.getItem("task")).dataList,
+      data_list:JSON.parse(Decrypt(localStorage.getItem("task"))).dataList,
       mapType: "mapBox",
       //使用mapbox-view组件需要传递的参数
       shpList: [], //格式参考[{name: "111", type: "circle", nameId: "111_123"}]

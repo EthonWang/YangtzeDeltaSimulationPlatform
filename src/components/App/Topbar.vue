@@ -1,22 +1,45 @@
+<!-- ·主题：顶部模块条及平台交互统筹 -->
+<!-- ·设计人：张子卓 -->
+<!-- ·功能 -->
+<!-- 1.页面跳转 -->
+<!-- 2.判断是否来自首页，是否需要刷新清缓存 -->
+<!-- 3.初始化关系图谱的底层数据 -->
 <template>
   <div class="container">
     <span
       class="bg"
-      style="position: absolute; z-index: 2; transition: all .5s"
+      style="position: absolute; z-index: 2; transition: all 0.5s"
       :class="{
         background_show: background_show,
         background_hide: !background_show,
       }"
     ></span>
+
+    <img
+      class="bg_pro"
+      src="@/assets/img/mesh-673.png"
+      style="
+        position: absolute;
+        z-index: 2;
+        width: 100vw;
+        height: 65px;
+        transition: all 0.5s;
+        opacity: 0;
+      "
+    />
     <div class="head">
+      
       <!-- <span class="logo">长 三 角 模 拟 器</span> -->
+      
+      <img style="width: 150px;margin-left: 25px;margin-right: 15px;" src="@/assets/app/logo.png" alt="" />
       <img
         src="../../assets/globle.svg"
         id="logo"
         style="
           transition: all 1s;
           height: 70%;
-          margin-left: 1.5vw;
+          margin-left: 15px;
+          margin-right: 15px;
           margin-top: 0px;
           color: white;
           position: relative;
@@ -28,7 +51,7 @@
           v-for="(bar, index) in barList"
           :key="bar"
           @click="sendRouterToFather(bar.path, index)"
-          style="font-size: 1.2vw; cursor: pointer"
+          style="font-size: 25px; cursor: pointer"
           class="set_7_btn-wrapper"
         >
           <svg height="54" width="150">
@@ -39,40 +62,58 @@
           </div>
         </div>
       </div>
-      <avatar class="user-topbar" ref="user" />
+      <!-- <avatar class="user-topbar" ref="user" /> -->
+      <img
+        class="user-topbar"
+        src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.ntimg.cn%2F20140727%2F6608733_095451721000_2.jpg&refer=http%3A%2F%2Fpic.ntimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1662540904&t=bf172540a1b26f7eb55b539080c3b0a1"
+        alt=""
+        v-if="userAvatar == null"
+        @click="sendRouterToFather('/user', 3)"
+      />
+      <img
+        @click="sendRouterToFather('/user', 3)"
+        class="user-topbar"
+        :src="devServer + userAvatar"
+        alt=""
+        v-else
+      />
     </div>
   </div>
 </template>
 
 <script setup>
-import { userInfo } from "os";
 import { reactive, computed, ref, defineEmits, defineProps, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import graphAPI from "@/api/user/graph";
-
-const user_info = JSON.parse(localStorage.getItem("userInfo"));
-
-// import dataApi from "@/api/user/data"
-
-// const dataapi=new dataApi()
-
-const graphapi = new graphAPI();
-if (user_info != undefined) {
-  graphapi.initGraph(user_info.id).then((res) => {
-    console.log(res);
-  });
-}
+import { userAvatar } from "@/assets/user/scienceChoose";
+import { useStore } from "vuex";
+import { Encrypt, Decrypt } from "@/util/codeUtil";
+import { ElLoading } from "element-plus";
 
 const props = defineProps({
   background_show: ref(Boolean),
 });
 const router = useRouter();
 const route = useRoute();
+
+const graphapi = new graphAPI();
+const store = useStore();
+const devServer = ref(store.getters.devIpAddress_backup);
+let user_info = localStorage.getItem("userInfo");
+if (user_info != null && user_info != undefined) {
+  user_info = JSON.parse(Decrypt(user_info));
+  userAvatar.value = user_info.avatar;
+  graphapi.initGraph(user_info.id).then((res) => {
+    console.log(res);
+  });
+}
+
+
 const barList = reactive(
   router.options.routes.filter((item) => item.isBar == true)
 );
 const relation = require("@/assets/data/another/relation.json");
-localStorage.setItem("relation", JSON.stringify(relation));
+localStorage.setItem("relation", Encrypt(JSON.stringify(relation)));
 const user = ref();
 const notHome = ref(true);
 const getRootPath = (whole) => {
@@ -89,7 +130,7 @@ const searchIndexInRoutes = () => {
 
     pick.value = new Array(barList.length).fill(0);
   } else {
-    document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
+    // document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
   }
   if (getRootPath(route.path) != "") {
     return;
@@ -101,12 +142,14 @@ const searchIndexInRoutes = () => {
     }
   }
 };
+//根据路由routePath的变化做操作
 watch(
   () => route.path,
   (newValue, oldValue) => {
     if (getRootPath(newValue) != "") {
       setTimeout(() => {
         document.getElementsByClassName("bg")[0].style.opacity = "0";
+        document.getElementsByClassName("bg_pro")[0].style.opacity = "0";
         document.getElementsByClassName("container")[0].style.background =
           "#24292f3b";
       }, 100);
@@ -122,12 +165,19 @@ watch(
         }
       }, 201);
       let fromHome = localStorage.getItem("fromHome");
-      console.log(fromHome);
-      if (fromHome=='true') {
-        setTimeout(() => {
-          localStorage.setItem("fromHome", 'false');
-          location.reload();
-        }, 600);
+      if (fromHome != null && fromHome != undefined) {
+        fromHome = Decrypt(fromHome);
+        if (fromHome == "true") {
+          let loading = ElLoading.service({
+            lock: true,
+            text: "清理缓存中...",
+            background: "rgba(0, 0, 0, 0.7)",
+          });
+          setTimeout(() => {
+            localStorage.setItem("fromHome", Encrypt("false"));
+            location.reload();
+          }, 700);
+        }
       }
     }
   }
@@ -135,8 +185,11 @@ watch(
 const emit = defineEmits(["RouterFromBar"]);
 const sendRouterToFather = (route1, index) => {
   if (getRootPath(route1) != "") {
-    let user_info = localStorage.getItem("userInfo");
-    console.log(user_info);
+    user_info = localStorage.getItem("userInfo");
+    if (user_info != null && user_info != undefined) {
+      user_info = JSON.parse(Decrypt(user_info));
+      userAvatar.value = user_info.avatar;
+    }
     if (
       user_info == null &&
       getRootPath(route1) != "case" &&
@@ -149,10 +202,6 @@ const sendRouterToFather = (route1, index) => {
     // if (index != -1) {
     //     pickup(index);
     //   }
-    setTimeout(() => {
-      // location.reload();
-      console.log(router.options);
-    }, 300);
   }
   // setTimeout(() => {
   //   document.getElementsByClassName("user-topbar")[0].style.right = "20vw";
@@ -178,23 +227,29 @@ setTimeout(searchIndexInRoutes, 100);
 @import "../../css/btn/btn7.css";
 
 .user-topbar {
-  display: none;
-  position: relative;
+  // display: none;
+  position: absolute;
   transition: all 1s;
   color: aliceblue;
-  width: 5vw;
-  height: 5vh;
-  right: 20vw;
-  margin-top: 1vh;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  margin-top: 0px;
+  right: 1vw;
+  // margin-top: 1vh;
   cursor: pointer;
+  transition: all 1s;
+  &:hover {
+    filter: brightness(1.75);
+  }
 }
 
 .topbar {
   // margin-left: 20px;
   width: 100%;
-  position: absolute;
+  position: relative;
   // left: calc(17% + 50px);
-  left: 4vw;
+  // left: 4vw;
   transition: all 1s;
 }
 
@@ -300,8 +355,8 @@ setTimeout(searchIndexInRoutes, 100);
   color: white;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  position: relative;
+  justify-content: flex-start;
+  position: absolute;
   z-index: 10;
   // transition: all 2s;
 }

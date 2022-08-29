@@ -80,7 +80,7 @@ export default {
     };
     const downloadPic = (path) => {
       window.location.href =
-        dataServer + "/script/downloadPic/" + path.split("/scriptOut/")[1];
+        dataServer + "/script/downloadPic?path=" + path;
     };
     return {
       closeWindow,

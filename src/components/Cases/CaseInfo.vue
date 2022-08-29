@@ -4,64 +4,118 @@
       <el-col :span="11" :offset="4">
         <div>
           <div style="display: flex">
-            <div class="caseImageWrap">
-              <el-image class="caseImage" @click="toCase(caseInfo.path)"  :src="baseUrl+caseInfo.thumbnail" fit="fill"></el-image>
+            <div class="caseImageWrap" @click="toCase(caseInfo.path)">
+              <el-image class="caseImage"   :src="baseUrl+caseInfo.thumbnail" fit="fill"></el-image>
               <div class="imageMask">
                 <img :src="mdOpenIcon" class="caseIcon">
                 <span >查看案例</span>
               </div>
-
             </div>
             <div>
               <h2 class="case-name">{{caseInfo.name}}</h2>
-              <template v-for="(item,key) in caseInfo.description" :key="key">
-                <p class="case-name">{{item.value}}</p>
-              </template>
+              <p style="font-size: 1.1rem;margin-left: 40px;"
+                 v-if="caseInfo.introduction == null || caseInfo.introduction == ''"
+              >暂无简介</p>
+              <p v-else style="font-size: 1.1rem;margin-left: 40px;">{{caseInfo.introduction}}</p>
             </div>
           </div>
           <h3 class="typeName">案例描述</h3>
           <el-divider ></el-divider>
-          <template v-for="(item,key) in caseInfo.description" :key="key">
-            <p>{{item.value}}</p>
-          </template>
+          <div class="descriptionBlock" v-if="caseInfo.description.length != 0">
+            <template
+                v-for="(item, key) in caseInfo.description"
+                :key="key"
+            >
+              <p v-if="item.type == 'text'" class="descriptionText">
+                {{ item.value }}
+              </p>
+              <el-image
+                  class="imageBlock"
+                  v-if="item.type == 'image'"
+                  :src="baseUrl + item.value"
+              ></el-image>
+            </template>
+          </div>
+          <div class="descriptionText" v-else>暂无描述</div>
           <h3 class="typeName">案例数据</h3>
           <el-divider ></el-divider>
-            <div class="data-area">
-              <template v-for="(item,key) in caseInfo.dataList" :key="key">
+          <template v-if="caseInfo.resourceDataList != null">
+              <div style="display: flex;align-items: center;width: 100%;flex-wrap: wrap;" v-if="caseInfo.resourceDataList.length != 0">
+                <template v-for="(item, key) in resourceDataList" :key="key">
+                  <div class="caseCard">
+                    <div class="caseImageWrap">
+                      <el-image
+                          class="caseImage"
+                          @click="startSearch(item.name)"
+                          :src="dataServer + item.imgWebAddress"
+                          fit="fill"
+                      ></el-image>
+                      <div class="imageMask">
+                        <img :src="mdOpenIcon" class="caseIcon"/>
+                        <span>查看数据</span>
+                      </div>
+                    </div>
+                    <div class="cardText">
+                      <el-tooltip :content="item.name" placement="bottom">
+                        <h4 class="font-size-case">{{ item.name }}</h4>
+                      </el-tooltip>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            <div class="descriptionText" v-else>暂无数据</div>
+          </template>
+          <div class="descriptionText" v-else>暂无数据</div>
+          <h3 class="typeName">相关资料</h3>
+          <el-divider ></el-divider>
+          <template v-if="caseInfo.relatedResource != null">
+            <div class="data-area"  v-if="caseInfo.relatedResource.length != 0">
+              <template v-for="(item,key) in caseInfo.relatedResource" :key="key">
                 <div class="data-item">
-                  <p style="color: #4c4c4c;font-size: 0.9375rem">{{item.name}}</p>
-                  <p style="color: #6e6e6e;font-size: 0.8125rem">{{item.type}}</p>
+                  <el-link  style="font-size: 1.1rem" :href="item.url" type="primary" target="_blank">{{item.name}}<el-icon><Link></Link></el-icon></el-link>
+                  <p style="color: #6e6e6e;font-size: 1rem">{{item.description}}</p>
                 </div>
               </template>
             </div>
+            <div class="descriptionText" v-else>暂无资料</div>
+          </template>
+          <div class="descriptionText" v-else>暂无资料</div>
+          <div style="margin: 50px;"></div>
         </div>
       </el-col>
       <el-col :span="4" :offset="1">
         <div class="rightBox1">
-          <div><el-button  class="rightButton hvr-shutter-out-horizontal" plain><span>在实验室中打开</span><ArrowDown style="width: 1em"/></el-button></div>
-          <div><el-button  class="rightButton hvr-shutter-out-horizontal" @click="toCase(caseInfo.path)" plain><span>查看案例</span><ArrowDown style="width: 1em"/></el-button></div>
-          <div><el-button  class="rightButton hvr-shutter-out-horizontal" @click="editCases" plain><span>编辑案例</span><ArrowDown style="width: 1em"/></el-button></div>
+          <div><el-button @click="router.push('/themetic')" class="rightButton hvr-shutter-out-horizontal" plain><ArrowLeft style="width: 1em"/>&nbsp;<span>返回专题</span></el-button></div>
+          <div><el-button  class="rightButton hvr-shutter-out-horizontal" @click="toCase(caseInfo.path)" plain><View style="width: 1em"/>&nbsp;<span>查看案例</span></el-button></div>
+           <div><el-button @click="openInLab()" class="rightButton hvr-shutter-out-horizontal" plain><DataLine style="width: 1em"/>&nbsp;<span>在实验室中打开</span></el-button></div>
+          <div><el-button v-if="isAdmin" class="rightButton hvr-shutter-out-horizontal" @click="editCases" plain><Setting style="width: 1em"/>&nbsp;<span>编辑案例</span></el-button></div>
           <edit-case-draw
               ref="editCaseRef"
               title="编辑--案例"
               :editing-case-info="updateCases"
               @saveCase="saveCase"
               @cancelCase ="cancelCase"
+              theme=""
           ></edit-case-draw>
         </div>
         <div>
-          <h3 class="authorInfo">作者</h3>
-          <template v-for="(item,key) in caseInfo.caseAuthor" :key="key">
-            <p class="font-size-1">
-              作者：{{item.name}}
-            </p>
-            <p  class="font-size-1">
-              作者单位：{{item.workPlace}}
-            </p>
-            <p  class="font-size-1">
-              作者邮箱：{{item.email}}
-            </p>
+          <h3 class="authorInfo">版权信息</h3>
+          <el-divider style="margin: 18px 0 6px 0;"></el-divider>
+          <template v-if="caseInfo.caseAuthor.length != 0">
+            <template v-for="(item,key) in caseInfo.caseAuthor" :key="key">
+              <p class="font-size-1">
+                作者：{{item.name}}
+              </p>
+              <p v-if="item.workPlace != ''"  class="font-size-1">
+                作者单位：{{item.workPlace}}
+              </p>
+              <p v-if="item.email != ''"  class="font-size-1">
+                作者邮箱：{{item.email}}
+              </p>
+              <el-divider style="margin: 22px 0 6px 0;"></el-divider>
+            </template>
           </template>
+          <p v-else class="font-size-1">暂无版权信息</p>
         </div>
       </el-col>
     </el-row>
@@ -70,26 +124,51 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {ArrowDown,Plus,Upload} from '@element-plus/icons-vue'
+import {ArrowDown,Plus,Upload,Link} from '@element-plus/icons-vue'
 import { useRouter,useRoute} from "vue-router";
 import {post ,get} from "@/request/request_backup";
 import {ElNotification} from "element-plus";
 import EditCaseDraw from "components/Cases/editCaseDraw";
+import {useStore} from "vuex";
+import taskAPI from "@/api/user/task"
+import { ElMessage } from "element-plus/lib/components";
+import { Encrypt,Decrypt } from "@/util/codeUtil"
+
 const router = useRouter();
 const route = useRoute();
+const store = useStore();
+const task_api=new taskAPI()
+const isAdmin=ref(false)
+let user_info=localStorage.getItem('userInfo')
+if(user_info){
+  user_info=JSON.parse(Decrypt(user_info))
+  isAdmin.value=(user_info.email=="opengms@126.com")
+}
+
 
 const mdOpenIcon = require("@/assets/img/icon/md-open.png")
 const toCase = (path) => {
-  router.push("/case/" + path + "/");
+  if(path == ""){
+    ElMessage({
+      type:"info",
+      message:"暂无"
+    })
+    return;
+  }else {
+    router.push("/case/" + path + "/");
+  }
+
 }
-const caseInfo = ref({})
-const baseUrl = ref("/back")
+const caseInfo = ref()
+const baseUrl = store.state.devBackIp;
+const dataServer = store.getters.devIpAddress;
 
 //编辑案例信息
 const editCaseRef = ref();
 const updateCases = ref({})
 const editCases = () => {
   editCaseRef.value.showCase();
+  console.log("案例信息",caseInfo.value)
   updateCases.value = JSON.parse(JSON.stringify(caseInfo.value));
 }
 const saveCase = (data) => {
@@ -108,54 +187,104 @@ const cancelCase = () => {
 }
 
 let caseId;
-onMounted(()=>{
-  getCaseInfo();
-})
+
 const getCaseInfo = () => {
   caseId = route.query.caseId;
   get("/case/getCaseById/"+caseId).then(res=>{
-    caseInfo.value = res.data.data
+    caseInfo.value = res.data.data;
+    getResourceDataById(caseInfo.value.resourceDataList);
   })
 }
+onMounted(()=>{
+  getCaseInfo();
+})
+
+//获取案例包含的数据
+const resourceDataList = ref([])
+const getResourceDataById = (idList) => {
+  resourceDataList.value = [];
+  let body = {
+    ids:idList
+  }
+  post("/case/getResourceDataListInfo",body).then(res=>{
+    resourceDataList.value = res.data;
+  })
+}
+//根据数据名称查询数据
+const startSearch = function (searchValue) {
+  if (user_info) {
+    router.push({
+    path: "/resourse",
+    query: {searchValue},
+  });
+  }else{
+    ElMessage('请您先登录')
+    localStorage.setItem("toLast",Encrypt(route.path))
+    router.push('/login')
+  }
+
+};
 caseInfo.value = {
-  name:"SWMM",
+  name:"暂无案例",
   thumbnail:"/store/themeImg/swmm.62c2a75e443cecf9144a6fb0.png",
+  introduction:"",
   path:"SWMM",
   problem:["洪涝水环境灾害","地表地下水耦合"],
-  description:["SWMM（暴雨洪水管理模型）是一个动态的降水-径流模拟模型，主要用于模拟城市某一单一降水事件或长期的水量和水质模拟。其径流模块部分综合处理各子流域所发生的降水，径流和污染负荷。其汇流模块部分则通过管网、渠道、蓄水和处理设施、水泵、调节闸等进行水量传输。"],
-  dataList:[
+  description:[],
+  dataList:[],
+  caseAuthor:[],
+  resourceDataList:[],
+  relatedResource:[
     {
-      name:"dem.tif",
-      type:"tif"
-    },{
-      name:"土地利用.shp",
-      type:"shp"
-    },{
-      name:"管网数据.shp",
-      type:"shp"
-    },{
-      name:"降水.csv",
-      type:"csv"
-    },{
-      name:"径流量.csv",
-      type:"csv"
+      name:"SWMM官网",
+      url:"https://geomodeling.njnu.edu.cn/",
+      description: "OpenGMS supports sharing of your modeling and simulation resources for geographic applications. Also, this platform provides a virtual community for collaboration among researchers from various domains. Through open web-distributed resource sharing and collaboration, this platform further contributes to open geographic modelling and simulation to enable broader participation and exploration.",
+    },
+    {
+      name:"泛在",
+      url:"http://www.geofuturelab.com/ubiquitous-geoinformation/platform-help",
+      description: "收集散布于互联网中的文本、图表、图像、地图、音频、视频数据（“原数据”）， 提取其类型、结构、内容等信息（“标签”），并挖掘这些标签关联的高层信息（“七要素”）。 为此，客户端提供了数据资源、信息标签、信息检索、信息溯源模块。在这些模块中，用户可以从不同的角度查询、 检索原数据、标签、语义等内容。"
+    },
+  ]
+}
+const openInLab=()=>{
+  if(user_info==null||user_info==undefined){
+    ElMessage('请先登录您的账号')
+    router.push('/login')
+  }else{
+    task_api.openCaseInLab(user_info.id,caseInfo.value.name).then((res)=>{
+    let lab=res.data.data
+    if(lab==null||lab==undefined){
+      ElMessage('暂无案例实验')
+    }else{
+      localStorage.setItem('task',Encrypt(JSON.stringify(lab)))
+    setTimeout(()=>{
+      ElMessage({
+        type:'success',
+        message:"成功"
+      })
+      router.push('/model')
+    },200)
     }
-  ],
-  caseAuthor:{
-    name:"SWMM team",
-    workPlace: "U.S. Environmental Protection Agency",
-    email:"123@gmail.com"
-  },
+
+  }).catch((err)=>{
+    ElMessage('暂无案例实验')
+  })
+  }
+
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .about {
-  top: 7.46vh;
+  top: 65px;
   background-color: white;
   overflow: scroll;
+  height: calc(100vh - 65px);
+  margin-bottom: 65px;
 }
 .case-name{
+  font-size: 1.8rem;
   margin-left: 40px;
 }
 .data-area{
@@ -170,41 +299,103 @@ caseInfo.value = {
 .data-item:hover{
   background-color: rgb(248, 248, 248);
 }
-.caseImageWrap{
+/*.caseImageWrap{*/
+/*  display: flex;*/
+/*  flex-direction: row;*/
+/*  flex-wrap: wrap;*/
+/*  position: relative;*/
+/*  height: 120px;*/
+/*  width: 192px;*/
+/*  cursor: pointer;*/
+/*}*/
+
+/*.caseImage{*/
+/*  height: 120px;*/
+/*  width: 192px;*/
+/*}*/
+/*.imageMask{*/
+/*  height: 120px;*/
+/*  width: 192px;*/
+/*  opacity: 0;*/
+/*  position: absolute;*/
+/*  top:0;*/
+/*  right: 0;*/
+/*  background-color: rgba(0,0,0,0.7);*/
+/*  color:white;*/
+/*  pointer-events: none;*/
+/*  transition:opacity 200ms linear ;*/
+/*  z-index: 100;*/
+/*  display: flex;*/
+/*  justify-content: center;*/
+/*  align-items: center;*/
+/*}*/
+/*.caseImageWrap:hover .imageMask{*/
+/*  opacity: 1;*/
+/*}*/
+/*.caseIcon{*/
+/*  width: 1em;*/
+/*}*/
+
+@imageHeight: 160px;
+@imageWidth:240px;
+.caseImageWrap {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   position: relative;
-  height: 100px;
-  width: 160px;
+  height: @imageHeight;
+  width: @imageWidth;
   cursor: pointer;
 }
 
-.caseImage{
-  height: 100px;
-  width: 160px;
+.caseImage {
+  height: @imageHeight;
+  width: @imageWidth;
+  border: 1px solid lightgray;
 }
-.imageMask{
-  height: 100px;
-  width: 160px;
+
+.imageMask {
+  height: @imageHeight;
+  width: @imageWidth;
   opacity: 0;
   position: absolute;
-  top:0;
+  top: 0;
   right: 0;
-  background-color: rgba(0,0,0,0.7);
-  color:white;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
   pointer-events: none;
-  transition:opacity 200ms linear ;
+  transition: opacity 200ms linear;
   z-index: 100;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.caseImageWrap:hover .imageMask{
+
+.caseImageWrap:hover .imageMask {
   opacity: 1;
 }
-.caseIcon{
+
+.caseIcon {
   width: 1em;
+}
+
+.font-size-case {
+  line-height: 1.5;
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cardText{
+  padding: 0.5rem;
+  text-align: center;
+  width:@imageWidth;
+}
+
+.caseCard {
+  margin-right: 20px;
+  margin-bottom: 20px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
 .rightBox1{
@@ -216,26 +407,57 @@ caseInfo.value = {
   margin: 0 0 25px 0;
   letter-spacing: 2px;
   color: #0c7dd8;
+  font-size: 1rem;
 }
 .typeName {
   animation: tracking-in-expand 0.7s cubic-bezier(0.215, 0.61, 0.355, 1) both;
   border-left: 8px solid #4ba0ff;
   padding: 0 15px;
   margin-top: 24px;
+  font-size: 1.4rem;
 }
 .authorInfo {
   animation: tracking-in-expand 0.7s cubic-bezier(0.215, 0.61, 0.355, 1) both;
   border-left: 8px solid #609356;
   padding: 0 15px;
   margin-top: 24px;
+  font-size: 1.4rem;
 }
 .font-size-1{
-  font-size: 0.8125rem;
+  font-size: 1rem;
   line-height: 1.5;
   color: #6e6e6e;
   padding: 15px 15px 0 20px;
 }
+.descriptionBlock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 1.2em;
+}
 
+.descriptionText {
+  text-indent: 2rem;
+  font-size: 1.2rem;
+}
+.imageBlock {
+  width: 50%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  animation: scale-in-center 0.5s both;
+  //box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+@keyframes scale-in-center {
+  0% {
+    transform: scale(0.9);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 .editDialogRow {
   align-items: center;
   margin-bottom: 15px;
@@ -274,5 +496,9 @@ caseInfo.value = {
 }
 .hvr-shutter-out-horizontal:hover:before, .hvr-shutter-out-horizontal:focus:before, .hvr-shutter-out-horizontal:active:before {
   transform: scaleX(1);
+}
+
+/deep/.el-divider--horizontal{
+  margin:18px 0
 }
 </style>

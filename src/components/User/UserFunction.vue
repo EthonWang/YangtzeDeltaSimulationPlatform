@@ -2,10 +2,31 @@
   <div style="width: 100%; height: 100%">
     <div class="tabs-page">
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
-        <el-tab-pane label="概览" name=""> </el-tab-pane>
-        <el-tab-pane label="我的数据" name="data"> </el-tab-pane>
+        <el-tab-pane name="">
+          <template #label>
+            <span style="display: flex; align-items: center">
+              <el-icon><View /></el-icon>
+              <span>&nbsp;我的信息</span>
+            </span>
+          </template>
+        </el-tab-pane>
+        <el-tab-pane name="data">
+          <template #label>
+            <span style="display: flex; align-items: center">
+              <el-icon><FolderChecked /></el-icon>
+              <span>&nbsp;我的数据</span>
+            </span>
+          </template>
+        </el-tab-pane>
         <!-- <el-tab-pane label="我的模型" name="model"></el-tab-pane> -->
-        <el-tab-pane label="我的实验" name="task"></el-tab-pane>
+        <el-tab-pane name="task">
+          <template #label>
+            <span style="display: flex; align-items: center">
+              <el-icon><DataAnalysis /></el-icon>
+              <span>&nbsp;我的实验</span>
+            </span>
+          </template>
+        </el-tab-pane>
         <router-view class="data-center"></router-view>
         <!-- <el-tab-pane label="其他" name="fourth">Task</el-tab-pane> -->
       </el-tabs>
@@ -27,15 +48,15 @@ const route = useRoute();
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 const activeName = ref("");
-switch(route.path.split('/')[route.path.split("/").length - 1]){
-  case "task" :
-    activeName.value='task'
+switch (route.path.split("/")[route.path.split("/").length - 1]) {
+  case "task":
+    activeName.value = "task";
     break;
-  case "model" :
-    activeName.value='model'
+  case "":
+    activeName.value = "";
     break;
-  case "data" :
-    activeName.value='data'
+  case "data":
+    activeName.value = "data";
     break;
 }
 const spaceAniChange = (scene = 0) => {
@@ -57,14 +78,15 @@ const spaceAniChange = (scene = 0) => {
   }
 };
 setTimeout(() => {
-  if (route.path.split("/")[route.path.split("/").length - 1] == "user") {
+  let routeSplit=route.path.split("/")
+  if (routeSplit[routeSplit.length - 1] == "user" || (routeSplit[routeSplit.length - 2] == "user"&&routeSplit[routeSplit.length - 1] == "")) {
     spaceAniChange(0);
   } else {
     spaceAniChange(1);
   }
 }, 410);
 const handleClick = (tab, event) => {
-  console.log(tab)
+  console.log(tab);
   // console.log(tab,event)
   toRouter(tab.props.name);
   if (tab.props.name == "") {
@@ -97,7 +119,7 @@ const toRouter = (route) => {
     transition: all 1s;
 
     .el-tabs__item {
-      font-size: 0.9vw;
+      font-size: 23px;
       margin-right: 4vw;
     }
   }
@@ -123,13 +145,13 @@ const toRouter = (route) => {
 }
 .science {
   position: fixed;
-  top: 15%;
+  top: calc(4.6vh + 65px + 40px);
   z-index: 500;
   // padding-top: 1vh;
   left: 5vw;
   width: 290px;
   height: 80%;
-  border: 0.5px solid rgba(197, 197, 197, 0.219);
+  border: 1px solid rgba(197, 197, 197, 0.8);
   box-shadow: 0 1px 3px rgba(22, 22, 22, 0.1);
   transition: all 1s;
   opacity: 0;

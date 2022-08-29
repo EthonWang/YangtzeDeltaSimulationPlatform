@@ -16,7 +16,7 @@ import FileItemVue from "../User/UserFunctionCollection/FileItem.vue";
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
-// const dataList = reactive(JSON.parse(localStorage.getItem("task")).dataList.filter(
+// const dataList = reactive(JSON.parse(Decrypt(localStorage.getItem("task"))).dataList.filter(
 //   (item) => item.simularTrait != "model"
 // ));
 // console.log(dataList);

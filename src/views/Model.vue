@@ -9,10 +9,7 @@
     <el-button size="small" @click="switchMap" class="mapSwitchButton"
       ><el-icon><Camera /></el-icon>&nbsp;2D/3D
     </el-button>
-    <el-button
-      size="small"
-      @click="this.router.push('/user/task')"
-      class="backButton"
+    <el-button size="small" @click="this.router.go(-1)" class="backButton"
       ><el-icon><ArrowLeftBold /></el-icon>&nbsp;返回
     </el-button>
     <mapbox-view
@@ -61,7 +58,7 @@
     </template>
     <txt-editor :txtInfo="txtInfo" @saveTxtHtml="saveTxtHtml"></txt-editor>
     <template #footer>
-      <Button @click="txtEditorModal = false">取消</Button>
+      <Button @click="handleTxtEditorClose">取消</Button>
       <Button type="primary" @click="handleTxtEditorClose">确认</Button>
     </template>
   </Modal>
@@ -109,11 +106,117 @@
     </div>
   </div>
   <el-dialog v-model="recommendVisible" title="推荐数据" width="30%">
-    <span>{{ recommendShowOne.name }}</span>
+    <el-descriptions
+      class="margin-top"
+      title=""
+      :column="1"
+      :size="'large'"
+      border
+    >
+      <el-descriptions-item>
+        <template #label>
+          <div class="cell-item">
+            <el-icon :style="iconStyle">
+              <user />
+            </el-icon>
+            数据名称
+          </div>
+        </template>
+        <span>{{ recommendShowOne.name }}</span>
+      </el-descriptions-item>
+    </el-descriptions>
+
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="recommendVisible = false">取消</el-button>
         <el-button type="primary" @click="addtoLab()">加入本实验</el-button>
+      </span>
+    </template>
+  </el-dialog>
+
+  <el-button
+    size="small"
+    style="position: absolute; z-index: 100; top: 75px; left: 295px"
+    @click="myDataVisible = true"
+    ><el-icon><FolderOpened /></el-icon>&nbsp;我的数据</el-button
+  >
+  <!-- 添加单个数据 -->
+  <el-dialog v-model="myDataVisible" width="80%" draggable>
+    <div style="display: flex">
+      <ScienceProblemData style="width: 20vw"></ScienceProblemData>
+      <DataCenter style="width: 40vw;height: ;60vh"></DataCenter>
+    </div>
+
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button
+          style="position: relative; z-index: 5"
+          @click="myDataVisible = false"
+          >退出</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
+  <el-dialog
+    v-model="show_task"
+    title="添加数据集到实验室"
+    width="50%"
+    draggable
+  >
+    <h3 style="margin-bottom: 15px">选择要添加的资源</h3>
+    <el-scrollbar max-height="35vh">
+      <el-checkbox-group
+        v-model="selectedVisualDataItems"
+        @change="selectedVisualDataItemsRangeChangeBefore"
+      >
+        <el-checkbox
+          :label="item.name"
+          v-for="(item, index) in selectedRes.visualDataItems"
+          :key="index"
+        />
+      </el-checkbox-group>
+    </el-scrollbar>
+    <div
+      class="slider-demo-block"
+      v-if="
+        selectedRes.visualDataItems.length >= 30 &&
+        selectedVisualDataItems.length >= 1
+      "
+    >
+      <span class="demonstration" v-if="selectedVisualDataItems.length == 1"
+        >快速选择</span
+      >
+      <span class="demonstration" v-else
+        >已选择 {{ selectedVisualDataItemsRange[0] }} -
+        {{ selectedVisualDataItemsRange[1] }}</span
+      >
+      <el-slider
+        v-model="selectedVisualDataItemsRange"
+        range
+        :marks="guideMarks"
+        :max="selectedRes.visualDataItems.length"
+        @change="selectedVisualDataItemsRangeChange"
+      />
+    </div>
+    <el-divider border-style="dashed" />
+    <el-checkbox
+      v-if="selectedVisualDataItems.length >= 1"
+      v-model="setSelectedVisualDataItemsDataSet"
+      label="设置为数据集"
+      title="选中后，将会把所选择要添加的资源打包成一个数据集，添加到实验室中"
+      size="large"
+      style="margin-bottom: 15px"
+    />
+    <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
+    <el-button @click="addtoLab()" style="margin: 5px">
+      <el-icon><Monitor /></el-icon> &nbsp;
+
+      <span> 本实验 </span></el-button
+    >
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="this.show_task = false">取消</el-button>
+        <!-- <el-button type="primary" @click="show_task = false">完成</el-button> -->
       </span>
     </template>
   </el-dialog>
@@ -133,8 +236,11 @@ import chartTemplate from "../components/chartPlugin/chartTemplate.vue";
 import ModelTree from "components/App/ModelTree";
 import txtEditor from "../components/Mapbox/labUtils/wangEditorBox.vue";
 import taskApi from "@/api/user/task";
-import { ElMessageBox, ElMessage } from "element-plus";
+import { ElMessageBox, ElMessage, ElLoading } from "element-plus";
 import graphAPI from "@/api/user/graph";
+import DataCenter from "@/components/User/UserFunctionCollection/DataCenter.vue";
+import { Encrypt, Decrypt } from "@/util/codeUtil";
+import ScienceProblemData from "@/components/User/UserFunctionCollection/ScienceProblemData.vue";
 
 export default {
   components: {
@@ -143,6 +249,8 @@ export default {
     Cesium,
     chartTemplate,
     txtEditor,
+    DataCenter,
+    ScienceProblemData,
   },
   data() {
     return {
@@ -150,7 +258,8 @@ export default {
       recommendShowOne: {},
       recommendList: true,
       recommendVisible: false,
-      res_list: JSON.parse(localStorage.getItem("task")).dataList,
+      myDataVisible: false,
+      res_list: JSON.parse(Decrypt(localStorage.getItem("task"))).dataList,
       mapType: "mapBox",
       //使用mapbox-view组件需要传递的参数
       shpList: [], //格式参考[{name: "111", type: "circle", nameId: "111_123"}]
@@ -165,9 +274,14 @@ export default {
       isTxtContent: false,
       dataServer: useStore().state.devIpAddress,
       graphapi: new graphAPI(),
-      user_info: JSON.parse(localStorage.getItem("userInfo")),
+      user_info: JSON.parse(Decrypt(localStorage.getItem("userInfo"))),
       router: useRouter(),
       dataRecommend: [],
+      selectedVisualDataItems: [],
+      selectedRes: [],
+      setSelectedVisualDataItemsDataSet: false,
+      show_task: false,
+      selectedVisualDataItemsRange: [0, 0],
     };
   },
   mounted() {
@@ -177,13 +291,16 @@ export default {
         let haveData = [];
         for (let i = 0; i < this.res_list.length; i++) {
           let name = this.res_list[i].name;
+          if ("parent" in this.res_list[i]) {
+            name = this.res_list[i].parent + "子模块";
+          }
           haveData.push(name);
         }
         console.log(haveData);
         this.dataRecommend = this.graphapi.giveRecommend(haveData);
         console.log("推荐", this.dataRecommend);
         // });
-      }, 800);
+      }, 4000);
     }
 
     let mapType = this.getURLParameter("mapType");
@@ -197,9 +314,49 @@ export default {
   },
 
   methods: {
+    selectedVisualDataItemsRangeChangeBefore(value) {
+      if (this.selectedRes.visualDataItems.length >= 30) {
+        let min = this.selectedVisualDataItemsRange[0];
+        let max = this.selectedVisualDataItemsRange[1];
+        for (let i = 0; i < value.length; i++) {
+          for (let j = 0; j < this.selectedRes.visualDataItems.length; j++) {
+            if (value[i] == this.selectedRes.visualDataItems[j].name) {
+              if (value.length == 1) {
+                min = max = j;
+              } else {
+                //判断增减
+                if (min >= j) {
+                  min = j;
+                } else if (max <= j) {
+                  max = j;
+                }
+              }
+            }
+          }
+        }
+        this.selectedVisualDataItemsRange = [min, max];
+        this.selectedVisualDataItemsRangeChange([min, max]);
+      }
+    },
+    selectedVisualDataItemsRangeChange(value) {
+      this.selectedVisualDataItems = [];
+      for (let j = 0; j < this.selectedRes.visualDataItems.length; j++) {
+        if (j >= value[0] && j <= value[1]) {
+          this.selectedVisualDataItems.push(
+            this.selectedRes.visualDataItems[j].name
+          );
+        }
+      }
+    },
     recommendShow(data) {
-      this.recommendVisible = true;
       this.recommendShowOne = data;
+      this.selectedRes = data;
+      if (data.private == "resource") {
+        this.show_task = true;
+        console.log(this.show_task);
+      } else {
+        this.recommendVisible = true;
+      }
     },
     showRecommend() {
       let dom = document.getElementsByClassName("level");
@@ -241,18 +398,92 @@ export default {
       this.recommendList = !this.recommendList;
     },
     addtoLab() {
-      if ("id_backup" in this.recommendShowOne) {
-        this.recommendShowOne["id"] = this.recommendShowOne["id_backup"];
-        delete this.recommendShowOne["id_backup"];
+      //长三角数据中心的数据
+      if (this.recommendShowOne.visualizationBoolean == false) {
+        window.open(this.recommendShowOne.fileWebAddress);
+      } else { //我们平台的数据 公共+私有
+        if ("id_backup" in this.recommendShowOne) {
+          this.recommendShowOne["id"] = this.recommendShowOne["id_backup"];
+          delete this.recommendShowOne["id_backup"];
+        }
+        let dataList = [];
+        console.log(this.selectedVisualDataItems);
+        if (this.recommendShowOne.private == "resource") {
+          //如果是来自资源的数据
+          this.selectedRes = this.recommendShowOne;
+          if (this.setSelectedVisualDataItemsDataSet) {
+            //设置集
+            let dataSet = {};
+            dataSet.createTime = this.selectedRes.createTime;
+            dataSet.description = this.selectedRes.description;
+            dataSet.id =
+              this.selectedRes.id +
+              Math.floor(Math.random() * 10 + 1).toString();
+            dataSet.name = this.selectedRes.name + "_dataSet";
+            dataSet.normalTags = this.selectedRes.normalTags;
+            dataSet.problemTags = this.selectedRes.problemTags;
+            dataSet.publicBoolean = this.selectedRes.publicBoolean;
+            dataSet.type = this.selectedRes.type;
+            dataSet.visualType = "dataSet";
+            dataSet.visualizationBoolean =
+              this.selectedRes.visualizationBoolean;
+            dataSet.dataSetList = [];
+            for (let i in this.selectedVisualDataItems) {
+              let dataName = this.selectedVisualDataItems[i];
+              for (let j in this.selectedRes.visualDataItems) {
+                let data = this.selectedRes.visualDataItems[j];
+                if (dataName == data.name) {
+                  dataSet.dataSetList.push(data);
+                  dataSet.visualWebAddress = data.visualWebAddress;
+                }
+              }
+            }
+            dataSet["simularTrait"] = "data";
+            dataList.push(dataSet);
+            // console.log(dataSet);
+          } else {
+            for (let i in this.selectedVisualDataItems) {
+              let dataName = this.selectedVisualDataItems[i];
+              for (let j in this.selectedRes.visualDataItems) {
+                let data = this.selectedRes.visualDataItems[j];
+                if (dataName == data.name) {
+                  console.log(1);
+                  data["simularTrait"] = "data";
+                  dataList.push(data);
+                }
+              }
+            }
+            this.selectedVisualDataItemsRange = [0, 0];
+            this.selectedVisualDataItems = [];
+          }
+          ElMessage({
+            type: "success",
+            message: "成功加入实验室",
+          });
+          let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
+          this.task_api.addData(newTask, dataList); //传入newTask指针，里面进行push
+
+          // this.task_api.addData(newTask, [this.recommendShowOne]);
+
+          localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
+        } else {
+          //如果是来自个人空间的数据
+          let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
+          this.task_api.addData(newTask, [this.recommendShowOne]);
+          localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
+        }
+
+        this.recommendVisible = false;
+        this.show_task = false;
+        let loading = ElLoading.service({
+          lock: true,
+          text: "更新实验室数据...",
+          background: "rgba(0, 0, 0, 0.7)",
+        });
+        setTimeout(() => {
+          location.reload();
+        }, 500);
       }
-
-      let newTask = JSON.parse(localStorage.getItem("task"));
-
-      this.task_api.addData(newTask, [this.recommendShowOne]);
-      newTask.dataList.push(this.recommendShowOne);
-      localStorage.setItem("task", JSON.stringify(newTask));
-      this.recommendVisible = false;
-      location.reload();
     },
     switchMap() {
       if (this.mapType == "mapBox") {
@@ -346,17 +577,25 @@ export default {
       formData.append("visualType", this.txtInfo.data.visualType);
       formData.append("fileStoreName", this.txtInfo.data.fileStoreName);
       formData.append("id", this.txtInfo.data.id);
-      formData.append("taskId", JSON.parse(localStorage.getItem("task")).id);
+      formData.append(
+        "taskId",
+        JSON.parse(Decrypt(localStorage.getItem("task"))).id
+      );
       axios
         .post(this.dataServer + "/LabTask/updateLabTxtFile", formData)
         .then((res) => {
-          console.log(res.data.data);
-          localStorage.setItem("task", JSON.stringify(res.data.data));
-          this.$refs.mapBoxView.updateTxtInfo(res.data.data);
-          ElMessage({
-            type: "success",
-            message: "修改成功！",
-          });
+          if (res.data.code == 0) {
+            console.log(res.data.data);
+            localStorage.setItem(
+              "task",
+              Encrypt(JSON.stringify(res.data.data))
+            );
+            this.$refs.mapBoxView.updateTxtInfo(res.data.data);
+            ElMessage({
+              type: "success",
+              message: "修改成功！",
+            });
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -411,6 +650,20 @@ const store = useStore(); //vuex直接用store.commit
       color: #e7e7e7;
     }
   }
+}
+
+/deep/.file-container[data-v-017137ce] {
+  width: 60%;
+}
+/deep/.file-operation[data-v-017137ce] {
+  width: 60%;
+}
+/deep/.file-controller[data-v-017137ce] {
+  height: calc(98% - 60px);
+}
+/deep/.file-detail-controller[data-v-017137ce] {
+  height: calc(98% - 120px);
+  right: 3%;
 }
 </style>
 <style lang="css">
@@ -505,7 +758,7 @@ const store = useStore(); //vuex直接用store.commit
   transform: rotateX(30deg) rotateY(0deg) rotate(0deg) translate(-40px, 10px);
   z-index: 100;
   opacity: 1;
-  border:5px solid rgb(153, 153, 153)
+  border: 1px solid rgb(153, 153, 153);
 }
 .levels .level:hover:after {
   transform: translateX(100%);

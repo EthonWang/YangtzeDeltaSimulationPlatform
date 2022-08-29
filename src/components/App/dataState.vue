@@ -1,3 +1,8 @@
+<!-- ·设计人：于晶晶、张子卓 -->
+<!-- ·功能： -->
+<!-- 1.识别模型配置项，提供配置项的前端操作与数据装载； -->
+<!-- 2.提供模型结果数据下载 -->
+<!-- 3.提供模型运行结果（实验结果）保存到个人空间与实验室 -->
 <template>
   <el-divider>
     <div class="modelState">
@@ -52,14 +57,20 @@
                 <!-- 按钮 -->
                 <el-col :span="4">
                   <div class="_btn-group">
-                    <el-button
-                      round
-                      type="success"
-                      size="mini"
-                      :icon="Upload"
-                      @click="chooseConfig(modelInEvent)"
-                    ></el-button>
-
+                    <el-tooltip
+                      class="box-item"
+                      effect="light"
+                      content="选取实验数据"
+                      placement="top"
+                    >
+                      <el-button
+                        round
+                        type="success"
+                        size="mini"
+                        :icon="Upload"
+                        @click="chooseConfig(modelInEvent)"
+                      ></el-button>
+                    </el-tooltip>
                     <el-button
                       round
                       type="warning"
@@ -153,14 +164,36 @@
               <!-- 按钮 -->
               <el-col :span="2">
                 <div class="_btn-group">
-                  <el-button
-                    round
-                    type="warning"
-                    size="mini"
-                    :icon="Download"
-                    @click="download(modelOutEvent)"
+                  <el-tooltip
+                    class="box-item"
+                    effect="light"
+                    content="下载实验结果"
+                    placement="bottom"
                   >
-                  </el-button>
+                    <el-button
+                      round
+                      type="warning"
+                      size="mini"
+                      :icon="Download"
+                      @click="download(modelOutEvent)"
+                    >
+                    </el-button>
+                  </el-tooltip>
+                  <el-tooltip
+                    class="box-item"
+                    effect="light"
+                    content="加入所有结果数据到实验室"
+                    placement="bottom"
+                  >
+                    <el-button
+                      round
+                      type="primary"
+                      size="mini"
+                      :icon="Plus"
+                      @click="loadToLab(modelOutEvent)"
+                    >
+                    </el-button>
+                  </el-tooltip>
                 </div>
               </el-col>
             </el-row>
@@ -179,23 +212,37 @@
 
   <el-dialog
     v-model="dialogDataChoose"
-    title="数据选取"
+    title="选择实验数据"
     width="50%"
     height="500"
     :before-close="handleClose"
   >
     <el-button
-      v-for="data in dataList"
+      v-for="data in dataList.filter(
+        (item) => item.simularTrait != 'model' && item.simularTrait != 'task'
+      )"
       :key="data"
+      style="margin: 5px"
       @click="chooseOneData(data)"
       >{{ data.name }}</el-button
     >
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogDataChoose = false">取消</el-button>
-        <el-button type="primary" @click="dialogDataChoose = false"
-          >确定</el-button
-        >
+      </span>
+    </template>
+  </el-dialog>
+  <el-dialog
+    v-model="addLabVisible"
+    title="选择实验数据"
+    width="50%"
+    height="500"
+    :before-close="handleClose"
+  >
+    <img src="" alt="" />
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="addLabVisible = false">取消</el-button>
       </span>
     </template>
   </el-dialog>
@@ -203,28 +250,35 @@
 
 <script>
 import { Upload } from "@element-plus/icons-vue";
-import { Download } from "@element-plus/icons-vue";
+import { Download, Plus } from "@element-plus/icons-vue";
 import ChooseData from "../Model/ChooseData.vue";
 import dataAPI from "@/api/user/data";
 import { ElMessage } from "element-plus/lib/components";
 import { ElLoading } from "element-plus";
+import taskApi from "@/api/user/task";
+import { Encrypt, Decrypt } from "@/util/codeUtil";
+
 export default {
   name: "DataState",
   props: ["state"],
   data() {
     return {
-      task: JSON.parse(localStorage.getItem("task")),
+      task_api: new taskApi(),
+      task: JSON.parse(Decrypt(localStorage.getItem("task"))),
+      userInfo: JSON.parse(Decrypt(localStorage.getItem("userInfo"))),
       nowChooseConfig: null,
-      mdlStatesList: JSON.parse(localStorage.getItem("mdlStatesList")),
+      mdlStatesList: JSON.parse(Decrypt(localStorage.getItem("mdlStatesList"))),
       loading: false,
       fileList: [],
       Upload,
       Download,
+      Plus,
       dialogDataChoose: false,
-      dataList: JSON.parse(localStorage.getItem("task")).dataList.filter(
-        (item) => item.simularTrait != "model"
-      ),
+      dataList: JSON.parse(
+        Decrypt(localStorage.getItem("task"))
+      ).dataList.filter((item) => item.simularTrait != "model"),
       dataApi: new dataAPI(),
+      addLabVisible: false,
     };
   },
   methods: {
@@ -233,7 +287,12 @@ export default {
       this.nowChooseConfig = modelInEvent;
     },
     chooseOneData(data) {
-      if (data.fileRelativePath == undefined || data.id == undefined) {
+      console.log(data);
+      if (
+        (data.visualType != "dataSet" &&
+          (data.fileRelativePath == undefined || data.id == undefined)) ||
+        (data.visualType == "dataSet" && data.id == undefined)
+      ) {
         this.dialogDataChoose = false;
         ElMessage.error("加入数据失败");
         return;
@@ -244,8 +303,12 @@ export default {
         text: "Loading",
         background: "rgba(0, 0, 0, 0.7)",
       });
-      console.log("have url=",data.dataContainerUrl);
-      if (data.dataContainerUrl != null && data.dataContainerUrl != undefined) {
+      console.log("have url=", data.dataContainerUrl);
+      if (
+        data.dataContainerUrl != null &&
+        data.dataContainerUrl != undefined &&
+        data.dataContainerUrl != ""
+      ) {
         this.nowChooseConfig.url = data.dataContainerUrl;
         this.nowChooseConfig.tag = data.name.split(".")[0];
         this.nowChooseConfig.suffix = data.name.split(".")[1];
@@ -256,32 +319,73 @@ export default {
         });
         this.dialogDataChoose = false;
       } else {
-        this.dataApi
-          .sendDataToContainer(data.fileRelativePath, data.id)
-          .then((res) => {
-            console.log(res.data.data);
-            this.nowChooseConfig.tag = data.name.split(".")[0];
-            this.nowChooseConfig.suffix = data.name.split(".")[1];
-            this.nowChooseConfig.url = res.data.data;
-            data.dataContainerUrl = res.data.data;
-            for (let i = 0; i < this.task.dataList.length; i++) {
-              if (this.task.dataList[i].id == data.id) {
-                this.task.dataList[i].dataContainerUrl = res.data.data;
-                break;
+        if (
+          data.parentId != null &&
+          data.parentId != undefined &&
+          data.parentId != ""
+        ) { //发送数据（非集）获取url
+          this.dataApi
+            .sendDataToContainer(data.fileRelativePath, data.id)
+            .then((res) => {
+              console.log(res.data.data);
+              this.nowChooseConfig.tag = data.name.split(".")[0];
+              this.nowChooseConfig.suffix = data.name.split(".")[1];
+              this.nowChooseConfig.url = res.data.data;
+              data.dataContainerUrl = res.data.data;
+              for (let i = 0; i < this.task.dataList.length; i++) {
+                if (this.task.dataList[i].id == data.id) {
+                  this.task.dataList[i].dataContainerUrl = res.data.data;
+                  break;
+                }
               }
-            }
-            localStorage.setItem("task",JSON.stringify(this.task))
-            loading_data.close();
-            ElMessage({
-              type: "success",
-              message: "成功加入数据",
+              localStorage.setItem("task", Encrypt(JSON.stringify(this.task)));
+              loading_data.close();
+              ElMessage({
+                type: "success",
+                message: "成功加入数据",
+              });
+              this.dialogDataChoose = false;
+            })
+            .catch((err) => {
+              ElMessage.error("使用数据失败1");
+              loading_data.close();
             });
-            this.dialogDataChoose = false;
-          })
-          .catch((err) => {
-            ElMessage.error("使用数据失败");
-            loading_data.close();
-          });
+        } else { //发送数据集 获取url
+          this.dataApi
+            .sendResDataToContainer(
+              data.fileRelativePath,
+              this.task.id,
+              data.id,
+              this.userInfo.id
+            )
+            .then((res) => {
+              console.log(res.data.data);
+              this.nowChooseConfig.tag = data.name.split(".")[0];
+              this.nowChooseConfig.suffix = data.name.split(".")[1];
+              if (data.visualType == "dataSet") {
+                this.nowChooseConfig.suffix = "zip";
+              }
+              this.nowChooseConfig.url = res.data.data;
+              data.dataContainerUrl = res.data.data;
+              for (let i = 0; i < this.task.dataList.length; i++) {
+                if (this.task.dataList[i].id == data.id) {
+                  this.task.dataList[i].dataContainerUrl = res.data.data;
+                  break;
+                }
+              }
+              localStorage.setItem("task", Encrypt(JSON.stringify(this.task)));
+              loading_data.close();
+              ElMessage({
+                type: "success",
+                message: "成功加入数据",
+              });
+              this.dialogDataChoose = false;
+            })
+            .catch((err) => {
+              ElMessage.error("使用数据失败2");
+              loading_data.close();
+            });
+        }
       }
     },
     inEventList(state) {
@@ -356,7 +460,48 @@ export default {
 
         window.open(this.eventChoosing.url);
       } else {
-        this.$message.error("No data can be downloaded.");
+        this.$message.error("请先进行实验");
+      }
+    },
+    loadToLab(event) {
+      if(event.url==undefined){
+        this.$message.error("请先进行实验");
+        return
+      }
+      let outList=this.outEventList(this.state)
+      let outUrlList=[]
+      for(let i in outList){
+        outUrlList.push(outList[i].url)
+      }
+      if (outList[0].url != undefined) {
+        this.task_api
+          .addResultToLabAndDataCenter(
+            outUrlList,
+            this.userInfo.id,
+            this.task.id
+          )
+          .then((res) => {
+            if (res.data == null) {
+              ElMessage.error("出错，可能已存在或无数据");
+            } else {
+              let newTask = res.data;
+              console.log(res);
+              localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
+              ElMessage({ type: "success", message: "成功加入"+outUrlList.length+"条数据" });
+              let loading = ElLoading.service({
+                lock: true,
+                text: "装载数据中...",
+                background: "rgba(0, 0, 0, 0.7)",
+              });
+              setTimeout(()=>{
+                location.reload()
+              },750)
+            }
+          }).catch((err)=>{
+            ElMessage.error("出错，未返回数据")
+          });
+      } else {
+        this.$message.error("请先进行实验");
       }
     },
   },

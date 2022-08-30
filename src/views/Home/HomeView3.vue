@@ -43,7 +43,7 @@ setTimeout(()=>{
   left: 47%;
   top: 55%;
   background: transparent;
-  color: white;
+  color: hsl(0,0,98%);
   font-size: 25px;
   padding: 15px 15px 15px 15px !important;
   height: fit-content;
@@ -51,6 +51,7 @@ setTimeout(()=>{
 #video{
   width: 100%;
   height: 100%;
+  object-fit: fill;
 }
 .videoDesc{
   position: absolute;

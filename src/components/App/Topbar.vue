@@ -41,7 +41,7 @@
           margin-left: 15px;
           margin-right: 15px;
           margin-top: 0px;
-          color: white;
+          color: hsl(0,0,98%);
           position: relative;
           z-index: 5;
         "
@@ -165,7 +165,7 @@ watch(
         }
       }, 201);
       let fromHome = localStorage.getItem("fromHome");
-      if (fromHome != null && fromHome != undefined) {
+      if (fromHome) {
         fromHome = Decrypt(fromHome);
         if (fromHome == "true") {
           let loading = ElLoading.service({
@@ -173,8 +173,9 @@ watch(
             text: "清理缓存中...",
             background: "rgba(0, 0, 0, 0.7)",
           });
+          localStorage.setItem("fromHome", Encrypt("false"));
           setTimeout(() => {
-            localStorage.setItem("fromHome", Encrypt("false"));
+            
             location.reload();
           }, 700);
         }
@@ -352,7 +353,7 @@ setTimeout(searchIndexInRoutes, 100);
 .head {
   width: 100%;
   height: 100%;
-  color: white;
+  color: hsl(0,0,98%);
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -416,13 +417,13 @@ setTimeout(searchIndexInRoutes, 100);
 
 .head .main-user i {
   font-size: 30px;
-  color: white;
+  color: hsl(0,0,98%);
   font-size: 28px;
 }
 
 .head .main-user p {
   margin-left: 10px;
   font-size: 20px;
-  color: white;
+  color: hsl(0,0,98%);
 }
 </style>

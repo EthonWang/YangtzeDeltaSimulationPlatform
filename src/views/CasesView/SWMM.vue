@@ -37,7 +37,7 @@
                     @change="selectChange"
                     class="radioDiv"
                     fill="#409EFF"
-                    text-color="#ffffff"
+                    text-color="#fafafa"
                   >
                     <el-radio-button label="Inflow" name="Inflow"
                       >入流量</el-radio-button
@@ -62,7 +62,7 @@
                     @change="selectChange"
                     class="radioDiv"
                     fill="#409EFF"
-                    text-color="#ffffff"
+                    text-color="#fafafa"
                   >
                     <el-radio-button label="Flow" name="Flow"
                       >管线流量</el-radio-button
@@ -91,7 +91,7 @@
                     @change="selectChange"
                     class="radioDiv"
                     fill="#409EFF"
-                    text-color="#ffffff"
+                    text-color="#fafafa"
                   >
                     <el-radio-button label="Inflow" name="Inflow"
                       >入流量</el-radio-button
@@ -116,7 +116,7 @@
                     @change="selectChange"
                     class="radioDiv"
                     fill="#409EFF"
-                    text-color="#ffffff"
+                    text-color="#fafafa"
                   >
                     <el-radio-button label="Flow" name="Flow"
                       >管线流量</el-radio-button
@@ -145,7 +145,7 @@
                     @change="selectChange"
                     class="radioDiv"
                     fill="#409EFF"
-                    text-color="#ffffff"
+                    text-color="#fafafa"
                   >
                     <el-radio-button label="Inflow" name="Inflow"
                       >入流量</el-radio-button
@@ -170,7 +170,7 @@
                     @change="selectChange"
                     class="radioDiv"
                     fill="#409EFF"
-                    text-color="#ffffff"
+                    text-color="#fafafa"
                   >
                     <el-radio-button label="Flow" name="Flow"
                       >管线流量</el-radio-button
@@ -199,7 +199,7 @@
                     @change="selectChange"
                     class="radioDiv"
                     fill="#409EFF"
-                    text-color="#ffffff"
+                    text-color="#fafafa"
                   >
                     <el-radio-button label="Inflow" name="Inflow"
                       >入流量</el-radio-button
@@ -224,7 +224,7 @@
                     @change="selectChange"
                     class="radioDiv"
                     fill="#409EFF"
-                    text-color="#ffffff"
+                    text-color="#fafafa"
                   >
                     <el-radio-button label="Flow" name="Flow"
                       >管线流量</el-radio-button
@@ -253,7 +253,7 @@
                     @change="selectChange"
                     class="radioDiv"
                     fill="#409EFF"
-                    text-color="#ffffff"
+                    text-color="#fafafa"
                   >
                     <el-radio-button label="Inflow" name="Inflow"
                       >入流量</el-radio-button
@@ -278,7 +278,7 @@
                     @change="selectChange"
                     class="radioDiv"
                     fill="#409EFF"
-                    text-color="#ffffff"
+                    text-color="#fafafa"
                   >
                     <el-radio-button label="Flow" name="Flow"
                       >管线流量</el-radio-button
@@ -310,7 +310,7 @@
       <div
         id="time-slider"
         style="
-          background: white;
+          background: hsl(0,0,98%);
           border-radius: 15px;
           width: 100%;
           bottom: -20%;
@@ -744,7 +744,7 @@ const readlayer = () => {
       "line-color": [
         "case",
         ["<", ["get", "value"], nodeLinkInit.linkmin],
-        "#ffffff", //<10.8
+        "#fafafa", //<10.8
         [
           "<",
           ["get", "value"],
@@ -798,7 +798,7 @@ const readlayer = () => {
       "circle-color": [
         "case",
         ["<", ["get", "value"], nodeLinkInit.nodemin],
-        "#ffffff", //<10.8
+        "#fafafa", //<10.8
         [
           "<",
           ["get", "value"],
@@ -1182,7 +1182,7 @@ const pauseAnimation = () => {
   border: 3px solid #73ad21;
 }
 .tool {
-  background: white;
+  background: hsl(0,0,98%);
   height: 60%;
   width: 25%;
   position: absolute;

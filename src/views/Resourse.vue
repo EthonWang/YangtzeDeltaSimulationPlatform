@@ -22,7 +22,7 @@
           <div style="margin: auto; display: flex">
             <h1
               style="
-                color: white;
+                color:#fafafa;
                 line-height: 70px;
                 font-size: 50px;
                 vertical-align: top;
@@ -33,7 +33,7 @@
             <!-- <img src="../assets/globle.svg" style="width: 70px; margin: 0 25px" /> -->
             <!-- <h1
             style="
-              color: white;
+              color: hsl(0,0,98%);
               line-height: 70px;
               font-size: 50px;
               vertical-align: top;
@@ -69,7 +69,7 @@
               >检索</el-button
             >
             <el-button
-              type="info"
+              type="primary"
               class="startSearchButton"
               @click="startSearch()"
               >更多...</el-button
@@ -77,7 +77,7 @@
           </div>
         </el-row>
         <el-row style="padding-top: 3%">
-          <div style="width: 37%; margin: auto; color: white">
+          <div style="width: 47%; margin: auto; color: hsl(0,0,98%)">
             <h3>热门搜索></h3>
             <ul
               style="
@@ -201,7 +201,7 @@
                     type="ios-arrow-back"
                     :size="25"
                     style="
-                      color: white;
+                      color: hsl(0,0,98%);
                       line-height: 50px;
                       margin-left: 10px;
                       cursor: pointer;
@@ -226,7 +226,7 @@
                   class="searchInput"
                 ></el-input>
 
-                <el-button class="searchButton" @click="beforeStartSearch()"
+                <el-button type="primary" class="searchButton" @click="beforeStartSearch()"
                   >搜索</el-button
                 >
                 <el-button class="searchButton" @click="clearSearch()"
@@ -265,7 +265,9 @@
                     v-model="visualChecked"
                     class="sortCheckBox"
                     @change="visualCheckedChange"
-                    >仅显示支持<span style="color: hsl(190, 100%, 50%);">可视化</span>的数据</el-checkbox
+                    >仅显示支持<span style="color: hsl(190, 100%, 50%)"
+                      >可视化</span
+                    >的数据</el-checkbox
                   >
                   <!-- <span class="fontSet">仅显示支持可视化的数据</span> -->
                   <el-divider direction="vertical"></el-divider>
@@ -273,7 +275,9 @@
                     v-model="downloadChecked"
                     class="sortCheckBox"
                     @change="downloadCheckedChange"
-                    >仅显示<span style="color: hsl(190, 100%, 50%);">本站数据</span></el-checkbox
+                    >仅显示<span style="color: hsl(190, 100%, 50%)"
+                      >本站数据</span
+                    ></el-checkbox
                   >
                   <!-- <span class="fontSet">仅显示支持下载的数据</span> -->
                 </div>
@@ -362,7 +366,7 @@
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, defineProps } from "vue";
 import tagTree from "@/components/resource/tagTree.vue";
 import resourceList from "@/components/resource/resourceList.vue";
 import { Decrypt } from "@/util/codeUtil";
@@ -375,6 +379,7 @@ if (user_info) {
     isAdmin.value = true;
   }
 }
+
 const router = useRouter();
 const route = useRoute();
 if (route.path == "/user/task") {
@@ -399,11 +404,19 @@ const restaurants = ref([]);
 const carouselList = ref([]);
 const hotsearchData = ref([]);
 const store = useStore();
+const props = defineProps({
+    data_recommend: String,
+  });
 const dataServer = store.getters.devIpAddress;
 onMounted(() => {
   getRouteValue();
   getHotsearchList();
   getAutocompleteList();
+  
+  if (props.data_recommend) {
+    searchValue.value = props.data_recommend;
+    startSearch();
+  }
   //监听鼠标滚动事件
   // window.addEventListener("mousewheel", resHandleScroll);
 });
@@ -731,7 +744,7 @@ const back2StartPage = () => {
   list-style: none;
 }
 .hotsearch-item-a {
-  color: white;
+  color: hsl(0,0,98%);
 }
 .hotsearch-item-a:hover {
   color: rgb(64, 158, 255);
@@ -746,6 +759,7 @@ const back2StartPage = () => {
 .search {
   height: 100%;
   width: 100%;
+  overflow: hidden;
   // background: url("../assets/night.jpg");
   // background-size: 100% 100%;
 }
@@ -754,6 +768,7 @@ const back2StartPage = () => {
   height: calc(100vh - 65px);
   background: url("../assets/night.jpg");
   background-size: 100% 100%;
+  overflow: scroll;
 }
 .content {
   // background-color: rgba(255, 255, 255, 0.7);
@@ -803,7 +818,7 @@ const back2StartPage = () => {
 .sortBox {
   width: 100%;
   height: 50px;
-  // background-color: white;
+  // background-color: hsl(0,0,98%);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -819,7 +834,7 @@ const back2StartPage = () => {
 .sortCheckBox {
   margin-left: 10px;
   vertical-align: sub;
-  color: white;
+  color: hsl(0,0,98%);
 }
 .fontSet {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
@@ -827,13 +842,13 @@ const back2StartPage = () => {
   font-size: 14px;
   font-weight: 500;
   // color: #606266;
-  color: white;
+  color: hsl(0,0,98%);
   vertical-align: middle;
 }
 .sortButton {
   width: 60px;
   height: 50px;
-  color: white;
+  color: hsl(0,0,98%);
 }
 .resourceList {
   // background-color: rgb(255, 255, 255);
@@ -911,9 +926,9 @@ const back2StartPage = () => {
     border-radius: 5px;
     height: 135px;
   }
-  .imgBoxTitle{
+  .imgBoxTitle {
     font-size: 16px;
-    color: white;
+    color: hsl(0,0,98%);
   }
 }
 
@@ -931,7 +946,7 @@ const back2StartPage = () => {
 /deep/.el-card {
   // background: hsl(220, 100%, 5%);
   background: hsl(0, 0, 75%);
-  // color: white;
+  // color: hsl(0,0,98%);
   // border:0px;
   box-shadow: 2px 2px 8px rgba(255, 255, 255, 0.5) !important;
 }

@@ -99,7 +99,7 @@ export default {
   border: 1px solid #747474;
   border-radius: 1%;
   position: absolute;
-  background: white;
+  background: hsl(0,0,98%);
   z-index: 1002;
   /* opacity: 0.9; */
 }
@@ -110,7 +110,7 @@ export default {
   border-bottom: 1px solid black;
   border-radius: 1%;
   text-align: left;
-  /* background: white; */
+  /* background: hsl(0,0,98%); */
   user-select: none;
 }
 .window-header-close {

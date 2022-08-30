@@ -278,7 +278,7 @@ const openInLab=()=>{
 <style lang="less" scoped>
 .about {
   top: 65px;
-  background-color: white;
+  background-color: hsl(0,0,98%);
   overflow: scroll;
   height: calc(100vh - 65px);
   margin-bottom: 65px;
@@ -362,7 +362,7 @@ const openInLab=()=>{
   top: 0;
   right: 0;
   background-color: rgba(0, 0, 0, 0.7);
-  color: white;
+  color: hsl(0,0,98%);
   pointer-events: none;
   transition: opacity 200ms linear;
   z-index: 100;
@@ -472,7 +472,7 @@ const openInLab=()=>{
   transform: perspective(1px) translateZ(0);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
   position: relative;
-  background: white;
+  background: hsl(0,0,98%);
   transition-property: color;
   transition-duration: 0.4s;
 }
@@ -492,7 +492,7 @@ const openInLab=()=>{
   transition-timing-function: ease-out;
 }
 .hvr-shutter-out-horizontal:hover, .hvr-shutter-out-horizontal:focus, .hvr-shutter-out-horizontal:active {
-  color: white;
+  color: hsl(0,0,98%);
 }
 .hvr-shutter-out-horizontal:hover:before, .hvr-shutter-out-horizontal:focus:before, .hvr-shutter-out-horizontal:active:before {
   transform: scaleX(1);

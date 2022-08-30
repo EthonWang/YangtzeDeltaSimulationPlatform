@@ -43,18 +43,17 @@
       >编辑信息</el-button
     >
     <div class="otherSpan">
-      <span>机构：</span><span>{{ data.institution }}</span
+      <span>机构：</span><span style="color: gray">{{ data.institution }}</span
       ><br />
-      <span>地址：</span><span>{{ data.address }} </span><br />
-      <span>联系方式：</span><span>{{ data.phone }} </span><br />
+      <span>地址：</span><span style="color: gray">{{ data.address }} </span><br />
+      <span>联系方式：</span><span style="color: gray">{{ data.phone }} </span><br />
     </div>
     <el-button
       @click="logout()"
+      type="danger"
       style="
         width: 88%;
-        color: white;
         margin: 0.8vh;
-        background-color: hsl(0, 100%, 70%);
       "
       >登出</el-button
     >
@@ -75,7 +74,7 @@
         <el-form-item label="地址" :label-width="formLabelWidth">
           <el-input v-model="data.address" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="手机号码" :label-width="formLabelWidth">
+        <el-form-item label="联系方式" :label-width="formLabelWidth">
           <el-input v-model="data.phone" autocomplete="off" />
         </el-form-item>
       </el-form>

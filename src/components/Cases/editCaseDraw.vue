@@ -81,13 +81,13 @@
     </el-row>
     <template v-for="(item,key) in editingCases.description" :key="key">
       <el-row v-if="item.type == 'text'" class="editDialogRow">
-        <span>问题描述:</span>
+        <span>专题描述:</span>
         <el-col :span="20" :offset="1" style="align-items: center">
           <el-input
               style="width: 90%"
               v-model="item.value"
               type="textarea"
-              placeholder="请输入问题描述"
+              placeholder="请输入专题描述"
               :autosize="{ minRows: 2, maxRows: 4 }"
           ></el-input>
           <el-icon

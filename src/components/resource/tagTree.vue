@@ -164,7 +164,7 @@ export default {
   /* height: 45px; */
   line-height: 40px;
   background: hsla(220, 100%, 5%, 0);
-  /* background-color: white; */
+  /* background-color: hsl(0,0,98%); */
   /* border: solid 1px black; */
 }
 .tagSpan {

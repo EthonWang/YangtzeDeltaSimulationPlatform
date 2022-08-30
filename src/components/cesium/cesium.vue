@@ -956,7 +956,7 @@ export default {
   border-radius: 10%;
   font-size: 20px;
   font-weight: 600;
-  color: white;
+  color: hsl(0,0,98%);
   cursor: pointer;
 }
 .startbarItem:hover {

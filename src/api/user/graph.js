@@ -67,7 +67,7 @@ export default class {
         for (let i = 0; i < relation.nodes.length; i++) {
             if (output.length >= 5) { break }
             if (("type" in relation.nodes[i]) && !("parent" in relation.nodes[i])) {
-                if (relation.nodes[i].type == "data") {
+                if (relation.nodes[i].type == "data"&&relation.nodes[i].private!="mydata") {
                     output.push(relation.nodes[i])
                 }
             }

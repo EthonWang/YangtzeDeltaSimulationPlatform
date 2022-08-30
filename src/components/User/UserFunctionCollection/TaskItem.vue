@@ -82,31 +82,20 @@
         v-if="!edit_task"
         style="float: left; margin-right: 5px"
         @click="myDataVisible = true"
-        >选择并添加<strong>我的云端</strong>数据</el-button
+        >选择并添加<strong>我的数据</strong></el-button
       >
-      <!-- <el-upload
-      v-if="!edit_task"
-        style="float: left; margin-right: 5px"
-        class="upload-demo"
-        action=""
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :before-remove="beforeRemove"
-        multiple
-        :limit="10"
-        :on-change="handleChange"
-        :on-exceed="handleExceed"
-       :before-upload="beforeUpload"
-        :file-list="fileList"
-      >
-        <el-button>选择并添加<strong>本地</strong>数据</el-button>
-      </el-upload> -->
-
       <el-button
         v-if="!edit_task"
         @click="ResourseVisible = true"
         style="float: left; margin-right: 5px"
         >选择并添加<strong>公共资源</strong></el-button
+      ><el-button
+        v-if="!edit_task"
+        @click="recommendVisible = true"
+        style="float: left; margin-right: 5px"
+        >选择并添加<strong style="color: hsl(140, 100%, 40%)"
+          >推荐数据</strong
+        ></el-button
       >
       <br />
       <div style="margin: 30px"></div>
@@ -214,19 +203,47 @@
     </el-dialog>
     <!-- 添加平台数据 -->
     <div class="resourceDialog">
-      <el-dialog v-model="ResourseVisible" width="100%" draggable @close="refresh">
-      <Resourse style="width: 100vw; height: 60vh"></Resourse>
+      <el-dialog
+        v-model="ResourseVisible"
+        width="100%"
+        draggable
+        @close="refresh"
+      >
+        <Resourse style="width: 100vw; height: 60vh" :data_recommend="data_recommend"></Resourse>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button
+              style="position: relative; z-index: 5"
+              @click="ResourseVisible = false"
+              >退出</el-button
+            >
+          </span>
+        </template>
+      </el-dialog>
+    </div>
+    <el-dialog
+      v-model="recommendVisible"
+      title="推荐数据"
+      width="30%"
+      @close="refresh"
+    >
+      <el-button
+        v-for="data in recommendData"
+        :key="data"
+        @click="recommendShow(data)"
+        style="margin: 5px"
+      >
+        <el-icon><Document /></el-icon>&nbsp; ><span>{{
+          data.name
+        }}</span></el-button
+      >
+
       <template #footer>
         <span class="dialog-footer">
-          <el-button
-            style="position: relative; z-index: 5"
-            @click="ResourseVisible = false"
-            >退出</el-button
-          >
+          <el-button @click="recommendVisible = false">取消</el-button>
         </span>
       </template>
     </el-dialog>
-    </div>
     
   </div>
 </template>
@@ -241,7 +258,10 @@ import taskApi from "@/api/user/task";
 import { Encrypt, Decrypt } from "@/util/codeUtil";
 import DataCenter from "@/components/User/UserFunctionCollection/DataCenter.vue";
 import ScienceProblemData from "@/components/User/UserFunctionCollection/ScienceProblemData.vue";
-import Resourse from "@/views/Resourse.vue"
+import Resourse from "@/views/Resourse.vue";
+import graphAPI from "@/api/user/graph";
+import { ElMessageBox } from "element-plus";
+import { ElMessage } from "element-plus/lib/components";
 
 const task_api = new taskApi();
 const router = useRouter(); //路由直接用router.push(...)
@@ -250,18 +270,18 @@ const props = defineProps({
   task: reactive(Object),
 });
 const centerDialogVisible = ref(false);
-const emit = defineEmits(["update:task", "deleteTask","refresh"]);
+const emit = defineEmits(["update:task", "deleteTask", "refresh"]);
 const task_data = ref(props.task);
 const edit_task = ref(false);
-const ResourseVisible=ref(false)
+const ResourseVisible = ref(false);
 watch(task_data, (newValue, oldValue) => {
   emit("update:task", newValue);
   //   console.log(newValue);
 });
 
-const refresh=()=>{
-  emit("refresh")
-}
+const refresh = () => {
+  emit("refresh");
+};
 const myDataVisible = ref(false);
 const gotoLiboratory = (task) => {
   localStorage.setItem("task", Encrypt(JSON.stringify(task)));
@@ -314,6 +334,47 @@ const handleClose = (tag) => {
     1
   );
 };
+
+
+const recommendVisible = ref(false);
+const show_task = ref(false);
+const recommendData = ref([]);
+const graphApi = new graphAPI();
+const data_recommend=ref('');
+let dataNameList = [];
+for (let i in props.task.dataList) {
+  dataNameList.push(props.task.dataList[i].name);
+}
+recommendData.value = graphApi.giveRecommend(dataNameList);
+
+const recommendShow = (data) => {
+  if (
+    !data.visualizationBoolean &&
+    data.fileWebAddress != "" &&
+    data.md5 == undefined
+  ) {
+    ElMessageBox.confirm(
+        "数据名："+data.name+"，即将前往“国家地球科学数据中心-长江三角洲分中心”，您可下载数据后上传到 [ 实验室 - 我的数据 ] 中使用。",
+        "外站数据",
+        {
+          confirmButtonText: "前往",
+          cancelButtonText: "取消",
+        }
+      )
+        .then(() => {
+          window.open(data.fileWebAddress);
+        })
+        .catch(() => {
+          ElMessage({
+            type: "info",
+            message: "取消操作",
+          });
+        });
+  } else if (data.private == "resource") {
+    data_recommend.value=data.name
+    ResourseVisible.value=true
+  }
+};
 </script>
 
 <style lang="less" scoped>
@@ -351,6 +412,7 @@ h4 {
   }
   strong {
     color: hsl(210, 100%, 60%);
+    font-weight: 600;
   }
 }
 .btn_public {
@@ -434,12 +496,12 @@ h4 {
   right: 3%;
 }
 
-.resourceDialog/deep/.el-dialog{
+.resourceDialog/deep/.el-dialog {
   padding: 0;
-  background:#1b233a;
-  .el-dialog__body{
+  background: #1b233a;
+  .el-dialog__body {
     padding: 0;
-    .main{
+    .main {
       margin-top: 20px;
     }
   }

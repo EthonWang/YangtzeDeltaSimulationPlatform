@@ -26,7 +26,7 @@ import UserFunction from "@/components/User/UserFunction.vue";
     width: 100%;
     height: 93vh;
     top: 65px;
-    background-color: white;
+    background-color: hsl(0, 0%, 99%);
     overflow-y: hidden;
 }
 

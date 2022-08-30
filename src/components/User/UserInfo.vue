@@ -57,7 +57,7 @@
       "
       >登出</el-button
     >
-    <el-dialog v-model="dialogFormVisible" title="Shipping address">
+    <el-dialog v-model="dialogFormVisible" title="编辑信息">
       <el-form :model="data">
         <el-form-item label="姓名" :label-width="formLabelWidth">
           <el-input v-model="data.name" autocomplete="off" />

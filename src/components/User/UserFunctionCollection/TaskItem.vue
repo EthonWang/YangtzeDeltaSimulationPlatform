@@ -407,6 +407,7 @@ h4 {
   width: 100%;
   padding: 2% 5% 35px 5%;
   transition: all 0.5s;
+  background: hsl(0,0,97%);
   &:hover {
     border: 1px solid rgba(81, 113, 255, 0.85);
   }
@@ -496,9 +497,13 @@ h4 {
   right: 3%;
 }
 
-.resourceDialog/deep/.el-dialog {
+.resourceDialog[data-v-f5288c9c]/deep/.el-dialog {
   padding: 0;
   background: #1b233a;
+  .el-dialog{
+    padding: 5px;
+    background: #fafafa;
+  }
   .el-dialog__body {
     padding: 0;
     .main {

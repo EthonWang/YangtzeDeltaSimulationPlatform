@@ -18,7 +18,7 @@
 
 <script setup>
 //采用vue2写法的话把setup去掉，
-import { reactive, computed, ref, onMounted, defineEmits } from "vue"; //reactive必须接收对象
+import { computed, ref, defineEmits } from "vue"; //reactive必须接收对象
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import HomeView1 from "./Home/HomeView1.vue";
@@ -26,12 +26,9 @@ import HomeView2 from "./Home/HomeView2.vue";
 import HomeView3 from "./Home/HomeView3.vue";
 import HomeViewFooter from "./Home/HomeViewFooter.vue";
 import { Encrypt, Decrypt } from "@/util/codeUtil";
-import { set } from "ol/transform";
 
 localStorage.setItem("fromHome", Encrypt("false"));
 
-const router = useRouter(); //路由直接用router.push(...)
-const store = useStore(); //vuex直接用store.commit
 const scrollTop = ref(0);
 const emit = defineEmits(["showTopbarBackground"]);
 

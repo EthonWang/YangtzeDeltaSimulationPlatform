@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { reactive, computed, ref, defineProps,defineEmits,watch } from "vue";
+import { ref,defineEmits } from "vue";
 import {useRouter,useRoute} from "vue-router";
 import {useStore} from "vuex";
 const router=useRouter()//路由直接用router.push(...)

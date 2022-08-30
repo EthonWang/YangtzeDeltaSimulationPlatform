@@ -11,6 +11,7 @@
       v-model:file-list="fileList_ava"
       class="upload-demo"
       action=""
+      accept="image/jpg,image/jpeg,image/png"
       :limit="1"
       :before-upload="beforeUploadAvatar"
       :auto-upload="true"
@@ -126,8 +127,8 @@ const data = reactive({
 
 const beforeUploadAvatar = (rawFile) => {
   console.log(1);
-  if (rawFile.type !== "image/jpeg" && rawFile.type !== "image/png") {
-    ElMessage.error("请使用jpg或png格式");
+  if (rawFile.type !== "image/jpg"&&rawFile.type !== "image/jpeg" && rawFile.type !== "image/png") {
+    ElMessage.error("请使用jpg/jpeg或png格式");
     return false;
   } else if (rawFile.size / 1024 / 1024 > 5) {
     ElMessage.error("头像请控制在 5MB 以内");

@@ -152,7 +152,9 @@
       <el-table-column prop="name" label="数据名称" />
       <el-table-column prop="imgWebAddress" label="缩略图"  width="80">
         <template #default="scope">
-          <el-image style="width: 100%" :src="dataServer+scope.row.imgWebAddress" :preview-src-list="[dataServer+scope.row.imgWebAddress]"/>
+          <el-image style="width: 100%" :src="scope.row.imgWebAddress"
+                    v-if="scope.row.imgWebAddress.indexOf('http://') >= 0" />
+          <el-image v-else style="width: 100%" :src="dataServer+scope.row.imgWebAddress" />
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" width="100">

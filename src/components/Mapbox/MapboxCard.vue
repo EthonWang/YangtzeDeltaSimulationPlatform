@@ -313,7 +313,7 @@ export default {
   top: 75px;
   width: 27%;
   height: 45vh;
-  background: white !important;
+  background: hsl(0,0,98%) !important;
 }
 .scrollbar-demo-item {
   display: flex;

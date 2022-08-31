@@ -162,7 +162,7 @@ h4 {
   position: relative;
   font-size: 1.5vw;
   font-weight: 400;
-  color: white;
+  color: hsl(0,0,98%);
 }
 .user-info {
   width: fit-content;
@@ -182,7 +182,7 @@ h4 {
   //   background: #409eff;
 }
 /deep/.el-form-item__label {
-  color: white;
+  color: hsl(0,0,98%);
 }
 </style>
 

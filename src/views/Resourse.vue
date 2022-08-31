@@ -22,7 +22,7 @@
           <div style="margin: auto; display: flex">
             <h1
               style="
-                color: white;
+                color:#fafafa;
                 line-height: 70px;
                 font-size: 50px;
                 vertical-align: top;
@@ -33,7 +33,7 @@
             <!-- <img src="../assets/globle.svg" style="width: 70px; margin: 0 25px" /> -->
             <!-- <h1
             style="
-              color: white;
+              color: hsl(0,0,98%);
               line-height: 70px;
               font-size: 50px;
               vertical-align: top;
@@ -57,7 +57,7 @@
               :fetch-suggestions="querySearch"
               :trigger-on-focus="false"
               clearable
-              placeholder=" 请输入想要检索的内容..."
+              placeholder=" 请输入想要检索的数据和模型..."
               @select="handleSelect"
               class="startSearchInput"
               size="large"
@@ -68,10 +68,16 @@
               @click="startSearch()"
               >检索</el-button
             >
+            <el-button
+              type="primary"
+              class="startSearchButton"
+              @click="startSearch()"
+              >更多...</el-button
+            >
           </div>
         </el-row>
         <el-row style="padding-top: 3%">
-          <div style="width: 37%; margin: auto; color: white">
+          <div style="width: 47%; margin: auto; color: hsl(0,0,98%)">
             <h3>热门搜索></h3>
             <ul
               style="
@@ -87,7 +93,7 @@
                   type="md-flame"
                   style="color: rgb(255, 102, 0); margin-right: 5px"
                 />
-                <a class="hotsearch-item-a" @click="hotsearchClick(0)"
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
                   >1. {{ hotsearchData[0].name }}</a
                 >
               </li>
@@ -96,7 +102,7 @@
                   type="md-flame"
                   style="color: rgb(255, 102, 0); margin-right: 5px"
                 />
-                <a class="hotsearch-item-a" @click="hotsearchClick(3)"
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
                   >4. {{ hotsearchData[3].name }}</a
                 >
               </li>
@@ -105,7 +111,7 @@
                   type="md-flame"
                   style="color: rgb(255, 102, 0); margin-right: 5px"
                 />
-                <a class="hotsearch-item-a" @click="hotsearchClick(1)"
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
                   >2. {{ hotsearchData[1].name }}</a
                 >
               </li>
@@ -114,7 +120,7 @@
                   type="md-flame"
                   style="color: rgb(255, 102, 0); margin-right: 5px"
                 />
-                <a class="hotsearch-item-a" @click="hotsearchClick(4)"
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
                   >5. {{ hotsearchData[4].name }}</a
                 >
               </li>
@@ -123,7 +129,7 @@
                   type="md-flame"
                   style="color: rgb(255, 102, 0); margin-right: 5px"
                 />
-                <a class="hotsearch-item-a" @click="hotsearchClick(2)"
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
                   >3. {{ hotsearchData[2].name }}</a
                 >
               </li>
@@ -132,11 +138,43 @@
                   type="md-flame"
                   style="color: rgb(255, 102, 0); margin-right: 5px"
                 />
-                <a class="hotsearch-item-a" @click="hotsearchClick(5)"
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
                   >6. {{ hotsearchData[5].name }}</a
                 >
               </li>
             </ul>
+          </div>
+        </el-row>
+        <el-row style="padding-top: 3%">
+          <div
+            style="width: 100%; margin: auto; border-radius: 20px"
+            class="el-row"
+          >
+            <div id="div1" v-if="carouselList.length > 0">
+              <ul>
+                <li v-for="(item, index) in carouselList" :key="index">
+                  <a @click="hotsearchClick(item.name)"
+                    ><div class="imgBox">
+                      <img
+                        :src="item.imgWebAddress"
+                        class="colreacherimg"
+                        :title="item.name"
+                        v-if="item.imgWebAddress.indexOf('http://') >= 0"
+                      />
+                      <img
+                        :src="dataServer + item.imgWebAddress"
+                        class="colreacherimg"
+                        :title="item.name"
+                        v-else
+                      />
+                      <div class="imgBoxTitle">
+                        {{ item.name }}
+                      </div>
+                    </div></a
+                  >
+                </li>
+              </ul>
+            </div>
           </div>
         </el-row>
       </div>
@@ -146,7 +184,11 @@
         <el-col :span="5">
           <!-- <el-affix :offset="105"> -->
           <div class="tagTree">
-            <tag-tree @tagClick="tagClick" @hotsearchClick="hotsearchClick" :hotsearchData="hotsearchData"></tag-tree>
+            <tag-tree
+              @tagClick="tagClick"
+              @hotsearchClick="hotsearchClick"
+              :hotsearchData="hotsearchData"
+            ></tag-tree>
           </div>
           <!-- </el-affix> -->
         </el-col>
@@ -154,6 +196,18 @@
           <el-row>
             <div class="indexBox">
               <el-row class="searchBox">
+                <span
+                  ><Icon
+                    type="ios-arrow-back"
+                    :size="25"
+                    style="
+                      color: hsl(0,0,98%);
+                      line-height: 50px;
+                      margin-left: 10px;
+                      cursor: pointer;
+                    "
+                    @click="back2StartPage()"
+                /></span>
                 <div v-if="selectedTag.length > 0" class="selectedTag">
                   当前选择：<span class="selectedTagFont">{{
                     selectedTag[0]
@@ -172,7 +226,7 @@
                   class="searchInput"
                 ></el-input>
 
-                <el-button class="searchButton" @click="beforeStartSearch()"
+                <el-button type="primary" class="searchButton" @click="beforeStartSearch()"
                   >搜索</el-button
                 >
                 <el-button class="searchButton" @click="clearSearch()"
@@ -211,7 +265,9 @@
                     v-model="visualChecked"
                     class="sortCheckBox"
                     @change="visualCheckedChange"
-                    >仅显示支持可视化的数据</el-checkbox
+                    >仅显示支持<span style="color: hsl(190, 100%, 50%)"
+                      >可视化</span
+                    >的数据</el-checkbox
                   >
                   <!-- <span class="fontSet">仅显示支持可视化的数据</span> -->
                   <el-divider direction="vertical"></el-divider>
@@ -219,7 +275,9 @@
                     v-model="downloadChecked"
                     class="sortCheckBox"
                     @change="downloadCheckedChange"
-                    >仅显示公开下载的数据</el-checkbox
+                    >仅显示<span style="color: hsl(190, 100%, 50%)"
+                      >本站数据</span
+                    ></el-checkbox
                   >
                   <!-- <span class="fontSet">仅显示支持下载的数据</span> -->
                 </div>
@@ -242,7 +300,7 @@
                   resList.length > 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
-                    selectedTag[0] == '数据')
+                    selectedTag[0] == '数据资源')
                 "
                 @pageChange="dataPageChange"
                 @pageNext="dataPageNext"
@@ -254,7 +312,7 @@
                   resList.length == 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
-                    selectedTag[0] == '数据')
+                    selectedTag[0] == '数据资源')
                 "
               >
                 <template #title>
@@ -274,7 +332,7 @@
                   modelList.length > 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
-                    selectedTag[0] == '模型')
+                    selectedTag[0] == '模型资源')
                 "
                 @pageChange="modelPageChange"
                 @pageNext="modelPageNext"
@@ -286,7 +344,7 @@
                   modelList.length == 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
-                    selectedTag[0] == '模型')
+                    selectedTag[0] == '模型资源')
                 "
               >
                 <template #title>
@@ -306,9 +364,9 @@
 
 <script setup>
 import { useStore } from "vuex";
-import { useRouter,useRoute } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, defineProps } from "vue";
 import tagTree from "@/components/resource/tagTree.vue";
 import resourceList from "@/components/resource/resourceList.vue";
 import { Decrypt } from "@/util/codeUtil";
@@ -321,13 +379,13 @@ if (user_info) {
     isAdmin.value = true;
   }
 }
+
 const router = useRouter();
-const route=useRoute();
-if(route.path=="/user/task"){
-  setTimeout(()=>{
-    startSearch()
-  },300)
-  
+const route = useRoute();
+if (route.path == "/user/task") {
+  setTimeout(() => {
+    startSearch();
+  }, 300);
 }
 let searchPage = ref(true);
 let searchValue = ref("");
@@ -343,13 +401,22 @@ let downloadChecked = ref(false);
 let dataPageNum = ref(1);
 let modelPageNum = ref(1);
 const restaurants = ref([]);
+const carouselList = ref([]);
 const hotsearchData = ref([]);
 const store = useStore();
+const props = defineProps({
+    data_recommend: String,
+  });
 const dataServer = store.getters.devIpAddress;
 onMounted(() => {
   getRouteValue();
   getHotsearchList();
   getAutocompleteList();
+  
+  if (props.data_recommend) {
+    searchValue.value = props.data_recommend;
+    startSearch();
+  }
   //监听鼠标滚动事件
   // window.addEventListener("mousewheel", resHandleScroll);
 });
@@ -396,6 +463,7 @@ let getAutocompleteList = function () {
   }).then(
     (res) => {
       let list = res.data.data.content;
+      carouselList.value = list;
       for (let i = 0; i < list.length; i++) {
         restaurants.value.push({
           value: list[i].name,
@@ -643,8 +711,8 @@ const searchDataByVisualChecked = () => {
     }
   );
 };
-const hotsearchClick = (index) => {
-  searchValue.value = hotsearchData.value[index].name;
+const hotsearchClick = (value) => {
+  searchValue.value = value;
   startSearch();
 };
 const resHandleScroll = (e) => {
@@ -657,11 +725,14 @@ const resHandleScroll = (e) => {
     console.log("up");
   }
 };
+const back2StartPage = () => {
+  searchPage.value = true;
+};
 </script>
 
 <style lang="less" scoped>
 .startSearchBox {
-  width: 40%;
+  width: 50%;
   height: 50px;
   margin: auto;
 }
@@ -673,14 +744,14 @@ const resHandleScroll = (e) => {
   list-style: none;
 }
 .hotsearch-item-a {
-  color: white;
+  color: hsl(0,0,98%);
 }
 .hotsearch-item-a:hover {
   color: rgb(64, 158, 255);
 }
 .startSearchButton {
   margin-left: 2%;
-  width: 12%;
+  width: 10%;
   height: 40px;
   font-size: 0.94vw;
   vertical-align: top;
@@ -688,6 +759,7 @@ const resHandleScroll = (e) => {
 .search {
   height: 100%;
   width: 100%;
+  overflow: hidden;
   // background: url("../assets/night.jpg");
   // background-size: 100% 100%;
 }
@@ -696,6 +768,7 @@ const resHandleScroll = (e) => {
   height: calc(100vh - 65px);
   background: url("../assets/night.jpg");
   background-size: 100% 100%;
+  overflow: scroll;
 }
 .content {
   // background-color: rgba(255, 255, 255, 0.7);
@@ -745,7 +818,7 @@ const resHandleScroll = (e) => {
 .sortBox {
   width: 100%;
   height: 50px;
-  // background-color: white;
+  // background-color: hsl(0,0,98%);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -761,7 +834,7 @@ const resHandleScroll = (e) => {
 .sortCheckBox {
   margin-left: 10px;
   vertical-align: sub;
-  color: white;
+  color: hsl(0,0,98%);
 }
 .fontSet {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
@@ -769,13 +842,13 @@ const resHandleScroll = (e) => {
   font-size: 14px;
   font-weight: 500;
   // color: #606266;
-  color: white;
+  color: hsl(0,0,98%);
   vertical-align: middle;
 }
 .sortButton {
   width: 60px;
   height: 50px;
-  color: white;
+  color: hsl(0,0,98%);
 }
 .resourceList {
   // background-color: rgb(255, 255, 255);
@@ -797,6 +870,68 @@ const resHandleScroll = (e) => {
   font-weight: 550;
   color: rgb(131, 124, 124);
 }
+#div1 {
+  position: relative;
+  width: 80%;
+  margin: 30px auto;
+  height: 170px;
+  overflow: hidden;
+}
+#div1 ul {
+  width: 1000%;
+  position: absolute;
+  left: 0;
+  animation: move1 120s infinite linear;
+}
+#div1 ul:hover {
+  animation-play-state: paused;
+}
+#div1 a {
+  position: absolute;
+  z-index: 2;
+  text-decoration: none;
+  /*top: 45%;*/
+  /*display: none;*/
+}
+#div1 ul li {
+  padding: 5px;
+  list-style: none;
+  width: 200px;
+  height: 160px;
+  float: left;
+}
+@keyframes move1 {
+  from {
+    margin-left: 0;
+  }
+  to {
+    margin-left: -7560px;
+  }
+}
+.colreacherimg {
+  width: 170px;
+  border-radius: 10px;
+  height: 130px;
+}
+.imgBoxTitle {
+  width: 175px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgb(131, 124, 124);
+}
+.imgBox:hover {
+  .colreacherimg {
+    width: 175px;
+    border-radius: 5px;
+    height: 135px;
+  }
+  .imgBoxTitle {
+    font-size: 16px;
+    color: hsl(0,0,98%);
+  }
+}
+
 /deep/.el-col-19 {
   width: 87%;
   max-width: 87%;
@@ -811,7 +946,7 @@ const resHandleScroll = (e) => {
 /deep/.el-card {
   // background: hsl(220, 100%, 5%);
   background: hsl(0, 0, 75%);
-  // color: white;
+  // color: hsl(0,0,98%);
   // border:0px;
   box-shadow: 2px 2px 8px rgba(255, 255, 255, 0.5) !important;
 }
@@ -822,7 +957,7 @@ const resHandleScroll = (e) => {
 <style>
 .startSearchInput {
   margin-left: 2%;
-  width: 80%;
+  width: 70%;
   height: 40px;
   font-size: 0.94vw;
 }

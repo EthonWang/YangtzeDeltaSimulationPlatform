@@ -34,8 +34,8 @@
     </el-row>
     <div v-if="hotsearchData.length > 0">
       <el-row class="tagContent" v-for="(item, index) in hotsearchData" :key="index">
-        <a class="hotsearch-item-a" @click="hotsearchClick(index)"
-          >{{index + 1}}. {{ hotsearchData[index].name }}</a
+        <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
+          >{{index + 1}}. {{ item.name }}</a
         >
       </el-row>
     </div>
@@ -60,7 +60,7 @@ export default {
   setup(props, ctx) {
     let tagList = [
       {
-        name: "数据相关",
+        name: "数据资源",
         list: [
           "基础地理",
           "土地利用/覆盖",
@@ -77,11 +77,11 @@ export default {
           "气候",
           "水文",
           "农业",
-          "其他",
+          "其他数据",
         ],
       },
       {
-        name: "模型相关",
+        name: "模型资源",
         list: [
           "水文模型",
           "土壤模型",
@@ -91,15 +91,15 @@ export default {
           "其他模型",
         ],
       },
-      {
-        name: "专题相关",
-        list: [
-          "流域水循环及其驱动机制",
-          "全球变化与区域环境演化",
-          "长三角灾害响应与治理",
-          "长三角城市化与人地关系协调发展",
-        ],
-      },
+      // {
+      //   name: "专题相关",
+      //   list: [
+      //     "流域水循环及其驱动机制",
+      //     "全球变化与区域环境演化",
+      //     "长三角灾害响应与治理",
+      //     "长三角城市化与人地关系协调发展",
+      //   ],
+      // },
       {
         name: "其他",
         list: ["学术研究", "说明文档"],
@@ -119,8 +119,8 @@ export default {
       }
       ctx.emit("tagClick", emitData);
     };
-    const hotsearchClick = (index) => {
-      ctx.emit("hotsearchClick", index);
+    const hotsearchClick = (value) => {
+      ctx.emit("hotsearchClick", value);
     };
     return {
       tagList,
@@ -164,7 +164,7 @@ export default {
   /* height: 45px; */
   line-height: 40px;
   background: hsla(220, 100%, 5%, 0);
-  /* background-color: white; */
+  /* background-color: hsl(0,0,98%); */
   /* border: solid 1px black; */
 }
 .tagSpan {

@@ -2,7 +2,7 @@
   <div>
     <div
       style="
-        background-color: white;
+        background-color: hsl(0,0,98%);
         box-shadow: 0 1px 6px rgb(0 0 0 / 20%);
         padding-top: 5%;
         padding-bottom: 5%;
@@ -19,9 +19,9 @@
       <div class="opt" @click="downloadData">
         <el-icon><Download /></el-icon>&nbsp;下载({{ props.num }})
       </div>
-      <!-- <div class="opt">
-        <el-icon><Bicycle /></el-icon>&nbsp;移动
-      </div> -->
+      <div class="opt" @click="emit('showMoveSpan')">
+        <el-icon><Bicycle /></el-icon>&nbsp;移动({{ props.num }})
+      </div>
 
       <div class="opt" @click="deleteData">
         <el-icon><Delete /></el-icon>&nbsp;删除({{ props.num }})
@@ -50,7 +50,7 @@ const props = defineProps({
   file: Object,
   num: Number,
 });
-const emit = defineEmits(["comeIn_r", "downloadData", "deleteData"]);
+const emit = defineEmits(["comeIn_r", "downloadData", "deleteData","showMoveSpan"]);
 // const rename=()=>{
 
 // }

@@ -174,7 +174,7 @@ setTimeout(() => {
 // 兼容css
 .task {
   width: calc(100% - 10px);
-  margin: 5px;
+  margin: 5px 0 10px 0;
 }
 </style>
 

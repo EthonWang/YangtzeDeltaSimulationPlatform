@@ -201,7 +201,7 @@
                     type="ios-arrow-back"
                     :size="25"
                     style="
-                      color: hsl(0,0,98%);
+                      color: #fafafa;
                       line-height: 50px;
                       margin-left: 10px;
                       cursor: pointer;
@@ -587,6 +587,7 @@ const clearSearch = function () {
 };
 const tagClick = function (data) {
   selectedTag.value = data;
+  searchValue.value = "";
   if (visualChecked.value || downloadChecked.value) {
     dataPageNum.value = 1;
     searchDataByVisualChecked();

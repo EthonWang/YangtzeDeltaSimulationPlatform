@@ -12,7 +12,7 @@
       @to-sci="toSci()"
     ></HomeView1>
     <HomeView2 :show="show2" style="width: 100%; height: 99.96vh"></HomeView2>
-    <HomeViewFooter style="width: 100%; height: 30vh"></HomeViewFooter>
+    <HomeViewFooter style="width: 100%; height: 35vh"></HomeViewFooter>
   </div>
 </template>
 
@@ -27,7 +27,7 @@ import HomeView3 from "./Home/HomeView3.vue";
 import HomeViewFooter from "./Home/HomeViewFooter.vue";
 import { Encrypt, Decrypt } from "@/util/codeUtil";
 
-localStorage.setItem("fromHome", Encrypt("false"));
+localStorage.setItem("fromHome", Encrypt("true"));
 
 const scrollTop = ref(0);
 const emit = defineEmits(["showTopbarBackground"]);
@@ -74,7 +74,7 @@ const mousedown = () => {
       document.getElementsByClassName("block_home")[0].style.opacity = 0;
     }, 500);
   } else if (
-    scrollTop.value > 1.88 * window.innerHeight &&
+    scrollTop.value > 1.86 * window.innerHeight &&
     scrollTop.value < 2 * window.innerHeight
   ) {
     home_scroll_listen.value.scrollTop = window.innerHeight * 1.96;

@@ -39,7 +39,7 @@
                   z-index="99"
               ></el-image>
               <div v-if="item.type == 'image'">
-                图{{key}}: {{item.imageName}}
+                {{item.imageName}}
               </div>
             </template>
           </div>
@@ -423,7 +423,7 @@ const openInLab=()=>{
   font-size: 1.1rem;
 }
 .imageBlock {
-  height: 45vh;
+  max-height: 45vh;
   margin-top: 15px;
   margin-bottom: 15px;
   animation: scale-in-center 0.5s both;

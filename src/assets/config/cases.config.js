@@ -34,7 +34,7 @@ export const cases_config = [
     },
     {
         problem: "大陆板块漂移",
-        path: "plate",
+        path: "PlateDrift",
         component: () => import("views/CasesView/PlateDrift.vue")
     }, {
         problem: "小流域山洪灾害在线模拟",

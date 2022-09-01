@@ -45,6 +45,14 @@
                   <div class="caseCard">
                     <div class="caseImageWrap">
                       <el-image
+                          v-if="item.imgWebAddress.indexOf('http://') >= 0"
+                          class="caseImage"
+                          @click="startSearch(item.name)"
+                          :src="item.imgWebAddress"
+                          fit="fill"
+                      ></el-image>
+                      <el-image
+                          v-else
                           class="caseImage"
                           @click="startSearch(item.name)"
                           :src="dataServer + item.imgWebAddress"

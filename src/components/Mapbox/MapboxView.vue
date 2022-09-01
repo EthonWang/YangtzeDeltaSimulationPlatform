@@ -1132,8 +1132,8 @@ export default {
       map = new mapboxgl.Map({
         container: "map",
         style: "mapbox://styles/mapbox/dark-v10",
-        center: [120, 32],
-        zoom: 7,
+        center: [118, 32],
+        zoom: 6,
       });
       map.addControl(new MapboxLanguage({ defaultLanguage: "zh-Hans" }));
 

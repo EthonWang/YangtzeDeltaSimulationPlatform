@@ -37,7 +37,7 @@
             placeholder="请输入描述"
           />
         </el-form-item>
-        <el-form-item label="面向科学问题">
+        <el-form-item label="面向专题">
           <el-tag
             v-for="item in props.task.problemTags"
             :key="item.label"
@@ -110,7 +110,7 @@
         <h4>数据配置：</h4>
         <template v-for="(data, index) in props.task.dataList" :key="data">
           <el-form-item
-            :label="data.name.slice(0, 25)"
+            :label="data.name.slice(0, 50)"
             v-if="data.simularTrait != 'model' && data.simularTrait != 'task'"
           >
             <el-button
@@ -410,6 +410,7 @@ h4 {
   background: hsl(0,0,97%);
   &:hover {
     border: 1px solid rgba(81, 113, 255, 0.85);
+    background: hsl(220,100%,96%);
   }
   strong {
     color: hsl(210, 100%, 60%);

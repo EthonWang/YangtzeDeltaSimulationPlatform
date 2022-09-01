@@ -6,7 +6,7 @@
       >
     </div>
     <el-divider></el-divider>
-    <div style="height: 100%; width: 100%; justify-content: center">
+    <div style="height: 100%; width: 100%;padding-bottom: 100px;">
       <TaskItem
         class="task"
         v-for="task in tasks"
@@ -17,7 +17,6 @@
         @refresh="refresh"
       ></TaskItem>
     </div>
-
     <el-dialog v-model="dialogFormVisible" title="新建实验项目">
     <el-form :model="form">
       <el-form-item label="输入实验名称" :label-width="formLabelWidth">

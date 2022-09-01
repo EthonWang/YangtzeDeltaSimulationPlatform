@@ -33,6 +33,10 @@
                   class="imageBlock"
                   v-if="item.type == 'image'"
                   :src="baseUrl + item.value"
+                  :preview-src-list="[baseUrl + item.value]"
+                  preview-teleported="true"
+                  hide-on-click-modal="true"
+                  z-index="99"
               ></el-image>
               <div v-if="item.type == 'image'">
                 图{{key}}: {{item.imageName}}

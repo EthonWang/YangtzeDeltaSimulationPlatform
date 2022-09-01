@@ -108,7 +108,7 @@
             :offset="1"
         >
           <el-input
-              placeholder="请上传案例缩略图"
+              placeholder="图片描述"
               v-model="item.imageName"
               style="width: 90%"
           ></el-input>

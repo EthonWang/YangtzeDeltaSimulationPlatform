@@ -99,6 +99,30 @@
       >
       <br />
       <div style="margin: 30px"></div>
+      <div style="display: flex">
+        <el-card
+          :body-style="{ padding: '0px' }"
+          v-for="data in recommendData"
+          :key="data"
+          @click="recommendShow(data)"
+          style="margin: 5px; cursor: pointer;width: 150px;"
+        >
+          <img :src="data.imgWebAddress" style="width: 150px; height: 100px" />
+          <div style="padding: 5px">
+            <div
+              style="
+                margin-top: 13px;
+                line-height: 150%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+             <span>{{data.name}}</span>
+            </div>
+          </div>
+        </el-card>
+      </div>
       <el-form
         :inline="true"
         :label-position="labelPosition"
@@ -209,7 +233,10 @@
         draggable
         @close="refresh"
       >
-        <Resourse style="width: 100vw; height: 60vh" :data_recommend="data_recommend"></Resourse>
+        <Resourse
+          style="width: 100vw; height: 60vh"
+          :data_recommend="data_recommend"
+        ></Resourse>
         <template #footer>
           <span class="dialog-footer">
             <el-button
@@ -221,7 +248,7 @@
         </template>
       </el-dialog>
     </div>
-    <el-dialog
+    <!-- <el-dialog
       v-model="recommendVisible"
       title="推荐数据"
       width="30%"
@@ -243,8 +270,7 @@
           <el-button @click="recommendVisible = false">取消</el-button>
         </span>
       </template>
-    </el-dialog>
-    
+    </el-dialog> -->
   </div>
 </template>
 
@@ -335,17 +361,17 @@ const handleClose = (tag) => {
   );
 };
 
-
 const recommendVisible = ref(false);
 const show_task = ref(false);
 const recommendData = ref([]);
 const graphApi = new graphAPI();
-const data_recommend=ref('');
+const data_recommend = ref("");
 let dataNameList = [];
 for (let i in props.task.dataList) {
   dataNameList.push(props.task.dataList[i].name);
 }
 recommendData.value = graphApi.giveRecommend(dataNameList);
+console.log(recommendData.value);
 
 const recommendShow = (data) => {
   if (
@@ -354,25 +380,27 @@ const recommendShow = (data) => {
     data.md5 == undefined
   ) {
     ElMessageBox.confirm(
-        "数据名："+data.name+"，即将前往“国家地球科学数据中心-长江三角洲分中心”，您可下载数据后上传到 [ 实验室 - 我的数据 ] 中使用。",
-        "外站数据",
-        {
-          confirmButtonText: "前往",
-          cancelButtonText: "取消",
-        }
-      )
-        .then(() => {
-          window.open(data.fileWebAddress);
-        })
-        .catch(() => {
-          ElMessage({
-            type: "info",
-            message: "取消操作",
-          });
+      "数据名：" +
+        data.name +
+        "，即将前往“国家地球科学数据中心-长江三角洲分中心”，您可下载数据后上传到 [ 实验室 - 我的数据 ] 中使用。",
+      "外站数据",
+      {
+        confirmButtonText: "前往",
+        cancelButtonText: "取消",
+      }
+    )
+      .then(() => {
+        window.open(data.fileWebAddress);
+      })
+      .catch(() => {
+        ElMessage({
+          type: "info",
+          message: "取消操作",
         });
+      });
   } else if (data.private == "resource") {
-    data_recommend.value=data.name
-    ResourseVisible.value=true
+    data_recommend.value = data.name;
+    ResourseVisible.value = true;
   }
 };
 </script>
@@ -407,10 +435,10 @@ h4 {
   width: 100%;
   padding: 2% 5% 35px 5%;
   transition: all 0.5s;
-  background: hsl(0,0,97%);
+  background: hsl(0, 0, 97%);
   &:hover {
     border: 1px solid rgba(81, 113, 255, 0.85);
-    background: hsl(220,100%,96%);
+    background: hsl(220, 100%, 96%);
   }
   strong {
     color: hsl(210, 100%, 60%);
@@ -501,7 +529,7 @@ h4 {
 .resourceDialog[data-v-f5288c9c]/deep/.el-dialog {
   padding: 0;
   background: #1b233a;
-  .el-dialog{
+  .el-dialog {
     padding: 5px;
     background: #fafafa;
   }

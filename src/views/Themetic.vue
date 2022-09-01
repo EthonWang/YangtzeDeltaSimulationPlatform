@@ -1010,6 +1010,7 @@ const findParentName = (childName) => {
 
 .descriptionText {
   text-indent: 2em;
+  font-size: 1.2em;
 }
 
 .imageBlock {

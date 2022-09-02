@@ -29,12 +29,12 @@
         <!--          </div>-->
         <!--        </div>-->
         <div class="part45 border-box ">
-          <div class="flex-row-center">
-            <h2 style=" color: #fafafa;position: absolute; margin-top: 70px; z-index: 50">长三角气候</h2>
-          </div>
-          <div class="content-part-1">
-            <img class="img" src="/case/rainForecast/长三角气候.gif" style="height: 90%;width: 90%">
-          </div>
+<!--          <div class="flex-row-center">-->
+<!--            <h2 style=" color: #fafafa;position: absolute; margin-top: 70px; z-index: 50">长三角气候</h2>-->
+<!--          </div>-->
+<!--          <div class="content-part-1">-->
+<!--            <img class="img" src="/case/rainForecast/长三角气候.gif" style="height: 90%;width: 90%">-->
+<!--          </div>-->
           <div id="lineChart" style="  width: 95%;  height: 95%;"></div>
         </div>
       </div>

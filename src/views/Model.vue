@@ -85,7 +85,7 @@
   <el-button
     size="small"
     @click="showRecommend"
-    style="position: absolute; right: 50px; top: 8vh"
+    style="position: absolute; right: 20px; top: 330px"
     ><span v-if="recommendList"
       ><el-icon><ArrowUpBold /></el-icon>&nbsp;收起</span
     >
@@ -163,7 +163,9 @@
     width="50%"
     draggable
   >
-    <h3 style="margin-bottom: 15px">选择要添加的资源</h3>
+    <h3 style="margin-bottom: 15px">
+      [{{ recommendShowOne.name }}]所属子数据(必选)
+    </h3>
     <el-scrollbar max-height="35vh">
       <el-checkbox-group
         v-model="selectedVisualDataItems"
@@ -199,6 +201,9 @@
       />
     </div>
     <el-divider border-style="dashed" />
+    <h3 v-if="selectedVisualDataItems.length >= 1">
+      是否设置为数据集？（打包数据，若有多数据建议选上）
+    </h3>
     <el-checkbox
       v-if="selectedVisualDataItems.length >= 1"
       v-model="setSelectedVisualDataItemsDataSet"
@@ -230,7 +235,7 @@ import { reactive, computed, ref } from "vue";
 import { toRaw } from "@vue/reactivity";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import MapboxView from "../components/Mapbox/MapboxView";
+import MapboxView from "../components/Mapbox/MapboxView.vue";
 import Cesium from "../components/cesium/cesium.vue";
 import chartTemplate from "../components/chartPlugin/chartTemplate.vue";
 import ModelTree from "components/App/ModelTree";
@@ -296,9 +301,9 @@ export default {
           }
           haveData.push(name);
         }
-        console.log(haveData);
-        this.dataRecommend = this.graphapi.giveRecommend(haveData);
-        console.log("推荐", this.dataRecommend);
+        this.graphapi.giveRecommend(haveData).then((res) => {
+          this.dataRecommend = res;
+        });
         // });
       }, 4000);
     }
@@ -319,11 +324,7 @@ export default {
         let min = this.selectedVisualDataItemsRange[0];
         let max = this.selectedVisualDataItemsRange[1];
         for (let i = 0; i < value.length; i++) {
-          for (
-            let j = 0;
-            j < this.selectedRes.visualDataItems.length;
-            j++
-          ) {
+          for (let j = 0; j < this.selectedRes.visualDataItems.length; j++) {
             if (value[i] == this.selectedRes.visualDataItems[j].name) {
               if (value.length == 1) {
                 min = max = j;
@@ -354,8 +355,14 @@ export default {
     },
     recommendShow(data) {
       this.recommendShowOne = data;
-      this.selectedRes=data
-      if (data.private == "resource") {
+      this.selectedRes = data;
+      if (
+        !data.visualizationBoolean &&
+        data.fileWebAddress != "" &&
+        data.md5 == undefined
+      ) {
+        this.opemWebUrlData(data.fileWebAddress, data.name);
+      } else if (data.private == "resource") {
         this.show_task = true;
         console.log(this.show_task);
       } else {
@@ -375,15 +382,17 @@ export default {
           i++
         ) {
           if (i == 0) {
-            continue;
+            document.getElementsByClassName("level")[i].style.opacity='0.55'
+            continue
           }
           let ele = document.getElementsByClassName("level")[i];
           ele.style.marginTop = "-50px";
-          ele.style.opacity = "0.75";
+          ele.style.opacity = "0.35";
         }
       } else {
         document.getElementsByClassName("levels")[0].style.pointerEvents =
           "auto";
+          document.getElementsByClassName("level")[0].style.opacity='0.95'
         // document.getElementsByClassName("level")[0].style.opacity="0.95"
         for (
           let i = 0;
@@ -401,88 +410,118 @@ export default {
 
       this.recommendList = !this.recommendList;
     },
-    addtoLab() {
-      if ("id_backup" in this.recommendShowOne) {
-        this.recommendShowOne["id"] = this.recommendShowOne["id_backup"];
-        delete this.recommendShowOne["id_backup"];
-      }
-      let dataList = [];
-      console.log(this.selectedVisualDataItems);
-      if (this.recommendShowOne.private == "resource") {
-        //如果是来自资源的数据
-        this.selectedRes = this.recommendShowOne;
-        if (this.setSelectedVisualDataItemsDataSet) {
-          //设置集
-          let dataSet = {};
-          dataSet.createTime = this.selectedRes.createTime;
-          dataSet.description = this.selectedRes.description;
-          dataSet.id =
-            this.selectedRes.id +
-            Math.floor(Math.random() * 10 + 1).toString();
-          dataSet.name = this.selectedRes.name + "_dataSet";
-          dataSet.normalTags = this.selectedRes.normalTags;
-          dataSet.problemTags = this.selectedRes.problemTags;
-          dataSet.publicBoolean = this.selectedRes.publicBoolean;
-          dataSet.type = this.selectedRes.type;
-          dataSet.visualType = "dataSet";
-          dataSet.visualizationBoolean =
-            this.selectedRes.visualizationBoolean;
-          dataSet.dataSetList = [];
-          for (let i in this.selectedVisualDataItems) {
-            let dataName = this.selectedVisualDataItems[i];
-            for (let j in this.selectedRes.visualDataItems) {
-              let data = this.selectedRes.visualDataItems[j];
-              if (dataName == data.name) {
-                dataSet.dataSetList.push(data);
-                dataSet.visualWebAddress = data.visualWebAddress;
-              }
-            }
-          }
-          dataSet["simularTrait"] = "data";
-          dataList.push(dataSet);
-          // console.log(dataSet);
-        } else {
-          for (let i in this.selectedVisualDataItems) {
-            let dataName = this.selectedVisualDataItems[i];
-            for (let j in this.selectedRes.visualDataItems) {
-              let data = this.selectedRes.visualDataItems[j];
-              if (dataName == data.name) {
-                console.log(1);
-                data["simularTrait"] = "data";
-                dataList.push(data);
-              }
-            }
-          }
-          this.selectedVisualDataItemsRange = [0, 0];
-          this.selectedVisualDataItems = [];
+    opemWebUrlData(url, name) {
+      ElMessageBox.confirm(
+        "数据名：" +
+          name +
+          "，即将前往“国家地球科学数据中心-长江三角洲分中心”，您可下载数据后上传到 [ 实验室 - 我的数据 ] 中使用。",
+        "外站数据",
+        {
+          confirmButtonText: "前往",
+          cancelButtonText: "取消",
         }
-        ElMessage({
-          type: "success",
-          message: "成功加入实验室",
+      )
+        .then(() => {
+          window.open(url);
+        })
+        .catch(() => {
+          ElMessage({
+            type: "info",
+            message: "取消操作",
+          });
         });
-        let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
-        this.task_api.addData(newTask, dataList);//传入newTask指针，里面进行push
-
-        // this.task_api.addData(newTask, [this.recommendShowOne]);
-
-        localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
+    },
+    addtoLab() {
+      //长三角数据中心的数据
+      if (this.selectedVisualDataItems.length <= 0) {
+        ElMessage.error("您未选择数据");
+        return;
+      } else if (this.recommendShowOne.visualizationBoolean == false) {
+        window.open(this.recommendShowOne.fileWebAddress);
       } else {
-        //如果是来自个人空间的数据
-        let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
-        this.task_api.addData(newTask, [this.recommendShowOne]);
-        localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
-      }
+        //我们平台的数据 公共+私有
+        if ("id_backup" in this.recommendShowOne) {
+          this.recommendShowOne["id"] = this.recommendShowOne["id_backup"];
+          delete this.recommendShowOne["id_backup"];
+        }
+        let dataList = [];
+        console.log(this.selectedVisualDataItems);
+        if (this.recommendShowOne.private == "resource") {
+          //如果是来自资源的数据
+          this.selectedRes = this.recommendShowOne;
+          if (this.setSelectedVisualDataItemsDataSet) {
+            //设置集
+            let dataSet = {};
+            dataSet.createTime = this.selectedRes.createTime;
+            dataSet.description = this.selectedRes.description;
+            dataSet.id =
+              this.selectedRes.id +
+              Math.floor(Math.random() * 10 + 1).toString();
+            dataSet.name = this.selectedRes.name + "_dataSet";
+            dataSet.normalTags = this.selectedRes.normalTags;
+            dataSet.problemTags = this.selectedRes.problemTags;
+            dataSet.publicBoolean = this.selectedRes.publicBoolean;
+            dataSet.type = this.selectedRes.type;
+            dataSet.visualType = "dataSet";
+            dataSet.visualizationBoolean =
+              this.selectedRes.visualizationBoolean;
+            dataSet.dataSetList = [];
+            for (let i in this.selectedVisualDataItems) {
+              let dataName = this.selectedVisualDataItems[i];
+              for (let j in this.selectedRes.visualDataItems) {
+                let data = this.selectedRes.visualDataItems[j];
+                if (dataName == data.name) {
+                  dataSet.dataSetList.push(data);
+                  dataSet.visualWebAddress = data.visualWebAddress;
+                }
+              }
+            }
+            dataSet["simularTrait"] = "data";
+            dataList.push(dataSet);
+            // console.log(dataSet);
+          } else {
+            for (let i in this.selectedVisualDataItems) {
+              let dataName = this.selectedVisualDataItems[i];
+              for (let j in this.selectedRes.visualDataItems) {
+                let data = this.selectedRes.visualDataItems[j];
+                if (dataName == data.name) {
+                  console.log(1);
+                  data["simularTrait"] = "data";
+                  dataList.push(data);
+                }
+              }
+            }
+            this.selectedVisualDataItemsRange = [0, 0];
+            this.selectedVisualDataItems = [];
+          }
+          ElMessage({
+            type: "success",
+            message: "成功加入实验室",
+          });
+          let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
+          this.task_api.addData(newTask, dataList); //传入newTask指针，里面进行push
 
-      this.recommendVisible = false;
-      this.show_task = false;
-      let loading = ElLoading.service({
-        lock: true,
-        text: "更新实验室数据...",
-        background: "rgba(0, 0, 0, 0.7)",
-      });
-      setTimeout(() => {
-        location.reload();
-      }, 500);
+          // this.task_api.addData(newTask, [this.recommendShowOne]);
+
+          localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
+        } else {
+          //如果是来自个人空间的数据
+          let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
+          this.task_api.addData(newTask, [this.recommendShowOne]);
+          localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
+        }
+
+        this.recommendVisible = false;
+        this.show_task = false;
+        let loading = ElLoading.service({
+          lock: true,
+          text: "更新实验室数据...",
+          background: "rgba(0, 0, 0, 0.7)",
+        });
+        setTimeout(() => {
+          location.reload();
+        }, 500);
+      }
     },
     switchMap() {
       if (this.mapType == "mapBox") {
@@ -635,7 +674,7 @@ const store = useStore(); //vuex直接用store.commit
   border-radius: 10px;
   border: 0px !important;
   background: #e7e7e7;
-  box-shadow: inset 3px 3px 3px #474747, inset -4px -4px 3px #ffffff !important;
+  box-shadow: inset 3px 3px 3px #474747, inset -4px -4px 3px #fafafa !important;
   .recommend_item {
     text-align: center;
     margin: 0;
@@ -667,21 +706,21 @@ const store = useStore(); //vuex直接用store.commit
 </style>
 <style lang="css">
 :root {
-  --fontColor: #ffffff;
-  --three1: #bd7be8;
-  --three2: #8063e1;
-  --two1: #7f94fc;
-  --two2: #3f58e3;
-  --one1: #21bbfe;
-  --one2: #2c6fd1;
-  --four1: #415197;
-  --four2: #352f64;
-  --levelShadow: #22325480;
+  --fontColor: #fafafa;
+  --three1: hsl(276, 70%, 50%);
+  --three2: hsl(254, 68%, 44%);
+  --two1: hsl(230, 95%, 54%);
+  --two2: hsl(231, 75%, 37%);
+  --one1: hsl(198, 99%, 46%);
+  --one2: hsl(216, 65%, 40%);
+  --four1: hsl(229, 40%, 42%);
+  --four2: hsl(247, 36%, 29%);
+  --levelShadow: hsla(221, 42%, 23%, 0.502);
 }
 .levels {
   position: absolute;
-  top: 15%;
-  right: 3%;
+  top: 400px;
+  right: 20px;
   margin-left: -140px;
   margin-top: 0px;
   transform-style: preserve-3d;
@@ -731,10 +770,10 @@ const store = useStore(); //vuex直接用store.commit
 .levels .level .title {
   position: absolute;
   top: 8px;
-  font-weight: 700;
+  font-weight: 500;
 
   left: 15px;
-  font-size: 16px;
+  font-size: 20px;
 }
 .levels .level .content {
   /* position: absolute; */
@@ -742,9 +781,9 @@ const store = useStore(); //vuex直接用store.commit
 
   /* left: 15px; */
   line-height: 100%;
-  font-size: 14px;
+  font-size: 16px;
   text-align: center;
-  font-weight: bold;
+  font-weight: 500;
   width: 100%;
   table-layout: fixed;
   word-wrap: break-all;

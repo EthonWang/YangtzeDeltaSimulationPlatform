@@ -3,9 +3,9 @@
 
     <!--    标题-->
     <div class="flex-row-center" style="height: 75px;">
-      <!--      <h2 style="color: white"></h2>-->
+      <!--      <h2 style="color: hsl(0,0,98%)"></h2>-->
       <dv-decoration-3 style="width:250px;height:40px;"/>
-      <dv-decoration-11 style="width:400px;height:75px;color: white"><h1>长三角降雨预报专题</h1></dv-decoration-11>
+      <dv-decoration-11 style="width:400px;height:75px;color: hsl(0,0,98%)"><h1>长三角降雨预报专题</h1></dv-decoration-11>
       <dv-decoration-3 style="width:250px;height:40px;"/>
 
     </div>
@@ -20,13 +20,22 @@
           </div>
         </dv-border-box-9>
 
+        <!--        <div class="part45 border-box ">-->
+        <!--          <div class="flex-row-center">-->
+        <!--            <h2 style=" color: #ffffff;position: absolute; margin-top: 70px; z-index: 50">长三角气候</h2>-->
+        <!--          </div>-->
+        <!--          <div class="content-part-1">-->
+        <!--            <img class="img" src="/case/rainForecast/长三角气候.gif" style="height: 90%;width: 90%">-->
+        <!--          </div>-->
+        <!--        </div>-->
         <div class="part45 border-box ">
-          <div class="flex-row-center">
-            <h2 style=" color: #ffffff;position: absolute; margin-top: 70px; z-index: 50">长三角气候</h2>
-          </div>
-          <div class="content-part-1">
-            <img class="img" src="/case/rainForecast/长三角气候.gif" style="height: 90%;width: 90%">
-          </div>
+<!--          <div class="flex-row-center">-->
+<!--            <h2 style=" color: #fafafa;position: absolute; margin-top: 70px; z-index: 50">长三角气候</h2>-->
+<!--          </div>-->
+<!--          <div class="content-part-1">-->
+<!--            <img class="img" src="/case/rainForecast/长三角气候.gif" style="height: 90%;width: 90%">-->
+<!--          </div>-->
+          <div id="lineChart" style="  width: 95%;  height: 95%;"></div>
         </div>
       </div>
 
@@ -41,7 +50,7 @@
             <div class="rainfallforcast-color" style=" z-index: 5">
               <div class="color-bar">
                 <div class="color">
-                  <div class="color-item" style="background-color: #ffffff"></div>
+                  <div class="color-item" style="background-color: #fafafa"></div>
                   <div class="color-item" style="background-color: #9cf790"></div>
                   <div class="color-item" style="background-color: #37a600"></div>
                   <div class="color-item" style="background-color: #67b4f8"></div>
@@ -67,9 +76,12 @@
         <dv-border-box-1 :color="['#00a1ff']" style="  width: 100%;  height: 35%; position: relative;">
           <div class="content-part-2">
 
-            <div id="lineChart" style="  width: 45%;  height: 90%;"></div>
+
+            <div id="historyRiverLevelChart" style="  width: 45%;  height: 90%;z-index: 50"></div>
+
 
             <div id="pieChart" style="  width: 45%;  height: 90%;"></div>
+
 
           </div>
         </dv-border-box-1>
@@ -79,10 +91,9 @@
 
 
       <div class="content-col-3 flex-Column-Around-Center">
-
-        <dv-border-box-9 :color="['#00a1ff']" style="  width: 100%;  height: 70%; position: relative;">
+        <dv-border-box-9 :color="['#00a1ff']" style="  width: 100%;  height: 60%; position: relative;">
           <div class="flex-row-center">
-            <h2 style=" color: #ffffff;position: absolute;    margin-top: 70px; z-index: 50">历史洪灾</h2>
+            <h2 style=" color: #fafafa;position: absolute;    margin-top: 70px; z-index: 50">历史洪灾</h2>
           </div>
           <div class="content-part-1">
             <img class="img" src="/case/rainForecast/historyRecord1.png" style="height: 90%;width: 90%">
@@ -90,8 +101,17 @@
         </dv-border-box-9>
 
 
-        <div class="part25 border-box ">
-          <div id="historyRiverLevelChart" style="  width: 100%;  height: 100%;z-index: 50"></div>
+        <div class="part35 border-box ">
+          <!--          <div id="historyRiverLevelChart" style="  width: 100%;  height: 100%;z-index: 50"></div>-->
+
+          <div style=" width: 100%;  height:100%;">
+            <div class="flex-row-center">
+              <h2 style=" color: #ffffff;position: absolute; margin-top: 40px; z-index: 50">长三角气候</h2>
+            </div>
+            <div class="content-part-1">
+              <img class="img" src="/case/rainForecast/长三角气候.gif" style="height: 100%;width: 80%">
+            </div>
+          </div>
         </div>
 
 
@@ -276,10 +296,10 @@ export default {
 
     //降雨地区排行数据获取
     getSortRainfallByDistrict() {
-       post("/dashboard/sortRainfallByDistrict", {
-            "count": 10,
-            "isAsc": -1
-          })
+      post("/dashboard/sortRainfallByDistrict", {
+        "count": 10,
+        "isAsc": -1
+      })
           .then((res) => {
             let data = res.data
             let name = []
@@ -358,9 +378,9 @@ export default {
     //部分地区降雨预测数据获取
     getDailyRainfallByDistrict() {
       post("/dashboard/getDailyRainfallByDistrict", {
-            "count": 10,
-            "isAsc": -1
-          })
+        "count": 10,
+        "isAsc": -1
+      })
           .then((res) => {
             let rainData = res.data
             let name = []
@@ -746,6 +766,14 @@ export default {
 .part25 {
   width: 100%;
   height: 25%;
+  padding: 20px;
+  position: relative;
+  box-shadow: rgb(0 108 255) 0px 0px 25px inset;
+}
+
+.part35 {
+  width: 100%;
+  height: 35%;
   padding: 20px;
   position: relative;
   box-shadow: rgb(0 108 255) 0px 0px 25px inset;

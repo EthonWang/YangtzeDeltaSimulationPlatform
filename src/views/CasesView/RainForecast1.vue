@@ -3,9 +3,9 @@
 
     <!--    标题-->
     <div class="flex-row-center" style="height: 75px;">
-      <!--      <h2 style="color: white"></h2>-->
+      <!--      <h2 style="color: hsl(0,0,98%)"></h2>-->
       <dv-decoration-3 style="width:250px;height:40px;"/>
-      <dv-decoration-11 style="width:400px;height:75px;color: white"><h1>王家坝流域降雨预报专题</h1></dv-decoration-11>
+      <dv-decoration-11 style="width:400px;height:75px;color: hsl(0,0,98%)"><h1>王家坝流域降雨预报专题</h1></dv-decoration-11>
       <dv-decoration-3 style="width:250px;height:40px;"/>
 
     </div>
@@ -32,7 +32,7 @@
           <div class="rainfallforcast-color" style=" z-index: 5">
             <div class="color-bar">
               <div class="color">
-                <div class="color-item" style="background-color: #ffffff"></div>
+                <div class="color-item" style="background-color: #fafafa"></div>
                 <div class="color-item" style="background-color: #9cf790"></div>
                 <div class="color-item" style="background-color: #37a600"></div>
                 <div class="color-item" style="background-color: #67b4f8"></div>
@@ -64,7 +64,7 @@
         <div class="part border-box ">
           <!--          <div id="barChart" style="  width: 100%;  height: 100%;z-index: 5"></div>-->
           <div style="    width: 100%;    height: 100%;display: flex;    justify-content: center;">
-            <h3 style=" color: #ffffff;position: absolute;    margin-top: -2px;">历史洪灾</h3>
+            <h3 style=" color: #fafafa;position: absolute;    margin-top: -2px;">历史洪灾</h3>
             <img class="img" src="/case/rainForecast/historyRecord1.png" style="height: 100%;width: 100%">
           </div>
         </div>

@@ -54,7 +54,7 @@ const configs = reactive([
   {
     tittle: "我的实验",
     sum_des:"我的实验总量",
-    des: "此处是我的实验室，汇总我在各个科学问题的研究中执行的实验，用于使用数据并调用模型进行地理模拟问题的求解，并对结果进行分析与可视化。",
+    des: "此处是我的实验室，汇总我在各个科学专题的研究中执行的实验，用于使用数据并调用模型进行地理模拟问题的求解，并对结果进行分析与可视化。",
     img:require("@/assets/img/LAB.png"),
     edit_des: false,
     all: allResourceNum.themeNum,

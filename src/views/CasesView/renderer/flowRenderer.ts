@@ -25,6 +25,7 @@ const quadVertices = [
 
 // TODO:文件夹如果需要更改到其他位置，需要修改此URL
 // shader source request url
+/* eslint-disable */
 const vsURL = [
     '/shaders/screen.vert', '/shaders/coastline.vert', '/shaders/gabriel.vert', '/shaders/newSimulation.vert', 
     '/shaders/particlePoolUpdate.vert', '/shaders/ribbonParticle_instancedLineStrips.vert', '/shaders/debug.vert'

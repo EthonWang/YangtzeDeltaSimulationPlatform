@@ -10,10 +10,12 @@
 <script setup>
 import {ref} from "vue";
 import VideoCase from "components/Cases/videoCase";
+import {useStore} from "vuex"
+const dataServer=useStore().getters.devIpAddress_backup
 const videoPath1 = ref("")
-videoPath1.value = "/back/store/themeImg/jiajiang1.62d7b3ed443c3b60743a527a.mp4";
+videoPath1.value = dataServer+"/store/themeImg/jiajiang1.62d7b3ed443c3b60743a527a.mp4";
 const videoPath2 = ref("")
-videoPath2.value = "/back/store/themeImg/jiajiang2.62d7b630443c3b60743a528c.mp4";
+videoPath2.value = dataServer+"/store/themeImg/jiajiang2.62d7b630443c3b60743a528c.mp4";
 </script>
 
 <style scoped>

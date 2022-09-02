@@ -1,5 +1,6 @@
 <template>
   <div class="file" @click="choose()">
+  <div v-if="file.type!='folder'">
     <span
       style="position: absolute; right: 10%; top: 10%; color: rgb(61, 204, 56)"
       v-if="file.publicBoolean"
@@ -10,6 +11,8 @@
       v-if="!file.publicBoolean"
       ><el-icon><Lock /></el-icon
     ></span>
+  </div>
+    
     <img
       src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKgAAACoCAMAAABDlVWGAAAAwFBMVEUAAAD/2Ur/20z/203/40X//3j/yiX/zCv/3lD/2kv/yib/yiX/yib/2kr/2kr/yiX/2kv/2kv/yyb/2UT/1Tv/20H/yib/2kr/yib/2kr/yiX/20v/2kr/3Uz/5Vj/2kr/ySX/ySX/yiX/2Ur/20v/2Uz/ySj/zSf/20z/ySb/2kv/2Ur/2Ur/2Uv/yiX/0DX/yib/2Uz/yiX/yyf/20v/ySf/2kr/ySf/20z/2Uz/yyb/4k7/////2Ur/ySX/zS9+lhVZAAAAPXRSTlMAr1RGBQKWFw2o9PHt69/YiYBpKyIT+/bLwIFfWDMJ8OPHv7ePbEdBP+DU0tG8uKmnopCEd3duVU02NhoBsiz/2wAAAaxJREFUeNrt1GdSIzEQQOE2nuhsnCNhgWVzDoQW978V8J/CowkSqnrfCV5J3S0AAAAAAAAAXhVdJefDjjlg3vuw/L7+l4ovadI1NoY/b8WDaN0x1oZ/MnEsPTOldH/NxKXJqSmrdxyLM+mpqWA5FUeiM1NJ7724sTYVzY/FhbRjKksiaV5iavC1+dKoa+qQSNOuTD1emNM3+PNP5k3v/rmpSW8qjRqauixjadLzcQpiTE19uqk06KFG39oHXU8yKUedO8m3WRChTxbjLIxQ1f42kFDVURxIqLbiQEJ1FEqobkIJ7WeBhOoolNDFLJBQ3YQS2goldBEHEqp3oYTuQgn9H0roEaGEEkoooYQSSiihhBZHKKGEEkoooYQSSqgNQgkllFBCCSWUUEJtEEoooYQSSiihhBJqg9DD+urVtRT1Wb2aSlHv1Ku9FDVWnz5JYRP1aSzFDdSjnRR3qf6sxELk8UlvxMaR+pKLnQv142MmdmI/t7Q/FVv7XN0bTMTe/VhdW82klN0XdWmwiaWsdn6ijqwu91JF1P47+tFqVn7xezsTAAAAAAAAAK97BM+evOtMrXyJAAAAAElFTkSuQmCC"
       v-if="file.type == 'folder'"
@@ -84,27 +87,42 @@
         @keyup.enter="createFolder()"
         style="text-align: center"
       /><el-button
+      
         style="
-          width: 10px;
+          width: 40px;
           border: 0;
+          font-size: 30px;
           position: absolute;
           background: transparent;
-          right: 0;
+          right: 5px;
+          top: 10px;
+          color:hsl(140,100%,40%);
         "
         @click="createFolder()"
-        ><el-icon><FolderChecked /></el-icon
-      ></el-button>
-      
+        ><el-icon><CircleCheck /></el-icon></el-button>
+      <el-button
+        style="
+          width: 40px;
+          border: 0;
+          font-size: 30px;
+          position: absolute;
+          background: transparent;
+          left: -5px;
+          top: 10px;
+          color:hsla(20,100%,40%,0.8);
+        "
+        @click="emit('refresh')"
+        ><el-icon><CircleClose /></el-icon></el-button>
     </span>
     <div v-if="file.rename" style="position: absolute;top: 200px;">
       <el-tree-select
       
-        :popper-append-to-body="false"
+        :popper-append-to-body="true"
         v-model="file.problemTags"
         :data="options"
         multiple
         show-checkbox
-        placeholder="选择科学问题"
+        placeholder="选择科学专题"
       />
     </div>
     

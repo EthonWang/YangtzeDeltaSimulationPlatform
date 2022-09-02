@@ -1,9 +1,9 @@
 <template>
   <el-drawer
       v-model="newCasesVisible"
-      :title="title" 
+      :title="title"
       width="40%"
-      style="width: 40%;"
+      style="width: 50%;"
       destroy-on-close="true"
       @open="showCase"
   >
@@ -81,13 +81,13 @@
     </el-row>
     <template v-for="(item,key) in editingCases.description" :key="key">
       <el-row v-if="item.type == 'text'" class="editDialogRow">
-        <span>问题描述:</span>
+        <span>专题描述:</span>
         <el-col :span="20" :offset="1" style="align-items: center">
           <el-input
               style="width: 90%"
               v-model="item.value"
               type="textarea"
-              placeholder="请输入问题描述"
+              placeholder="请输入专题描述"
               :autosize="{ minRows: 2, maxRows: 4 }"
           ></el-input>
           <el-icon
@@ -108,7 +108,7 @@
             :offset="1"
         >
           <el-input
-              placeholder="请上传案例缩略图"
+              placeholder="图片描述"
               v-model="item.imageName"
               style="width: 90%"
           ></el-input>
@@ -148,20 +148,43 @@
     <el-row class="editDialogRow">
       <el-button :icon="Plus" @click="newCaseDataList"  plain>添加-移除数据条目</el-button>
     </el-row>
-    <el-table v-show="dataListVisible" :data="tableData" table-layout="fixed" style="width: 100%" max-height="300" :row-key="Math.random()">
-      <el-table-column prop="name" label="数据名称" />
-      <el-table-column prop="imgWebAddress" label="缩略图"  width="80">
-        <template #default="scope">
-          <el-image style="width: 100%" :src="dataServer+scope.row.imgWebAddress" :preview-src-list="[dataServer+scope.row.imgWebAddress]"/>
+    <el-table
+        v-show="dataListVisible" :data="tableData" table-layout="fixed" style="width: 100%" max-height="300" :row-key="Math.random()"
+        :default-sort="{prop: 'isAddToCase',order: 'descending'}"
+    >
+      <el-table-column prop="name" label="数据名称" >
+        <template #header>
+          <el-input v-model="searchName" size="small" placeholder="请输入数据名称..." clearable>
+            <template #append>
+              <el-button size="small" :icon="Search"  @click="searchByName"/>
+            </template>
+          </el-input>
         </template>
       </el-table-column>
-      <el-table-column label="操作" fixed="right" width="100">
+      <el-table-column prop="imgWebAddress" label="缩略图"  width="80">
+        <template #default="scope">
+          <el-image style="width: 100%;height: 50px" :src="scope.row.imgWebAddress"
+                    v-if="scope.row.imgWebAddress.indexOf('http://') >= 0" />
+          <el-image v-else style="width: 100%" :src="dataServer+scope.row.imgWebAddress" />
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" fixed="right" width="100" prop="isAddToCase">
         <template #default="scope">
           <el-button v-if="!scope.row.isAddToCase"   type="primary" size="small" @click="addToCase(scope.row)" >添加</el-button>
           <el-button v-else  type="warning" size="small" @click="removeCaseData(scope.$index,scope.row)">移除</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+        v-show="dataListVisible"
+        style="margin-top: 10px"
+        small
+        background
+        layout="prev, pager, next"
+        :total = "totalData"
+        v-model:current-page = "currentPage"
+        @current-change="pageChange"
+    />
     <el-divider>相关资料</el-divider>
     <el-row class="editDialogRow">
       <el-button :icon="Plus" @click="newRelatedResource"  plain>添加相关资料</el-button>
@@ -256,7 +279,7 @@
 <script setup>
 import {defineProps, defineEmits, defineExpose, ref, onMounted} from "vue";
 import {useStore} from "vuex";
-import {Plus,Upload} from '@element-plus/icons-vue'
+import {Plus,Upload,Search} from '@element-plus/icons-vue'
 import axios from "axios";
 const store = useStore();
 const dataServer = store.getters.devIpAddress;
@@ -302,14 +325,26 @@ const removeCaseData = (index,row) => {
   });
   editingCases.value.resourceDataList = newDataList;
 }
+//根据名称查询数据
+const searchName = ref("");
+const searchByName = () => {
+  getResourceData();
+}
+//表格分页配置
+const currentPage = ref(1);
+const totalData = ref(700);
+const pageChange = (currentP) => {
+  currentPage.value = currentP;
+  getResourceData();
+}
 //根据专题查询所有数据列表
 const getResourceData = () => {
   tableData.value = [];
   let DTO = {
     asc: false,
-    page: 1,
-    pageSize: 16,
-    searchText: "",
+    page: currentPage.value,
+    pageSize: 10,
+    searchText: searchName.value,
     sortField: "createTime",
     tagClass: "problemTags",
     tagName: props.theme,
@@ -326,6 +361,7 @@ const getResourceData = () => {
   }).then(
       (res) => {
         let resourceData = res.data.data.content;
+        totalData.value = res.data.data.totalElements;
         for(let i in resourceData){
           let item = resourceData[i];
           tableData.value.push({
@@ -349,9 +385,6 @@ const getResourceData = () => {
         console.log(err);
       }
   );
-}
-const deleteCaseDataList = (key) => {
-  editingCases.value.dataList.splice(key,1)
 }
 //作者信息的创建与删除
 const newCaseAuthor = () => {

@@ -8,9 +8,16 @@
       <el-card class="resListCard">
         <div class="imageBox">
           <el-image
+            :src="item.imgWebAddress"
+            class="image"
+            :fit="contain"
+            v-if="item.imgWebAddress.indexOf('http://') >= 0"
+          ></el-image>
+          <el-image
             :src="dataServer + item.imgWebAddress"
             class="image"
             :fit="contain"
+            v-else
           ></el-image>
         </div>
         <div style="padding: 7px">
@@ -21,14 +28,37 @@
             type="primary"
             effect="dark"
             @click="showMapCard(item)"
+            v-if="item.visualizationBoolean"
+            >查看</el-button
+          >
+          <el-button
+            class="downloadButton"
+            style="margin-left: 2px"
+            type="primary"
+            effect="dark"
+            @click="showMapCard(item)"
+            v-if="item.md5 != undefined && item.md5 != ''"
             >查看</el-button
           >
           <el-button
             type="primary"
-            v-if="'fileSize' in item"
+            v-if="'fileSize' in item && item.visualizationBoolean"
             class="downloadButton"
             @click="downloadRes(item)"
             >下载</el-button
+          >
+          <el-button
+            class="downloadButton"
+            style="margin-left: 2px"
+            type="primary"
+            effect="dark"
+            @click="opemWebUrlData(item.fileWebAddress)"
+            v-if="
+              !item.visualizationBoolean &&
+              item.fileWebAddress != '' &&
+              item.md5 == undefined
+            "
+            >查看</el-button
           >
           <div class="fontSet" style="margin: 5px 0" v-if="'fileSize' in item">
             <span>{{ filterSizeType(item.fileSize) }}</span
@@ -43,7 +73,15 @@
     </el-col>
   </el-row>
   <el-row class="resListPagination">
-    <el-pagination background layout="prev, pager, next" :total="5">
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :total="props.dataNum"
+      :page-size="16"
+      @current-change="pageChange"
+      @next-click="pageNext"
+      @prev-click="pagePrev"
+    >
     </el-pagination>
   </el-row>
   <el-dialog
@@ -90,7 +128,7 @@
     </template>
   </el-dialog>
   <el-dialog v-model="show_task" title="添加数据到实验室" width="30%">
-    <h3 style="margin-bottom: 15px">选择要添加的资源</h3>
+    <h3 style="margin-bottom: 15px">选择要添加的数据(必选)</h3>
     <el-scrollbar max-height="35vh">
       <el-checkbox-group
         v-model="selectedVisualDataItems"
@@ -126,6 +164,9 @@
       />
     </div>
     <el-divider border-style="dashed" />
+    <h3 v-if="selectedVisualDataItems.length >= 1">
+      是否设置为数据集？（打包数据，若有多数据建议选上）
+    </h3>
     <el-checkbox
       v-if="selectedVisualDataItems.length >= 1"
       v-model="setSelectedVisualDataItemsDataSet"
@@ -136,16 +177,14 @@
     />
     <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
     <el-button
-      v-for="(task, index) in task_list"
+      v-for="(task) in task_list"
       :key="task"
       @click="addDataToTask(task)"
       style="margin: 5px"
     >
       <el-icon><Monitor /></el-icon> &nbsp;
-      <span v-if="index == 0" style="color: hsl(210, 100%, 40%)">{{
-        task.name
-      }}</span
-      ><span v-else>{{ task.name }}</span></el-button
+      
+      ><span>{{ task.name }}</span></el-button
     >
     <template #footer>
       <span class="dialog-footer">
@@ -157,7 +196,8 @@
 </template>
 
 <script setup>
-import { onMounted, ref, defineProps, computed } from "vue";
+import axios from "axios";
+import { onMounted, ref, defineProps, computed, defineEmits } from "vue";
 import { ElMessageBox } from "element-plus";
 import MapboxCard from "../Mapbox/MapboxCard.vue";
 import { ElMessage } from "element-plus";
@@ -167,7 +207,7 @@ import { randomInt } from "d3-random";
 import { Decrypt } from "@/util/codeUtil";
 
 const store = useStore();
-const dataServer = store.getters.devIpAddress_backup;
+const dataServer = store.getters.devIpAddress;
 const userInfo = JSON.parse(Decrypt(localStorage.getItem("userInfo")));
 const task_api = new taskApi();
 const show_task = ref(false);
@@ -178,6 +218,8 @@ const selectedVisualDataItemsRange = ref([0, 0]);
 const setSelectedVisualDataItemsDataSet = ref(false);
 const mapCardDialogVisible = ref(false);
 const selectedRes = ref({});
+const changPageCount = ref(0);
+const emit = defineEmits(["pageChange", "pageNext", "pagePrev"]);
 task_api.getTaskList(userInfo.id).then((res) => {
   for (let i = res.data.data.length - 1; i >= 0; i--) {
     task_list.value.push(res.data.data[i]);
@@ -186,10 +228,28 @@ task_api.getTaskList(userInfo.id).then((res) => {
 
 const props = defineProps({
   resList: Array,
+  dataNum: Number,
 });
+
+const pageChange = (value) => {
+  console.log(value);
+  if (value != 1 || changPageCount.value > 0) {
+    emit("pageChange", value);
+    changPageCount.value = changPageCount.value + 1;
+  }
+};
+const pageNext = (value) => {
+  emit("pageNext", value);
+};
+const pagePrev = (value) => {
+  emit("pagePrev", value);
+};
 const addDataToTask = (task) => {
   console.log("selectedRes.value is :", selectedRes.value);
-  if ("mdl" in selectedRes.value) {
+  if (selectedVisualDataItems.value.length <= 0) {
+    ElMessage.error("您未选择数据");
+    return
+  } else if ("mdl" in selectedRes.value) {
     // console.log(234);
     let data = selectedRes.value;
     data["simularTrait"] = "model";
@@ -207,7 +267,10 @@ const addDataToTask = (task) => {
       dataSet.description = selectedRes.value.description;
       dataSet.id =
         selectedRes.value.id + Math.floor(Math.random() * 10 + 1).toString();
-      dataSet.name = selectedRes.value.name + "_dataSet_" + Math.random().toString(36).substr(2,4);
+      dataSet.name =
+        selectedRes.value.name +
+        "_dataSet_" +
+        Math.random().toString(36).substr(2, 4);
       dataSet.normalTags = selectedRes.value.normalTags;
       dataSet.problemTags = selectedRes.value.problemTags;
       dataSet.publicBoolean = selectedRes.value.publicBoolean;
@@ -277,11 +340,22 @@ const showMapCard = function (info) {
   selectedRes.value = {};
   selectedRes.value = info;
   if ("fileSize" in info) {
+    axios({
+      url: dataServer + "/resDataView/" + info.id,
+      method: "get",
+    }).then(
+      (res) => {
+        console.log(res.data.data);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
     setTimeout(() => {
       mapCardDialogVisible.value = true;
     }, 200);
   } else {
-    show_task_model.value=true
+    show_task_model.value = true;
   }
 };
 const downloadRes = function (item) {
@@ -296,11 +370,33 @@ const downloadRes = function (item) {
     });
   }
 };
+const opemWebUrlData = (url) => {
+  ElMessageBox.confirm(
+    "即将前往“国家地球科学数据中心-长江三角洲分中心”，您可下载数据后上传到 [ 实验室 - 我的数据 ] 中使用。",
+    "外站数据",
+    {
+      confirmButtonText: "前往",
+      cancelButtonText: "取消",
+    }
+  )
+    .then(() => {
+      turn2blank(url);
+    })
+    .catch(() => {
+      ElMessage({
+        type: "info",
+        message: "取消操作",
+      });
+    });
+};
+const turn2blank = function (url) {
+  window.open(url);
+};
 const go2Model = function () {
   location.href = "/model";
 };
 const filterSizeType = function (value) {
-  if (value === 0) return "0 B";
+  if (value === "0") return "unknown";
   let k = 1024;
   let sizes = ["B", "KB", "MB", "GB"];
   let i = Math.floor(Math.log(value) / Math.log(k));
@@ -402,7 +498,7 @@ const guideMarks = computed(() => {
   // border-top: solid 0.1px rgba(176, 174, 174, 0.445);
 }
 .cardTitle {
-  // color: white;
+  // color: hsl(0,0,98%);
   height: 30px;
   line-height: 30px;
   width: 62%;

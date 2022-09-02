@@ -69,6 +69,7 @@
             @comeIn_f="comeIn(file)"
             @create-folder_f="createFolder(index)"
             @contextmenu.prevent="rightClick($event, file, index)"
+            @refresh="refresh"
           ></FileItem>
         </div>
 
@@ -83,9 +84,10 @@
       class="right-click"
       :file="show_file"
       :num="choose_num"
-      @comeIn_r="comeIn(file)"
+      @comeIn_r="comeIn"
       @deleteData="deleteData"
       @downloadData="downloadData"
+      @showMoveSpan="showMoveSpan()"
     ></RightClick>
     <div class="file-detail-controller">
       <FileDetail
@@ -313,13 +315,13 @@ if (nowTask.value) {
 
 const addDataToTask = (task) => {
   let dataList = [];
-  for (let i in choosing_files.value.value) {
-    if (choosing_files.value.value[i].type != "folder") {
-      let data = choosing_files.value.value[i];
+  for (let i in choosing_files.value) {
+    if (choosing_files.value[i].type != "folder") {
+      let data = choosing_files.value[i];
       data["source"] = "cloud";
       data["type"] = "data";
       data["visualizationBoolean"] = false;
-      data["visualType"] = choosing_files.value.value[i].name.split(".")[1];
+      data["visualType"] = choosing_files.value[i].name.split(".")[1];
       data["geoType"] = "line";
       dataList.push(data);
     }
@@ -454,7 +456,10 @@ const now_id = ref(userInfo.id);
 var last_id = [];
 const createFolder = (index = -1) => {
   if (index != -1) {
-    api
+    if(file_data_choose.value[index].name==""){
+      ElMessage('请输入文件夹名')
+    }else{
+      api
       .createFolder(
         now_id.value,
         file_data_choose.value[index].name,
@@ -465,6 +470,8 @@ const createFolder = (index = -1) => {
         refresh();
         return;
       });
+    }
+    
   }
   if (index == -1) {
     file_data_choose.value.unshift({
@@ -558,6 +565,7 @@ const refresh = () => {
   }
 };
 const comeIn = (file) => {
+  console.log(file);
   last_id.push(now_id.value);
   now_id.value = reactive(file.id);
   breadcrumbs.push(file.name);
@@ -684,7 +692,7 @@ const moveData = (targetFolder) => {
     choosing_files.value[i].parentId = targetFolder.id;
     api.editFile(choosing_files.value[i]).then((res) => {});
     i++;
-    if (i == choosing_files.value.value.length) {
+    if (i == choosing_files.value.length) {
       setTimeout(() => {
         loading.value = false;
         refresh();
@@ -746,7 +754,7 @@ const moveData = (targetFolder) => {
   transition: all 1s;
   border: 2px solid rgb(15, 177, 0);
   background-color: rgba(15, 177, 0, 0.15);
-  box-shadow: 0px 0px 6px #00e6f6;
+  box-shadow: 0px 0px 6px #006bf6;
 }
 /deep/.el-loading-mask {
   height: 100%;

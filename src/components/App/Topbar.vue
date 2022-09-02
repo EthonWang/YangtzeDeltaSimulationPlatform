@@ -28,16 +28,20 @@
       "
     />
     <div class="head">
+      
       <!-- <span class="logo">长 三 角 模 拟 器</span> -->
+      
+      <img style="width: 150px;margin-left: 25px;margin-right: 15px;" src="@/assets/app/logo.png" alt="" />
       <img
         src="../../assets/globle.svg"
         id="logo"
         style="
           transition: all 1s;
           height: 70%;
-          margin-left: 1.5vw;
+          margin-left: 15px;
+          margin-right: 15px;
           margin-top: 0px;
-          color: white;
+          color: hsl(0,0,98%);
           position: relative;
           z-index: 5;
         "
@@ -86,6 +90,12 @@ import { useStore } from "vuex";
 import { Encrypt, Decrypt } from "@/util/codeUtil";
 import { ElLoading } from "element-plus";
 
+const props = defineProps({
+  background_show: ref(Boolean),
+});
+const router = useRouter();
+const route = useRoute();
+
 const graphapi = new graphAPI();
 const store = useStore();
 const devServer = ref(store.getters.devIpAddress_backup);
@@ -98,11 +108,7 @@ if (user_info != null && user_info != undefined) {
   });
 }
 
-const props = defineProps({
-  background_show: ref(Boolean),
-});
-const router = useRouter();
-const route = useRoute();
+
 const barList = reactive(
   router.options.routes.filter((item) => item.isBar == true)
 );
@@ -159,7 +165,7 @@ watch(
         }
       }, 201);
       let fromHome = localStorage.getItem("fromHome");
-      if (fromHome != null && fromHome != undefined) {
+      if (fromHome) {
         fromHome = Decrypt(fromHome);
         if (fromHome == "true") {
           let loading = ElLoading.service({
@@ -167,8 +173,9 @@ watch(
             text: "清理缓存中...",
             background: "rgba(0, 0, 0, 0.7)",
           });
+          localStorage.setItem("fromHome", Encrypt("false"));
           setTimeout(() => {
-            localStorage.setItem("fromHome", Encrypt("false"));
+            
             location.reload();
           }, 700);
         }
@@ -241,9 +248,9 @@ setTimeout(searchIndexInRoutes, 100);
 .topbar {
   // margin-left: 20px;
   width: 100%;
-  position: absolute;
+  position: relative;
   // left: calc(17% + 50px);
-  left: 4vw;
+  // left: 4vw;
   transition: all 1s;
 }
 
@@ -346,11 +353,11 @@ setTimeout(searchIndexInRoutes, 100);
 .head {
   width: 100%;
   height: 100%;
-  color: white;
+  color: hsl(0,0,98%);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  position: relative;
+  justify-content: flex-start;
+  position: absolute;
   z-index: 10;
   // transition: all 2s;
 }
@@ -410,13 +417,13 @@ setTimeout(searchIndexInRoutes, 100);
 
 .head .main-user i {
   font-size: 30px;
-  color: white;
+  color: hsl(0,0,98%);
   font-size: 28px;
 }
 
 .head .main-user p {
   margin-left: 10px;
   font-size: 20px;
-  color: white;
+  color: hsl(0,0,98%);
 }
 </style>

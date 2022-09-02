@@ -1,3 +1,6 @@
+<!-- 主题：专题展示 -->
+<!-- 设计人：于晶晶、张子卓 -->
+<!-- 功能：展示20个科学专题专题及其对应的数据、案例 -->
 <template>
   <div class="about">
     <el-row style="margin-top: 5vh">
@@ -52,6 +55,7 @@
                 width: 100%;
                 flex-wrap: wrap;
               "
+              v-if="themeCase.length != 0"
             >
               <template v-for="(item, key) in themeCase" :key="key">
                 <div class="caseCard">
@@ -67,13 +71,7 @@
                       <span>打开案例</span>
                     </div>
                   </div>
-                  <div
-                    style="
-                      display: flex;
-                      justify-content: center;
-                      padding: 0.5rem;
-                    "
-                  >
+                  <div class="cardText">
                     <el-tooltip
                       effect="dark"
                       placement="bottom"
@@ -91,6 +89,7 @@
                 </div>
               </template>
             </div>
+            <div class="descriptionText" v-else>待补充</div>
             <div class="dataBlock">
               <edit-case-draw
                 ref="createCaseRef"
@@ -120,7 +119,15 @@
                     <el-image
                       class="caseImage"
                       @click="startSearch(item.name)"
+                      :src="item.imgWebAddress"
+                      v-if="item.imgWebAddress.indexOf('http://') >= 0"
+                      fit="fill"
+                    ></el-image>
+                    <el-image
+                      class="caseImage"
+                      @click="startSearch(item.name)"
                       :src="dataServer + item.imgWebAddress"
+                      v-else
                       fit="fill"
                     ></el-image>
                     <div class="imageMask">
@@ -148,7 +155,7 @@
             </div>
           </div>
           <div>
-            <h3 class="typeName">问题描述</h3>
+            <h3 class="typeName">专题描述</h3>
             <el-divider></el-divider>
             <div class="descriptionBlock">
               <template
@@ -277,7 +284,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-divider>问题描述</el-divider>
+      <el-divider>专题描述</el-divider>
       <el-row style="justify-content: space-around; margin-bottom: 10px">
         <el-button
           :icon="Plus"
@@ -296,13 +303,13 @@
       </el-row>
       <template v-for="(item, key) in description" :key="key">
         <el-row v-if="item.type == 'text'" class="editDialogRow">
-          <span>问题描述:</span>
+          <span>专题描述:</span>
           <el-col :span="20" :offset="1" style="align-items: center">
             <el-input
               style="width: 90%"
               v-model="item.value"
               type="textarea"
-              placeholder="请输入问题描述"
+              placeholder="请输入专题描述"
               :autosize="{ minRows: 2, maxRows: 4 }"
             ></el-input>
             <el-icon
@@ -402,8 +409,15 @@ if (user_info) {
 const mdOpenIcon = require("@/assets/img/icon/md-open.png");
 
 onMounted(() => {
-  thematicName.value = "流域生态环境演变";
-  getThemeInfo("流域生态环境演变", "流域水循环及其驱动机制");
+  let show_name = localStorage.getItem("show_themetic");
+  if (show_name) {
+    show_name = Decrypt(show_name);
+    thematicName.value = show_name.replace("\n", "");
+    getThemeInfo(show_name, findParentName(show_name));
+  } else {
+    thematicName.value = "流域生态环境演变";
+    getThemeInfo("流域生态环境演变", "流域水循环及其驱动机制");
+  }
 });
 
 const modelTreeData = ref([]);
@@ -426,6 +440,10 @@ modelTreeData.value = [
       },
       {
         label: "湖泊水环境监测",
+        type: "subProblem",
+      },
+      {
+        label: "其他流域专题",
         type: "subProblem",
       },
     ],
@@ -453,25 +471,8 @@ modelTreeData.value = [
         label: "土壤氮转化过程及其环境效应",
         type: "subProblem",
       },
-    ],
-  },
-  {
-    label: "灾害响应与治理",
-    children: [
       {
-        label: "台风与风暴潮",
-        type: "subProblem",
-      },
-      {
-        label: "洪涝水环境灾害",
-        type: "subProblem",
-      },
-      {
-        label: "地质灾害",
-        type: "subProblem",
-      },
-      {
-        label: "大气污染",
+        label: "其他环境或演化专题",
         type: "subProblem",
       },
     ],
@@ -507,6 +508,35 @@ modelTreeData.value = [
         label: "城市群发展",
         type: "subProblem",
       },
+      {
+        label: "其他城市或人地关系专题",
+        type: "subProblem",
+      },
+    ],
+  },
+  {
+    label: "灾害响应与治理",
+    children: [
+      {
+        label: "台风与风暴潮",
+        type: "subProblem",
+      },
+      {
+        label: "洪涝水环境灾害",
+        type: "subProblem",
+      },
+      {
+        label: "地质灾害",
+        type: "subProblem",
+      },
+      {
+        label: "大气污染",
+        type: "subProblem",
+      },
+      {
+        label: "其他灾害专题",
+        type: "subProblem",
+      },
     ],
   },
 ];
@@ -524,6 +554,8 @@ const getAllCases = () => {
         thumbnail: item.thumbnail,
       });
     });
+
+
   });
 };
 //添加案例到专题
@@ -884,20 +916,12 @@ const findParentName = (childName) => {
   }
   return "流域水循环及其驱动机制";
 };
-setTimeout(() => {
-  let show_name = localStorage.getItem("show_themetic");
-  if (show_name) {
-    show_name = Decrypt(show_name);
-    thematicName.value = show_name.replace("\n", "");
-    getThemeInfo(show_name, findParentName(show_name));
-  }
-}, 600);
 </script>
 
 <style lang="less" scoped>
 .about {
   top: 65px;
-  background-color: white;
+  background-color: hsl(0, 0%, 98%);
   overflow: scroll;
 }
 @imageHeight: 100px;
@@ -927,7 +951,7 @@ setTimeout(() => {
   top: 0;
   right: 0;
   background-color: rgba(0, 0, 0, 0.7);
-  color: white;
+  color: hsl(0, 0%, 98%);
   pointer-events: none;
   transition: opacity 200ms linear;
   z-index: 100;
@@ -986,6 +1010,7 @@ setTimeout(() => {
 
 .descriptionText {
   text-indent: 2em;
+  font-size: 1.2em;
 }
 
 .imageBlock {

@@ -39,13 +39,13 @@
         >
       </el-row>
     </div>
-    <el-row
+    <!-- <el-row
       class="tagContent fontSet borderTop"
       style="font-weight: 800; font-size: 20px; margin-top: 10px"
     >
       <Icon type="ios-more-outline"  class="iconStyle"/>
       更多操作
-    </el-row>
+    </el-row> -->
   </div>
 </template>
 
@@ -100,10 +100,10 @@ export default {
       //     "长三角城市化与人地关系协调发展",
       //   ],
       // },
-      {
-        name: "其他",
-        list: ["学术研究", "说明文档"],
-      },
+      // {
+      //   name: "其他",
+      //   list: ["学术研究", "说明文档"],
+      // },
     ];
     const clearTagClick = function () {
       let emitData = [];
@@ -164,7 +164,7 @@ export default {
   /* height: 45px; */
   line-height: 40px;
   background: hsla(220, 100%, 5%, 0);
-  /* background-color: white; */
+  /* background-color: hsl(0,0,98%); */
   /* border: solid 1px black; */
 }
 .tagSpan {
@@ -176,6 +176,7 @@ export default {
 .clickTitle {
   font-size: 18px !important;
   font-weight: 500;
+  font-style:italic;
 }
 .fontSet {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",

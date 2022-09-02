@@ -24,9 +24,9 @@ import UserFunction from "@/components/User/UserFunction.vue";
 .user-space {
     position: absolute;
     width: 100%;
-    height: 93vh;
+    height: calc(100vh - 65px);
     top: 65px;
-    background-color: white;
+    background-color: hsl(0, 0%, 98%);
     overflow-y: hidden;
 }
 

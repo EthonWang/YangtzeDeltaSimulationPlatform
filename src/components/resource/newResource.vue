@@ -229,14 +229,38 @@ h1 {
             </div>
             <div v-if="formInline.resType != 'model'"> 
               <Tag style="cursor: pointer" @click="addTag('地形')">地形</Tag>
+              <Tag style="cursor: pointer" @click="addTag('地貌')"
+                >地貌</Tag
+              >
               <Tag style="cursor: pointer" @click="addTag('土壤')">土壤</Tag>
+              <Tag style="cursor: pointer" @click="addTag('湖泊')"
+                >湖泊</Tag
+              >
               <Tag style="cursor: pointer" @click="addTag('海洋')">海洋</Tag>
               <Tag style="cursor: pointer" @click="addTag('气候')">气候</Tag>
+              <Tag style="cursor: pointer" @click="addTag('植被')"
+                >植被</Tag
+              >
               <Tag style="cursor: pointer" @click="addTag('生态')">生态</Tag>
               <Tag style="cursor: pointer" @click="addTag('地质')">地质</Tag>
               <Tag style="cursor: pointer" @click="addTag('水文')">水文</Tag>
+              <Tag style="cursor: pointer" @click="addTag('农业')"
+                >农业</Tag
+              >
               <Tag style="cursor: pointer" @click="addTag('社会经济')"
                 >社会经济</Tag
+              >
+              <Tag style="cursor: pointer" @click="addTag('基础地理')"
+                >基础地理</Tag
+              >
+              <Tag style="cursor: pointer" @click="addTag('土地利用/覆盖')"
+                >土地利用/覆盖</Tag
+              >
+              <Tag style="cursor: pointer" @click="addTag('人口')"
+                >人口</Tag
+              >
+              <Tag style="cursor: pointer" @click="addTag('其他数据')"
+                >其他数据</Tag
               >
             </div>
             <div v-if="formInline.resType == 'model'"> 

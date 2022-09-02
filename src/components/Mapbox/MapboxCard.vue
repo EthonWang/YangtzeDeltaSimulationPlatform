@@ -292,7 +292,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .mapbox-page {
   /* position: absolute; */
   width: 100%;
@@ -307,13 +307,16 @@ export default {
   width: 100%;
   height: 100%;
 }
+/deep/.el-card{
+  background: hsl(0,0,98%);
+}
 .info-card {
   position: absolute;
   left: 20px;
   top: 75px;
   width: 27%;
   height: 45vh;
-  background: white !important;
+  background: hsl(0,0,98%) !important;
 }
 .scrollbar-demo-item {
   display: flex;

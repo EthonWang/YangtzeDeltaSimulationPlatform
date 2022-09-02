@@ -15,9 +15,28 @@
         <div class="blue"></div>
         <div class="text">Power Generation(TWh)</div>
       </div>
-      <div class="lgd">
+      <div class="lgd" style="margin-bottom: 5px">
         <div class="red"></div>
         <div class="text">Volume of Carbon Miligation(Million ton)</div>
+      </div>
+      <hr />
+      <div class="map-legend">
+        <div class="color-bar">
+          <div class="c1"></div>
+          <div class="c2"></div>
+          <div class="c3"></div>
+          <div class="c4"></div>
+          <div class="c5"></div>
+          <div class="c6"></div>
+        </div>
+        <div class="descrip">
+          <div class="first">N/A</div>
+          <div>0-10</div>
+          <div>10-15</div>
+          <div>15-20</div>
+          <div>20-40</div>
+          <div>40-80</div>
+        </div>
       </div>
     </div>
     <!-- <div id="chart" ref="chart" style="display：none"></div> -->
@@ -280,7 +299,7 @@ export default {
             width: 1,
           }),
           fill: new Fill({
-            color: "rgba(232,175,105,1)",
+            color: "rgba(218,133,48,1)",
           }),
         });
       } else if (InstalledC > 40 && InstalledC <= 80) {
@@ -446,7 +465,7 @@ export default {
   bottom: 0px;
   right: 0px;
   width: 300px;
-  height: 180px;
+  height: 200px;
   background-color: rgba(255, 255, 255);
   box-shadow: 0 0 15px rgb(177, 177, 177);
   border-radius: 5px;
@@ -491,5 +510,67 @@ export default {
   margin: auto;
   font-weight: 300;
   font-size: 18px;
+}
+/deep/.map-legend {
+  width: 100%;
+  height: 50px;
+}
+/deep/.color-bar {
+  display: flex;
+  margin-top: 5px;
+  margin-left: 25px;
+}
+/deep/.c1 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(225, 225, 225, 1);
+}
+/deep/.c2 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(254, 247, 230, 1);
+}
+/deep/.c3 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(241, 213, 165, 1);
+}
+/deep/.c4 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(232, 175, 105, 1);
+}
+/deep/.c5 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(218, 133, 48, 1);
+}
+/deep/.c6 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(210, 86, 1, 1);
+}
+/deep/.descrip {
+  display: flex;
+  margin-left: 18px;
+  // writing-mode: vertical-lr;
+}
+/deep/.descrip div {
+  margin-left: 11px;
+}
+/deep/.first {
+  margin-right: 5px;
 }
 </style>

@@ -42,6 +42,7 @@
           placeholder="3D视图"
           :popper-append-to-body="false"
           @change="changeview"
+          :disabled="!isplaying"
         >
           <el-option
             v-for="item in options"
@@ -56,6 +57,7 @@
           v-model="this.time"
           :placeholder="this.time + 'Ma'"
           :popper-append-to-body="false"
+          :disabled="!isplaying"
           @change="changetime"
         >
           <el-option
@@ -69,7 +71,7 @@
         </el-select>
       </div>
       <div class="timebar">
-        <span>{{ time }}MA</span>
+        <span>时间：{{ time }}MA</span>
       </div>
       <div class="info">
         <a href="javascript:;" @click="changestatus">&lt;</a>
@@ -98,6 +100,18 @@
         </div>
       </div>
       <div class="location">lon:{{ lon }},lat:{{ lat }}</div>
+      <div id="time-slider" style="border-radius: 15px">
+        <el-slider
+          v-model="time_slider"
+          @change="sliderChange"
+          @input="sliderInput"
+          :step="1"
+          :min="0"
+          :max="410"
+          style="width: 80%; margin: auto; left: 15px"
+        >
+        </el-slider>
+      </div>
     </div>
   </div>
 </template>
@@ -142,6 +156,7 @@ export default {
       isplaying: true,
       value: "",
       time: 410,
+      time_slider: 0,
       timer: null,
       timer2: null,
       grid: "打开格网",
@@ -176,12 +191,48 @@ export default {
     this.Init();
   },
   updated() {
+    const box = document.querySelector(".cesium-infoBox");
     const csvt = document.querySelector(".cesium-infoBox-title");
     const csbt = document.querySelector(".cesium-infoBox-camera");
     csvt.style = "font-size:20px;line-height:25px;";
     csbt.style = "display:none";
+    box.style = "top:100px";
   },
   methods: {
+    sliderInput(val) {
+      // this.time_slider = 410 - val;
+      // this.stop();
+      // this.changetime();
+      // setTimeout(function () {
+      //   this.play;
+      // }, 2000);
+      let julianDT = new Cesium.JulianDate();
+      this.viewer.clock._currentTime = Cesium.JulianDate.addSeconds(
+        Cesium.JulianDate.fromIso8601("2012-08-04T16:00:00Z"),
+        this.time_slider,
+        julianDT
+      );
+      this.viewer.zoomTo(this.viewer.dataSources.get(0));
+      this.time = 410 - this.time_slider;
+      // console.log(this.viewer.dataSources);
+      // this.requirePngData();
+      // const entity = this.viewer.dataSources._dataSources[4].entities.values[0];
+      // this.viewer.trackedEntity = entity;
+      // this.viewer.clockTrackedDataSource = this.viewer.dataSources.get(0);
+    },
+    sliderChange(val) {
+      // this.time_slider = 410 - val;
+      console.log(val);
+      let julianDT = new Cesium.JulianDate();
+      this.viewer.clock._currentTime = Cesium.JulianDate.addSeconds(
+        Cesium.JulianDate.fromIso8601("2012-08-04T16:00:00Z"),
+        this.time_slider,
+        julianDT
+      );
+      this.requirePngData();
+      // this.changetime();
+      this.time = 410 - this.time_slider;
+    },
     async requireJsonData(filepath) {
       const { data: czml } = await axios.get(filepath);
       const shp = Cesium.CzmlDataSource.load(czml);
@@ -195,9 +246,11 @@ export default {
           410 - this.time,
           julianDT
         );
+        if (result._name == "Cities") {
+          this.viewer.zoomTo(shp);
+        }
       });
       this.viewer.dataSources.add(shp);
-      this.viewer.zoomTo(shp);
     },
     async requirePngData() {
       const urll =
@@ -310,9 +363,12 @@ export default {
       var imagelayer = new Cesium.SingleTileImageryProvider({
         url: this.imageUrl,
       });
-      this.requireJsonData("/case/cities.json");
-      this.requireJsonData("/case/province.json");
-      this.requireJsonData("/case/border.json");
+      // this.requireJsonData("/case/cities.json");
+      this.requireJsonData("/case/province_pm.json");
+      this.requireJsonData("/case/polyline.json");
+      this.requireJsonData("/case/label.json");
+      this.requireJsonData("/case/plate_border.json");
+      // this.viewer.zoomTo(this.viewer.dataSources._dataSources[0]);
       imageryLayers.addImageryProvider(imagelayer, this.layercount);
       this.layercount++;
 
@@ -355,18 +411,22 @@ export default {
     },
 
     changetime() {
-      if (this.mode == "2D") {
-        this.viewer.dataSources.removeAll();
-        this.requireJsonData("/case/all_pm.json");
-        this.requirePngData();
-      } else {
-        this.viewer.dataSources.removeAll();
-        this.requireJsonData("/case/cities.json");
-        this.requireJsonData("/case/province.json");
-        this.requireJsonData("/case/border.json");
-        this.requirePngData();
-        console.log(123123123123);
-      }
+      // if (this.mode == "2D") {
+      //   this.viewer.dataSources.removeAll();
+      //   this.requireJsonData("/case/province_pm.json");
+      //   this.requireJsonData("/case/polyline.json");
+      //   this.requireJsonData("/case/label.json");
+      //   this.requireJsonData("/case/plate_border.json");
+      //   this.requirePngData();
+      // } else {
+      // this.viewer.dataSources.removeAll();
+      this.time_slider = 410 - this.time;
+      this.requireJsonData("/case/province_pm.json");
+      this.requireJsonData("/case/polyline.json");
+      this.requireJsonData("/case/label.json");
+      this.requireJsonData("/case/plate_border.json");
+      this.requirePngData();
+      // }
 
       // console.log(this.time);
     },
@@ -519,6 +579,7 @@ export default {
       this.timer = setInterval(() => {
         this.requiredata();
         this.time--;
+        this.time_slider = 410 - this.time;
         if (this.time == 0) {
           this.requirePngData();
           clearInterval(this.timer);
@@ -531,9 +592,11 @@ export default {
       this.viewer.clock.shouldAnimate = false;
       this.isplaying = true;
       clearInterval(this.timer);
+      this.requirePngData();
     },
     reset() {
       this.time = 410;
+      this.time_slider = 410 - this.time;
       this.changetime();
     },
     changeview() {
@@ -542,26 +605,26 @@ export default {
         //切换场景模式为三维球面
         this.mode = "3D";
         this.viewer.scene.morphTo3D(2);
-        this.viewer.dataSources.removeAll();
-        this.requireJsonData("/case/cities.json");
-        this.requireJsonData("/case/province.json");
-        this.requireJsonData("/case/border.json");
+        // this.viewer.dataSources.removeAll();
+        // this.requireJsonData("/case/cities.json");
+        // this.requireJsonData("/case/province.json");
+        // this.requireJsonData("/case/border.json");
       } else if (this.value === "ColumBus") {
         //切换场景模式为三维平面
         this.viewer.scene.morphToColumbusView(2);
         this.mode = "ColumBus";
-        this.viewer.dataSources.removeAll();
-        this.requireJsonData("/case/cities.json");
-        this.requireJsonData("/case/province.json");
-        this.requireJsonData("/case/border.json");
+        // this.viewer.dataSources.removeAll();
+        // this.requireJsonData("/case/cities.json");
+        // this.requireJsonData("/case/province.json");
+        // this.requireJsonData("/case/border.json");
       } else if (this.value === "2D") {
         //切换场景模式为二维地图
         this.mode = "2D";
         this.viewer.scene.morphTo2D(2);
-        this.viewer.dataSources.removeAll();
-        this.requireJsonData("/case/cities.json");
-        this.requireJsonData("/case/border.json");
-        this.requireJsonData("/case/province_pm.json");
+        // this.viewer.dataSources.removeAll();
+        // this.requireJsonData("/case/cities.json");
+        // this.requireJsonData("/case/border.json");
+        // this.requireJsonData("/case/province_pm.json");
       }
     },
   },
@@ -603,8 +666,14 @@ export default {
 }
 /deep/ .el-input__wrapper {
   background-color: #363636;
+  padding: 0;
   border: 1px solid #363636;
   margin-left: 20px;
+  color: #fff;
+}
+/deep/.el-input__suffix-inner {
+  border: 1px solid #363636;
+  background-color: #363636;
 }
 // 设置下拉框的背景颜色及边框属性；
 /deep/.el-select-dropdown {
@@ -615,7 +684,7 @@ export default {
 }
 /deep/.location {
   position: absolute;
-  bottom: 5px;
+  bottom: 20px;
   font-size: 20px;
   color: #fff;
   z-index: 99999;
@@ -675,6 +744,29 @@ export default {
 .el-button /deep/ {
   font-size: 17px;
 }
+#time-slider {
+  // text-align: center;
+  z-index: 100000;
+  position: absolute;
+  bottom: 30px;
+  width: 30%;
+  left: 35%;
+  background-color: rgba(54, 54, 54, 0.5);
+  // transform: rotate(180deg);
+}
+// .el-slider {
+//   // transform: rotate(180deg)
+//   /deep/.el-slider__bar {
+//     background-color: #e4e7ed;
+//     // transform: rotate(180deg);
+//   }
+// }
+// .el-slider {
+//   /deep/.el-slider__runway {
+//     background-color: #409eff;
+//     // transform: rotate(180deg);
+//   }
+// }
 
 // // 设置下拉框的字体属性及背景颜色；
 // .el-select-dropdown__item {

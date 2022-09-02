@@ -28,7 +28,7 @@
                 vertical-align: top;
               "
             >
-              长三角资源目录 · 检索
+              长三角资源目录 · 搜索
             </h1>
             <!-- <img src="../assets/globle.svg" style="width: 70px; margin: 0 25px" /> -->
             <!-- <h1
@@ -39,7 +39,7 @@
               vertical-align: top;
             "
           >
-            检索
+            检索                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
           </h1> -->
           </div>
         </el-row>
@@ -57,7 +57,7 @@
               :fetch-suggestions="querySearch"
               :trigger-on-focus="false"
               clearable
-              placeholder=" 请输入想要检索的数据和模型..."
+              placeholder=" 请输入想要搜索的数据和模型..."
               @select="handleSelect"
               class="startSearchInput"
               size="large"
@@ -66,7 +66,7 @@
               type="primary"
               class="startSearchButton"
               @click="startSearch()"
-              >检索</el-button
+              >搜索</el-button
             >
             <el-button
               type="primary"
@@ -218,7 +218,7 @@
                   <Divider type="vertical" style="margin-left: 30px" />
                 </div>
                 <span class="fontSet" style="font-size: 16px; margin-left: 35px"
-                  >数据检索：</span
+                  >数据搜索：</span
                 >
                 <el-input
                   v-model="searchValue"
@@ -283,7 +283,7 @@
                 </div>
                 <div class="sortResult">
                   <span class="fontSet"
-                    >共检索到 {{ dataNum }} 条数据资源，{{
+                    >共搜索到 {{ dataNum }} 条数据资源，{{
                       modelNum
                     }}条模型资源</span
                   >

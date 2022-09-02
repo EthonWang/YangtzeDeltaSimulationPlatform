@@ -292,7 +292,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .mapbox-page {
   /* position: absolute; */
   width: 100%;
@@ -306,6 +306,9 @@ export default {
   /* bottom: 0; */
   width: 100%;
   height: 100%;
+}
+/deep/.el-card{
+  background: hsl(0,0,98%);
 }
 .info-card {
   position: absolute;

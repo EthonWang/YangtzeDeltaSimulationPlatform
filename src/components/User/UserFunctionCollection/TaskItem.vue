@@ -89,25 +89,59 @@
         @click="ResourseVisible = true"
         style="float: left; margin-right: 5px"
         >选择并添加<strong>公共资源</strong></el-button
-      ><el-button
+      >
+      <br /><br />
+      <!-- <el-divider></el-divider> -->
+      <el-button
         v-if="!edit_task"
-        @click="recommendVisible = true"
-        style="float: left; margin-right: 5px"
-        >选择并添加<strong style="color: hsl(140, 100%, 40%)"
-          >推荐数据</strong
-        ></el-button
+        @click="recommendVisible = !recommendVisible"
+        style="margin-left: 5px; position: relative; z-index: 1"
+      >
+        <span v-if="recommendVisible"
+          >收起</span
+        ><span v-else
+          >查看</span
+        >
+        <strong style="color: hsl(140, 100%, 40%)">推荐数据</strong></el-button
       >
       <br />
-      <div style="margin: 30px"></div>
-      <div style="display: flex">
+      <div style="margin: 10px"></div>
+      <div
+        style="
+          width: fit-content;
+          display: flex;
+          opacity: 0.85;
+          padding: 40px 5px 5px 5px;
+          margin-top: -47px;
+          margin-bottom: 15px;
+          border-radius: 5px;
+          background-color: hsl(140, 100%, 94%);
+        "
+        v-if="recommendVisible"
+      >
         <el-card
           :body-style="{ padding: '0px' }"
           v-for="data in recommendData"
           :key="data"
           @click="recommendShow(data)"
-          style="margin: 5px; cursor: pointer;width: 150px;"
+          style="margin: 5px; cursor: pointer; width: 150px"
         >
-          <img :src="data.imgWebAddress" style="width: 150px; height: 100px" />
+          <!-- <img
+          v-if="!(imgWebAddress in data)"
+            src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Ftenfei02.cfp.cn%2Fcreative%2Fvcg%2Fveer%2F612%2Fveer-151591516.jpg&refer=http%3A%2F%2Ftenfei02.cfp.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1664635359&t=868a15b9dca36642df90c3d70c861e9a"
+            alt=""
+            style="width: 150px; height: 100px"
+          /> -->
+          <img
+            v-if="data.imgWebAddress.includes('http://')"
+            :src="data.imgWebAddress"
+            style="width: 150px; height: 100px"
+          />
+          <img
+            v-else
+            :src="dataServer + data.imgWebAddress"
+            style="width: 150px; height: 100px"
+          />
           <div style="padding: 5px">
             <div
               style="
@@ -118,7 +152,7 @@
                 align-items: center;
               "
             >
-             <span>{{data.name}}</span>
+              <span>{{ data.name }}</span>
             </div>
           </div>
         </el-card>
@@ -292,6 +326,7 @@ import { ElMessage } from "element-plus/lib/components";
 const task_api = new taskApi();
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
+const dataServer = store.getters.devIpAddress;
 const props = defineProps({
   task: reactive(Object),
 });
@@ -361,7 +396,8 @@ const handleClose = (tag) => {
   );
 };
 
-const recommendVisible = ref(false);
+//推荐数据
+const recommendVisible = ref(true);
 const show_task = ref(false);
 const recommendData = ref([]);
 const graphApi = new graphAPI();
@@ -369,9 +405,26 @@ const data_recommend = ref("");
 let dataNameList = [];
 for (let i in props.task.dataList) {
   dataNameList.push(props.task.dataList[i].name);
+  // for (let j in props.task.dataList[i].problemTags) {
+  //   dataNameList.push(props.task.dataList[i].problemTags[j]);
+  // }
 }
-recommendData.value = graphApi.giveRecommend(dataNameList);
-console.log(recommendData.value);
+for (let i in props.task.problemTags) {
+  dataNameList.push(props.task.problemTags[i]);
+}
+let obj = {};
+dataNameList.forEach((item) => (obj[item] = item));
+let a = [];
+for (let key in obj) {
+  a.push(obj[key]);
+}
+dataNameList = a;
+graphApi.giveRecommend(dataNameList).then((res) => {
+  recommendData.value = res;
+});
+// setTimeout(() => {
+//   recommendData.value = graphApi.giveRecommend(dataNameList);
+// }, 1200);
 
 const recommendShow = (data) => {
   if (
@@ -399,6 +452,9 @@ const recommendShow = (data) => {
         });
       });
   } else if (data.private == "resource") {
+    data_recommend.value = data.name;
+    ResourseVisible.value = true;
+  } else if (data.type=="model"){
     data_recommend.value = data.name;
     ResourseVisible.value = true;
   }
@@ -438,7 +494,7 @@ h4 {
   background: hsl(0, 0, 97%);
   &:hover {
     border: 1px solid rgba(81, 113, 255, 0.85);
-    background: hsl(220, 100%, 96%);
+    background: hsl(220, 100%, 94%);
   }
   strong {
     color: hsl(210, 100%, 60%);

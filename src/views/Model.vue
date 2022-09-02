@@ -301,7 +301,9 @@ export default {
           }
           haveData.push(name);
         }
-        this.dataRecommend = this.graphapi.giveRecommend(haveData);
+        this.graphapi.giveRecommend(haveData).then((res) => {
+          this.dataRecommend = res;
+        });
         // });
       }, 4000);
     }
@@ -380,7 +382,8 @@ export default {
           i++
         ) {
           if (i == 0) {
-            continue;
+            document.getElementsByClassName("level")[i].style.opacity='0.55'
+            continue
           }
           let ele = document.getElementsByClassName("level")[i];
           ele.style.marginTop = "-50px";
@@ -389,6 +392,7 @@ export default {
       } else {
         document.getElementsByClassName("levels")[0].style.pointerEvents =
           "auto";
+          document.getElementsByClassName("level")[0].style.opacity='0.95'
         // document.getElementsByClassName("level")[0].style.opacity="0.95"
         for (
           let i = 0;

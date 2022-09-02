@@ -93,7 +93,7 @@
       <el-button
         style="margin-top: 10%; width: 100%"
         @click="dialogFormVisible = true"
-        v-if="!props.publicState"
+        v-if="!props.publicState||isAdmin"
         ><el-icon><EditPen /></el-icon>&nbsp;编辑数据</el-button
       ><br />
 
@@ -158,7 +158,7 @@
             {{ tag }}
           </el-tag>
         </el-form-item> -->
-        <el-form-item label="科学问题" :label-width="formLabelWidth">
+        <el-form-item label="科学专题" :label-width="formLabelWidth">
           <el-tree-select
             :popper-append-to-body="false"
             v-model="form.problemTags"
@@ -210,9 +210,20 @@ import Api from "@/api/user/data";
 import dataRelation from "./dataRelation.vue";
 import { sciencePro } from "@/assets/data/home/sciencePro";
 import { ElMessage } from "element-plus/lib/components";
+import {Decrypt} from "@/util/codeUtil"
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
+
+//是否是管理员
+const isAdmin = ref("false");
+let user_info = localStorage.getItem("userInfo");
+if (user_info) {
+  user_info = JSON.parse(Decrypt(user_info));
+  if (user_info.email == "opengms@126.com") {
+    isAdmin.value = true;
+  }
+}
 
 const show_relation = ref(false);
 const api = new Api();

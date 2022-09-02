@@ -115,7 +115,7 @@ const home1 = ref();
   transition: all 1s;
   padding: 20px 20px;
   h1 {
-    color: white;
+    color: hsl(0,0,98%);
     font-size: 3.75vw;
     margin-top: -10px;
     margin-bottom: 10px;
@@ -123,7 +123,7 @@ const home1 = ref();
   p {
     // margin-top: -10px;
     font-size: 1.458vw;
-    color: white;
+    color: hsl(0,0,98%);
     line-height: 170%;
   }
   /deep/ .login {

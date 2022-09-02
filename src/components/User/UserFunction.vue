@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; height: 100%">
+  <div style="width: 100%; height: 100%;overflow-y: hidden;">
     <div class="tabs-page">
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane name="">
@@ -111,7 +111,7 @@ const toRouter = (route) => {
 .tabs-page {
   position: absolute;
   width: 100%;
-  height: 87%;
+  height: 88%;
   top: 0;
 
   /deep/ .el-tabs__nav {

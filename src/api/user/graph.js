@@ -11,78 +11,109 @@ export default class {
         this.weight = []
     }
     giveRecommend(knownName = []) {
-        console.log(relation);
-        relation.weight = new Array(relation.nodes.length).fill(0)
-        let sourceNodes = []
-        for (let i = 0; i < knownName.length; i++) {
-            let firstNode = relation.nodes.findIndex((elment) => {
-                return elment.name == knownName[i]
+        return new Promise((resolve, reject) => {
+            setTimeout(()=>{
+                let sourceNodes = []
+                for (let i = 0; i < knownName.length; i++) {
+                    if (knownName[i]) {
+                        let firstNode = relation.nodes.findIndex((elment) => {
+                            return elment.name == knownName[i]
+                        })
+                        if (firstNode != -1) {
+                            sourceNodes.push(firstNode)
+                        }
+    
+                    }
+    
+                }
+                //权值归零
+                for (let i = 0; i < relation.nodes.length; i++) {
+                    relation.nodes[i].weight = 0
+                }
+                
+                for (let i = 0; i < sourceNodes.length; i++) {
+                    let willVisit = new Array(relation.nodes.length).fill(true)
+                    let sourceNode = sourceNodes[i]
+                    let nextNodeList = []
+                    let nowNodeList = []
+                    let weightReduce = 1
+                    let nowWeight = 32
+                    nowNodeList.push(sourceNode)
+                    for (let node = nowNodeList.shift(); node != undefined || nowWeight > 0; node = nowNodeList.shift()) {
+                        if (willVisit[node]) {
+                            willVisit[node] = false
+                            let outEdge = relation.allOutDegreeEdge[node]
+                            let inEdge = relation.allInDegreeEdge[node]
+                            for (let j = 0; j < inEdge.length; j++) {
+                                if (relation.edgeNode[inEdge[j]][1] == -1 || relation.edgeNode[inEdge[j]][0] == -1) { continue }
+                                if (willVisit[relation.edgeNode[inEdge[j]][0]]) {
+                                    nextNodeList.push(relation.edgeNode[inEdge[j]][0])
+                                    relation.nodes[relation.edgeNode[inEdge[j]][0]].weight += nowWeight
+                                }
+                            }
+                            for (let j = 0; j < outEdge.length; j++) {
+                                if (relation.edgeNode[outEdge[j]][1] == -1 || relation.edgeNode[outEdge[j]][0] == -1) { continue }
+                                if (willVisit[relation.edgeNode[outEdge[j]][1]]) {
+    
+                                    nextNodeList.push(relation.edgeNode[outEdge[j]][1])
+                                    // console.log(relation.nodes[relation.edgeNode[outEdge[j]][1]])
+                                    relation.nodes[relation.edgeNode[outEdge[j]][1]].weight += nowWeight
+                                }
+                            }
+                        }
+    
+                        if (nowNodeList.length == 0) {
+                            for (let k = 0; k < nextNodeList.length; k++) {
+                                nowNodeList.push(nextNodeList[k])
+                            }
+                            nextNodeList = []
+    
+                            nowWeight-=weightReduce
+                            weightReduce+=0.5
+                        }
+                    }
+                }
+                let newrelation=JSON.parse(JSON.stringify(relation.nodes))
+                for (let i in newrelation.nodes) {
+                    if (newrelation[i].type=='model') {
+                        newrelation[i].weight*=5
+                    }
+                }
+                newrelation.sort((a, b) => { return b.weight - a.weight })
+                let output = []
+                for (let i = 0; i < newrelation.length; i++) {
+                    if (output.length >= 5) { break }
+                    if (("type" in newrelation[i]) && !("parent" in newrelation[i])) {
+                        if ((newrelation[i].type == "data" && newrelation[i].private != "mydata") || newrelation[i].type == "model") {
+                            output.push(newrelation[i])
+                        }
+                    }
+                }
+                console.log(knownName, output);
+                resolve(output)
             })
-            sourceNodes.push(firstNode)
-        }
+            },1000)
+            
 
-        for (let i = 0; i < sourceNodes.length; i++) {
-            let willVisit = new Array(relation.nodes.length).fill(true)
-            let sourceNode = sourceNodes[i]
-            let nextNodeList = []
-            let nowNodeList = []
-            let nowDoorNum = 0
-            let nowWeight = 10
-            nowNodeList.push(sourceNode)
-            for (let node = nowNodeList.shift(); node != undefined || nowWeight > 0; node = nowNodeList.shift()) {
-                if (willVisit[node]) {
-                    willVisit[node] = false
-                    let outEdge = relation.allOutDegreeEdge[node]
-                    let inEdge = relation.allInDegreeEdge[node]
-                    for (let j = 0; j < inEdge.length; j++) {
-                        if (relation.edgeNode[inEdge[j]][1] == -1 || relation.edgeNode[inEdge[j]][0] == -1) { continue }
-                        if (willVisit[relation.edgeNode[inEdge[j]][0]]) {
-                            nextNodeList.push(relation.edgeNode[inEdge[j]][0])
-                            relation.nodes[relation.edgeNode[inEdge[j]][0]].weight += nowWeight
-                        }
-                    }
-                    for (let j = 0; j < outEdge.length; j++) {
-                        if (relation.edgeNode[outEdge[j]][1] == -1 || relation.edgeNode[outEdge[j]][0] == -1) { continue }
-                        if (willVisit[relation.edgeNode[outEdge[j]][1]]) {
-
-                            nextNodeList.push(relation.edgeNode[outEdge[j]][1])
-                            // console.log(relation.nodes[relation.edgeNode[outEdge[j]][1]])
-                            relation.nodes[relation.edgeNode[outEdge[j]][1]].weight += nowWeight
-                        }
-                    }
-                }
-
-                if (nowNodeList.length == 0) {
-                    for (let k = 0; k < nextNodeList.length; k++) {
-                        nowNodeList.push(nextNodeList[k])
-                    }
-                    nextNodeList = []
-
-                    nowWeight--
-                }
-            }
-        }
-        relation.nodes.sort((a, b) => { return b.weight - a.weight })
-        let output = []
-        for (let i = 0; i < relation.nodes.length; i++) {
-            if (output.length >= 5) { break }
-            if (("type" in relation.nodes[i]) && !("parent" in relation.nodes[i])) {
-                if (relation.nodes[i].type == "data") {
-                    output.push(relation.nodes[i])
-                }
-            }
-        }
-        return output
 
     }
     getKnowledgeSorce(user_id) {
         return new Promise((resolve, reject) => {
             post("/resource/getUserAllResource?userId=" + user_id,).then((res) => {
-                localStorage.setItem("allResourceNum", Encrypt(JSON.stringify({
+                let PlantNum = {
                     privateDataNum: res.data.personalData.length,
                     modelNum: res.data.modelList.length,
-                    themeNum: res.data.themeList.length
-                })))
+                    themeNum: res.data.themeList.length,
+                    disasterNum: 0,
+                    globalNum: 0,
+                    riverNum: 0,
+                    cityNum: 0,
+                    disasterModelNum: 0,
+                    globalModelNum: 0,
+                    riverModelNum: 0,
+                    cityModelNum: 0,
+                }
+
                 let personalData = res.data.personalData
                 let publicData = res.data.publicData
                 let modelList = res.data.modelList
@@ -136,6 +167,15 @@ export default class {
                     if (data.name == undefined || data.name == null) {
                         continue
                     }
+                    if (data.problemTags[0] == "长三角灾害响应与治理") {
+                        PlantNum.disasterNum++
+                    } else if (data.problemTags[0] == "全球变化与区域环境演化") {
+                        PlantNum.globalNum++
+                    } else if (data.problemTags[0] == "流域水循环及其驱动机制") {
+                        PlantNum.riverNum++
+                    } else if (data.problemTags[0] == "长三角城市化与人地关系协调发展") {
+                        PlantNum.cityNum++
+                    }
                     data['category'] = 0
                     data['weight'] = 0
                     data['symbolSize'] = 15
@@ -143,22 +183,22 @@ export default class {
                     data['type'] = "data"
                     data['private'] = 'resource'
                     relation.nodes.push(data);
-                    relation.nodes.push({
-                        category: 0,
-                        weight: 0,
-                        symbolSize: 10,
-                        name:data.name + "子模块",
-                        parent:data.name,
-                        value: data.name + "的数据子模块",
-                        type: "data",
-                        private: "resource",
-                        Recommend: false,
-                    })
-                    relation.links.push({
-                        source: data.name + "子模块",
-                        target: data.name,
-                        relation: "双亲节点"
-                    });
+                    // relation.nodes.push({
+                    //     category: 0,
+                    //     weight: 0,
+                    //     symbolSize: 10,
+                    //     name: data.name + "子模块",
+                    //     parent: data.name,
+                    //     value: data.name + "的数据子模块",
+                    //     type: "data",
+                    //     private: "resource",
+                    //     Recommend: false,
+                    // })
+                    // relation.links.push({
+                    //     source: data.name + "子模块",
+                    //     target: data.name,
+                    //     relation: "双亲节点"
+                    // });
                     relation.links.push({
                         source: data.name,
                         target: "公开",
@@ -252,29 +292,43 @@ export default class {
                     //     lastName = data.name
                     // }
                 }
+
                 for (let i in modelList) {
                     let data = modelList[i];
+                    if (modelList[i].problemTags[0] != "" && modelList[i].problemTags != []) {
+                        modelList[i].problemTags = data.problemTags.split(",");
+                    }
+                    if (modelList[i].normalTags[0] != "" && modelList[i].normalTags != []) {
+                        modelList[i].normalTags = data.normalTags.split(",");
+                    }
                     if (data.name == undefined || data.name == null) {
                         continue
                     }
-                    console.log(data.name);
-                    relation.nodes.push({
-                        name: data.name,
-                        category: 1,
-                        symbolSize: 10,
-                        value: data.overview,
-                        type: "model",
-                        weight: 0
-                    });
+
+                    if (data.problemTags[0] == "长三角灾害响应与治理") {
+                        PlantNum.disasterModelNum++
+                    } else if (data.problemTags[0] == "全球变化与区域环境演化") {
+                        PlantNum.globalModelNum++
+                    } else if (data.problemTags[0] == "流域水循环及其驱动机制") {
+                        PlantNum.riverModelNum++
+                    } else if (data.problemTags[0] == "长三角城市化与人地关系协调发展") {
+                        PlantNum.cityModelNum++
+                    }
+                    data['category']=1
+                    data['symbolSize']=10
+                    data['type']="model"
+                    data['value']=data.overview
+                    data['weight']=0
+                    relation.nodes.push(data);
                     relation.links.push({
                         source: data.name,
                         target: "模型",
                         relation: "类型"
                     });
-                    for (let j in data.classifications) {
+                    for (let j in data.normalTags) {
                         relation.links.push({
                             source: data.name,
-                            target: data.classifications[j],
+                            target: data.normalTags[j],
                             relation: "归类"
                         });
 
@@ -321,11 +375,14 @@ export default class {
                     }
 
                 }
+                //操作结束后存储资源总数
+                console.log('资源统计', PlantNum);
+                localStorage.setItem("allResourceNum", Encrypt(JSON.stringify(PlantNum)))
+                //去重
                 let obj = {}
                 relation.nodes.forEach((item) => obj[item.name] = item)
                 let a = []
                 for (let key in obj) { a.push(obj[key]) }
-                console.log("a is :", a);
                 relation.nodes = a
                 resolve("ok")
             }).catch((err) => {

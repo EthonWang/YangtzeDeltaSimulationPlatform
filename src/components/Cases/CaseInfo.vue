@@ -4,8 +4,8 @@
       <el-col :span="11" :offset="4">
         <div>
           <div style="display: flex">
-            <div class="caseImageWrap">
-              <el-image class="caseImage" @click="toCase(caseInfo.path)"  :src="baseUrl+caseInfo.thumbnail" fit="fill"></el-image>
+            <div class="caseImageWrap" @click="toCase(caseInfo.path)">
+              <el-image class="caseImage"   :src="baseUrl+caseInfo.thumbnail" fit="fill"></el-image>
               <div class="imageMask">
                 <img :src="mdOpenIcon" class="caseIcon">
                 <span >查看案例</span>
@@ -13,10 +13,10 @@
             </div>
             <div>
               <h2 class="case-name">{{caseInfo.name}}</h2>
-              <p style="font-size: 1.1rem;margin-left: 40px"
+              <p style="font-size: 1.1rem;margin-left: 40px;"
                  v-if="caseInfo.introduction == null || caseInfo.introduction == ''"
               >暂无简介</p>
-              <p v-else style="font-size: 1.1rem;margin-left: 40px">{{caseInfo.introduction}}</p>
+              <p v-else style="font-size: 1.1rem;margin-left: 40px;">{{caseInfo.introduction}}</p>
             </div>
           </div>
           <h3 class="typeName">案例描述</h3>
@@ -33,7 +33,14 @@
                   class="imageBlock"
                   v-if="item.type == 'image'"
                   :src="baseUrl + item.value"
+                  :preview-src-list="[baseUrl + item.value]"
+                  preview-teleported="true"
+                  hide-on-click-modal="true"
+                  z-index="99"
               ></el-image>
+              <div v-if="item.type == 'image'">
+                {{item.imageName}}
+              </div>
             </template>
           </div>
           <div class="descriptionText" v-else>暂无描述</div>
@@ -45,6 +52,14 @@
                   <div class="caseCard">
                     <div class="caseImageWrap">
                       <el-image
+                          v-if="item.imgWebAddress.indexOf('http://') >= 0"
+                          class="caseImage"
+                          @click="startSearch(item.name)"
+                          :src="item.imgWebAddress"
+                          fit="fill"
+                      ></el-image>
+                      <el-image
+                          v-else
                           class="caseImage"
                           @click="startSearch(item.name)"
                           :src="dataServer + item.imgWebAddress"
@@ -106,10 +121,10 @@
               <p class="font-size-1">
                 作者：{{item.name}}
               </p>
-              <p  class="font-size-1">
+              <p v-if="item.workPlace != ''"  class="font-size-1">
                 作者单位：{{item.workPlace}}
               </p>
-              <p  class="font-size-1">
+              <p v-if="item.email != ''"  class="font-size-1">
                 作者邮箱：{{item.email}}
               </p>
               <el-divider style="margin: 22px 0 6px 0;"></el-divider>
@@ -148,7 +163,16 @@ if(user_info){
 
 const mdOpenIcon = require("@/assets/img/icon/md-open.png")
 const toCase = (path) => {
-  router.push("/case/" + path + "/");
+  if(path == ""){
+    ElMessage({
+      type:"info",
+      message:"暂无"
+    })
+    return;
+  }else {
+    router.push("/case/" + path + "/");
+  }
+
 }
 const caseInfo = ref()
 const baseUrl = store.state.devBackIp;
@@ -159,6 +183,7 @@ const editCaseRef = ref();
 const updateCases = ref({})
 const editCases = () => {
   editCaseRef.value.showCase();
+  console.log("案例信息",caseInfo.value)
   updateCases.value = JSON.parse(JSON.stringify(caseInfo.value));
 }
 const saveCase = (data) => {
@@ -182,6 +207,7 @@ const getCaseInfo = () => {
   caseId = route.query.caseId;
   get("/case/getCaseById/"+caseId).then(res=>{
     caseInfo.value = res.data.data;
+    console.log("案例描述信息",caseInfo.value);
     getResourceDataById(caseInfo.value.resourceDataList);
   })
 }
@@ -212,7 +238,7 @@ const startSearch = function (searchValue) {
     localStorage.setItem("toLast",Encrypt(route.path))
     router.push('/login')
   }
-  
+
 };
 caseInfo.value = {
   name:"暂无案例",
@@ -268,7 +294,7 @@ const openInLab=()=>{
 <style lang="less" scoped>
 .about {
   top: 65px;
-  background-color: white;
+  background-color: hsl(0,0,98%);
   overflow: scroll;
   height: calc(100vh - 65px);
   margin-bottom: 65px;
@@ -289,42 +315,6 @@ const openInLab=()=>{
 .data-item:hover{
   background-color: rgb(248, 248, 248);
 }
-/*.caseImageWrap{*/
-/*  display: flex;*/
-/*  flex-direction: row;*/
-/*  flex-wrap: wrap;*/
-/*  position: relative;*/
-/*  height: 120px;*/
-/*  width: 192px;*/
-/*  cursor: pointer;*/
-/*}*/
-
-/*.caseImage{*/
-/*  height: 120px;*/
-/*  width: 192px;*/
-/*}*/
-/*.imageMask{*/
-/*  height: 120px;*/
-/*  width: 192px;*/
-/*  opacity: 0;*/
-/*  position: absolute;*/
-/*  top:0;*/
-/*  right: 0;*/
-/*  background-color: rgba(0,0,0,0.7);*/
-/*  color:white;*/
-/*  pointer-events: none;*/
-/*  transition:opacity 200ms linear ;*/
-/*  z-index: 100;*/
-/*  display: flex;*/
-/*  justify-content: center;*/
-/*  align-items: center;*/
-/*}*/
-/*.caseImageWrap:hover .imageMask{*/
-/*  opacity: 1;*/
-/*}*/
-/*.caseIcon{*/
-/*  width: 1em;*/
-/*}*/
 
 @imageHeight: 160px;
 @imageWidth:240px;
@@ -341,7 +331,7 @@ const openInLab=()=>{
 .caseImage {
   height: @imageHeight;
   width: @imageWidth;
-  border-bottom: 1px solid lightgray;
+  border: 1px solid lightgray;
 }
 
 .imageMask {
@@ -352,7 +342,7 @@ const openInLab=()=>{
   top: 0;
   right: 0;
   background-color: rgba(0, 0, 0, 0.7);
-  color: white;
+  color: hsl(0,0,98%);
   pointer-events: none;
   transition: opacity 200ms linear;
   z-index: 100;
@@ -415,7 +405,7 @@ const openInLab=()=>{
 }
 .font-size-1{
   font-size: 1rem;
-  line-height: 1.5;
+  line-height: 1;
   color: #6e6e6e;
   padding: 15px 15px 0 20px;
 }
@@ -428,15 +418,16 @@ const openInLab=()=>{
 }
 
 .descriptionText {
-  text-indent: 2rem;
-  font-size: 1.2rem;
+  margin-top: 5px;
+  text-indent: 1.5rem;
+  font-size: 1.1rem;
 }
 .imageBlock {
-  width: 50%;
+  max-height: 45vh;
   margin-top: 15px;
   margin-bottom: 15px;
   animation: scale-in-center 0.5s both;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  //box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 @keyframes scale-in-center {
   0% {
@@ -462,7 +453,7 @@ const openInLab=()=>{
   transform: perspective(1px) translateZ(0);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
   position: relative;
-  background: white;
+  background: hsl(0,0,98%);
   transition-property: color;
   transition-duration: 0.4s;
 }
@@ -482,7 +473,7 @@ const openInLab=()=>{
   transition-timing-function: ease-out;
 }
 .hvr-shutter-out-horizontal:hover, .hvr-shutter-out-horizontal:focus, .hvr-shutter-out-horizontal:active {
-  color: white;
+  color: hsl(0,0,98%);
 }
 .hvr-shutter-out-horizontal:hover:before, .hvr-shutter-out-horizontal:focus:before, .hvr-shutter-out-horizontal:active:before {
   transform: scaleX(1);

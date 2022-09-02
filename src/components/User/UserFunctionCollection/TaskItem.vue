@@ -37,7 +37,7 @@
             placeholder="请输入描述"
           />
         </el-form-item>
-        <el-form-item label="面向科学问题">
+        <el-form-item label="面向专题">
           <el-tag
             v-for="item in props.task.problemTags"
             :key="item.label"
@@ -81,35 +81,82 @@
       <el-button
         v-if="!edit_task"
         style="float: left; margin-right: 5px"
-        @click="router.push('/user/data')"
-        >选择并添加<strong>我的云端</strong>数据</el-button
+        @click="myDataVisible = true"
+        >选择并添加<strong>我的数据</strong></el-button
       >
-      <!-- <el-upload
-      v-if="!edit_task"
-        style="float: left; margin-right: 5px"
-        class="upload-demo"
-        action=""
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :before-remove="beforeRemove"
-        multiple
-        :limit="10"
-        :on-change="handleChange"
-        :on-exceed="handleExceed"
-       :before-upload="beforeUpload"
-        :file-list="fileList"
-      >
-        <el-button>选择并添加<strong>本地</strong>数据</el-button>
-      </el-upload> -->
-
       <el-button
         v-if="!edit_task"
-        @click="router.push('/resourse')"
+        @click="ResourseVisible = true"
         style="float: left; margin-right: 5px"
         >选择并添加<strong>公共资源</strong></el-button
       >
+      <br /><br />
+      <!-- <el-divider></el-divider> -->
+      <el-button
+        v-if="!edit_task"
+        @click="recommendVisible = !recommendVisible"
+        style="margin-left: 5px; position: relative; z-index: 1"
+      >
+        <span v-if="recommendVisible"
+          >收起</span
+        ><span v-else
+          >查看</span
+        >
+        <strong style="color: hsl(140, 100%, 40%)">推荐数据</strong></el-button
+      >
       <br />
-      <div style="margin: 30px"></div>
+      <div style="margin: 10px"></div>
+      <div
+        style="
+          width: fit-content;
+          display: flex;
+          opacity: 0.85;
+          padding: 40px 5px 5px 5px;
+          margin-top: -47px;
+          margin-bottom: 15px;
+          border-radius: 5px;
+          background-color: hsl(140, 100%, 94%);
+        "
+        v-if="recommendVisible"
+      >
+        <el-card
+          :body-style="{ padding: '0px' }"
+          v-for="data in recommendData"
+          :key="data"
+          @click="recommendShow(data)"
+          style="margin: 5px; cursor: pointer; width: 150px"
+        >
+          <!-- <img
+          v-if="!(imgWebAddress in data)"
+            src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Ftenfei02.cfp.cn%2Fcreative%2Fvcg%2Fveer%2F612%2Fveer-151591516.jpg&refer=http%3A%2F%2Ftenfei02.cfp.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1664635359&t=868a15b9dca36642df90c3d70c861e9a"
+            alt=""
+            style="width: 150px; height: 100px"
+          /> -->
+          <img
+            v-if="data.imgWebAddress.includes('http://')"
+            :src="data.imgWebAddress"
+            style="width: 150px; height: 100px"
+          />
+          <img
+            v-else
+            :src="dataServer + data.imgWebAddress"
+            style="width: 150px; height: 100px"
+          />
+          <div style="padding: 5px">
+            <div
+              style="
+                margin-top: 13px;
+                line-height: 150%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <span>{{ data.name }}</span>
+            </div>
+          </div>
+        </el-card>
+      </div>
       <el-form
         :inline="true"
         :label-position="labelPosition"
@@ -121,7 +168,7 @@
         <h4>数据配置：</h4>
         <template v-for="(data, index) in props.task.dataList" :key="data">
           <el-form-item
-            :label="data.name.slice(0, 25)"
+            :label="data.name.slice(0, 50)"
             v-if="data.simularTrait != 'model' && data.simularTrait != 'task'"
           >
             <el-button
@@ -189,6 +236,7 @@
         ><el-icon><CloseBold /></el-icon>&nbsp; 删除本实验</el-button
       >
     </div>
+    <!-- 删除实验确认 -->
     <el-dialog v-model="centerDialogVisible" title="删除实验" width="30%">
       <span>删除后无法恢复，确认删除？</span>
       <template #footer>
@@ -198,6 +246,65 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 添加我的数据 -->
+    <el-dialog v-model="myDataVisible" width="60%" draggable @close="refresh">
+      <DataCenter style="width: 40vw; height: 60vh"></DataCenter>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            style="position: relative; z-index: 5"
+            @click="myDataVisible = false"
+            >退出</el-button
+          >
+        </span>
+      </template>
+    </el-dialog>
+    <!-- 添加平台数据 -->
+    <div class="resourceDialog">
+      <el-dialog
+        v-model="ResourseVisible"
+        width="100%"
+        draggable
+        @close="refresh"
+      >
+        <Resourse
+          style="width: 100vw; height: 60vh"
+          :data_recommend="data_recommend"
+        ></Resourse>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button
+              style="position: relative; z-index: 5"
+              @click="ResourseVisible = false"
+              >退出</el-button
+            >
+          </span>
+        </template>
+      </el-dialog>
+    </div>
+    <!-- <el-dialog
+      v-model="recommendVisible"
+      title="推荐数据"
+      width="30%"
+      @close="refresh"
+    >
+      <el-button
+        v-for="data in recommendData"
+        :key="data"
+        @click="recommendShow(data)"
+        style="margin: 5px"
+      >
+        <el-icon><Document /></el-icon>&nbsp; ><span>{{
+          data.name
+        }}</span></el-button
+      >
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="recommendVisible = false">取消</el-button>
+        </span>
+      </template>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -208,23 +315,35 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { sciencePro } from "@/assets/data/home/sciencePro";
 import taskApi from "@/api/user/task";
-import { Encrypt,Decrypt } from "@/util/codeUtil"
+import { Encrypt, Decrypt } from "@/util/codeUtil";
+import DataCenter from "@/components/User/UserFunctionCollection/DataCenter.vue";
+import ScienceProblemData from "@/components/User/UserFunctionCollection/ScienceProblemData.vue";
+import Resourse from "@/views/Resourse.vue";
+import graphAPI from "@/api/user/graph";
+import { ElMessageBox } from "element-plus";
+import { ElMessage } from "element-plus/lib/components";
 
 const task_api = new taskApi();
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
+const dataServer = store.getters.devIpAddress;
 const props = defineProps({
   task: reactive(Object),
 });
 const centerDialogVisible = ref(false);
-const emit = defineEmits(["update:task", "deleteTask"]);
+const emit = defineEmits(["update:task", "deleteTask", "refresh"]);
 const task_data = ref(props.task);
 const edit_task = ref(false);
+const ResourseVisible = ref(false);
 watch(task_data, (newValue, oldValue) => {
   emit("update:task", newValue);
   //   console.log(newValue);
 });
 
+const refresh = () => {
+  emit("refresh");
+};
+const myDataVisible = ref(false);
 const gotoLiboratory = (task) => {
   localStorage.setItem("task", Encrypt(JSON.stringify(task)));
   router.push("/model");
@@ -276,6 +395,70 @@ const handleClose = (tag) => {
     1
   );
 };
+
+//推荐数据
+const recommendVisible = ref(true);
+const show_task = ref(false);
+const recommendData = ref([]);
+const graphApi = new graphAPI();
+const data_recommend = ref("");
+let dataNameList = [];
+for (let i in props.task.dataList) {
+  dataNameList.push(props.task.dataList[i].name);
+  // for (let j in props.task.dataList[i].problemTags) {
+  //   dataNameList.push(props.task.dataList[i].problemTags[j]);
+  // }
+}
+for (let i in props.task.problemTags) {
+  dataNameList.push(props.task.problemTags[i]);
+}
+let obj = {};
+dataNameList.forEach((item) => (obj[item] = item));
+let a = [];
+for (let key in obj) {
+  a.push(obj[key]);
+}
+dataNameList = a;
+graphApi.giveRecommend(dataNameList).then((res) => {
+  recommendData.value = res;
+});
+// setTimeout(() => {
+//   recommendData.value = graphApi.giveRecommend(dataNameList);
+// }, 1200);
+
+const recommendShow = (data) => {
+  if (
+    !data.visualizationBoolean &&
+    data.fileWebAddress != "" &&
+    data.md5 == undefined
+  ) {
+    ElMessageBox.confirm(
+      "数据名：" +
+        data.name +
+        "，即将前往“国家地球科学数据中心-长江三角洲分中心”，您可下载数据后上传到 [ 实验室 - 我的数据 ] 中使用。",
+      "外站数据",
+      {
+        confirmButtonText: "前往",
+        cancelButtonText: "取消",
+      }
+    )
+      .then(() => {
+        window.open(data.fileWebAddress);
+      })
+      .catch(() => {
+        ElMessage({
+          type: "info",
+          message: "取消操作",
+        });
+      });
+  } else if (data.private == "resource") {
+    data_recommend.value = data.name;
+    ResourseVisible.value = true;
+  } else if (data.type=="model"){
+    data_recommend.value = data.name;
+    ResourseVisible.value = true;
+  }
+};
 </script>
 
 <style lang="less" scoped>
@@ -308,11 +491,14 @@ h4 {
   width: 100%;
   padding: 2% 5% 35px 5%;
   transition: all 0.5s;
+  background: hsl(0, 0, 97%);
   &:hover {
     border: 1px solid rgba(81, 113, 255, 0.85);
+    background: hsl(220, 100%, 94%);
   }
   strong {
     color: hsl(210, 100%, 60%);
+    font-weight: 600;
   }
 }
 .btn_public {
@@ -354,9 +540,10 @@ h4 {
 }
 
 /deep/.el-form--label-left .el-form-item__label {
-    font-size: 17px;
+  font-size: 17px;
 }
-/deep/.el-form-item__content,.el-tag{
+/deep/.el-form-item__content,
+.el-tag {
   font-size: 17px;
 }
 .data-list {
@@ -377,6 +564,35 @@ h4 {
         transform: translateX(0);
         opacity: 1;
       }
+    }
+  }
+}
+
+/deep/.file-container[data-v-017137ce] {
+  width: 92%;
+}
+/deep/.file-operation[data-v-017137ce] {
+  width: 92%;
+}
+/deep/.file-controller[data-v-017137ce] {
+  height: calc(98% - 60px);
+}
+/deep/.file-detail-controller[data-v-017137ce] {
+  height: calc(98% - 120px);
+  right: 3%;
+}
+
+.resourceDialog[data-v-f5288c9c]/deep/.el-dialog {
+  padding: 0;
+  background: #1b233a;
+  .el-dialog {
+    padding: 5px;
+    background: #fafafa;
+  }
+  .el-dialog__body {
+    padding: 0;
+    .main {
+      margin-top: 20px;
     }
   }
 }

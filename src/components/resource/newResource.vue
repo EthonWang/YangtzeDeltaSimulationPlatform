@@ -133,13 +133,14 @@ h1 {
             <RadioGroup v-model="formInline.resType" style="width: 80%">
               <Radio label="data" style="font-size: 14px">数据资源</Radio>
               <Radio label="model" style="font-size: 14px">模型资源</Radio>
+              <Radio label="item" style="font-size: 14px">条目数据</Radio>
               <Radio label="other" style="font-size: 14px">其他资源</Radio>
             </RadioGroup>
           </FormItem>
           <FormItem prop="workName" label="资源名称" :label-width="150">
             <Input
               v-model="formInline.workName"
-              placeholder="输入资源名称（少于 20 个字）..."
+              placeholder="输入资源名称..."
             />
           </FormItem>
           <FormItem prop="description" label="资源描述" :label-width="150">
@@ -198,10 +199,11 @@ h1 {
               @keyup.enter="addTag(inputTag)"
             /> -->
             <el-autocomplete
+              
               class="inline-input"
               v-model="inputTag"
               :fetch-suggestions="querySearch"
-              placeholder="输入一些标签来描述作品..."
+              placeholder="输入一些标签来描述数据..."
               :trigger-on-focus="false"
               @select="handleSelect"
               @keyup.enter="addTag(inputTag)"
@@ -225,24 +227,68 @@ h1 {
                 >{{ item }}</Tag
               >
             </div>
-            <div>
+            <div v-if="formInline.resType != 'model'"> 
               <Tag style="cursor: pointer" @click="addTag('地形')">地形</Tag>
+              <Tag style="cursor: pointer" @click="addTag('地貌')"
+                >地貌</Tag
+              >
               <Tag style="cursor: pointer" @click="addTag('土壤')">土壤</Tag>
+              <Tag style="cursor: pointer" @click="addTag('湖泊')"
+                >湖泊</Tag
+              >
               <Tag style="cursor: pointer" @click="addTag('海洋')">海洋</Tag>
               <Tag style="cursor: pointer" @click="addTag('气候')">气候</Tag>
+              <Tag style="cursor: pointer" @click="addTag('植被')"
+                >植被</Tag
+              >
               <Tag style="cursor: pointer" @click="addTag('生态')">生态</Tag>
               <Tag style="cursor: pointer" @click="addTag('地质')">地质</Tag>
               <Tag style="cursor: pointer" @click="addTag('水文')">水文</Tag>
+              <Tag style="cursor: pointer" @click="addTag('农业')"
+                >农业</Tag
+              >
               <Tag style="cursor: pointer" @click="addTag('社会经济')"
                 >社会经济</Tag
               >
+              <Tag style="cursor: pointer" @click="addTag('基础地理')"
+                >基础地理</Tag
+              >
+              <Tag style="cursor: pointer" @click="addTag('土地利用/覆盖')"
+                >土地利用/覆盖</Tag
+              >
+              <Tag style="cursor: pointer" @click="addTag('人口')"
+                >人口</Tag
+              >
+              <Tag style="cursor: pointer" @click="addTag('其他数据')"
+                >其他数据</Tag
+              >
             </div>
+            <div v-if="formInline.resType == 'model'"> 
+              <Tag style="cursor: pointer" @click="addModelTag('水文')">水文模型</Tag>
+              <Tag style="cursor: pointer" @click="addModelTag('土壤')">土壤模型</Tag>
+              <Tag style="cursor: pointer" @click="addModelTag('大气')">大气模型</Tag>
+              <Tag style="cursor: pointer" @click="addModelTag('生态')">生态模型</Tag>
+              <Tag style="cursor: pointer" @click="addModelTag('社会经济')">社会经济模型</Tag>
+              <Tag style="cursor: pointer" @click="addModelTag('其他')">其他模型</Tag>
+            </div>
+          </FormItem>
+          <FormItem
+            prop="linkURL"
+            label="linkURL"
+            :label-width="150"
+            v-if="formInline.resType == 'item'"
+          >
+            <Input
+              v-model="formInline.linkURL"
+              type="textarea"
+              placeholder="输入linkURL..."
+            />
           </FormItem>
           <FormItem
             prop="file"
             label="资源上传"
             :label-width="150"
-            v-if="formInline.resType != 'model'"
+            v-if="formInline.resType == 'data'"
           >
             <div style="width: 80%">
               <uploader
@@ -384,7 +430,7 @@ h1 {
                 >取消</Button
               >
               <Button
-                v-if="formInline.resType == 'data'"
+                v-if="formInline.resType == 'data' || formInline.resType == 'item'"
                 type="success"
                 @click="validateCreateProject('formInline')"
                 style="margin-left: 15px; width: 150px"
@@ -462,9 +508,9 @@ export default {
         workName: [
           {
             required: true,
-            message: "The name cannot be empty and no more than 20 characters",
+            message: "The name cannot be empty and no more than 200 characters",
             trigger: "blur",
-            max: 60,
+            max: 600,
           },
         ],
         md5: [
@@ -472,15 +518,12 @@ export default {
             required: true,
             message: "The md5 cannot be empty",
             trigger: "blur",
-            max: 60,
+            max: 600,
           },
         ],
         mdl: [
           {
             required: true,
-            message: "The mdl cannot be empty",
-            trigger: "blur",
-            max: 60,
           },
         ],
         visualType: [
@@ -578,6 +621,14 @@ export default {
         { value: "学术研究", label: "学术研究" },
         { value: "说明文档", label: "说明文档" },
       ],
+      restaurants_model:[
+        { value: "水文模型", label: "水文模型" },
+        { value: "土壤模型", label: "土壤模型" },
+        { value: "大气模型", label: "大气模型" },
+        { value: "生态模型", label: "生态模型" },
+        { value: "社会经济模型", label: "社会经济模型" },
+        { value: "其他模型", label: "其他模型" },
+      ]
     };
   },
   created() {
@@ -616,8 +667,8 @@ export default {
       //
       //     }
       //   });
-      console.log(this.formInline);
-      console.log(this.uploaderRes);
+      // console.log(this.formInline);
+      // console.log(this.uploaderRes);
       if (
         this.formInline.workName != "" &&
         this.formInline.visualType != "" &&
@@ -635,6 +686,14 @@ export default {
         this.formInline.resType == "model" &&
         this.formInline.md5 != "" &&
         this.formInline.mdl != ""
+      ) {
+        this.commitProjectData();
+      } else if (
+        this.formInline.workName != "" &&
+        this.formInline.problemTags != [] &&
+        this.formInline.tagList != [] &&
+        this.formInline.resType == "item" &&
+        this.formInline.linkURL != ""
       ) {
         this.commitProjectData();
       } else {
@@ -700,6 +759,9 @@ export default {
 
         formData.append("imgFile", this.imageFile);
         // formData.append("visualFile", this.toUploadVisualFiles[0]);
+        if(info.normalTags==null||info.normalTags==""||info.normalTags==undefined){
+          info.normalTags=="其他模型,其他"
+        }
         console.log(info);
         formData.append(
           "info",
@@ -708,6 +770,45 @@ export default {
 
         axios({
           url: this.dataServer + "/createResourceModel",
+          method: "post",
+          //忽略contentType
+          contentType: false,
+          //取消序列换 formData本来就是序列化好的
+          processData: false,
+          dataType: "json",
+          data: formData,
+        }).then(
+          (res) => {
+            console.log(res.data);
+            this.$router.go(-1);
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+      } else if (this.formInline.resType == "item"){
+        let formData = new FormData();
+        let info = {};
+        info.name = this.formInline.workName;
+        info.description = this.formInline.description;
+        info.type = "data";
+        info.normalTags = this.formInline.tagList.toString();
+        info.problemTags = this.formInline.problemTags.toString();
+        info.publicBoolean = false;
+        info.visualizationBoolean = false;
+        info.visualType = this.formInline.visualType;
+        info.geoType = this.formInline.geoType;
+        info.fileWebAddress = this.formInline.linkURL;
+
+        formData.append("imgFile", this.imageFile);
+        // formData.append("visualFile", this.toUploadVisualFiles[0]);
+        formData.append(
+          "info",
+          new Blob([JSON.stringify(info)], { type: "application/json" })
+        );
+
+        axios({
+          url: this.dataServer + "/saveResourceItemFile",
           method: "post",
           //忽略contentType
           contentType: false,
@@ -814,6 +915,19 @@ export default {
         this.useTagTemplate = "";
       }
     },
+    addModelTag(tag) {
+      if (tag != "" && this.formInline.tagList.toString().indexOf(tag) == -1) {
+        this.formInline.tagList.push(tag);
+        this.inputTag = "";
+        this.useTagTemplate = "";
+      }
+      let model_tag=tag+'模型'
+      if (model_tag != "" && this.formInline.tagList.toString().indexOf(model_tag) == -1) {
+        this.formInline.tagList.push(model_tag);
+        this.inputTag = "";
+        this.useTagTemplate = "";
+      }
+    },
     deleteTag(index) {
       this.formInline.tagList.splice(index, 1);
     },
@@ -899,6 +1013,12 @@ export default {
       var results = queryString
         ? restaurants.filter(this.createFilter(queryString))
         : restaurants;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    querySearch_model(queryString, cb) {
+      var restaurants_model = this.restaurants_model;
+      var results =  restaurants_model;
       // 调用 callback 返回建议列表的数据
       cb(results);
     },

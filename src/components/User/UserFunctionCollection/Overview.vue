@@ -9,10 +9,10 @@
     
       <img height="56" width="56" src="@/assets/earth_global.svg" alt="" />
       <div style="margin: 1.5vh"></div>
-      <h1>开始您的长三角模拟实验</h1>
+      <h1>欢迎进入长三角虚拟地理实验室</h1>
       <div style="margin: 1.5vh"></div>
       <p style="font-size: 20px; color: #646464">
-        基于数据、模型、地图，进行您的科研活动
+        基于数据、模型、地图，进行您的科研实验
       </p>
       <div style="margin: 3.5vh"></div>
       <IntroduceVue

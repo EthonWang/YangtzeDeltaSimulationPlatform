@@ -1,86 +1,194 @@
 <template>
   <div class="main">
-    <div class="search" v-if="searchPage">
-      <el-button
-        style="
-          position: absolute;
-          right: 1%;
-          top: 1%;
-          z-index: 10;
-          border: 0px;
-          opacity: 0.35;
-          background-color: transparent;
-        "
-        v-if="isAdmin"
-        @click="router.push('/newResource')"
-        plain
-        type="info"
-        >新建资源条目</el-button
-      >
-      <el-row style="padding-top: 7%">
-        <div style="margin: auto; display: flex">
-          <h1
+    <transition name="move-up">
+      <div class="search transition-box" v-if="searchPage">
+        <el-button
+          style="
+            position: absolute;
+            right: 1%;
+            top: 1%;
+            z-index: 10;
+            border: 0px;
+            opacity: 0.35;
+            background-color: transparent;
+          "
+          v-if="isAdmin"
+          @click="router.push('/newResource')"
+          plain
+          type="info"
+          >新建资源条目</el-button
+        >
+        <el-row style="padding-top: 7%">
+          <div style="margin: auto; display: flex">
+            <h1
+              style="
+                color:#fafafa;
+                line-height: 70px;
+                font-size: 50px;
+                vertical-align: top;
+              "
+            >
+              长三角资源目录 · 搜索
+            </h1>
+            <!-- <img src="../assets/globle.svg" style="width: 70px; margin: 0 25px" /> -->
+            <!-- <h1
             style="
-              color: white;
+              color: hsl(0,0,98%);
               line-height: 70px;
               font-size: 50px;
               vertical-align: top;
             "
           >
-            长三角资源目录 · 检索
-          </h1>
-          <!-- <img src="../assets/globle.svg" style="width: 70px; margin: 0 25px" /> -->
-          <!-- <h1
-            style="
-              color: white;
-              line-height: 70px;
-              font-size: 50px;
-              vertical-align: top;
-            "
-          >
-            检索
+            检索                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
           </h1> -->
-        </div>
-      </el-row>
-      <el-row style="padding-top: 3%">
-        <div class="startSearchBox">
-          <!-- <el-input
+          </div>
+        </el-row>
+        <el-row style="padding-top: 3%">
+          <div class="startSearchBox">
+            <!-- <el-input
             type="text"
             v-model="searchValue"
             placeholder=" 请输入想要检索的内容..."
             class="startSearchInput"
             size="large"
           /> -->
-          <el-autocomplete
-            v-model="searchValue"
-            :fetch-suggestions="querySearch"
-            :trigger-on-focus="false"
-            clearable
-            placeholder=" 请输入想要检索的内容..."
-            @select="handleSelect"
-            class="startSearchInput"
-            size="large"
-          />
-          <el-button
-            type="primary"
-            class="startSearchButton"
-            @click="startSearch()"
-            >检索</el-button
+            <el-autocomplete
+              v-model="searchValue"
+              :fetch-suggestions="querySearch"
+              :trigger-on-focus="false"
+              clearable
+              placeholder=" 请输入想要搜索的数据和模型..."
+              @select="handleSelect"
+              class="startSearchInput"
+              size="large"
+            />
+            <el-button
+              type="primary"
+              class="startSearchButton"
+              @click="startSearch()"
+              >搜索</el-button
+            >
+            <el-button
+              type="primary"
+              class="startSearchButton"
+              @click="startSearch()"
+              >更多...</el-button
+            >
+          </div>
+        </el-row>
+        <el-row style="padding-top: 3%">
+          <div style="width: 47%; margin: auto; color: hsl(0,0,98%)">
+            <h3>热门搜索></h3>
+            <ul
+              style="
+                display: block;
+                margin-left: 5px;
+                font-size: 16px;
+                margin-top: 10px;
+              "
+              v-if="hotsearchData.length > 0"
+            >
+              <li class="hotsearch-item odd" data-index="0">
+                <Icon
+                  type="md-flame"
+                  style="color: rgb(255, 102, 0); margin-right: 5px"
+                />
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
+                  >1. {{ hotsearchData[0].name }}</a
+                >
+              </li>
+              <li class="hotsearch-item even" data-index="3">
+                <Icon
+                  type="md-flame"
+                  style="color: rgb(255, 102, 0); margin-right: 5px"
+                />
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
+                  >4. {{ hotsearchData[3].name }}</a
+                >
+              </li>
+              <li class="hotsearch-item odd" data-index="1">
+                <Icon
+                  type="md-flame"
+                  style="color: rgb(255, 102, 0); margin-right: 5px"
+                />
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
+                  >2. {{ hotsearchData[1].name }}</a
+                >
+              </li>
+              <li class="hotsearch-item even" data-index="4">
+                <Icon
+                  type="md-flame"
+                  style="color: rgb(255, 102, 0); margin-right: 5px"
+                />
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
+                  >5. {{ hotsearchData[4].name }}</a
+                >
+              </li>
+              <li class="hotsearch-item odd" data-index="2">
+                <Icon
+                  type="md-flame"
+                  style="color: rgb(255, 102, 0); margin-right: 5px"
+                />
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
+                  >3. {{ hotsearchData[2].name }}</a
+                >
+              </li>
+              <li class="hotsearch-item even" data-index="5">
+                <Icon
+                  type="md-flame"
+                  style="color: rgb(255, 102, 0); margin-right: 5px"
+                />
+                <a class="hotsearch-item-a" @click="hotsearchClick(item.name)"
+                  >6. {{ hotsearchData[5].name }}</a
+                >
+              </li>
+            </ul>
+          </div>
+        </el-row>
+        <el-row style="padding-top: 3%">
+          <div
+            style="width: 100%; margin: auto; border-radius: 20px"
+            class="el-row"
           >
-        </div>
-      </el-row>
-      <!-- <el-row style="padding-top: 3%">
-        <div style="width: 30%; margin: auto; color: white;">
-          <h4>热门搜索></h4>
-        </div>
-      </el-row> -->
-    </div>
-    <div class="content" v-else>
+            <div id="div1" v-if="carouselList.length > 0">
+              <ul>
+                <li v-for="(item, index) in carouselList" :key="index">
+                  <a @click="hotsearchClick(item.name)"
+                    ><div class="imgBox">
+                      <img
+                        :src="item.imgWebAddress"
+                        class="colreacherimg"
+                        :title="item.name"
+                        v-if="item.imgWebAddress.indexOf('http://') >= 0"
+                      />
+                      <img
+                        :src="dataServer + item.imgWebAddress"
+                        class="colreacherimg"
+                        :title="item.name"
+                        v-else
+                      />
+                      <div class="imgBoxTitle">
+                        {{ item.name }}
+                      </div>
+                    </div></a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </el-row>
+      </div>
+    </transition>
+    <div class="content" v-if="!searchPage">
       <el-row>
         <el-col :span="5">
           <!-- <el-affix :offset="105"> -->
           <div class="tagTree">
-            <tag-tree @tagClick="tagClick"></tag-tree>
+            <tag-tree
+              @tagClick="tagClick"
+              @hotsearchClick="hotsearchClick"
+              :hotsearchData="hotsearchData"
+            ></tag-tree>
           </div>
           <!-- </el-affix> -->
         </el-col>
@@ -88,6 +196,18 @@
           <el-row>
             <div class="indexBox">
               <el-row class="searchBox">
+                <span
+                  ><Icon
+                    type="ios-arrow-back"
+                    :size="25"
+                    style="
+                      color: #fafafa;
+                      line-height: 50px;
+                      margin-left: 10px;
+                      cursor: pointer;
+                    "
+                    @click="back2StartPage()"
+                /></span>
                 <div v-if="selectedTag.length > 0" class="selectedTag">
                   当前选择：<span class="selectedTagFont">{{
                     selectedTag[0]
@@ -98,7 +218,7 @@
                   <Divider type="vertical" style="margin-left: 30px" />
                 </div>
                 <span class="fontSet" style="font-size: 16px; margin-left: 35px"
-                  >数据检索：</span
+                  >数据搜索：</span
                 >
                 <el-input
                   v-model="searchValue"
@@ -106,7 +226,7 @@
                   class="searchInput"
                 ></el-input>
 
-                <el-button class="searchButton" @click="startSearch()"
+                <el-button type="primary" class="searchButton" @click="beforeStartSearch()"
                   >搜索</el-button
                 >
                 <el-button class="searchButton" @click="clearSearch()"
@@ -141,19 +261,29 @@
                     <span v-if="sortField == 'sizeUp'">▲</span>
                   </el-link>
                   <el-divider direction="vertical"></el-divider>
-                  <el-checkbox v-model="visualChecked" class="sortCheckBox"
-                    >仅显示支持可视化的数据</el-checkbox
+                  <el-checkbox
+                    v-model="visualChecked"
+                    class="sortCheckBox"
+                    @change="visualCheckedChange"
+                    >仅显示支持<span style="color: hsl(190, 100%, 50%)"
+                      >可视化</span
+                    >的数据</el-checkbox
                   >
                   <!-- <span class="fontSet">仅显示支持可视化的数据</span> -->
                   <el-divider direction="vertical"></el-divider>
-                  <el-checkbox v-model="downloadChecked" class="sortCheckBox"
-                    >仅显示公开下载的数据</el-checkbox
+                  <el-checkbox
+                    v-model="downloadChecked"
+                    class="sortCheckBox"
+                    @change="downloadCheckedChange"
+                    >仅显示<span style="color: hsl(190, 100%, 50%)"
+                      >本站数据</span
+                    ></el-checkbox
                   >
                   <!-- <span class="fontSet">仅显示支持下载的数据</span> -->
                 </div>
                 <div class="sortResult">
                   <span class="fontSet"
-                    >共检索到 {{ dataNum }} 条数据资源，{{
+                    >共搜索到 {{ dataNum }} 条数据资源，{{
                       modelNum
                     }}条模型资源</span
                   >
@@ -165,12 +295,16 @@
             <div class="resourceList">
               <resource-list
                 :resList="resList"
+                :dataNum="dataNum"
                 v-if="
                   resList.length > 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
-                    selectedTag[0] == '数据')
+                    selectedTag[0] == '数据资源')
                 "
+                @pageChange="dataPageChange"
+                @pageNext="dataPageNext"
+                @pagePrev="dataPagePrev"
               ></resource-list>
               <el-result
                 icon="info"
@@ -178,7 +312,7 @@
                   resList.length == 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
-                    selectedTag[0] == '数据')
+                    selectedTag[0] == '数据资源')
                 "
               >
                 <template #title>
@@ -193,12 +327,16 @@
               ></el-divider>
               <resource-list
                 :resList="modelList"
+                :dataNum="modelNum"
                 v-if="
                   modelList.length > 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
-                    selectedTag[0] == '模型')
+                    selectedTag[0] == '模型资源')
                 "
+                @pageChange="modelPageChange"
+                @pageNext="modelPageNext"
+                @pagePrev="modelPagePrev"
               ></resource-list>
               <el-result
                 icon="info"
@@ -206,7 +344,7 @@
                   modelList.length == 0 &&
                   (selectedTag.length == 0 ||
                     selectedTag[0] == '专题' ||
-                    selectedTag[0] == '模型')
+                    selectedTag[0] == '模型资源')
                 "
               >
                 <template #title>
@@ -226,14 +364,13 @@
 
 <script setup>
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, defineProps } from "vue";
 import tagTree from "@/components/resource/tagTree.vue";
 import resourceList from "@/components/resource/resourceList.vue";
 import { Decrypt } from "@/util/codeUtil";
 
-const router = useRouter();
 const isAdmin = ref("false");
 let user_info = localStorage.getItem("userInfo");
 if (user_info) {
@@ -241,6 +378,14 @@ if (user_info) {
   if (user_info.email == "opengms@126.com") {
     isAdmin.value = true;
   }
+}
+
+const router = useRouter();
+const route = useRoute();
+if (route.path == "/user/task") {
+  setTimeout(() => {
+    startSearch();
+  }, 300);
 }
 let searchPage = ref(true);
 let searchValue = ref("");
@@ -253,12 +398,27 @@ let dataNum = ref(0);
 let modelNum = ref(0);
 let visualChecked = ref(false);
 let downloadChecked = ref(false);
+let dataPageNum = ref(1);
+let modelPageNum = ref(1);
 const restaurants = ref([]);
+const carouselList = ref([]);
+const hotsearchData = ref([]);
 const store = useStore();
-const dataServer = store.getters.devIpAddress_backup;
+const props = defineProps({
+    data_recommend: String,
+  });
+const dataServer = store.getters.devIpAddress;
 onMounted(() => {
   getRouteValue();
+  getHotsearchList();
   getAutocompleteList();
+  
+  if (props.data_recommend) {
+    searchValue.value = props.data_recommend;
+    startSearch();
+  }
+  //监听鼠标滚动事件
+  // window.addEventListener("mousewheel", resHandleScroll);
 });
 const getRouteValue = () => {
   let routerValue = router.currentRoute.value.query.searchValue;
@@ -266,6 +426,20 @@ const getRouteValue = () => {
     searchValue.value = routerValue;
     startSearch();
   }
+};
+const getHotsearchList = () => {
+  axios({
+    url: dataServer + "/getResByDataView",
+    method: "get",
+  }).then(
+    (res) => {
+      // console.log(res.data.data);
+      hotsearchData.value = res.data.data;
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
 };
 let getAutocompleteList = function () {
   let DTO = {
@@ -289,6 +463,7 @@ let getAutocompleteList = function () {
   }).then(
     (res) => {
       let list = res.data.data.content;
+      carouselList.value = list;
       for (let i = 0; i < list.length; i++) {
         restaurants.value.push({
           value: list[i].name,
@@ -315,6 +490,15 @@ const createFilter = (queryString) => {
     );
   };
 };
+const beforeStartSearch = () => {
+  if (visualChecked.value || downloadChecked.value) {
+    dataPageNum.value = 1;
+    searchDataByVisualChecked();
+  } else {
+    dataPageNum.value = 1;
+    startSearch();
+  }
+};
 let startSearch = function () {
   let tagClass = "problemTags";
   let tagName = "";
@@ -336,9 +520,9 @@ let startSearch = function () {
       tagName = selectedTag.value[1];
     }
   }
-  let DTO = {
+  let dataDTO = {
     asc: false,
-    page: 1,
+    page: dataPageNum.value,
     pageSize: 16,
     searchText: searchValue.value,
     sortField: "createTime",
@@ -353,7 +537,7 @@ let startSearch = function () {
     //取消序列换 formData本来就是序列化好的
     processData: false,
     dataType: "json",
-    data: DTO,
+    data: dataDTO,
   }).then(
     (res) => {
       searchPage.value = false;
@@ -364,6 +548,15 @@ let startSearch = function () {
       console.log(err);
     }
   );
+  let modelDTO = {
+    asc: false,
+    page: modelPageNum.value,
+    pageSize: 16,
+    searchText: searchValue.value,
+    sortField: "createTime",
+    tagClass: tagClass,
+    tagName: tagName,
+  };
   axios({
     url: dataServer + "/getResourceModelList",
     method: "post",
@@ -372,7 +565,7 @@ let startSearch = function () {
     //取消序列换 formData本来就是序列化好的
     processData: false,
     dataType: "json",
-    data: DTO,
+    data: modelDTO,
   }).then(
     (res) => {
       searchPage.value = false;
@@ -389,11 +582,19 @@ const clearSearch = function () {
   visualChecked.value = false;
   downloadChecked.value = false;
   selectedTag.value = [];
+  dataPageNum.value = 1;
   startSearch();
 };
 const tagClick = function (data) {
   selectedTag.value = data;
-  startSearch();
+  searchValue.value = "";
+  if (visualChecked.value || downloadChecked.value) {
+    dataPageNum.value = 1;
+    searchDataByVisualChecked();
+  } else {
+    dataPageNum.value = 1;
+    startSearch();
+  }
 };
 let sortByField = function (type) {
   if (type == "relativity") {
@@ -416,18 +617,142 @@ let sortByField = function (type) {
     }
   }
 };
+const dataPageChange = (value) => {
+  // console.log(value);
+  dataPageNum.value = value;
+  if (visualChecked.value || downloadChecked.value) {
+    searchDataByVisualChecked();
+  } else {
+    startSearch();
+  }
+};
+const dataPageNext = (value) => {
+  // console.log(value);
+};
+const dataPagePrev = (value) => {
+  // console.log(value);
+};
+const modelPageChange = (value) => {
+  // console.log(value);
+  // console.log(value);
+  modelPageNum.value = value;
+  startSearch();
+};
+const modelPageNext = (value) => {
+  // console.log(value);
+};
+const modelPagePrev = (value) => {
+  // console.log(value);
+};
+const visualCheckedChange = () => {
+  if (visualChecked.value || downloadChecked.value) {
+    dataPageNum.value = 1;
+    searchDataByVisualChecked();
+  } else {
+    dataPageNum.value = 1;
+    startSearch();
+  }
+};
+const downloadCheckedChange = () => {
+  if (visualChecked.value || downloadChecked.value) {
+    dataPageNum.value = 1;
+    searchDataByVisualChecked();
+  } else {
+    dataPageNum.value = 1;
+    startSearch();
+  }
+};
+const searchDataByVisualChecked = () => {
+  let tagClass = "problemTags";
+  let tagName = "";
+  if (selectedTag.value.length == 0) {
+    tagClass = "problemTags";
+    tagName = "";
+  } else if (selectedTag.value[0] == "专题") {
+    tagClass = "problemTags";
+    if (selectedTag.value.length == 1) {
+      tagName = "";
+    } else {
+      tagName = selectedTag.value[1];
+    }
+  } else {
+    tagClass = "normalTags";
+    if (selectedTag.value.length == 1) {
+      tagName = "";
+    } else {
+      tagName = selectedTag.value[1];
+    }
+  }
+  let dataDTO = {
+    asc: false,
+    page: dataPageNum.value,
+    pageSize: 16,
+    searchText: searchValue.value,
+    sortField: "createTime",
+    tagClass: tagClass,
+    tagName: tagName,
+  };
+  axios({
+    url: dataServer + "/getResourceDataListByVisualChecked",
+    method: "post",
+    //忽略contentType
+    contentType: false,
+    //取消序列换 formData本来就是序列化好的
+    processData: false,
+    dataType: "json",
+    data: dataDTO,
+  }).then(
+    (res) => {
+      searchPage.value = false;
+      resList.value = res.data.data.content;
+      dataNum.value = res.data.data.totalElements;
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
+};
+const hotsearchClick = (value) => {
+  searchValue.value = value;
+  startSearch();
+};
+const resHandleScroll = (e) => {
+  let direction = e.deltaY > 0 ? "down" : "up"; //deltaY为正则滚轮向下，为负滚轮向上
+  if (direction == "down" && e.deltaY >= 125) {
+    //125为用户一次滚动鼠标的wheelDelta的值
+    console.log("down");
+  }
+  if (direction == "up" && e.deltaY <= -125) {
+    console.log("up");
+  }
+};
+const back2StartPage = () => {
+  searchPage.value = true;
+};
 </script>
 
 <style lang="less" scoped>
 .startSearchBox {
-  width: 40%;
+  width: 50%;
   height: 50px;
   margin: auto;
 }
-
+.hotsearch-item {
+  width: 50%;
+  float: left;
+  height: 36px;
+  line-height: 36px;
+  list-style: none;
+}
+.hotsearch-item-a {
+  color: hsl(0,0,98%);
+}
+.hotsearch-item-a:hover {
+  color: rgb(64, 158, 255);
+}
 .startSearchButton {
   margin-left: 2%;
-  width: 12%;
+  width: 10%;
   height: 40px;
   font-size: 0.94vw;
   vertical-align: top;
@@ -435,6 +760,7 @@ let sortByField = function (type) {
 .search {
   height: 100%;
   width: 100%;
+  overflow: hidden;
   // background: url("../assets/night.jpg");
   // background-size: 100% 100%;
 }
@@ -443,6 +769,7 @@ let sortByField = function (type) {
   height: calc(100vh - 65px);
   background: url("../assets/night.jpg");
   background-size: 100% 100%;
+  overflow: scroll;
 }
 .content {
   // background-color: rgba(255, 255, 255, 0.7);
@@ -492,7 +819,7 @@ let sortByField = function (type) {
 .sortBox {
   width: 100%;
   height: 50px;
-  // background-color: white;
+  // background-color: hsl(0,0,98%);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -508,7 +835,7 @@ let sortByField = function (type) {
 .sortCheckBox {
   margin-left: 10px;
   vertical-align: sub;
-  color: white;
+  color: hsl(0,0,98%);
 }
 .fontSet {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
@@ -516,13 +843,13 @@ let sortByField = function (type) {
   font-size: 14px;
   font-weight: 500;
   // color: #606266;
-  color: white;
+  color: hsl(0,0,98%);
   vertical-align: middle;
 }
 .sortButton {
   width: 60px;
   height: 50px;
-  color: white;
+  color: hsl(0,0,98%);
 }
 .resourceList {
   // background-color: rgb(255, 255, 255);
@@ -544,6 +871,68 @@ let sortByField = function (type) {
   font-weight: 550;
   color: rgb(131, 124, 124);
 }
+#div1 {
+  position: relative;
+  width: 80%;
+  margin: 30px auto;
+  height: 170px;
+  overflow: hidden;
+}
+#div1 ul {
+  width: 1000%;
+  position: absolute;
+  left: 0;
+  animation: move1 120s infinite linear;
+}
+#div1 ul:hover {
+  animation-play-state: paused;
+}
+#div1 a {
+  position: absolute;
+  z-index: 2;
+  text-decoration: none;
+  /*top: 45%;*/
+  /*display: none;*/
+}
+#div1 ul li {
+  padding: 5px;
+  list-style: none;
+  width: 200px;
+  height: 160px;
+  float: left;
+}
+@keyframes move1 {
+  from {
+    margin-left: 0;
+  }
+  to {
+    margin-left: -7560px;
+  }
+}
+.colreacherimg {
+  width: 170px;
+  border-radius: 10px;
+  height: 130px;
+}
+.imgBoxTitle {
+  width: 175px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgb(131, 124, 124);
+}
+.imgBox:hover {
+  .colreacherimg {
+    width: 175px;
+    border-radius: 5px;
+    height: 135px;
+  }
+  .imgBoxTitle {
+    font-size: 16px;
+    color: hsl(0,0,98%);
+  }
+}
+
 /deep/.el-col-19 {
   width: 87%;
   max-width: 87%;
@@ -558,7 +947,7 @@ let sortByField = function (type) {
 /deep/.el-card {
   // background: hsl(220, 100%, 5%);
   background: hsl(0, 0, 75%);
-  // color: white;
+  // color: hsl(0,0,98%);
   // border:0px;
   box-shadow: 2px 2px 8px rgba(255, 255, 255, 0.5) !important;
 }
@@ -569,7 +958,7 @@ let sortByField = function (type) {
 <style>
 .startSearchInput {
   margin-left: 2%;
-  width: 80%;
+  width: 70%;
   height: 40px;
   font-size: 0.94vw;
 }

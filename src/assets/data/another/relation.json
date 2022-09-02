@@ -1,7 +1,7 @@
 {
     "nodes": [
       {
-        "name": "灾害响应",
+        "name": "长三角灾害响应与治理",
         "symbolSize": 20,
         "value": "科学问题大类",
         "category": 3,
@@ -393,6 +393,48 @@
         "weight":0
       },
       {
+        "name":"土壤模型",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":0
+      },
+      {
+        "name":"水文模型",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":0
+      },
+      {
+        "name":"大气模型",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":0
+      },
+      {
+        "name":"生态模型",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":0
+      },
+      {
+        "name":"社会经济模型",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":0
+      },
+      {
+        "name":"其他模型",
+        "symbolSize":15,
+        "category":9,
+        "value": "",
+        "weight":0
+      },
+      {
         "name":"案例",
         "symbolSize":15,
         "category":8,
@@ -411,19 +453,19 @@
     "links": [
       {
         "source":"台风与风暴湖",
-        "target":"灾害响应"
+        "target":"长三角灾害响应与治理"
       },
       {
         "source":"洪涝水环境灾害",
-        "target":"灾害响应"
+        "target":"长三角灾害响应与治理"
       },
       {
         "source":"地质灾害",
-        "target":"灾害响应"
+        "target":"长三角灾害响应与治理"
       },
       {
         "source":"大气污染",
-        "target":"灾害响应"
+        "target":"长三角灾害响应与治理"
       },
       {
         "source":"海岸带变迁",
@@ -490,7 +532,7 @@
         "target":"长三角城市化与人地关系协调发展"
       },
       {
-        "source":"灾害响应",
+        "source":"长三角灾害响应与治理",
         "target":"科学问题"
       },
       {
@@ -625,6 +667,121 @@
       {
         "source":"案例",
         "target":"实验"
+      },
+      {
+        "source":"水文模型",
+        "target":"模型"
+      },
+      
+      {
+        "source":"水文模型",
+        "target":"水文"
+      },
+      
+      {
+        "source":"水文模型",
+        "target":"湖泊"
+      },
+      {
+        "source":"土壤模型",
+        "target":"模型"
+      },
+      
+      {
+        "source":"土壤模型",
+        "target":"土壤"
+      },
+      {
+        "source":"大气模型",
+        "target":"模型"
+      },
+      
+      {
+        "source":"大气模型",
+        "target":"气候"
+      },
+      {
+        "source":"生态模型",
+        "target":"模型"
+      },
+      
+      {
+        "source":"生态模型",
+        "target":"生态系统"
+      },
+      
+      {
+        "source":"生态模型",
+        "target":"环境"
+      },
+      
+      {
+        "source":"生态模型",
+        "target":"植被"
+      },
+      {
+        "source":"社会经济模型",
+        "target":"模型"
+      },
+      {
+        "source":"社会经济模型",
+        "target":"社会经济"
+      },
+      {
+        "source":"社会经济模型",
+        "target":"人口"
+      },
+      {
+        "source":"其他模型",
+        "target":"模型"
+      },
+      {
+        "source":"其他模型",
+        "target":"其他数据"
+      },
+      {
+        "source":"水文",
+        "target":"流域水循环及其驱动机制"
+      },
+      {
+        "source":"湖泊",
+        "target":"流域水循环及其驱动机制"
+      },
+      {
+        "source":"水文模型",
+        "target":"流域水循环及其驱动机制"
+      },
+      {
+        "source":"社会经济",
+        "target":"长三角城市化与人地关系协调发展"
+      },
+      {
+        "source":"人口",
+        "target":"长三角城市化与人地关系协调发展"
+      },
+      {
+        "source":"农业",
+        "target":"长三角城市化与人地关系协调发展"
+      },
+      {
+        "source":"社会经济模型",
+        "target":"长三角城市化与人地关系协调发展"
+      },
+      {
+        "source":"气候",
+        "target":"全球与区域变化"
+      },
+      {
+        "source":"环境",
+        "target":"全球与区域变化"
+      },
+      {
+        "source":"大气模型",
+        "target":"全球与区域变化"
+      },
+      {
+        "source":"灾害",
+        "target":"长三角灾害响应与治理"
       }
       
     ],
@@ -639,7 +796,7 @@
         "name": "实验"
       },
       {
-        "name": "灾害响应"
+        "name": "长三角灾害响应与治理"
       },
       {
         "name": "全球与区域变化"

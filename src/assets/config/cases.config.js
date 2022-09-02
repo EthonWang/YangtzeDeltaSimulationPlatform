@@ -36,7 +36,13 @@ export const cases_config = [
         problem: "大陆板块漂移",
         path: "PlateDrift",
         component: () => import("views/CasesView/PlateDrift.vue")
-    }, {
+    },
+    {
+        problem: "太阳能",
+        path: "SolarPower",
+        component: () => import("views/CasesView/SolarPower.vue")
+    },
+    {
         problem: "小流域山洪灾害在线模拟",
         path: "watershedFlood",
         component: () => import("views/CasesView/watershedFlood.vue")

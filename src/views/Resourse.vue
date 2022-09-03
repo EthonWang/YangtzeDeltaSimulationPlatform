@@ -69,7 +69,7 @@
               >检索</el-button
             >
             <el-button
-              type="info"
+              type="primary"
               class="startSearchButton"
               @click="startSearch()"
               >更多...</el-button

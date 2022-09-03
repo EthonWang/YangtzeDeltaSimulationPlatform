@@ -169,7 +169,7 @@ public class ScriptExecService {
                 inputPath = gdalClipDTO.getInputGeoJson();
             }
 //            String inputRasterPath = gdalClipDTO.getInputRasterPath();
-            ArrayList<cn.hutool.json.JSONObject> inputRasterList = gdalClipDTO.getInputRasterListPath();
+            ArrayList<JSONObject> inputRasterList = gdalClipDTO.getInputRasterListPath();
             //创建批量处理的存放文件夹
             String outFileName = gdalClipDTO.getOutputTifName();
             String folderId = IdUtil.objectId();
@@ -183,9 +183,9 @@ public class ScriptExecService {
             // 3. tif转asc （新文件夹下）
             String publish_1st = "false";
             String tempGeoUrl = "";
-            ArrayList<cn.hutool.json.JSONObject> resultList = new ArrayList<>();
-            for(cn.hutool.json.JSONObject item: inputRasterList){
-                String oldAscPath = dataResourceDir + item.getStr("fileRelativePath");
+            ArrayList<JSONObject> resultList = new ArrayList<>();
+            for(JSONObject item: inputRasterList){
+                String oldAscPath = dataResourceDir + item.getString("fileRelativePath");
                 String oldTifPath = oldAscPath.replace(".asc",".tif");
                 // asc2tif
                 List<String> argvList = new ArrayList<>();
@@ -197,7 +197,7 @@ public class ScriptExecService {
                     List<String> argvList1 = new ArrayList<>();
                     argvList1.add(dataResourceDir + inputPath);
                     argvList1.add(oldTifPath);
-                    String newTifPath = folderPath + "/" + item.getStr("name").replace(".asc","_clip.tif");
+                    String newTifPath = folderPath + "/" + item.getString("name").replace(".asc","_clip.tif");
                     argvList1.add(newTifPath);
                     int re1;
                     if (isShp) {
@@ -213,7 +213,7 @@ public class ScriptExecService {
                             int re3 = ExecCmdUtils.execPython("tifSetProj.py", argvList3);
                             if (re3 == 0) {
                                 publish_1st = "true";
-                                String tempName = IdUtil.objectId() + item.getStr("name").replace(".asc","_clip.tif");
+                                String tempName = IdUtil.objectId() + item.getString("name").replace(".asc","_clip.tif");
                                 GeoServerUtils.PublishTiff("yangtzeRiver",tempName.split(".tif")[0].replace(".","_"),newTifPath);
                                 String geoServerUrl= MessageFormat.format("{0}/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A{1}&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857" +
                                         "&WIDTH=512&HEIGHT=512&BBOX='{'bbox-epsg-3857'}'",geoserverUrl,tempName.split(".tif")[0].replace(".","_"));
@@ -225,13 +225,13 @@ public class ScriptExecService {
                         argvList2.add(newTifPath.replace(".tif",".asc"));
                         int re2 = ExecCmdUtils.execPython("tif2asc.py", argvList2);
                         if (re2 == 0){
-                            cn.hutool.json.JSONObject ascObject = new cn.hutool.json.JSONObject();
-                            ascObject.set("name", item.getStr("name").replace(".asc","_clip.asc"));
-                            ascObject.set("fileRelativePath",newTifPath.replace(".tif",".asc").split(dataResourceDir)[1]);
-                            ascObject.set("type","asc");
-                            ascObject.set("visualType", "asc");
-                            ascObject.set("visualWebAddress",tempGeoUrl);
-                            ascObject.set("id",IdUtil.objectId());
+                            JSONObject ascObject = new JSONObject();
+                            ascObject.put("name", item.getString("name").replace(".asc","_clip.asc"));
+                            ascObject.put("fileRelativePath",newTifPath.replace(".tif",".asc").split(dataResourceDir)[1]);
+                            ascObject.put("type","asc");
+                            ascObject.put("visualType", "asc");
+                            ascObject.put("visualWebAddress",tempGeoUrl);
+                            ascObject.put("id",IdUtil.objectId());
                             resultList.add(ascObject);
                         }
                     }

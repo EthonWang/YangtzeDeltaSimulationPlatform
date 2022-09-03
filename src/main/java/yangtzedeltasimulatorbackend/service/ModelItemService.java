@@ -59,6 +59,9 @@ public class ModelItemService {
     TaskDao taskDao;
 
     @Autowired
+    FolderDao folderDao;
+
+    @Autowired
     ResourceModelDao resourceModelDao;
 
     @Autowired
@@ -605,6 +608,16 @@ public class ModelItemService {
                 FileUtils.toZip(tempFolderPath, zipFos,true);
 
                 // 2.（压缩包）保存到个人中心
+//                saveModelOutput
+                Optional<Folder> byId = folderDao.findById(labTaskId);
+                if(!byId.isPresent()){
+                    Folder folder=new Folder();
+                    folder.setId(labTaskId);
+                    folder.setParentId(userId);
+                    folder.setUserId(userId);
+                    folder.setName(labTask.getName());
+                    userResourceService.createFolder(folder);
+                }
                 UserData userData = new UserData();
                 String fileName = zipFile.getName();
                 Long fileSize = zipFile.length();
@@ -615,7 +628,7 @@ public class ModelItemService {
                 userData.setFileStoreName(fileName);
                 userData.setFileWebAddress("/store/data/" + fileName);
                 userData.setFileRelativePath("/data/" + fileName);
-                userData.setPublicBoolean(true);
+                userData.setPublicBoolean(false);
                 userData.setVisualizationBoolean(true);
                 userData.setParentId(labTaskId);
                 userData.setUserId(userId);

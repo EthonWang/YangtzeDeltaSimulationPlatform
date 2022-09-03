@@ -19,8 +19,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-@Slf4j
+/**
+ * @Description
+ * @Auther wyjq
+ * @Date 2022/4/6
+ **/
 
+@Slf4j
 public class CustomInterceptor implements HandlerInterceptor {
     @Autowired
     UserDao userDao;
@@ -42,7 +47,7 @@ public class CustomInterceptor implements HandlerInterceptor {
         if (method.isAnnotationPresent(LoginRequired.class)) {
             LoginRequired userLoginToken = method.getAnnotation(LoginRequired.class);
             if (userLoginToken.required()) {
-                log.info("someone is verifing :"+method.getName());
+//                log.info("someone is verifing :"+method.getName());
                 // 执行认证
                 if (token == null) {
                     throw new RuntimeException("无token，请重新登录");

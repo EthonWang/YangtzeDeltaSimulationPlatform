@@ -27,7 +27,6 @@ public class LabTaskController {
     @Autowired
     LabTaskService labTaskService;
 
-
     @ApiOperation(value = "新建实验室任务")
     @PostMapping(value = "/createLabTask")
     JsonResult createLabTask(@RequestBody CreateLabTaskDTO createLabTaskDTO) {

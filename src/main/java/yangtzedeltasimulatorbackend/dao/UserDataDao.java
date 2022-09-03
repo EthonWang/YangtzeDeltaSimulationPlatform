@@ -19,4 +19,6 @@ public interface UserDataDao extends MongoRepository<UserData, String> {
     List<UserData> findAllByParentId(String parentId);
 
     List<UserData> findAllByUserId(String userId);
+
+    List<UserData> findByPublicBoolean(boolean b);
 }

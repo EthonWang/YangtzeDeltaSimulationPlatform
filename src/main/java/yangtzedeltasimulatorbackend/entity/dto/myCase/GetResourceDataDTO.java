@@ -11,6 +11,7 @@ import java.util.List;
  * @Auther wyjq
  * @Date 2022/6/10
  **/
+
 @Data
 public class GetResourceDataDTO {
     List<JSONObject>  ids=new ArrayList<>();

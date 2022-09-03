@@ -126,4 +126,11 @@ public class UserResourceController {
         userResourceService.downloadDataItem(dataItemId, response);
     }
 
+
+    @ApiOperation(value = "获取全部public的数据")
+    @GetMapping(value = "/getAllPublicUserData")
+    public JsonResult getAllPublicUserData(){
+        return userResourceService.getAllPublicUserData();
+    }
+
 }

@@ -27,5 +27,5 @@ public class UpdateUserDataItemDTO {
 
     boolean publicBoolean=false;  //是否公开,默认是私有
     boolean visualizationBoolean=false; // 是否可以可视化,默认false
-
+    String parentId;
 }

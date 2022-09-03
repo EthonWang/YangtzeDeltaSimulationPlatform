@@ -11,6 +11,7 @@ import yangtzedeltasimulatorbackend.entity.dto.PageDTO;
  * @Author wyjq
  * @Date 2022/3/17
  **/
+
 @Data
 public class CreateResourceSmallFileDTO {
     String name; //数据名称

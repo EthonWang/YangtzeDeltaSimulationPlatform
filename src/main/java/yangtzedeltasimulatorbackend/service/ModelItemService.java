@@ -8,6 +8,7 @@ import cn.hutool.core.util.ZipUtil;
 import cn.hutool.json.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.description.type.TypeDescription;
 import org.apache.http.entity.ContentType;
@@ -71,6 +72,9 @@ public class ModelItemService {
 
     @Autowired
     LabTaskDao labTaskDao;
+
+    @Autowired
+    FolderDao folderDao;
 
     @Value("${dataStoreDir}"+"/temp")
     private  String tempDir;
@@ -517,7 +521,6 @@ public class ModelItemService {
             JSONObject uploadResult=Utils.uploadDataToDataServer(dataContainerIpAndPort,part);
             if(uploadResult.getIntValue("code")==1){
                 String dataUrl="http://"+ dataContainerIpAndPort +"/data/"+uploadResult.getJSONObject("data").getString("id");
-
                 UserData u=userDataDao.findById(userDataId).get();
                 u.setDataContainerUrl(dataUrl);
                 userDataDao.save(u);
@@ -746,11 +749,24 @@ public class ModelItemService {
             String labId = saveResultDataDTO.getLabId();
             String userId = saveResultDataDTO.getUserId();
 
+            Folder labResultFolder=folderDao.findByNameAndUserId("实验结果",userId);
+            String parentId="";
+            if(labResultFolder==null){
+                Folder newLabReFolder=new Folder();
+                newLabReFolder.setParentId(userId);
+                newLabReFolder.setUserId(userId);
+                newLabReFolder.setName("实验结果");
+                userResourceService.createFolder(newLabReFolder);
+                parentId= newLabReFolder.getId();
+            }else {
+                parentId= labResultFolder.getId();
+            }
+
             Folder folder=new Folder();
-            folder.setParentId(userId);
+            folder.setParentId(parentId);
             folder.setUserId(userId);
             Date date = new Date();
-            SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss");
+            SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
             folder.setName(dateFormat.format(date)+"_result");
             userResourceService.createFolder(folder);
 
@@ -761,7 +777,8 @@ public class ModelItemService {
             for(int i=0;i<dataUrlList.size();i++){
                 String dataUrl=dataUrlList.get(i);
                 File file = MyFileUtils.downloadRemoteData(dataUrl, dataFolder);
-                UserData userData=userResourceService.saveDataItem(file,userId,folder.getId());
+                String fileNewName=dateFormat.format(date)+"_result"+i+1;
+                UserData userData=userResourceService.saveDataItem(file,userId,folder.getId(),fileNewName);
                 labDataList.add(JSONObject.parseObject(JSONObject.toJSONString(userData)));
             }
             labTask.setDataList(labDataList);

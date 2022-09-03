@@ -688,6 +688,7 @@ const getCaseById = (idList) => {
         id: item.id,
       });
     });
+    console.log("caseResult",caseResult);
   });
 };
 const toCase = (path) => {

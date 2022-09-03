@@ -128,7 +128,7 @@
     </template>
   </el-dialog>
   <el-dialog v-model="show_task" title="添加数据到实验室" width="30%">
-    <h3 style="margin-bottom: 15px">选择要添加的资源</h3>
+    <h3 style="margin-bottom: 15px">选择要添加的数据(必选)</h3>
     <el-scrollbar max-height="35vh">
       <el-checkbox-group
         v-model="selectedVisualDataItems"
@@ -164,6 +164,9 @@
       />
     </div>
     <el-divider border-style="dashed" />
+    <h3 v-if="selectedVisualDataItems.length >= 1">
+      是否设置为数据集？（打包数据，若有多数据建议选上）
+    </h3>
     <el-checkbox
       v-if="selectedVisualDataItems.length >= 1"
       v-model="setSelectedVisualDataItemsDataSet"
@@ -174,16 +177,14 @@
     />
     <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
     <el-button
-      v-for="(task, index) in task_list"
+      v-for="(task) in task_list"
       :key="task"
       @click="addDataToTask(task)"
       style="margin: 5px"
     >
       <el-icon><Monitor /></el-icon> &nbsp;
-      <span v-if="index == 0" style="color: hsl(210, 100%, 40%)">{{
-        task.name
-      }}</span
-      ><span v-else>{{ task.name }}</span></el-button
+      
+      ><span>{{ task.name }}</span></el-button
     >
     <template #footer>
       <span class="dialog-footer">
@@ -245,7 +246,10 @@ const pagePrev = (value) => {
 };
 const addDataToTask = (task) => {
   console.log("selectedRes.value is :", selectedRes.value);
-  if ("mdl" in selectedRes.value) {
+  if (selectedVisualDataItems.value.length <= 0) {
+    ElMessage.error("您未选择数据");
+    return
+  } else if ("mdl" in selectedRes.value) {
     // console.log(234);
     let data = selectedRes.value;
     data["simularTrait"] = "model";
@@ -341,7 +345,7 @@ const showMapCard = function (info) {
       method: "get",
     }).then(
       (res) => {
-        console.log(res.data.data)
+        console.log(res.data.data);
       },
       (err) => {
         console.log(err);
@@ -366,21 +370,25 @@ const downloadRes = function (item) {
     });
   }
 };
-const opemWebUrlData=(url)=>{
-  ElMessageBox.confirm('即将前往国家地球科学数据中心长江三角洲分中心', '外站数据', {
-
-    confirmButtonText: '前往',
-    cancelButtonText:'取消',
-  }).then(() => {
-      turn2blank(url)
+const opemWebUrlData = (url) => {
+  ElMessageBox.confirm(
+    "即将前往“国家地球科学数据中心-长江三角洲分中心”，您可下载数据后上传到 [ 实验室 - 我的数据 ] 中使用。",
+    "外站数据",
+    {
+      confirmButtonText: "前往",
+      cancelButtonText: "取消",
+    }
+  )
+    .then(() => {
+      turn2blank(url);
     })
     .catch(() => {
       ElMessage({
-        type: 'info',
-        message: '取消操作',
-      })
-    })
-}
+        type: "info",
+        message: "取消操作",
+      });
+    });
+};
 const turn2blank = function (url) {
   window.open(url);
 };
@@ -490,7 +498,7 @@ const guideMarks = computed(() => {
   // border-top: solid 0.1px rgba(176, 174, 174, 0.445);
 }
 .cardTitle {
-  // color: white;
+  // color: hsl(0,0,98%);
   height: 30px;
   line-height: 30px;
   width: 62%;

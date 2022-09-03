@@ -11,6 +11,7 @@
       v-model:file-list="fileList_ava"
       class="upload-demo"
       action=""
+      accept="image/jpg,image/jpeg,image/png"
       :limit="1"
       :before-upload="beforeUploadAvatar"
       :auto-upload="true"
@@ -43,22 +44,21 @@
       >编辑信息</el-button
     >
     <div class="otherSpan">
-      <span>机构：</span><span>{{ data.institution }}</span
+      <span>机构：</span><span style="color: gray">{{ data.institution }}</span
       ><br />
-      <span>地址：</span><span>{{ data.address }} </span><br />
-      <span>联系方式：</span><span>{{ data.phone }} </span><br />
+      <span>地址：</span><span style="color: gray">{{ data.address }} </span><br />
+      <span>联系方式：</span><span style="color: gray">{{ data.phone }} </span><br />
     </div>
     <el-button
       @click="logout()"
+      type="danger"
       style="
         width: 88%;
-        color: white;
         margin: 0.8vh;
-        background-color: hsl(0, 100%, 70%);
       "
       >登出</el-button
     >
-    <el-dialog v-model="dialogFormVisible" title="Shipping address">
+    <el-dialog v-model="dialogFormVisible" title="编辑信息">
       <el-form :model="data">
         <el-form-item label="姓名" :label-width="formLabelWidth">
           <el-input v-model="data.name" autocomplete="off" />
@@ -75,7 +75,7 @@
         <el-form-item label="地址" :label-width="formLabelWidth">
           <el-input v-model="data.address" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="手机号码" :label-width="formLabelWidth">
+        <el-form-item label="联系方式" :label-width="formLabelWidth">
           <el-input v-model="data.phone" autocomplete="off" />
         </el-form-item>
       </el-form>
@@ -127,8 +127,8 @@ const data = reactive({
 
 const beforeUploadAvatar = (rawFile) => {
   console.log(1);
-  if (rawFile.type !== "image/jpeg" && rawFile.type !== "image/png") {
-    ElMessage.error("请使用jpg或png格式");
+  if (rawFile.type !== "image/jpg"&&rawFile.type !== "image/jpeg" && rawFile.type !== "image/png") {
+    ElMessage.error("请使用jpg/jpeg或png格式");
     return false;
   } else if (rawFile.size / 1024 / 1024 > 5) {
     ElMessage.error("头像请控制在 5MB 以内");

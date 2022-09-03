@@ -33,7 +33,14 @@
                   class="imageBlock"
                   v-if="item.type == 'image'"
                   :src="baseUrl + item.value"
+                  :preview-src-list="[baseUrl + item.value]"
+                  preview-teleported="true"
+                  hide-on-click-modal="true"
+                  z-index="99"
               ></el-image>
+              <div v-if="item.type == 'image'">
+                {{item.imageName}}
+              </div>
             </template>
           </div>
           <div class="descriptionText" v-else>暂无描述</div>
@@ -45,6 +52,14 @@
                   <div class="caseCard">
                     <div class="caseImageWrap">
                       <el-image
+                          v-if="item.imgWebAddress.indexOf('http://') >= 0"
+                          class="caseImage"
+                          @click="startSearch(item.name)"
+                          :src="item.imgWebAddress"
+                          fit="fill"
+                      ></el-image>
+                      <el-image
+                          v-else
                           class="caseImage"
                           @click="startSearch(item.name)"
                           :src="item.imgWebAddress"
@@ -200,6 +215,7 @@ const getCaseInfo = () => {
   caseId = route.query.caseId;
   get("/case/getCaseById/"+caseId).then(res=>{
     caseInfo.value = res.data.data;
+    console.log("案例描述信息",caseInfo.value);
     getResourceDataById(caseInfo.value.resourceDataList);
   })
 }
@@ -286,7 +302,7 @@ const openInLab=()=>{
 <style lang="less" scoped>
 .about {
   top: 65px;
-  background-color: white;
+  background-color: hsl(0,0,98%);
   overflow: scroll;
   height: calc(100vh - 65px);
   margin-bottom: 65px;
@@ -307,42 +323,6 @@ const openInLab=()=>{
 .data-item:hover{
   background-color: rgb(248, 248, 248);
 }
-/*.caseImageWrap{*/
-/*  display: flex;*/
-/*  flex-direction: row;*/
-/*  flex-wrap: wrap;*/
-/*  position: relative;*/
-/*  height: 120px;*/
-/*  width: 192px;*/
-/*  cursor: pointer;*/
-/*}*/
-
-/*.caseImage{*/
-/*  height: 120px;*/
-/*  width: 192px;*/
-/*}*/
-/*.imageMask{*/
-/*  height: 120px;*/
-/*  width: 192px;*/
-/*  opacity: 0;*/
-/*  position: absolute;*/
-/*  top:0;*/
-/*  right: 0;*/
-/*  background-color: rgba(0,0,0,0.7);*/
-/*  color:white;*/
-/*  pointer-events: none;*/
-/*  transition:opacity 200ms linear ;*/
-/*  z-index: 100;*/
-/*  display: flex;*/
-/*  justify-content: center;*/
-/*  align-items: center;*/
-/*}*/
-/*.caseImageWrap:hover .imageMask{*/
-/*  opacity: 1;*/
-/*}*/
-/*.caseIcon{*/
-/*  width: 1em;*/
-/*}*/
 
 @imageHeight: 160px;
 @imageWidth:240px;
@@ -370,7 +350,7 @@ const openInLab=()=>{
   top: 0;
   right: 0;
   background-color: rgba(0, 0, 0, 0.7);
-  color: white;
+  color: hsl(0,0,98%);
   pointer-events: none;
   transition: opacity 200ms linear;
   z-index: 100;
@@ -433,7 +413,7 @@ const openInLab=()=>{
 }
 .font-size-1{
   font-size: 1rem;
-  line-height: 1.5;
+  line-height: 1;
   color: #6e6e6e;
   padding: 15px 15px 0 20px;
 }
@@ -446,11 +426,12 @@ const openInLab=()=>{
 }
 
 .descriptionText {
-  text-indent: 2rem;
-  font-size: 1.2rem;
+  margin-top: 5px;
+  text-indent: 1.5rem;
+  font-size: 1.1rem;
 }
 .imageBlock {
-  width: 50%;
+  max-height: 45vh;
   margin-top: 15px;
   margin-bottom: 15px;
   animation: scale-in-center 0.5s both;
@@ -480,7 +461,7 @@ const openInLab=()=>{
   transform: perspective(1px) translateZ(0);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
   position: relative;
-  background: white;
+  background: hsl(0,0,98%);
   transition-property: color;
   transition-duration: 0.4s;
 }
@@ -500,7 +481,7 @@ const openInLab=()=>{
   transition-timing-function: ease-out;
 }
 .hvr-shutter-out-horizontal:hover, .hvr-shutter-out-horizontal:focus, .hvr-shutter-out-horizontal:active {
-  color: white;
+  color: hsl(0,0,98%);
 }
 .hvr-shutter-out-horizontal:hover:before, .hvr-shutter-out-horizontal:focus:before, .hvr-shutter-out-horizontal:active:before {
   transform: scaleX(1);

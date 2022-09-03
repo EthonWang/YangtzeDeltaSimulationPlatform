@@ -2,10 +2,10 @@
 <!-- ·功能： -->
 <!-- 1.应用于个人空间“我的数据”与“我的实验”的科学问题组织与筛选 -->
 <template>
-  <div style="background-color: white">
-    <h2>科学专题筛选</h2>
+  <div style="">
+    <h2>专题分类</h2>
     <el-tree
-      style="width: 100%; height: 95%; background: white"
+      style="width: 100%; height: 95%; background: transparent"
       :data="data"
       show-checkbox
       node-key="label"
@@ -65,25 +65,24 @@ const data = [
         label: "未分类",
       },
       {
-        id: 1,
-        label: "长三角灾害响应与治理",
+        id: 3,
+        label: "流域水循环及驱动机制",
         children: [
           {
-            id: 11,
-            label: "台风与风暴潮",
+            id: 31,
+            label: "流域生态环境演变",
           },
           {
-            id: 12,
-            label: "洪涝水环境灾害",
-          },
-
-          {
-            id: 13,
-            label: "地质灾害",
+            id: 32,
+            label: "流域碳水耦合循环",
           },
           {
-            id: 14,
-            label: "大气污染",
+            id: 33,
+            label: "地表地下水耦合",
+          },
+          {
+            id: 34,
+            label: "湖泊水环境监测",
           },
         ],
       },
@@ -110,28 +109,6 @@ const data = [
           {
             id: 25,
             label: "土壤氮转化过程及其环境效应",
-          },
-        ],
-      },
-      {
-        id: 3,
-        label: "流域水循环及驱动机制",
-        children: [
-          {
-            id: 31,
-            label: "流域生态环境演变",
-          },
-          {
-            id: 32,
-            label: "流域碳水耦合循环",
-          },
-          {
-            id: 33,
-            label: "地表地下水耦合",
-          },
-          {
-            id: 34,
-            label: "湖泊水环境监测",
           },
         ],
       },
@@ -169,6 +146,29 @@ const data = [
           },
         ],
       },
+      {
+        id: 1,
+        label: "长三角灾害响应与治理",
+        children: [
+          {
+            id: 11,
+            label: "台风与风暴潮",
+          },
+          {
+            id: 12,
+            label: "洪涝水环境灾害",
+          },
+
+          {
+            id: 13,
+            label: "地质灾害",
+          },
+          {
+            id: 14,
+            label: "大气污染",
+          },
+        ],
+      },
     ],
   },
 ];
@@ -181,7 +181,7 @@ h2 {
   position: relative;
   font-size: 23px;
   z-index: 400;
-  background: white;
+  // background: hsl(0,0,98%);
 }
 </style>
 

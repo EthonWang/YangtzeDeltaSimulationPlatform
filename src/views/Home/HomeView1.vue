@@ -26,7 +26,7 @@
           justify-content: space-around;
         "
       >
-        <div size="large" class="border-box flowbtn">灾害响应与治理</div>
+        <div size="large" class="border-box flowbtn">流域水循环及驱动机制</div>
         <div size="large" class="border-box flowbtn">
           全球变化与区域环境演化
         </div>
@@ -38,7 +38,7 @@
           class="border-box flowbtn"
           style="margin-right: 0 !important"
         >
-          流域水循环及驱动机制
+          灾害响应与治理
         </div>
       </div>
 
@@ -48,7 +48,7 @@
       >
         <el-divider style="margin: 5px 0 5px 0"></el-divider>
         <p>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长三角模拟平台汇聚了大量长江三角洲区域的地理模型和数据资源，用以揭示区域水循环及其内部驱动机理的水循环，阐明全球气候变化条件下区域环境演化规律，以及长三角城市化与人地关系相互作用的互动互馈机制的综合集成模型，实现区域灾害的快速响应与治理，服务于长三角高质量一体化发展国家战略。
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长三角虚拟地理实验平台是以长三角区域为研究对象，以区域发展问题为驱动，将自然地理过程和社会经济过程相耦合的虚拟地理环境模拟和实验平台；强调了大气、陆面和海洋之间的循环演变，自然和城市之间的互联互动，学科之间的深度交叉；具有汇聚模拟资源、构建模拟模型和开展模型实验三大功能，可应用于地理过程模拟、自然灾害预报和综合决策制定多个领域，服务于长三角高质量一体化发展国家战略。
         </p>
         <el-divider style="margin: 15px 0 -5px 0"></el-divider>
         <div class="login">
@@ -87,34 +87,13 @@
         <path d="M0 40h1680V30S1340 0 840 0 0 30 0 30z" fill="#fff"></path>
       </svg>
     </div>
-    <!-- <div>
-      <p
-        class="introduce"
-        :class="{ show_ani: props.show, hide_ani: !props.show }"
-      >
-        长江三角洲区域自然资源丰富、经济发展活跃，<br>是人地活动最频繁的地区之一，<br>
-        是全球变化敏感区, <br>
-        是洪涝灾害易发区,<br>是长江经济带发展引擎区,<br>是新型城镇化先行区。
-      </p>
-      <img
-        @click="toModel"
-        :class="{ show_ani: props.show, hide_ani: !props.show }"
-        class="map"
-        src="http://i-1.33app.net/2021/3/12/87e04633-4304-4cc0-a5eb-9450a3e4d1d3.jpg"
-        alt=""
-      /> -->
-    <!-- <MapCharts class="map"></MapCharts> -->
-    <!-- <p class="cyberpunk inverse dotted introduce" v-if="show">
-        长江三角洲区域自然资源丰富、经济发展活跃，是人地活动最频繁的地区之一，在沉积学意义上，地处东部沿海，受季风气候与海面升降影响，是全球变化敏感区；在自然地理学意义上，地处长江下游平原地区，地势低洼，易洪易涝，是洪涝灾害易发区；在区域经济发展意义上，地处江海交汇，上海为龙头，长江黄金水道为纽带，是长江经济带发展引擎区；在行政区划上，地处世界经济最活跃区域，城市群、都市圈体系完备，区域内、区际间差异显著，是新型城镇化先行区。
-      </p> -->
-    <!-- <Fire style="position: fixed; top: 0px; left: 0; z-index: -1"></Fire> -->
-    <!-- </div> -->
+   
   </div>
 </template>
 
 <script setup>
 //采用vue2写法的话把setup去掉，
-import { ref, onMounted, defineProps, defineEmits } from "vue";
+import { ref, defineProps, defineEmits } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import MapCharts from "components/Home/MapCharts.vue";
@@ -155,20 +134,73 @@ const getHotsearchList = () => {
   );
 };
 getHotsearchList();
+const dataInterval = [0, 1, 5, 50, 200, 1000, 5000, 12000];
+let resourceNum_ori = [0, 0, 0, 0];
+let resourceModelNum_ori = [0, 0, 0, 0];
+let resourceNum = [0, 0, 0, 0];
+let resourceModelNum = [0, 0, 0, 0];
+const restoreNum = (num) => {
+  let i = resourceNum.indexOf(num);
+  if (i == -1) {
+    i = resourceModelNum.indexOf(num);
+    return resourceModelNum_ori[i];
+  } else {
+    return resourceNum_ori[i];
+  }
+  //  let y_value =
+  //         ((resourceModelNum[i] - min_v) / (max_v - min_v)) * 10 + index * 10;
+  // ((x- index * 10)/ 10)*(max_v - min_v)+ min_v = num   ;
+};
 setTimeout(() => {
-  let resourceNum = [0, 0, 0, 0];
-  let resourceModelNum = [0, 0, 0, 0];
   let allResourceNum = localStorage.getItem("allResourceNum");
+
   if (allResourceNum) {
     allResourceNum = JSON.parse(Decrypt(allResourceNum));
     resourceNum[0] = allResourceNum.disasterNum;
     resourceNum[1] = allResourceNum.globalNum;
     resourceNum[2] = allResourceNum.riverNum;
     resourceNum[3] = allResourceNum.cityNum;
+    resourceNum_ori[0] = allResourceNum.disasterNum;
+    resourceNum_ori[1] = allResourceNum.globalNum;
+    resourceNum_ori[2] = allResourceNum.riverNum;
+    resourceNum_ori[3] = allResourceNum.cityNum;
     resourceModelNum[0] = allResourceNum.disasterModelNum;
     resourceModelNum[1] = allResourceNum.globalModelNum;
     resourceModelNum[2] = allResourceNum.riverModelNum;
     resourceModelNum[3] = allResourceNum.cityModelNum;
+    resourceModelNum_ori[0] = allResourceNum.disasterModelNum;
+    resourceModelNum_ori[1] = allResourceNum.globalModelNum;
+    resourceModelNum_ori[2] = allResourceNum.riverModelNum;
+    resourceModelNum_ori[3] = allResourceNum.cityModelNum;
+
+    for (let i = 0; i < resourceNum.length; i++) {
+      // 1.寻找在数据间隔里小于Data的最大值
+      let min_v = Math.max(...dataInterval.filter((v) => v <= resourceNum[i]));
+      // 2.寻找在数据间隔里大于Data的最小值
+      let max_v = Math.min(...dataInterval.filter((v) => v > resourceNum[i]));
+      //  3.寻找 min_v 所在的下标
+      let index = dataInterval.findIndex((v) => v === min_v);
+      //  4.计算该Data在y轴上应该展示的位置
+      let y_value =
+        ((resourceNum[i] - min_v) / (max_v - min_v)) * 10 + index * 10;
+      resourceNum[i] = y_value;
+    }
+    for (let i = 0; i < resourceNum.length; i++) {
+      // 1.寻找在数据间隔里小于Data的最大值
+      let min_v = Math.max(
+        ...dataInterval.filter((v) => v <= resourceModelNum[i])
+      );
+      // 2.寻找在数据间隔里大于Data的最小值
+      let max_v = Math.min(
+        ...dataInterval.filter((v) => v > resourceModelNum[i])
+      );
+      //  3.寻找 min_v 所在的下标
+      let index = dataInterval.findIndex((v) => v === min_v);
+      //  4.计算该Data在y轴上应该展示的位置
+      let y_value =
+        ((resourceModelNum[i] - min_v) / (max_v - min_v)) * 10 + index * 10;
+      resourceModelNum[i] = y_value;
+    }
   }
 
   var chartDom1 = document.getElementById("main1");
@@ -190,11 +222,78 @@ setTimeout(() => {
         },
       },
     },
+    tooltip: {
+      // 鼠标悬浮提示框显示 X和Y 轴数据
+      // trigger: "axis",
+      // backgroundColor: "rgba(32, 33, 36,.7)",
+      // borderColor: "rgba(32, 33, 36,0.20)",
+      // borderWidth: 1,
+      // textStyle: {
+      //   // 文字提示样式
+      //   color: "#fff",
+      //   fontSize: "12",
+      // },
+      axisPointer: {
+        // 坐标轴虚线
+        type: "cross",
+        label: {
+          backgroundColor: "#6a7985",
+          show:false,
+          // formatter: (params) => {
+          //   return String(restoreNum(params.value));
+          // },
+        },
+      },
+      formatter: (params) => {
+        return params.name.replace('\n','')+"-"+params.seriesName + "：" + String(restoreNum(params.value)) + "条";
+      },
+    },
+
     angleAxis: {
       type: "category",
-      data: ["灾害", "环境", "流域", "城市"],
+      data: [
+        "灾害响应与治理",
+        "全球变化与\n区域环境演化",
+        "流域水循环\n及其驱动机制",
+        "城市化与人地关系\n协调发展",
+      ],
     },
-    radiusAxis: {},
+    radiusAxis: {
+      type: "value",
+      scale: true,
+      // minInterval:1,
+      // maxInterval:1000,
+      axisLabel: {
+        //v值 i系统分层值
+        formatter: (v, i) => {
+          if (i === 0) {
+            v = String(dataInterval[i]);
+          }
+          if (i === 1) {
+            v = String(dataInterval[i]);
+          }
+          if (i === 2) {
+            v = String(dataInterval[i]);
+          }
+          if (i === 3) {
+            v = String(dataInterval[i]);
+          }
+          if (i === 4) {
+            v = String(dataInterval[i]);
+          }
+          if (i === 5) {
+            v = String(dataInterval[i]);
+          }
+          if (i === 6) {
+            v = String(dataInterval[i]);
+          }
+          if (i === 7) {
+            v = String(dataInterval[i]);
+          }
+          return v;
+        },
+      },
+    },
     polar: {},
     backgroundColor: "transparent",
     series: [
@@ -203,25 +302,38 @@ setTimeout(() => {
         data: resourceModelNum,
         coordinateSystem: "polar",
         name: "模型",
-        stack: "a",
-        emphasis: {
-          focus: "series",
+        // stack: "a",
+        itemStyle:{
+          opacity:"0.75"
         },
+        // emphasis: {
+        //   focus: "series",
+        // },
       },
       {
         type: "bar",
         data: resourceNum,
         coordinateSystem: "polar",
         name: "数据",
-        stack: "a",
-        emphasis: {
-          focus: "series",
+        itemStyle:{
+          opacity:"0.65"
         },
+        // label: {
+        //   formatter: (params) => {
+        //     return params.value * 2;
+        //   },
+        // },
+
+        // stack: "a",
+        // emphasis: {
+        //   focus: "series",
+        // },
       },
     ],
     legend: {
       show: true,
       data: ["模型", "数据"],
+      selectedMode: false,
     },
   };
 
@@ -235,14 +347,15 @@ setTimeout(() => {
   var data2 = [];
   for (let i in hotsearchData) {
     data2.push(hotsearchData[i].pageviews);
-    xAxisData.push(hotsearchData[i].name)
+    xAxisData.push(hotsearchData[i].name);
   }
   option2 = {
     title: {
-      text: "资源使用情况",
+      text: "资源使用热点",
     },
     backgroundColor: "transparent",
     legend: {
+      selectedMode: false,
       data: ["数据"],
     },
     toolbox: {
@@ -257,7 +370,15 @@ setTimeout(() => {
         },
       },
     },
-    tooltip: {},
+    tooltip: {
+      axisPointer: {
+        // 坐标轴虚线
+        type: "cross",
+        label: {
+          backgroundColor: "#6a7985",
+        },
+      },
+    },
     xAxis: {
       data: xAxisData,
       splitLine: {
@@ -310,7 +431,7 @@ setTimeout(() => {
   text-transform: uppercase;
   transition: 0.5s;
   background-size: 200% auto;
-  color: white;
+  color: hsl(0,0,98%);
   border-radius: 10px;
   display: block;
   border: 0px;
@@ -369,7 +490,7 @@ setTimeout(() => {
     transform: scale(1) perspective(1200px) rotateY(-15deg);
   }
   h1 {
-    color: white;
+    color: hsl(0,0,98%);
     font-size: 2.24vw;
     text-align: center;
   }
@@ -400,14 +521,15 @@ setTimeout(() => {
   z-index: 2;
   left: 1vw;
   top: 25vh;
-  width: 18.55vw;
-  height: fit-content;
+  width: 20.55vw;
+  max-width: 23.55vw;
+  height: 65vh;
   transition: all 1s;
   padding: 20px 20px;
   border-radius: 5%;
   transform: scale(1) perspective(1200px) rotateY(15deg);
   h1 {
-    color: white;
+    color: hsl(0,0,98%);
     font-size: 3.75vw;
     margin-top: -10px;
     margin-bottom: 10px;
@@ -416,7 +538,7 @@ setTimeout(() => {
   p {
     // margin-top: -10px;
     font-size: 1.1vw;
-    color: white;
+    color: hsl(0,0,98%);
     line-height: 170%;
     width: 100%;
   }
@@ -576,7 +698,7 @@ setTimeout(() => {
   height: 50%;
 }
 .border-box {
-  color: white;
+  color: hsl(0,0,98%);
   position: relative;
   // margin:300px auto;
   // width:400px;

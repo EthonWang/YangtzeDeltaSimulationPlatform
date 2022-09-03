@@ -95,6 +95,8 @@ const mousedown = () => {
 
 const toSci = () => {
   home_scroll_listen.value.scrollTop = window.innerHeight * 1.96;
+  document.getElementsByClassName("container")[0].style.width = "100vw";
+  
 };
 
 const suitable = () => {

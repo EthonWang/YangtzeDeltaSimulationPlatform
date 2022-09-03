@@ -107,6 +107,8 @@
     </template>
   </el-dialog>
   <el-dialog v-model="show_task_model" title="添加模型到实验室" width="30%">
+    <h3 style="margin-bottom: 15px">模型描述</h3>
+    {{ selectedRes.description }}
     <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
     <el-button
       v-for="(task, index) in task_list"
@@ -177,14 +179,14 @@
     />
     <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
     <el-button
-      v-for="(task) in task_list"
+      v-for="task in task_list"
       :key="task"
       @click="addDataToTask(task)"
       style="margin: 5px"
     >
-      <el-icon><Monitor /></el-icon> &nbsp;
-      
-      ><span>{{ task.name }}</span></el-button
+      <el-icon><Monitor /></el-icon> &nbsp; ><span>{{
+        task.name
+      }}</span></el-button
     >
     <template #footer>
       <span class="dialog-footer">
@@ -257,8 +259,8 @@ const addDataToTask = (task) => {
     task_api.addData(task, [data]);
   } else if (selectedVisualDataItems.value.length <= 0) {
     ElMessage.error("您未选择数据");
-    return
-  }  else {
+    return;
+  } else {
     let dataList = [];
     if (setSelectedVisualDataItemsDataSet.value) {
       //设置集

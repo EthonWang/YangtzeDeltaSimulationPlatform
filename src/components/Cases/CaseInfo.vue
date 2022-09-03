@@ -59,14 +59,6 @@
                           fit="fill"
                       ></el-image>
                       <el-image
-                          v-else
-                          class="caseImage"
-                          @click="startSearch(item.name)"
-                          :src="item.imgWebAddress"
-                          v-if="item.imgWebAddress.indexOf('http://') >= 0"
-                          fit="fill"
-                      ></el-image>
-                      <el-image
                           class="caseImage"
                           @click="startSearch(item.name)"
                           :src="dataServer + item.imgWebAddress"

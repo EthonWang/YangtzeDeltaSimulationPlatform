@@ -20,13 +20,22 @@
           </div>
         </dv-border-box-9>
 
+        <!--        <div class="part45 border-box ">-->
+        <!--          <div class="flex-row-center">-->
+        <!--            <h2 style=" color: #ffffff;position: absolute; margin-top: 70px; z-index: 50">长三角气候</h2>-->
+        <!--          </div>-->
+        <!--          <div class="content-part-1">-->
+        <!--            <img class="img" src="/case/rainForecast/长三角气候.gif" style="height: 90%;width: 90%">-->
+        <!--          </div>-->
+        <!--        </div>-->
         <div class="part45 border-box ">
-          <div class="flex-row-center">
-            <h2 style=" color: #fafafa;position: absolute; margin-top: 70px; z-index: 50">长三角气候</h2>
-          </div>
-          <div class="content-part-1">
-            <img class="img" src="/case/rainForecast/长三角气候.gif" style="height: 90%;width: 90%">
-          </div>
+<!--          <div class="flex-row-center">-->
+<!--            <h2 style=" color: #fafafa;position: absolute; margin-top: 70px; z-index: 50">长三角气候</h2>-->
+<!--          </div>-->
+<!--          <div class="content-part-1">-->
+<!--            <img class="img" src="/case/rainForecast/长三角气候.gif" style="height: 90%;width: 90%">-->
+<!--          </div>-->
+          <div id="lineChart" style="  width: 95%;  height: 95%;"></div>
         </div>
       </div>
 
@@ -67,9 +76,12 @@
         <dv-border-box-1 :color="['#00a1ff']" style="  width: 100%;  height: 35%; position: relative;">
           <div class="content-part-2">
 
-            <div id="lineChart" style="  width: 45%;  height: 90%;"></div>
+
+            <div id="historyRiverLevelChart" style="  width: 45%;  height: 90%;z-index: 50"></div>
+
 
             <div id="pieChart" style="  width: 45%;  height: 90%;"></div>
+
 
           </div>
         </dv-border-box-1>
@@ -79,8 +91,7 @@
 
 
       <div class="content-col-3 flex-Column-Around-Center">
-
-        <dv-border-box-9 :color="['#00a1ff']" style="  width: 100%;  height: 70%; position: relative;">
+        <dv-border-box-9 :color="['#00a1ff']" style="  width: 100%;  height: 60%; position: relative;">
           <div class="flex-row-center">
             <h2 style=" color: #fafafa;position: absolute;    margin-top: 70px; z-index: 50">历史洪灾</h2>
           </div>
@@ -90,8 +101,17 @@
         </dv-border-box-9>
 
 
-        <div class="part25 border-box ">
-          <div id="historyRiverLevelChart" style="  width: 100%;  height: 100%;z-index: 50"></div>
+        <div class="part35 border-box ">
+          <!--          <div id="historyRiverLevelChart" style="  width: 100%;  height: 100%;z-index: 50"></div>-->
+
+          <div style=" width: 100%;  height:100%;">
+            <div class="flex-row-center">
+              <h2 style=" color: #ffffff;position: absolute; margin-top: 40px; z-index: 50">长三角气候</h2>
+            </div>
+            <div class="content-part-1">
+              <img class="img" src="/case/rainForecast/长三角气候.gif" style="height: 100%;width: 80%">
+            </div>
+          </div>
         </div>
 
 
@@ -276,10 +296,10 @@ export default {
 
     //降雨地区排行数据获取
     getSortRainfallByDistrict() {
-       post("/dashboard/sortRainfallByDistrict", {
-            "count": 10,
-            "isAsc": -1
-          })
+      post("/dashboard/sortRainfallByDistrict", {
+        "count": 10,
+        "isAsc": -1
+      })
           .then((res) => {
             let data = res.data
             let name = []
@@ -358,9 +378,9 @@ export default {
     //部分地区降雨预测数据获取
     getDailyRainfallByDistrict() {
       post("/dashboard/getDailyRainfallByDistrict", {
-            "count": 10,
-            "isAsc": -1
-          })
+        "count": 10,
+        "isAsc": -1
+      })
           .then((res) => {
             let rainData = res.data
             let name = []
@@ -746,6 +766,14 @@ export default {
 .part25 {
   width: 100%;
   height: 25%;
+  padding: 20px;
+  position: relative;
+  box-shadow: rgb(0 108 255) 0px 0px 25px inset;
+}
+
+.part35 {
+  width: 100%;
+  height: 35%;
   padding: 20px;
   position: relative;
   box-shadow: rgb(0 108 255) 0px 0px 25px inset;

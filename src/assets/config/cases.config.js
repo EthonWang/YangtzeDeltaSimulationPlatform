@@ -36,7 +36,13 @@ export const cases_config = [
         problem: "大陆板块漂移",
         path: "PlateDrift",
         component: () => import("views/CasesView/PlateDrift.vue")
-    }, {
+    },
+    {
+        problem: "太阳能",
+        path: "SolarPower",
+        component: () => import("views/CasesView/SolarPower.vue")
+    },
+    {
         problem: "小流域山洪灾害在线模拟",
         path: "watershedFlood",
         component: () => import("views/CasesView/watershedFlood.vue")
@@ -90,7 +96,12 @@ export const cases_config = [
         problem: "测试案例",
         path: "testCase",
         component: () => import("views/CasesView/testCase.vue")
-    }
+    },
+    {
+        problem: "长三角洪水灾害多尺度集合预警",
+        path: "FloodMultiScale",
+        component: () => import("views/CasesView/FloodMultiScale.vue")
+    },
     // {
     //     problem:"湖泊水环境监测",
     //     name:"滇池模型-富营养化水质参数",

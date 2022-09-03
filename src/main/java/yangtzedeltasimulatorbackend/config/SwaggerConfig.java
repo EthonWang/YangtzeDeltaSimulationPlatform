@@ -12,6 +12,12 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+/**
+ * @Description
+ * @Auther wyjq
+ * @Date 2022/4/6
+ **/
+
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig implements WebMvcConfigurer {

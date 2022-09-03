@@ -17,8 +17,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import yangtzedeltasimulatorbackend.dao.FolderDao;
 import yangtzedeltasimulatorbackend.dao.ModelItemDao;
 import yangtzedeltasimulatorbackend.dao.QuestionDao;
+import yangtzedeltasimulatorbackend.entity.po.Folder;
 import yangtzedeltasimulatorbackend.entity.po.QuestionItem;
 import yangtzedeltasimulatorbackend.service.LabTaskService;
 import yangtzedeltasimulatorbackend.utils.GeoServerUtils;
@@ -58,6 +60,9 @@ class YangtzeDeltaSimulatorBackendApplicationTests {
     //远程数据容器地址
     @Value("${dataContainerIpAndPort}")
     String dataContainerIpAndPort;
+
+    @Autowired
+    FolderDao folderDao;
 
     @Test
     void contextLoads() {
@@ -250,8 +255,7 @@ class YangtzeDeltaSimulatorBackendApplicationTests {
 
     @Test
     void del22(){
-        String url="http://221.226.60.2:8082/data/1d5c8da2-6767-4886-a3d3-b2b4cb708962";
-        File file = MyFileUtils.downloadRemoteData(url, "E://");
+        Folder labResultFolder=folderDao.findByNameAndUserId("实验结果","123");
         System.out.println("aa");
     }
 

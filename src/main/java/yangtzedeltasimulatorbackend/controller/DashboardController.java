@@ -12,6 +12,7 @@ import yangtzedeltasimulatorbackend.service.DashboardService;
  * @Author bin
  * @Date 2022/05/25
  */
+
 @RestController
 @RequestMapping(value="/dashboard")
 public class DashboardController {

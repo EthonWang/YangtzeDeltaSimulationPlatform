@@ -5,12 +5,6 @@ import lombok.Data;
 
 import java.util.ArrayList;
 
-/**
- * @Description
- * @Auther wyjq
- * @Date 2022/6/28
- **/
-
 @Data
 public class GDALClipDTO {
     String inputGeoJson;

@@ -99,11 +99,13 @@ public class UserResourceService {
     }
 
     //file 已经存在在data文件里，这里是添加到数据库里
-    public UserData saveDataItem(File file,String userId,String parentId) {
+    public UserData saveDataItem(File file,String userId,String parentId,String fileNewName) {
         try{
             String fileName = file.getName(); //eg: XXX.js
+            String extName=FileUtil.extName(fileName);
+
             UserData userData =new UserData();
-            userData.setName(fileName);
+            userData.setName(fileNewName+"."+extName);
             userData.setParentId(parentId);
             userData.setUserId(userId);
             userData.setFileRelativePath("/data/"+fileName);
@@ -303,6 +305,16 @@ public class UserResourceService {
         }catch (Exception e){
             log.error(e.getMessage());
             return ResultUtils.error("更新文件夹信息失败"+e.getMessage());
+        }
+    }
+
+    public JsonResult getAllPublicUserData() {
+        try {
+            List<UserData> userDataList=userDataDao.findByPublicBoolean(true);
+            return ResultUtils.success(userDataList);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("获取公共数据失败");
         }
     }
 }

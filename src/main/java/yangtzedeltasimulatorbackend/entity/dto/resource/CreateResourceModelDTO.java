@@ -21,7 +21,7 @@ import java.util.List;
 public class CreateResourceModelDTO {
 
     String name; //模型名称
-    String overview; //概述
+    String description; //概述
     List<String> authorShips; //作者
 
     String problemTags="";  //地理问题标签

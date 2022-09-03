@@ -14,4 +14,5 @@ public class UpdateFolderDTO {
     boolean publicBoolean=false;
     String description;
     String problemTags="";  //地理问题标签
+    String parentId;
 }

@@ -18,4 +18,6 @@ public interface FolderDao extends MongoRepository<Folder, String> {
     List<Folder> findAllByParentId(String folderId);
 
     List<Folder> findAllByUserId(String userId);
+
+    Folder findByNameAndUserId(String 实验结果, String userId);
 }

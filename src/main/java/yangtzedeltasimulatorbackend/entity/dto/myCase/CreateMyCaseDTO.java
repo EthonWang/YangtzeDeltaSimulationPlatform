@@ -10,6 +10,7 @@ import java.util.List;
  * @Auther wyjq
  * @Date 2022/7/6
  **/
+
 @Data
 public class CreateMyCaseDTO {
     String name;

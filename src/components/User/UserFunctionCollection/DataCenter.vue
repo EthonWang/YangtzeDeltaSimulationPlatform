@@ -593,7 +593,7 @@ const downloadData = () => {
     } else {
       api.downloadFile(file).then(() => {
         ElMessage({
-          message: "下载成功",
+          message: "下载开始",
           type: "success",
         });
       });

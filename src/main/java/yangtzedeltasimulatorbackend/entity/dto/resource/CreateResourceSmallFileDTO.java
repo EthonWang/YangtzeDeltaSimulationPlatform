@@ -18,6 +18,9 @@ public class CreateResourceSmallFileDTO {
     String description; //概述
     boolean publicBoolean=false;  //是否公开,默认是私有
     String visualType;
+    String fileWebAddress;
+    String problemTags="";  //地理问题标签
+    String normalTags=""; //地理数据常规标签
 
 
 }

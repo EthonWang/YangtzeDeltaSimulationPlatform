@@ -31,13 +31,9 @@ import yangtzedeltasimulatorbackend.utils.ResultUtils;
 import yangtzedeltasimulatorbackend.utils.Utils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @Description
@@ -277,6 +273,26 @@ public class ResourceService {
         }
     }
 
+    public JsonResult getResourceDataListByVisualChecked(ResourcePageDTO resourcePageDTO) {
+        try{
+            Pageable pageable = commonService.getPageable(resourcePageDTO);
+            String tagClass= resourcePageDTO.getTagClass();
+
+            if(tagClass.equals("problemTags")){
+                Page<ResourceData> re = resourceDataDao.findAllByNameLikeIgnoreCaseAndProblemTagsLikeIgnoreCaseAndVisualizationBoolean(resourcePageDTO.getSearchText(), resourcePageDTO.getTagName(), true,pageable);
+                return ResultUtils.success(re);
+            }else if(tagClass.equals("normalTags")){
+                Page<ResourceData> re = resourceDataDao.findAllByNameLikeIgnoreCaseAndNormalTagsLikeIgnoreCaseAndVisualizationBoolean(resourcePageDTO.getSearchText(), resourcePageDTO.getTagName(), true, pageable);
+                return ResultUtils.success(re);
+            }else {
+                return ResultUtils.error("数据类别不正确，problemTags或normalTags");
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("保存资源数据失败！");
+        }
+    }
+
     public JsonResult deleteResourceData(String resourceDataId) {
         try{
             ResourceData resourceData = resourceDataDao.findById(resourceDataId).get();
@@ -334,6 +350,43 @@ public class ResourceService {
         }catch (Exception e){
             log.error(e.getMessage());
             return ResultUtils.error("保存资源小文件失败！");
+        }
+    }
+
+    public JsonResult saveResourceItemFile(CreateResourceSmallFileDTO createResourceSmallFileDTO, MultipartFile upSmallFile) {
+        try{
+            File folder = new File(resourceDataFolder);
+            if (!folder.isDirectory()) {
+                folder.mkdirs();
+            }
+
+            ResourceData resourceItemFile=new ResourceData();
+            BeanUtils.copyProperties(createResourceSmallFileDTO,resourceItemFile);
+
+            //可视化文件
+            if (upSmallFile.isEmpty()) {
+                return ResultUtils.error("上传文件为空");
+            }
+
+            //将文件保存到指定位置
+            String fileName = upSmallFile.getOriginalFilename(); //eg: XXX.js
+            String fileMainName= FileNameUtil.mainName(fileName); // XXX
+            String fileExtName = FileNameUtil.extName(fileName); //js
+            String fileNewName=IdUtil.objectId()+"."+fileExtName;
+            File saveVisualFile = new File(folder, fileNewName);//eg: E:\\TEMP\\1231231.js
+
+            upSmallFile.transferTo(saveVisualFile);
+            resourceItemFile.setImgStoreName(fileNewName);
+            resourceItemFile.setImgWebAddress("/store/resourceData/"+fileNewName);
+            resourceItemFile.setImgRelativePath("/resourceData/"+fileNewName);
+            resourceItemFile.setFileSize("0");
+            resourceItemFile.setUserEmail("temp@xx.com");
+            resourceDataDao.save(resourceItemFile);
+
+            return ResultUtils.success("保存资源条目数据成功！");
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultUtils.error("保存资源条目数据失败！");
         }
     }
 
@@ -498,5 +551,82 @@ public class ResourceService {
             log.error(e.getMessage());
             return ResultUtils.error("获取模型信息失败");
         }
+    }
+
+    public JsonResult resDataView(String id){
+        Optional<ResourceData> byId = resourceDataDao.findById(id);
+        if(!byId.isPresent()){
+            return ResultUtils.error("获取数据信息失败");
+        }
+        ResourceData resourceData = byId.get();
+        resourceData.setPageviews(resourceData.getPageviews() + 1);
+        resourceDataDao.save(resourceData);
+        return ResultUtils.success("数据操作成功！");
+    }
+
+    public JsonResult getResByDataView(){
+        List<ResourceData> allByPageviews = resourceDataDao.findAll();
+        Collections.sort(allByPageviews, (o1, o2) -> o2.getPageviews()-o1.getPageviews());
+        return ResultUtils.success(allByPageviews.subList(0,6));
+    }
+
+
+    // 根据爬虫txt，快速导入数据资源条目
+    public JsonResult saveItemDataAuto(){
+        String txtPath = dataStoreDir + "/requestResult1.txt";
+        ArrayList<String> strList = new ArrayList<>();
+        try{
+            File file=new File(txtPath);
+            if(file.isFile() && file.exists()){ //判断文件是否存在
+                InputStreamReader read = new InputStreamReader(
+                        new FileInputStream(file),"GBK");//考虑到编码格式
+                BufferedReader bufferedReader = new BufferedReader(read);
+                String lineTxt = null;
+                while((lineTxt = bufferedReader.readLine()) != null){
+//                    System.out.println(lineTxt); // 一行一行的读
+                    strList.add(lineTxt);
+                }
+                read.close();
+            }else{
+                System.out.println("找不到指定的文件");
+            }
+        } catch (Exception e) {
+            System.out.println("读取文件内容出错");
+            e.printStackTrace();
+        }
+        for (int i = 0; i < strList.size(); i++) {
+            String[] fieldList = strList.get(i).split("\t");
+            ResourceData resourceItemFile=new ResourceData();
+            String visualPath = "http://nnu.geodata.cn/data/datadetails.html?dataguid=" + fieldList[0] + "&docid=" + fieldList[2];
+            String name = fieldList[1];
+            String fileSize = fieldList[3];
+            String thumbnailPath = "http://img.data.ac.cn/" + fieldList[4];
+            String problemTags;
+            if(fieldList.length <= 5){
+                problemTags = "";
+            }else {
+                problemTags = fieldList[5];
+            }
+            String normalTags;
+            if(fieldList.length <= 6){
+                normalTags = "";
+            } else {
+                normalTags = fieldList[6];
+            }
+            if(fieldList.length == 8){
+                normalTags = normalTags + "," + fieldList[7];
+            }
+            resourceItemFile.setName(name);
+            resourceItemFile.setType("data");
+            resourceItemFile.setFileSize(fileSize);
+            resourceItemFile.setDescription(name);
+            resourceItemFile.setFileWebAddress(visualPath);
+            resourceItemFile.setImgWebAddress(thumbnailPath);
+            resourceItemFile.setUserEmail("temp@xx.com");
+            resourceItemFile.setProblemTags(problemTags);
+            resourceItemFile.setNormalTags(normalTags);
+            resourceDataDao.save(resourceItemFile);
+        }
+        return ResultUtils.success(strList);
     }
 }

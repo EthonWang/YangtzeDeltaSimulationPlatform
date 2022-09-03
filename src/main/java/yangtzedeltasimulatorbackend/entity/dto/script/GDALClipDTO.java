@@ -1,6 +1,6 @@
 package yangtzedeltasimulatorbackend.entity.dto.script;
 
-import cn.hutool.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
 import java.util.ArrayList;

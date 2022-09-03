@@ -19,10 +19,14 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import yangtzedeltasimulatorbackend.dao.ModelItemDao;
 import yangtzedeltasimulatorbackend.dao.QuestionDao;
+import yangtzedeltasimulatorbackend.dao.ResourceDataDao;
+import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
 import yangtzedeltasimulatorbackend.entity.po.QuestionItem;
+import yangtzedeltasimulatorbackend.entity.po.ResourceData;
 import yangtzedeltasimulatorbackend.service.LabTaskService;
 import yangtzedeltasimulatorbackend.utils.GeoServerUtils;
 import yangtzedeltasimulatorbackend.utils.MyFileUtils;
+import yangtzedeltasimulatorbackend.utils.ResultUtils;
 import yangtzedeltasimulatorbackend.utils.Utils;
 
 import javax.swing.text.Style;
@@ -47,6 +51,9 @@ class YangtzeDeltaSimulatorBackendApplicationTests {
 
     @Autowired
     QuestionDao questionDao;
+
+    @Autowired
+    ResourceDataDao resourceDataDao;
 
     @Value("${dataStoreDir}"+"/models")
     private  String modelsFolder;
@@ -255,6 +262,43 @@ class YangtzeDeltaSimulatorBackendApplicationTests {
         System.out.println("aa");
     }
 
+    @Test
+    void resDataAddPageviews(){
+        List<ResourceData> all = resourceDataDao.findAll();
+        for (int i = 0; i < all.size(); i++) {
+            ResourceData item = all.get(i);
+            item.setPageviews(0);
+            resourceDataDao.save(item);
+        }
+    }
+    @Test
+    void getResByDataView(){
+        List<ResourceData> allByPageviews = resourceDataDao.findAll();
+        Collections.sort(allByPageviews, (o1, o2) -> o1.getPageviews()-o2.getPageviews());
+        System.out.println(allByPageviews);
+//        return ResultUtils.success(allByPageviews.subList(0,6));
+    }
 
+    @Test
+    void changePNG(){
+        String path = "/store/resourceData/63117680a5c5103c515731ab.png";
+        ResourceData resourceData = resourceDataDao.findById("6304dc3ca5c57662d9f9bdca").get();
+        resourceData.setImgWebAddress(path);
+        resourceData.setImgRelativePath("/resourceData/63117680a5c5103c515731ab.png");
+        resourceData.setImgStoreName("63117680a5c5103c515731ab.png");
+        resourceDataDao.save(resourceData);
+    }
+
+    @Test
+    void resDataFilesize2Long(){
+        List<ResourceData> allByPageviews = resourceDataDao.findAll();
+        for (int i = 0; i < allByPageviews.size(); i++) {
+            ResourceData item = allByPageviews.get(i);
+            Long filesize = Long.valueOf(item.getFileSize());
+//            System.out.println(filesize);
+            item.setFilesizeLong(filesize);
+            resourceDataDao.save(item);
+        }
+    }
 
 }

@@ -66,7 +66,7 @@ const mousedown = () => {
   }
   if (
     scrollTop.value > 0.9 * window.innerHeight &&
-    scrollTop.value < 1.1 * window.innerHeight
+    scrollTop.value < 1.0 * window.innerHeight
   ) {
     explore();
     document.getElementsByClassName("block_home")[0].style.opacity = 1;

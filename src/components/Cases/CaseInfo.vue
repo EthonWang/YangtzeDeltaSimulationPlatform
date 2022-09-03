@@ -26,9 +26,10 @@
                 v-for="(item, key) in caseInfo.description"
                 :key="key"
             >
-              <p v-if="item.type == 'text'" class="descriptionText">
+              <p style="width: 100%;" v-if="item.type == 'text'" class="descriptionText">
                 {{ item.value }}
               </p>
+              
               <el-image
                   class="imageBlock"
                   v-if="item.type == 'image'"

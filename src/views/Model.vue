@@ -450,10 +450,7 @@ export default {
     },
     addtoLab() {
       //长三角数据中心的数据
-      if (this.selectedVisualDataItems.length <= 0) {
-        ElMessage.error("您未选择数据");
-        return;
-      }else if(this.recommendShowOne.type=='model'){
+      if(this.recommendShowOne.type=='model'){
         let data = this.recommendShowOne;
          ElMessage({
             type: "success",
@@ -465,7 +462,10 @@ export default {
           localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
       } else if (this.recommendShowOne.visualizationBoolean == false) {
         window.open(this.recommendShowOne.fileWebAddress);
-      } else {
+      }else if (this.selectedVisualDataItems.length <= 0) {
+        ElMessage.error("您未选择数据");
+        return;
+      }  else {
         //我们平台的数据 公共+私有
         if ("id_backup" in this.recommendShowOne) {
           this.recommendShowOne["id"] = this.recommendShowOne["id_backup"];

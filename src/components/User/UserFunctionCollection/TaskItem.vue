@@ -168,9 +168,19 @@
         <h4>数据配置：</h4>
         <template v-for="(data, index) in props.task.dataList" :key="data">
           <el-form-item
-            :label="data.name.slice(0, 50)"
+          
             v-if="data.simularTrait != 'model' && data.simularTrait != 'task'"
           >
+          <template #label>
+            <span v-if="!edit_task">{{data.name.slice(0, 50)}}</span>
+            <el-input
+            v-if="edit_task"
+            v-model="data.name"
+            autosize
+            type="textarea"
+            placeholder="请输入描述"
+          />
+          </template>
             <el-button
               type="success"
               v-if="!edit_task"
@@ -404,10 +414,13 @@ const graphApi = new graphAPI();
 const data_recommend = ref("");
 let dataNameList = [];
 for (let i in props.task.dataList) {
-  dataNameList.push(props.task.dataList[i].name);
-  // for (let j in props.task.dataList[i].problemTags) {
-  //   dataNameList.push(props.task.dataList[i].problemTags[j]);
-  // }
+  // dataNameList.push(props.task.dataList[i].name);
+  for (let j in props.task.dataList[i].problemTags) {
+    dataNameList.push(props.task.dataList[i].problemTags[j]);
+  }
+  for (let j in props.task.dataList[i].normalTags) {
+    dataNameList.push(props.task.dataList[i].normalTags[j]);
+  }
 }
 for (let i in props.task.problemTags) {
   dataNameList.push(props.task.problemTags[i]);

@@ -99,7 +99,7 @@ export default {
   border: 1px solid #747474;
   border-radius: 1%;
   position: absolute;
-  background: hsl(0,0,98%);
+  background: #fafafa;
   z-index: 1002;
   /* opacity: 0.9; */
 }

@@ -3,12 +3,18 @@
 <template>
   <div id="app" class="">
     <Topbar
-    :background_show="background_show"
+      :background_show="background_show"
       @RouterFromBar="routerGo"
-      style="height: 65px; position: absolute; z-index: 500;overflow: hidden"
+      style="height: 65px; position: absolute; z-index: 500; overflow: hidden"
     ></Topbar>
 
-    <router-view @showTopbarBackground="showTopbarBackground" class="main"></router-view>
+    <router-view
+      @showTopbarBackground="showTopbarBackground"
+      class="main"
+    ></router-view>
+    <el-button class="btnback" style="" @click="myRouter.go(-1)">
+      返回
+    </el-button>
     <!-- </el-scrollbar> -->
     <!-- <div> OPENGMS</div> -->
   </div>
@@ -17,12 +23,13 @@
 import { reactive, computed, ref, defineProps } from "vue";
 import Topbar from "./components/App/Topbar.vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
-const background_show=ref(false)
-const showTopbarBackground=(bool)=>{
-  background_show.value=bool
-}
+const background_show = ref(false);
+const route = useRoute();
+const showTopbarBackground = (bool) => {
+  background_show.value = bool;
+};
 const myRouter = useRouter();
 const routerGo = (router) => {
   myRouter.push({ path: router });
@@ -30,11 +37,9 @@ const routerGo = (router) => {
 // window.onload=function(){document.getElementsByClassName("main")[0].height=window.innerHeight}
 </script>
 <style lang="less">
-
 @import "./css/global/cyberpunk.less";
 
 #app {
-
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: fit-content;
@@ -45,8 +50,18 @@ const routerGo = (router) => {
   // margin-left: -8px;
   // margin-right: -8px;
   // background: #24292f;
-  background: hsl(220,100%,5%);
-
+  background: hsl(220, 100%, 5%);
+}
+.btnback {
+  position: absolute;
+  top: 65px;
+  left: -45px;
+  z-index: 999;
+  opacity: 0.25;
+  &:hover {
+    left: 0;
+    opacity: 0.75;
+  }
 }
 .main {
   position: relative;

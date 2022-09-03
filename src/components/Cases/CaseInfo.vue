@@ -33,12 +33,13 @@
                   class="imageBlock"
                   v-if="item.type == 'image'"
                   :src="baseUrl + item.value"
+                  :fit="'contain'"
                   :preview-src-list="[baseUrl + item.value]"
                   preview-teleported="true"
                   hide-on-click-modal="true"
                   z-index="99"
               ></el-image>
-              <div v-if="item.type == 'image'">
+              <div v-if="item.type == 'image'" style="color:grey;">
                 {{item.imageName}}
               </div>
             </template>
@@ -423,7 +424,10 @@ const openInLab=()=>{
   font-size: 1.1rem;
 }
 .imageBlock {
-  max-height: 45vh;
+  object-fit:contain;
+  // object-position:center;
+  // max-width: 50%;
+  height: 45vh;
   margin-top: 15px;
   margin-bottom: 15px;
   animation: scale-in-center 0.5s both;

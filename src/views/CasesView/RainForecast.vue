@@ -5,9 +5,8 @@
     <div class="flex-row-center" style="height: 75px;">
       <!--      <h2 style="color: hsl(0,0,98%)"></h2>-->
       <dv-decoration-3 style="width:250px;height:40px;"/>
-      <dv-decoration-11 style="width:400px;height:75px;color: hsl(0,0,98%)"><h1>长三角降雨预报专题</h1></dv-decoration-11>
+      <dv-decoration-11 style="width:400px;height:75px;color:#fafafa"><h1>长三角降雨预报专题</h1></dv-decoration-11>
       <dv-decoration-3 style="width:250px;height:40px;"/>
-
     </div>
 
     <!--    内容-->
@@ -47,6 +46,8 @@
           <div class="content-part-map">
             <div id="map" style="    margin-bottom: 15px;"></div>
             <div class="dateForestShow" style=" z-index: 5"><h1>{{ dateForest }}</h1></div>
+            <div class="dateDescShow" style=" z-index: 5"><h2>红色站点显示降雨大于1mm</h2></div>
+
             <div class="rainfallforcast-color" style=" z-index: 5">
               <div class="color-bar">
                 <div class="color">
@@ -186,10 +187,6 @@ export default {
               "type": "image",
               "url": "/case/rainForecast/temp_rain_imgs/2008-08-06-0.png",
               "coordinates": [
-                // [113.25, 33.55],
-                // [115.65, 33.55],
-                // [115.65, 31.45],
-                // [113.25, 31.45]
                 [114.8, 35.1],
                 [122.8, 35.1],
                 [122.8, 27.1],
@@ -211,16 +208,6 @@ export default {
           "paint": {"raster-opacity": 0.85}
         });
 
-        // map.addLayer({
-        //   "id": "point",
-        //   "source": "rainStationSource",
-        //   "type": "circle",
-        //   "paint": {
-        //     "circle-radius": 1,
-        //     "circle-color": "#007cbf"
-        //   }
-        // });
-
         map.loadImage('/case/rainForecast/station.png', function (error, image) {
           if (error) throw error;
           map.addImage('station', image);
@@ -233,8 +220,10 @@ export default {
               "text-field": "{rainData0}",
               "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
               "text-offset": [0, 0.6],
+
               "text-anchor": "top",
-              "icon-size": 0.1
+              "icon-size": 0.1,
+
             },
             filter: ['>', 'rainData0', 1]
           });
@@ -255,10 +244,6 @@ export default {
         "type": "image",
         "url": imgUrl,
         "coordinates": [
-          // [113.25, 33.55],
-          // [115.65, 33.55],
-          // [115.65, 31.45],
-          // [113.25, 31.45]
           [114.8, 35.1],
           [122.8, 35.1],
           [122.8, 27.1],
@@ -378,16 +363,24 @@ export default {
     //部分地区降雨预测数据获取
     getDailyRainfallByDistrict() {
       post("/dashboard/getDailyRainfallByDistrict", {
-        "count": 10,
+        "count": 5,
         "isAsc": -1
       })
           .then((res) => {
             let rainData = res.data
             let name = []
-            Object.keys(rainData).forEach(key => {
-              name.push(key)
+            Object.keys(rainData).sort().forEach(key => {
+              name.unshift(key)
             })
 
+            // data.forEach((item, index, array) => {
+            //   Object.keys(item).forEach(key => {
+            //     name.unshift(key)
+            //     rain.unshift(item[key])
+            //   })
+            // })
+
+            console.log(name)
             this.createLineChart(name, rainData)
           });
     },
@@ -853,6 +846,13 @@ export default {
   color: #ff003b;
   position: absolute;
   top: 15%;
+  right: 30px;
+}
+
+.dateDescShow {
+  color: #ff003b;
+  position: absolute;
+  bottom: 8%;
   right: 30px;
 }
 

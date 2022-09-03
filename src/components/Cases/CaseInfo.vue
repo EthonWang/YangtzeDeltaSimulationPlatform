@@ -60,10 +60,10 @@
                           fit="fill"
                       ></el-image>
                       <el-image
-                          v-else
                           class="caseImage"
                           @click="startSearch(item.name)"
                           :src="dataServer + item.imgWebAddress"
+                          v-else
                           fit="fill"
                       ></el-image>
                       <div class="imageMask">

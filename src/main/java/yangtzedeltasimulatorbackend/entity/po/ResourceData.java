@@ -29,6 +29,7 @@ public class ResourceData {
     String type;
     String geoType;
     String fileSize;
+    Long filesizeLong; // 补上边fileSize类型定义为String的坑，用于排序，可以不用管
     String description; //概述
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     Date createTime=new Date(); //创建时间
@@ -55,6 +56,8 @@ public class ResourceData {
     boolean visualizationBoolean=false; // 是否可以可视化,默认false
 
     String visualType;
+
+    Integer pageviews = 0;
 
 }
 

@@ -41,6 +41,12 @@ public class ResourceController {
         return resourceService.getResourceDataList(resourcePageDTO);
     }
 
+    @ApiOperation(value = "数据---获取资源中心数据列表")
+    @PostMapping("/getResourceDataListByVisualChecked")
+    public JsonResult getResourceDataListByVisualChecked(@RequestBody ResourcePageDTO resourcePageDTO){
+        return resourceService.getResourceDataListByVisualChecked(resourcePageDTO);
+    }
+
     @ApiOperation(value = "数据---删除资源中心数据")
     @GetMapping("/deleteResourceData/{resourceDataId}")
     public JsonResult deleteResourceData(@PathVariable("resourceDataId") String resourceDataId ){
@@ -52,6 +58,13 @@ public class ResourceController {
     public JsonResult saveResourceSmallFile(@RequestPart("info") CreateResourceSmallFileDTO createResourceSmallFileDTO,
                                        @RequestPart("smallFile") MultipartFile smallFile){
         return resourceService.saveResourceSmallFile(createResourceSmallFileDTO,smallFile);
+    }
+
+    @ApiOperation(value = "数据---保存资源中心条目数据")
+    @PostMapping("/saveResourceItemFile")
+    public JsonResult saveResourceItemFile(@RequestPart("info") CreateResourceSmallFileDTO createResourceSmallFileDTO,
+                                            @RequestPart("imgFile") MultipartFile imgFile){
+        return resourceService.saveResourceItemFile(createResourceSmallFileDTO,imgFile);
     }
 
 
@@ -98,5 +111,18 @@ public class ResourceController {
     public JsonResult saveLabGeoJsonFile(HttpServletRequest request){
        return resourceService.saveLabGeoJsonFile(request);
     }
+
+    @ApiOperation(value = "数据---浏览数据，pageviews加一")
+    @GetMapping("/resDataView/{resDataId}")
+    public JsonResult resDataView(@PathVariable("resDataId") String id){
+        return resourceService.resDataView(id);
+    }
+
+    @ApiOperation(value = "数据---获取点击量前六的数据条目")
+    @GetMapping("/getResByDataView")
+    public JsonResult getResByDataView(){
+        return resourceService.getResByDataView();
+    }
+
 
 }

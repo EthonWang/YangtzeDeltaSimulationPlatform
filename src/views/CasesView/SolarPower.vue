@@ -5,6 +5,40 @@
       <div ref="city" style="font-size: 10px"></div>
       <div ref="info" style="font-size: 10px"></div>
     </div>
+    <div class="legend">
+      <div class="title">Legend</div>
+      <div class="lgd">
+        <div class="yellow"></div>
+        <div class="text">Installed Capacity(GW)</div>
+      </div>
+      <div class="lgd">
+        <div class="blue"></div>
+        <div class="text">Power Generation(TWh)</div>
+      </div>
+      <div class="lgd" style="margin-bottom: 5px">
+        <div class="red"></div>
+        <div class="text">Volume of Carbon Miligation(Million ton)</div>
+      </div>
+      <hr />
+      <div class="map-legend">
+        <div class="color-bar">
+          <div class="c1"></div>
+          <div class="c2"></div>
+          <div class="c3"></div>
+          <div class="c4"></div>
+          <div class="c5"></div>
+          <div class="c6"></div>
+        </div>
+        <div class="descrip">
+          <div class="first">N/A</div>
+          <div>0-10</div>
+          <div>10-15</div>
+          <div>15-20</div>
+          <div>20-40</div>
+          <div>40-80</div>
+        </div>
+      </div>
+    </div>
     <!-- <div id="chart" ref="chart" style="display：none"></div> -->
   </div>
 </template>
@@ -55,7 +89,7 @@ export default {
         // background: "#1a2b39",
         source: new VectorSource({
           // features: new GeoJSON().readFeatures("china_sim.json"),
-          url: "http://172.21.213.44:8999/store/data/china_sim.json",
+          url: "http://172.21.213.44:8999/store/data/china_sim2.json",
           format: new GeoJSON(),
         }),
         style: this.setstyle,
@@ -178,6 +212,7 @@ export default {
           let coords = new Array();
           coords[0] = feature.get("POINT_X");
           coords[1] = feature.get("POINT_Y");
+          console.log(coords[0]);
           let coordinates = proj.fromLonLat(coords);
           //   console.log(coordinates);
           this.popup.setPosition(coordinates);
@@ -193,8 +228,10 @@ export default {
           this.click(pixel);
         } else {
           this.showinfo = false;
-          console.log("zzasd");
-          this.feature_click.getSource().removeFeature(this.highlight_click);
+          // console.log("zzasd");
+          if (this.highlight_click) {
+            this.feature_click.getSource().removeFeature(this.highlight_click);
+          }
         }
       });
     },
@@ -262,7 +299,7 @@ export default {
             width: 1,
           }),
           fill: new Fill({
-            color: "rgba(232,175,105,1)",
+            color: "rgba(218,133,48,1)",
           }),
         });
       } else if (InstalledC > 40 && InstalledC <= 80) {
@@ -375,7 +412,7 @@ export default {
       this.openmap.on("moveend", () => {
         let zoom = this.openmap.getView().getZoom(); //获取当前地图的缩放级别
         // console.log(zoom);
-        this.radius = this.radius * zoom;
+        this.radius = this.radius / zoom;
         // let newsty = new Style();
         // this.openmap
         //   .getLayerGroup()
@@ -396,6 +433,10 @@ export default {
     // console.log(chats);
     this.maxzoom = this.openmap.getView().zoomFactor_;
     console.log(this.maxzoom);
+    let control = document.querySelector(".ol-control");
+    control.style = "display:none";
+    let rotate = document.querySelector(".ol-rotate");
+    rotate.style = "display:none";
   },
 };
 </script>
@@ -418,5 +459,118 @@ export default {
 }
 /deep/.city {
   font-size: 10px;
+}
+/deep/.legend {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 300px;
+  height: 200px;
+  background-color: rgba(255, 255, 255);
+  box-shadow: 0 0 15px rgb(177, 177, 177);
+  border-radius: 5px;
+}
+/deep/.lgd {
+  line-height: 20px;
+  margin-top: 10px;
+  margin-left: 5px;
+  display: flex;
+}
+/deep/.text {
+  // display: flex;
+  height: 20px;
+}
+/deep/.blue {
+  width: 20px;
+  height: 20px;
+  background-color: #271dfa;
+  // display: flex;
+  border-radius: 2px;
+  border: #fff 1px;
+  margin-right: 5px;
+}
+/deep/.red {
+  width: 20px;
+  height: 20px;
+  background-color: #ff0019;
+  // display: flex;
+  border-radius: 2px;
+  margin-right: 5px;
+}
+/deep/.yellow {
+  width: 20px;
+  height: 20px;
+  background-color: #ffa52a;
+  // display: flex;
+  border-radius: 2px;
+  margin-right: 5px;
+}
+/deep/.title {
+  width: 20%;
+  margin: auto;
+  font-weight: 300;
+  font-size: 18px;
+}
+/deep/.map-legend {
+  width: 100%;
+  height: 50px;
+}
+/deep/.color-bar {
+  display: flex;
+  margin-top: 5px;
+  margin-left: 25px;
+}
+/deep/.c1 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(225, 225, 225, 1);
+}
+/deep/.c2 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(254, 247, 230, 1);
+}
+/deep/.c3 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(241, 213, 165, 1);
+}
+/deep/.c4 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(232, 175, 105, 1);
+}
+/deep/.c5 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(218, 133, 48, 1);
+}
+/deep/.c6 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(210, 86, 1, 1);
+}
+/deep/.descrip {
+  display: flex;
+  margin-left: 18px;
+  // writing-mode: vertical-lr;
+}
+/deep/.descrip div {
+  margin-left: 11px;
+}
+/deep/.first {
+  margin-right: 5px;
 }
 </style>

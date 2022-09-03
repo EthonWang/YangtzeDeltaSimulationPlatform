@@ -75,7 +75,7 @@
                     <el-tooltip
                       effect="dark"
                       placement="bottom"
-                      content="查看案例详情"
+                      :content="item.name"
                     >
                       <h4
                         class="font-size-1"
@@ -468,11 +468,11 @@ modelTreeData.value = [
         type: "subProblem",
       },
       {
-        label: "土壤氮转化过程及其环境效应",
+        label: "区域气候模拟",
         type: "subProblem",
       },
       {
-        label: "其他环境或演化专题",
+        label: "其他区域环境演化专题",
         type: "subProblem",
       },
     ],
@@ -688,6 +688,7 @@ const getCaseById = (idList) => {
         id: item.id,
       });
     });
+    console.log("caseResult",caseResult);
   });
 };
 const toCase = (path) => {
@@ -861,7 +862,7 @@ allThematic.value = [
         label: "土壤碳氮循环",
       },
       {
-        label: "土壤氮转化过程及其环境效应",
+        label: "区域气候模拟",
       },
     ],
   },

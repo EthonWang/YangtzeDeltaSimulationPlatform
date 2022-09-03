@@ -246,10 +246,7 @@ const pagePrev = (value) => {
 };
 const addDataToTask = (task) => {
   console.log("selectedRes.value is :", selectedRes.value);
-  if (selectedVisualDataItems.value.length <= 0) {
-    ElMessage.error("您未选择数据");
-    return
-  } else if ("mdl" in selectedRes.value) {
+  if ("mdl" in selectedRes.value) {
     // console.log(234);
     let data = selectedRes.value;
     data["simularTrait"] = "model";
@@ -258,7 +255,10 @@ const addDataToTask = (task) => {
       message: "成功加入实验室",
     });
     task_api.addData(task, [data]);
-  } else {
+  } else if (selectedVisualDataItems.value.length <= 0) {
+    ElMessage.error("您未选择数据");
+    return
+  }  else {
     let dataList = [];
     if (setSelectedVisualDataItemsDataSet.value) {
       //设置集

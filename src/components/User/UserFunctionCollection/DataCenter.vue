@@ -46,7 +46,7 @@
       </div>
       <div
         v-loading="loading"
-        element-loading-text="切换数据空间"
+        element-loading-text="等待..."
         element-loading-background="hsla(210, 50%, 15%, 0.6)"
         class="file-container"
         :class="{ public_file_container: publicState }"
@@ -593,7 +593,7 @@ const downloadData = () => {
     } else {
       api.downloadFile(file).then(() => {
         ElMessage({
-          message: "下载成功",
+          message: "下载开始",
           type: "success",
         });
       });

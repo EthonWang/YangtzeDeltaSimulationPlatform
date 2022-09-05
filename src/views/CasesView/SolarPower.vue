@@ -92,7 +92,7 @@ export default {
         // background: "#1a2b39",
         source: new VectorSource({
           // features: new GeoJSON().readFeatures("china_sim.json"),
-          url: backUrl+"/store/data/china_sim2.json",
+          url: backUrl+"/store/data/yangtze_delta.json",
           format: new GeoJSON(),
         }),
         style: this.setstyle,

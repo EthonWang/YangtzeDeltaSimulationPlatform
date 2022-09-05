@@ -120,7 +120,7 @@
 //采用vue2写法的话把setup去掉，
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import * as Cesium from "Cesium";
+import * as Cesium from "cesium/Cesium";
 import axios from "axios";
 import url from "@/assets/raster_Topography_410.00Ma.png";
 import { mapGetters } from "vuex";

@@ -33,7 +33,7 @@
             <!-- <img src="../assets/globle.svg" style="width: 70px; margin: 0 25px" /> -->
             <!-- <h1
             style="
-              color: hsl(0,0,98%);
+              color:#fafafa;
               line-height: 70px;
               font-size: 50px;
               vertical-align: top;
@@ -837,7 +837,7 @@ const back2StartPage = () => {
 .sortBox {
   width: 100%;
   height: 50px;
-  // background-color: hsl(0,0,98%);
+  // background-color:#fafafa;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -965,7 +965,7 @@ const back2StartPage = () => {
 /deep/.el-card {
   // background: hsl(220, 100%, 5%);
   background: hsl(0, 0, 75%);
-  // color: hsl(0,0,98%);
+  // color:#fafafa;
   // border:0px;
   box-shadow: 2px 2px 8px rgba(255, 255, 255, 0.5) !important;
 }

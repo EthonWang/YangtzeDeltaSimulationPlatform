@@ -37,7 +37,6 @@ const routerGo = (router) => {
 // window.onload=function(){document.getElementsByClassName("main")[0].height=window.innerHeight}
 </script>
 <style lang="less">
-@import "./css/global/cyberpunk.less";
 
 #app {
   -webkit-font-smoothing: antialiased;

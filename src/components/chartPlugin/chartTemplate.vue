@@ -110,7 +110,7 @@ export default {
   border-bottom: 1px solid black;
   border-radius: 1%;
   text-align: left;
-  /* background: hsl(0,0,98%); */
+  /* background:#fafafa; */
   user-select: none;
 }
 .window-header-close {

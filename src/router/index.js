@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory,createWebHashHistory } from "vue-router";
 import Home from "../views/Home.vue";
 // import Data from "@/views/Data.vue";
 import Model from "@/views/Model.vue";
@@ -150,6 +150,7 @@ routes[4].children = routes[4].children.concat(cases_config)
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
+  // history: createWebHashHistory(),
   routes,
 });
 

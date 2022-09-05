@@ -500,7 +500,7 @@ const guideMarks = computed(() => {
   // border-top: solid 0.1px rgba(176, 174, 174, 0.445);
 }
 .cardTitle {
-  // color: hsl(0,0,98%);
+  // color:#fafafa;
   height: 30px;
   line-height: 30px;
   width: 62%;

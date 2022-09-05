@@ -1255,7 +1255,7 @@ rightOption3.value = {
 <style scoped>
 .covid19Page{
   background-color: #000c3b;
-  color: hsl(0,0,98%);
+  color:#fafafa;
   padding-right: 20px;
   padding-left: 20px;
   overflow: hidden;

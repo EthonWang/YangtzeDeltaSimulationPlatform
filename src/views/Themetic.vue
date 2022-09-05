@@ -68,7 +68,7 @@
                     ></el-image>
                     <div class="imageMask">
                       <img :src="mdOpenIcon" class="caseIcon" />
-                      <span>打开案例</span>
+                      <span>查看案例</span>
                     </div>
                   </div>
                   <div class="cardText">

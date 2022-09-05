@@ -576,7 +576,7 @@ defineExpose({ handleLoadTestData, handleInvoke });
 .modelConfigBox {
   z-index: 99999;
   left: 5px;
-  background-color: hsl(0,0,98%);
+  background-color:#fafafa;
   width: 100%;
 }
 /deep/.el-loading-spinner {

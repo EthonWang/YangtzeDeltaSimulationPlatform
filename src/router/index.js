@@ -85,28 +85,28 @@ const routes = [
         path: '',
         name: '概览',
         component: () =>
-          import("@/components/User/UserFunctionCollection/Overview.vue")
+          import("../components/User/UserFunctionCollection/Overview.vue")
       },
       {
         isBar: false,
         path: 'data',
         name: '数据中心',
         component: () =>
-          import("@/components/User/UserFunctionCollection/DataCenter.vue")
+          import("../components/User/UserFunctionCollection/DataCenter.vue")
       },
       {
         isBar: false,
         path: 'model',
         name: '模型中心',
         component: () =>
-          import("@/components/User/UserFunctionCollection/ModelCenter.vue")
+          import("../components/User/UserFunctionCollection/ModelCenter.vue")
       },
       {
         isBar: false,
         path: 'task',
         name: '任务中心',
         component: () =>
-          import("@/components/User/UserFunctionCollection/TaskCenter.vue")
+          import("../components/User/UserFunctionCollection/TaskCenter.vue")
       },
     ]
   },

@@ -35,28 +35,6 @@
         <path d="M0 40h1680V30S1340 0 840 0 0 30 0 30z" fill="#fff"></path>
       </svg>
     </div>
-    <!-- <div>
-      <p
-        class="introduce"
-        :class="{ show_ani: props.show, hide_ani: !props.show }"
-      >
-        长江三角洲区域自然资源丰富、经济发展活跃，<br>是人地活动最频繁的地区之一，<br>
-        是全球变化敏感区, <br>
-        是洪涝灾害易发区,<br>是长江经济带发展引擎区,<br>是新型城镇化先行区。
-      </p>
-      <img
-        @click="toModel"
-        :class="{ show_ani: props.show, hide_ani: !props.show }"
-        class="map"
-        src="http://i-1.33app.net/2021/3/12/87e04633-4304-4cc0-a5eb-9450a3e4d1d3.jpg"
-        alt=""
-      /> -->
-    <!-- <MapCharts class="map"></MapCharts> -->
-    <!-- <p class="cyberpunk inverse dotted introduce" v-if="show">
-        长江三角洲区域自然资源丰富、经济发展活跃，是人地活动最频繁的地区之一，在沉积学意义上，地处东部沿海，受季风气候与海面升降影响，是全球变化敏感区；在自然地理学意义上，地处长江下游平原地区，地势低洼，易洪易涝，是洪涝灾害易发区；在区域经济发展意义上，地处江海交汇，上海为龙头，长江黄金水道为纽带，是长江经济带发展引擎区；在行政区划上，地处世界经济最活跃区域，城市群、都市圈体系完备，区域内、区际间差异显著，是新型城镇化先行区。
-      </p> -->
-    <!-- <Fire style="position: fixed; top: 0px; left: 0; z-index: -1"></Fire> -->
-    <!-- </div> -->
   </div>
 </template>
 

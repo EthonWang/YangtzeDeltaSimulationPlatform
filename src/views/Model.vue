@@ -91,7 +91,7 @@
     >
     <span v-else
       ><el-icon><ArrowDownBold /></el-icon>&nbsp;展开</span
-    ><strong style="color: hsl(200, 100%, 45%)">数据推荐</strong>
+    ><strong style="color: hsl(200, 100%, 45%)">资源推荐</strong>
   </el-button>
   <div class="levels">
     <div
@@ -105,7 +105,7 @@
       </div>
     </div>
   </div>
-  <el-dialog v-model="recommendVisible" title="推荐数据" width="30%">
+  <el-dialog v-model="recommendVisible" title="推荐资源" width="30%">
     <el-descriptions
       class="margin-top"
       title=""
@@ -225,6 +225,22 @@
       </span>
     </template>
   </el-dialog>
+  <el-dialog v-model="show_task_model" title="添加模型到实验室" width="30%">
+    <h3 style="margin-bottom: 15px">模型描述</h3>
+    {{ selectedRes.description }}
+    <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
+    <el-button @click="addtoLab()" style="margin: 5px">
+      <el-icon><Monitor /></el-icon> &nbsp;
+
+      <span> 本实验 </span></el-button
+    >
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="show_task_model = false">取消</el-button>
+        <!-- <el-button type="primary" @click="show_task = false">完成</el-button> -->
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <!--<script setup>-->
@@ -259,6 +275,7 @@ export default {
   },
   data() {
     return {
+      show_task_model: false,
       task_api: new taskApi(),
       recommendShowOne: {},
       recommendList: true,
@@ -365,6 +382,8 @@ export default {
       } else if (data.private == "resource") {
         this.show_task = true;
         console.log(this.show_task);
+      } else if (data.type == "model") {
+        this.show_task_model = true;
       } else {
         this.recommendVisible = true;
       }
@@ -382,8 +401,8 @@ export default {
           i++
         ) {
           if (i == 0) {
-            document.getElementsByClassName("level")[i].style.opacity='0.55'
-            continue
+            document.getElementsByClassName("level")[i].style.opacity = "0.55";
+            continue;
           }
           let ele = document.getElementsByClassName("level")[i];
           ele.style.marginTop = "-50px";
@@ -392,7 +411,7 @@ export default {
       } else {
         document.getElementsByClassName("levels")[0].style.pointerEvents =
           "auto";
-          document.getElementsByClassName("level")[0].style.opacity='0.95'
+        document.getElementsByClassName("level")[0].style.opacity = "0.95";
         // document.getElementsByClassName("level")[0].style.opacity="0.95"
         for (
           let i = 0;
@@ -433,11 +452,21 @@ export default {
     },
     addtoLab() {
       //长三角数据中心的数据
-      if (this.selectedVisualDataItems.length <= 0) {
-        ElMessage.error("您未选择数据");
-        return;
+      if (this.recommendShowOne.type == "model") {
+        let data = this.recommendShowOne;
+        ElMessage({
+          type: "success",
+          message: "成功加入实验室",
+        });
+        let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
+        this.task_api.addData(newTask, [data]); //传入newTask指针，里面进行push
+
+        localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
       } else if (this.recommendShowOne.visualizationBoolean == false) {
         window.open(this.recommendShowOne.fileWebAddress);
+      } else if (this.selectedVisualDataItems.length <= 0) {
+        ElMessage.error("您未选择数据");
+        return;
       } else {
         //我们平台的数据 公共+私有
         if ("id_backup" in this.recommendShowOne) {
@@ -513,6 +542,7 @@ export default {
 
         this.recommendVisible = false;
         this.show_task = false;
+        this.show_task_model = false;
         let loading = ElLoading.service({
           lock: true,
           text: "更新实验室数据...",

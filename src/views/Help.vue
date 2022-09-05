@@ -41,7 +41,7 @@ import { useRouter } from "vue-router";
 
 </script>
 <style lang="less" scoped>
-@import "../css/tab/segmented.css";
-@import "../css/global/cyberpunk.less";
+// @import "../css/tab/segmented.css";
+// @import "../css/global/cyberpunk.less";
 
 </style>

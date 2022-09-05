@@ -29,12 +29,14 @@
 import * as Cesium from "cesium/Cesium";
 import axios from "axios";
 import proj4 from "proj4";
+import { backUrl,backUrl_backup } from "../../../public/backURL/backurl";
 
 export default {
   name: "Cesium",
   props: ["tifList", "jsonList"],
   data() {
     return {
+      backUrl_backup:backUrl_backup,
       viewer: null,
       startButton: false,
       redBox: null,
@@ -87,7 +89,7 @@ export default {
       Cesium.Ion.defaultAccessToken =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI5N2RjODQxYy0xNDI0LTRmNmYtOTJjNy02Njk3NGFmNGZlMzMiLCJpZCI6ODg1MTgsImlhdCI6MTY0OTI1MzIzNn0._0nz9pC6RF2dXjkzTilweCdZOP6jE-9Efc1QqjMOR_Q";
       this.viewer = new Cesium.Viewer("cesiumContainer", {
-        terrainProvider: Cesium.createWorldTerrain(),
+        // terrainProvider: Cesium.createWorldTerrain(),
         //   geocoder: false,
         //   homeButton: false,
         // sceneModePicker: false,
@@ -192,7 +194,7 @@ export default {
       this.viewer.dataSources
         .add(
           Cesium.KmlDataSource.load(
-            "http://172.21.212.63:8999/store" + this.loadedTifList[index].path,
+            backUrl_backup+"/store" + this.loadedTifList[index].path,
             options
           )
         )
@@ -216,7 +218,7 @@ export default {
       let tempDataList = [];
       for (let i = 0; i < fileNameList.length; i++) {
         let path = item.path.replace("color.json", fileNameList[i]);
-        axios.get("http://172.21.212.63:8999/store" + path).then((res) => {
+        axios.get(backUrl_backup+"/store" + path).then((res) => {
           tempDataList[i] = res.data;
         });
         if (i == 1) {
@@ -636,7 +638,7 @@ export default {
       // debugger;
       let tileset = new Cesium.Cesium3DTileset({
         // url: "data/model/3dtilesFromGltf/tileset.json",
-        url: "http://172.21.213.44:8087/static/resRepository/tileset/tileset.json",
+        url: "http://172.21.213.44:8097/static/resRepository/220829_raw_3141626272517_13-14/testOffline_autoTest/tileset/tileset.json",
         // url: "data/model/obj2Tiles/tileset.json",
         // url: "data/level_3dtiles_clt/tileset.json",
         maximumScreenSpaceError: 2, //最大的屏幕空间误差
@@ -645,14 +647,14 @@ export default {
       });
       let that = this;
       tileset.readyPromise.then(function (tilesetData) {
-        debugger;
-        let center = tilesetData.boundingSphere.center; //正球投影中心
-        let lonlat = that.webMercator2lonLat(center); //经纬度
-        let ellipsoidCenter = Cesium.Cartesian3.fromDegrees(
-          lonlat.x,
-          lonlat.y,
-          lonlat.z
-        ); //椭球投影中心
+        // debugger;
+        // let center = tilesetData.boundingSphere.center; //正球投影中心
+        // let lonlat = that.webMercator2lonLat(center); //经纬度
+        // let ellipsoidCenter = Cesium.Cartesian3.fromDegrees(
+        //   lonlat.x,
+        //   lonlat.y,
+        //   lonlat.z
+        // ); //椭球投影中心
         let m = Cesium.Matrix4.fromArray([
           1.0,
           0.0,
@@ -666,9 +668,9 @@ export default {
           0.0,
           1.0,
           0.0,
-          ellipsoidCenter.x - center.x,
-          ellipsoidCenter.y - center.y,
-          ellipsoidCenter.z - center.z,
+          0,
+          0,
+          25,
           1.0,
         ]); //偏差矩阵
         tilesetData.modelMatrix = m;
@@ -956,7 +958,7 @@ export default {
   border-radius: 10%;
   font-size: 20px;
   font-weight: 600;
-  color: hsl(0,0,98%);
+  color:#fafafa;
   cursor: pointer;
 }
 .startbarItem:hover {

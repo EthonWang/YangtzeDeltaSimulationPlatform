@@ -102,7 +102,7 @@
         ><span v-else
           >查看</span
         >
-        <strong style="color: hsl(140, 100%, 40%)">推荐数据</strong></el-button
+        <strong style="color: hsl(140, 100%, 40%)">推荐资源</strong></el-button
       >
       <br />
       <div style="margin: 10px"></div>
@@ -115,9 +115,9 @@
           margin-top: -47px;
           margin-bottom: 15px;
           border-radius: 5px;
-          background-color: hsl(140, 100%, 94%);
+          background-color: hsl(150, 100%, 95%);
         "
-        v-if="recommendVisible"
+        v-if="recommendVisible&&!edit_task"
       >
         <el-card
           :body-style="{ padding: '0px' }"
@@ -168,9 +168,19 @@
         <h4>数据配置：</h4>
         <template v-for="(data, index) in props.task.dataList" :key="data">
           <el-form-item
-            :label="data.name.slice(0, 50)"
+          
             v-if="data.simularTrait != 'model' && data.simularTrait != 'task'"
           >
+          <template #label>
+            <span v-if="!edit_task">{{data.name.slice(0, 50)}}</span>
+            <el-input
+            v-if="edit_task"
+            v-model="data.name"
+            autosize
+            type="textarea"
+            placeholder="请输入描述"
+          />
+          </template>
             <el-button
               type="success"
               v-if="!edit_task"
@@ -404,10 +414,13 @@ const graphApi = new graphAPI();
 const data_recommend = ref("");
 let dataNameList = [];
 for (let i in props.task.dataList) {
-  dataNameList.push(props.task.dataList[i].name);
-  // for (let j in props.task.dataList[i].problemTags) {
-  //   dataNameList.push(props.task.dataList[i].problemTags[j]);
-  // }
+  // dataNameList.push(props.task.dataList[i].name);
+  for (let j in props.task.dataList[i].problemTags) {
+    dataNameList.push(props.task.dataList[i].problemTags[j]);
+  }
+  for (let j in props.task.dataList[i].normalTags) {
+    dataNameList.push(props.task.dataList[i].normalTags[j]);
+  }
 }
 for (let i in props.task.problemTags) {
   dataNameList.push(props.task.problemTags[i]);

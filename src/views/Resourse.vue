@@ -22,7 +22,7 @@
           <div style="margin: auto; display: flex">
             <h1
               style="
-                color:#fafafa;
+                color: #fafafa;
                 line-height: 70px;
                 font-size: 50px;
                 vertical-align: top;
@@ -33,7 +33,7 @@
             <!-- <img src="../assets/globle.svg" style="width: 70px; margin: 0 25px" /> -->
             <!-- <h1
             style="
-              color: hsl(0,0,98%);
+              color:#fafafa;
               line-height: 70px;
               font-size: 50px;
               vertical-align: top;
@@ -77,7 +77,7 @@
           </div>
         </el-row>
         <el-row style="padding-top: 3%">
-          <div style="width: 47%; margin: auto; color: hsl(0,0,98%)">
+          <div style="width: 47%; margin: auto; color: hsl(0, 0, 98%)">
             <h3>热门搜索></h3>
             <ul
               style="
@@ -226,7 +226,10 @@
                   class="searchInput"
                 ></el-input>
 
-                <el-button type="primary" class="searchButton" @click="beforeStartSearch()"
+                <el-button
+                  type="primary"
+                  class="searchButton"
+                  @click="beforeStartSearch()"
                   >搜索</el-button
                 >
                 <el-button class="searchButton" @click="clearSearch()"
@@ -371,7 +374,7 @@ import tagTree from "@/components/resource/tagTree.vue";
 import resourceList from "@/components/resource/resourceList.vue";
 import { Decrypt } from "@/util/codeUtil";
 
-const isAdmin = ref("false");
+const isAdmin = ref(false);
 let user_info = localStorage.getItem("userInfo");
 if (user_info) {
   user_info = JSON.parse(Decrypt(user_info));
@@ -389,6 +392,8 @@ if (route.path == "/user/task") {
 }
 let searchPage = ref(true);
 let searchValue = ref("");
+let dataDTOAsc = ref(false);
+let dataDTOSortfield = ref("createTime");
 let selectedTag = ref([]);
 let questionsSelectValue = ref("");
 let resList = ref([]);
@@ -405,14 +410,14 @@ const carouselList = ref([]);
 const hotsearchData = ref([]);
 const store = useStore();
 const props = defineProps({
-    data_recommend: String,
-  });
+  data_recommend: String,
+});
 const dataServer = store.getters.devIpAddress;
 onMounted(() => {
   getRouteValue();
   getHotsearchList();
   getAutocompleteList();
-  
+
   if (props.data_recommend) {
     searchValue.value = props.data_recommend;
     startSearch();
@@ -521,11 +526,11 @@ let startSearch = function () {
     }
   }
   let dataDTO = {
-    asc: false,
+    asc: dataDTOAsc.value,
     page: dataPageNum.value,
     pageSize: 16,
     searchText: searchValue.value,
-    sortField: "createTime",
+    sortField: dataDTOSortfield.value,
     tagClass: tagClass,
     tagName: tagName,
   };
@@ -599,23 +604,36 @@ const tagClick = function (data) {
 let sortByField = function (type) {
   if (type == "relativity") {
     sortField.value = "relativity";
+    dataDTOAsc.value = false;
+    dataDTOSortfield.value = "createTime";
   } else if (type == "time") {
+    console.log(sortField.value);
     if (sortField.value == "timeDown") {
       sortField.value = "timeUp";
+      dataDTOAsc.value = true;
     } else if (sortField.value == "timeUp") {
       sortField.value = "relativity";
+      dataDTOAsc.value = false;
     } else {
       sortField.value = "timeDown";
+      dataDTOAsc.value = false;
     }
+    dataDTOSortfield.value = "createTime";
   } else if (type == "size") {
     if (sortField.value == "sizeDown") {
       sortField.value = "sizeUp";
+      dataDTOAsc.value = true;
     } else if (sortField.value == "sizeUp") {
       sortField.value = "relativity";
+      dataDTOAsc.value = false;
     } else {
       sortField.value = "sizeDown";
+      dataDTOAsc.value = false;
     }
+    dataDTOSortfield.value = "filesizeLong";
   }
+  dataPageNum.value = 1;
+  startSearch();
 };
 const dataPageChange = (value) => {
   // console.log(value);
@@ -745,7 +763,7 @@ const back2StartPage = () => {
   list-style: none;
 }
 .hotsearch-item-a {
-  color: hsl(0,0,98%);
+  color: hsl(0, 0, 98%);
 }
 .hotsearch-item-a:hover {
   color: rgb(64, 158, 255);
@@ -819,7 +837,7 @@ const back2StartPage = () => {
 .sortBox {
   width: 100%;
   height: 50px;
-  // background-color: hsl(0,0,98%);
+  // background-color:#fafafa;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -835,7 +853,7 @@ const back2StartPage = () => {
 .sortCheckBox {
   margin-left: 10px;
   vertical-align: sub;
-  color: hsl(0,0,98%);
+  color: hsl(0, 0, 98%);
 }
 .fontSet {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
@@ -843,13 +861,13 @@ const back2StartPage = () => {
   font-size: 14px;
   font-weight: 500;
   // color: #606266;
-  color: hsl(0,0,98%);
+  color: hsl(0, 0, 98%);
   vertical-align: middle;
 }
 .sortButton {
   width: 60px;
   height: 50px;
-  color: hsl(0,0,98%);
+  color: hsl(0, 0, 98%);
 }
 .resourceList {
   // background-color: rgb(255, 255, 255);
@@ -929,7 +947,7 @@ const back2StartPage = () => {
   }
   .imgBoxTitle {
     font-size: 16px;
-    color: hsl(0,0,98%);
+    color: hsl(0, 0, 98%);
   }
 }
 
@@ -947,7 +965,7 @@ const back2StartPage = () => {
 /deep/.el-card {
   // background: hsl(220, 100%, 5%);
   background: hsl(0, 0, 75%);
-  // color: hsl(0,0,98%);
+  // color:#fafafa;
   // border:0px;
   box-shadow: 2px 2px 8px rgba(255, 255, 255, 0.5) !important;
 }

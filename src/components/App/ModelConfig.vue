@@ -27,6 +27,7 @@ import DataState from "components/App/dataState";
 import dataAPI from "@/api/user/data";
 import taskAPI from "@/api/user/task";
 import { Encrypt, Decrypt } from "@/util/codeUtil";
+import { backUrl,backUrl_backup } from "./../../../public/backURL/backurl";
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
@@ -87,7 +88,7 @@ const getMDL = () => {
   //   MDLStatesInfo.value = states
 
   axios
-    .get("http://172.21.213.44:8999/model/getMdlById/" + props.model.id)
+    .get(backUrl_backup+"/model/getMdlById/" + props.model.id)
     .then((res) => {
       //对拿到的states再进行一下处理
       let states = res.data.data.mdl.states;
@@ -195,7 +196,7 @@ const handleLoadTestData = () => {
   loading.value = true;
   let interval = setInterval(() => {
     axios
-      .post("http://172.21.213.44:8999/task/taskResult", taskBody)
+      .post(backUrl_backup+"/task/taskResult", taskBody)
       .then((res) => {
         let data = res.data.data.data;
         let code = res.data.data.data.code;
@@ -406,7 +407,7 @@ const handleInvokeNext = () => {
 
     console.log("json is :", json);
     axios
-      .post("http://172.21.213.248:8999/model/invoke", json)
+      .post(backUrl_backup+"/model/invoke", json)
       .then((res) => {
         console.log("模型运行结果", res.data);
         let data = res.data.data;
@@ -478,7 +479,7 @@ const handleInvokeNext = () => {
           localStorage.setItem("task", Encrypt(JSON.stringify(task)));
           let interval = setInterval(() => {
             axios
-              .post("http://172.21.213.248:8999/task/taskResult", taskBody)
+              .post(backUrl_backup+"/task/taskResult", taskBody)
               .then((res) => {
                 let data = res.data.data.data;
                 let code = res.data.data.data.code;
@@ -576,7 +577,7 @@ defineExpose({ handleLoadTestData, handleInvoke });
 .modelConfigBox {
   z-index: 99999;
   left: 5px;
-  background-color: hsl(0,0,98%);
+  background-color:#fafafa;
   width: 100%;
 }
 /deep/.el-loading-spinner {

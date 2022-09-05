@@ -43,7 +43,7 @@ setTimeout(()=>{
   left: 47%;
   top: 55%;
   background: transparent;
-  color: hsl(0,0,98%);
+  color:#fafafa;
   font-size: 25px;
   padding: 15px 15px 15px 15px !important;
   height: fit-content;

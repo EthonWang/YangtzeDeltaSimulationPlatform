@@ -114,11 +114,15 @@ import Chart from "ol-ext/style/Chart.js";
 // import { Select } from "ol/interaction";
 import ol_ordering from "ol-ext/render/Ordering";
 import chats from "@/assets/charts_yangtze.json";
+
+import { backUrl,backUrl_backup } from "../../../public/backURL/backurl";
+
 // import "@/assets/ol-ext.js";
 export default {
   name: "openLys",
   data() {
     return {
+      // backUrl_backup:backUrl_backup,
       openmap: null,
       showinfo: false,
       ovlay: null,

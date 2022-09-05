@@ -1,9 +1,10 @@
 import axios from "axios";
 import { Decrypt } from "@/util/codeUtil";
+import { backUrl,backUrl_backup } from "../../public/backURL/backurl";
 
 const config = {
   baseUrl: {
-    dev: "http://172.21.213.44:8999", 
+    dev: backUrl, 
     // dev: "http://172.21.213.248:8999", // 开发环境
     // fat: 'http://xxx.xx.xx.xx:8080' 
     //uat : "http://production.com" 

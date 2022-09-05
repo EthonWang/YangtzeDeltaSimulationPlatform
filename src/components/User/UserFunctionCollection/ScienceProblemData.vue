@@ -108,7 +108,7 @@ const data = [
           },
           {
             id: 25,
-            label: "土壤氮转化过程及其环境效应",
+            label: "区域气候模拟",
           },
         ],
       },
@@ -181,7 +181,7 @@ h2 {
   position: relative;
   font-size: 23px;
   z-index: 400;
-  // background: hsl(0,0,98%);
+  // background:#fafafa;
 }
 </style>
 

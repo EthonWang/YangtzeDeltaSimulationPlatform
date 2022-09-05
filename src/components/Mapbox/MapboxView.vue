@@ -1885,7 +1885,7 @@ export default {
   position: absolute;
   top: 85px;
   right: 9px;
-  background-color: hsl(0,0,98%);
+  background-color:#fafafa;
   width: 100px;
   height: 203px;
   z-index: 50;
@@ -1923,7 +1923,7 @@ export default {
   top: 110px;
   left: 40px;
   z-index: 1009;
-  background-color: hsl(0,0,98%);
+  background-color:#fafafa;
   width: 350px;
   height: auto;
   border-radius: 4px;

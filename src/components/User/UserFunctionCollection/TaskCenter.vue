@@ -154,6 +154,13 @@ const refresh = () => {
         } else {
           res.data.data[i].dataList[j].problemTags = ["未分类"];
         }
+        let item = res.data.data[i].dataList[j].normalTags;
+        if (item && typeof item == "string") {
+          res.data.data[i].dataList[j].normalTags =
+            res.data.data[i].dataList[j].normalTags.split(",");
+        } else {
+          res.data.data[i].dataList[j].normalTags = ["未分类"];
+        }
       }
 
       task_origin.value.push(res.data.data[i]);

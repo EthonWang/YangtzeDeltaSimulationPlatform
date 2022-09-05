@@ -8,7 +8,7 @@
               <el-image class="caseImage"   :src="baseUrl+caseInfo.thumbnail" fit="fill"></el-image>
               <div class="imageMask">
                 <img :src="mdOpenIcon" class="caseIcon">
-                <span >查看案例</span>
+                <span >打开案例系统</span>
               </div>
             </div>
             <div>
@@ -26,19 +26,21 @@
                 v-for="(item, key) in caseInfo.description"
                 :key="key"
             >
-              <p v-if="item.type == 'text'" class="descriptionText">
+              <p style="width: 100%;" v-if="item.type == 'text'" class="descriptionText">
                 {{ item.value }}
               </p>
+              
               <el-image
                   class="imageBlock"
                   v-if="item.type == 'image'"
                   :src="baseUrl + item.value"
+                  :fit="'contain'"
                   :preview-src-list="[baseUrl + item.value]"
                   preview-teleported="true"
                   hide-on-click-modal="true"
                   z-index="99"
               ></el-image>
-              <div v-if="item.type == 'image'">
+              <div v-if="item.type == 'image'" style="color:grey;">
                 {{item.imageName}}
               </div>
             </template>
@@ -59,10 +61,10 @@
                           fit="fill"
                       ></el-image>
                       <el-image
-                          v-else
                           class="caseImage"
                           @click="startSearch(item.name)"
                           :src="dataServer + item.imgWebAddress"
+                          v-else
                           fit="fill"
                       ></el-image>
                       <div class="imageMask">
@@ -101,7 +103,7 @@
       <el-col :span="4" :offset="1">
         <div class="rightBox1">
           <div><el-button @click="router.push('/themetic')" class="rightButton hvr-shutter-out-horizontal" plain><ArrowLeft style="width: 1em"/>&nbsp;<span>返回专题</span></el-button></div>
-          <div><el-button  class="rightButton hvr-shutter-out-horizontal" @click="toCase(caseInfo.path)" plain><View style="width: 1em"/>&nbsp;<span>查看案例</span></el-button></div>
+          <div><el-button  class="rightButton hvr-shutter-out-horizontal" @click="toCase(caseInfo.path)" plain><View style="width: 1em"/>&nbsp;<span>打开案例系统</span></el-button></div>
            <div><el-button @click="openInLab()" class="rightButton hvr-shutter-out-horizontal" plain><DataLine style="width: 1em"/>&nbsp;<span>在实验室中打开</span></el-button></div>
           <div><el-button v-if="isAdmin" class="rightButton hvr-shutter-out-horizontal" @click="editCases" plain><Setting style="width: 1em"/>&nbsp;<span>编辑案例</span></el-button></div>
           <edit-case-draw
@@ -294,7 +296,7 @@ const openInLab=()=>{
 <style lang="less" scoped>
 .about {
   top: 65px;
-  background-color: hsl(0,0,98%);
+  background-color:#fafafa;
   overflow: scroll;
   height: calc(100vh - 65px);
   margin-bottom: 65px;
@@ -342,7 +344,7 @@ const openInLab=()=>{
   top: 0;
   right: 0;
   background-color: rgba(0, 0, 0, 0.7);
-  color: hsl(0,0,98%);
+  color:#fafafa;
   pointer-events: none;
   transition: opacity 200ms linear;
   z-index: 100;
@@ -423,7 +425,10 @@ const openInLab=()=>{
   font-size: 1.1rem;
 }
 .imageBlock {
-  max-height: 45vh;
+  object-fit:contain;
+  // object-position:center;
+  // max-width: 50%;
+  height: 45vh;
   margin-top: 15px;
   margin-bottom: 15px;
   animation: scale-in-center 0.5s both;
@@ -453,7 +458,7 @@ const openInLab=()=>{
   transform: perspective(1px) translateZ(0);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
   position: relative;
-  background: hsl(0,0,98%);
+  background:#fafafa;
   transition-property: color;
   transition-duration: 0.4s;
 }
@@ -473,7 +478,7 @@ const openInLab=()=>{
   transition-timing-function: ease-out;
 }
 .hvr-shutter-out-horizontal:hover, .hvr-shutter-out-horizontal:focus, .hvr-shutter-out-horizontal:active {
-  color: hsl(0,0,98%);
+  color:#fafafa;
 }
 .hvr-shutter-out-horizontal:hover:before, .hvr-shutter-out-horizontal:focus:before, .hvr-shutter-out-horizontal:active:before {
   transform: scaleX(1);

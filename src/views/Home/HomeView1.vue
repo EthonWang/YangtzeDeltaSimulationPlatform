@@ -75,7 +75,7 @@
       </div>
       <div class="merge-earth"></div>
       <MapCharts class="earth"></MapCharts>
-      <img class="triangle" src="@/assets/triangle.png" alt="" />
+      <img class="triangle" src="../../assets/triangle.png" alt="" />
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

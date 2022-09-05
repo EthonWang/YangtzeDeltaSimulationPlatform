@@ -61,11 +61,14 @@ import Chart from "ol-ext/style/Chart.js";
 // import { Select } from "ol/interaction";
 import ol_ordering from "ol-ext/render/Ordering";
 import chats from "@/assets/charts.json";
+import { backUrl,backUrl_backup } from "../../../public/backURL/backurl";
+
 // import "@/assets/ol-ext.js";
 export default {
   name: "openLys",
   data() {
     return {
+      // backUrl_backup:backUrl_backup,
       openmap: null,
       showinfo: false,
       ovlay: null,
@@ -89,7 +92,7 @@ export default {
         // background: "#1a2b39",
         source: new VectorSource({
           // features: new GeoJSON().readFeatures("china_sim.json"),
-          url: "http://172.21.213.44:8999/store/data/china_sim2.json",
+          url: backUrl+"/store/data/china_sim2.json",
           format: new GeoJSON(),
         }),
         style: this.setstyle,

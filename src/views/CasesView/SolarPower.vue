@@ -1,26 +1,43 @@
 <template>
   <div>
     <div id="map" class="map-home"></div>
+    <div class="selectbox">
+      <div class="select">图层渲染方式:</div>
+      <el-select
+        v-model="value"
+        class="m-2"
+        placeholder="请选择渲染方式"
+        size="large"
+        @change="selectindexchange"
+      >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+    </div>
     <div ref="popup" class="popup" v-show="showinfo">
       <div ref="city" style="font-size: 10px"></div>
       <div ref="info" style="font-size: 10px"></div>
     </div>
     <div class="legend">
-      <div class="title">Legend</div>
+      <div class="title">图例</div>
       <div class="lgd">
         <div class="yellow"></div>
-        <div class="text">Installed Capacity(GW)</div>
+        <div class="text">装机容量(GW)</div>
       </div>
       <div class="lgd">
         <div class="blue"></div>
-        <div class="text">Power Generation(TWh)</div>
+        <div class="text">发电量(TWh)</div>
       </div>
       <div class="lgd" style="margin-bottom: 5px">
         <div class="red"></div>
-        <div class="text">Volume of Carbon Miligation(Million ton)</div>
+        <div class="text">碳减排量(Million ton)</div>
       </div>
       <hr />
-      <div class="map-legend">
+      <div class="map-legend-1" v-if="this.value == '1'">
         <div class="color-bar">
           <div class="c1"></div>
           <div class="c2"></div>
@@ -36,6 +53,42 @@
           <div>15-20</div>
           <div>20-40</div>
           <div>40-80</div>
+        </div>
+      </div>
+      <div class="map-legend-2" v-if="this.value == '2'">
+        <div class="color-bar">
+          <div class="c1"></div>
+          <div class="c7"></div>
+          <div class="c8"></div>
+          <div class="c9"></div>
+          <div class="c10"></div>
+          <div class="c11"></div>
+        </div>
+        <div class="descrip">
+          <div class="first">N/A</div>
+          <div>0-10</div>
+          <div>10-15</div>
+          <div>15-25</div>
+          <div>25-40</div>
+          <div>40-70</div>
+        </div>
+      </div>
+      <div class="map-legend-3" v-if="this.value == '3'">
+        <div class="color-bar">
+          <div class="c1"></div>
+          <div class="c12"></div>
+          <div class="c13"></div>
+          <div class="c14"></div>
+          <div class="c15"></div>
+          <div class="c16"></div>
+        </div>
+        <div class="descrip">
+          <div class="first">N/A</div>
+          <div>0-5</div>
+          <div>5-10</div>
+          <div>10-20</div>
+          <div>20-30</div>
+          <div>30-60</div>
         </div>
       </div>
     </div>
@@ -56,11 +109,12 @@ import * as proj from "ol/proj";
 // import * as ol from "ol";
 // import "@/assets/olext.js";
 import { Point } from "ol/geom";
-import { Style, Fill, Stroke } from "ol/style";
+import { Style, Fill, Stroke, Text } from "ol/style";
 import Chart from "ol-ext/style/Chart.js";
 // import { Select } from "ol/interaction";
 import ol_ordering from "ol-ext/render/Ordering";
-import chats from "@/assets/charts.json";
+import chats from "@/assets/charts_yangtze.json";
+
 import { backUrl,backUrl_backup } from "../../../public/backURL/backurl";
 
 // import "@/assets/ol-ext.js";
@@ -73,7 +127,7 @@ export default {
       showinfo: false,
       ovlay: null,
       vectorLayer: null,
-      key: "aFuxFGaXzc2k66dkNmgF",
+      key: "3bb0fffc32732aaaddcf078379682d61",
       tilelayer: null,
       highlight_click: null,
       highlight_hover: null,
@@ -83,7 +137,22 @@ export default {
       animation: false,
       maxzoom: 0,
       minzoom: 0,
-      radius: 10,
+      radius: 12,
+      value: "1",
+      options: [
+        {
+          value: "1",
+          label: "装机容量",
+        },
+        {
+          value: "2",
+          label: "发电量",
+        },
+        {
+          value: "3",
+          label: "碳减排量",
+        },
+      ],
     };
   },
   methods: {
@@ -92,7 +161,7 @@ export default {
         // background: "#1a2b39",
         source: new VectorSource({
           // features: new GeoJSON().readFeatures("china_sim.json"),
-          url: backUrl+"/store/data/china_sim2.json",
+          url: "yangtze_delta.json",
           format: new GeoJSON(),
         }),
         style: this.setstyle,
@@ -100,7 +169,17 @@ export default {
       this.tilelayer = new TileLayer({
         source: new XYZ({
           url:
-            "https://api.maptiler.com/maps/streets/256/{z}/{x}/{y}.png?key=" +
+            "http://t3.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=" +
+            this.key,
+          //   attributions: attributions,
+          crossOrigin: "anonymous",
+          tileSize: 512,
+        }),
+      });
+      let newlayer = new TileLayer({
+        source: new XYZ({
+          url:
+            "http://t3.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=" +
             this.key,
           //   attributions: attributions,
           crossOrigin: "anonymous",
@@ -109,11 +188,11 @@ export default {
       });
       this.openmap = new Map({
         target: "map",
-        layers: [this.tilelayer, this.vectorLayer],
+        layers: [this.tilelayer, newlayer, this.vectorLayer],
         // layers: [this.tilelayer],
         view: new View({
           center: fromLonLat([120.583905, 31.313832]),
-          zoom: 1,
+          zoom: 7,
         }),
       });
       //   this.openmap = openmap;
@@ -213,20 +292,18 @@ export default {
           //   console.log(feature.get("POINT_X_1"));
           //   console.log(feature.get("POINT_Y_1"));
           let coords = new Array();
-          coords[0] = feature.get("POINT_X");
-          coords[1] = feature.get("POINT_Y");
+          coords[0] = feature.get("POINT_X_1");
+          coords[1] = feature.get("POINT_Y_1");
           console.log(coords[0]);
           let coordinates = proj.fromLonLat(coords);
           //   console.log(coordinates);
           this.popup.setPosition(coordinates);
           this.$refs.city.innerHTML = feature.get("市");
-          this.$refs.info.innerHTML = `<p>Installed Capacity(GW):${feature.get(
+          this.$refs.info.innerHTML = `<p>装机容量(GW):${feature.get(
             "IC"
-          )}</p><p>Power Generation(TWh):${feature.get(
+          )}</p><p>发电量(TWh):${feature.get(
             "PG"
-          )}</p><p>Volume of Carbon Mitigation(Million ton):${feature.get(
-            "VC"
-          )}</p>`;
+          )}</p><p>碳减排量(Million ton):${feature.get("VC")}</p>`;
           const pixel = this.openmap.getEventPixel(e.originalEvent);
           this.click(pixel);
         } else {
@@ -255,73 +332,201 @@ export default {
     },
     setstyle(feature) {
       let InstalledC = feature.get("IC");
-      if (InstalledC == 0) {
-        return new Style({
-          stroke: new Stroke({
-            color: "rgba(153,153,153,1)",
-            width: 1,
-          }),
-          fill: new Fill({
-            color: "rgba(225,225,225,1)",
-          }),
-        });
-      } else if (InstalledC > 0 && InstalledC <= 10) {
-        return new Style({
-          stroke: new Stroke({
-            color: "rgba(153,153,153,1)",
-            width: 1,
-          }),
-          fill: new Fill({
-            color: "rgba(254,247,230,1)",
-          }),
-        });
-      } else if (InstalledC > 10 && InstalledC <= 15) {
-        return new Style({
-          stroke: new Stroke({
-            color: "rgba(153,153,153,1)",
-            width: 1,
-          }),
-          fill: new Fill({
-            color: "rgba(241,213,165,1)",
-          }),
-        });
-      } else if (InstalledC > 15 && InstalledC <= 20) {
-        return new Style({
-          stroke: new Stroke({
-            color: "rgba(153,153,153,1)",
-            width: 1,
-          }),
-          fill: new Fill({
-            color: "rgba(232,175,105,1)",
-          }),
-        });
-      } else if (InstalledC > 20 && InstalledC <= 40) {
-        return new Style({
-          stroke: new Stroke({
-            color: "rgba(153,153,153,1)",
-            width: 1,
-          }),
-          fill: new Fill({
-            color: "rgba(218,133,48,1)",
-          }),
-        });
-      } else if (InstalledC > 40 && InstalledC <= 80) {
-        return new Style({
-          stroke: new Stroke({
-            color: "rgba(153,153,153,1)",
-            width: 1,
-          }),
-          fill: new Fill({
-            color: "rgba(210,86,1,1)",
-          }),
-        });
+      let PG = feature.get("PG");
+      let VC = feature.get("VC");
+      if (this.value == "1") {
+        if (InstalledC == 0) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(225,225,225,1)",
+            }),
+          });
+        } else if (InstalledC > 0 && InstalledC <= 10) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(254,247,230,1)",
+            }),
+          });
+        } else if (InstalledC > 10 && InstalledC <= 15) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(241,213,165,1)",
+            }),
+          });
+        } else if (InstalledC > 15 && InstalledC <= 20) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(232,175,105,1)",
+            }),
+          });
+        } else if (InstalledC > 20 && InstalledC <= 40) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(218,133,48,1)",
+            }),
+          });
+        } else if (InstalledC > 40 && InstalledC <= 80) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(210,86,1,1)",
+            }),
+          });
+        }
+      } else if (this.value == "2") {
+        if (PG == 0) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(225,225,225,1)",
+            }),
+          });
+        } else if (PG > 0 && PG <= 10) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(234,247,243,1)",
+            }),
+          });
+        } else if (PG > 10 && PG <= 15) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(176,209,206,1)",
+            }),
+          });
+        } else if (PG > 15 && PG <= 25) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(120,171,168,1)",
+            }),
+          });
+        } else if (PG > 25 && PG <= 40) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(71,133,135,1)",
+            }),
+          });
+        } else if (PG > 40 && PG <= 70) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(17,105,106,1)",
+            }),
+          });
+        }
+      } else if (this.value == "3") {
+        if (VC == 0) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(225,225,225,1)",
+            }),
+          });
+        } else if (VC > 0 && VC <= 5) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(242,242,254,1)",
+            }),
+          });
+        } else if (VC > 5 && VC <= 10) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(207,207,243,1)",
+            }),
+          });
+        } else if (VC > 10 && VC <= 20) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(147,149,204,1)",
+            }),
+          });
+        } else if (VC > 20 && VC <= 30) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(86,95,151,1)",
+            }),
+          });
+        } else if (VC > 30 && VC <= 60) {
+          return new Style({
+            stroke: new Stroke({
+              color: "rgba(153,153,153,1)",
+              width: 1,
+            }),
+            fill: new Fill({
+              color: "rgba(41,55,115,1)",
+            }),
+          });
+        }
       }
     },
     initbar() {
       // var ext = this.openmap.getView().calculateExtent(this.openmap.getSize());
       // console.log(ext);
       var features = [];
-      for (var i = 0; i < 365; i++) {
+      for (var i = 0; i < 41; i++) {
         let nb = 0;
         let data = [];
         data.push(chats[i].InstalledCapacity);
@@ -380,6 +585,7 @@ export default {
       var k =
         "bar" + "-" + "classic" + "-" + (sel ? "1-" : "") + feature.get("data");
       var style = this.styleCache[k];
+      let a = feature.get("data");
       if (!style) {
         // var radius = 15;
         // area proportional to data size: s=PI*r^2
@@ -392,17 +598,28 @@ export default {
           new Style({
             image: new Chart({
               type: "bar",
-              radius: (sel ? 1.2 : 1) * this.radius,
+              radius: (this.radius * a[0]) / 9,
               // radius: 50,
               displacement: [0, (sel ? 1.2 : 1) * this.radius],
               // data: [10, 30, 20],
-              data: feature.get("data") || [10, 30, 20],
+              data: feature.get("data"),
               colors: /,/.test(c) ? c.split(",") : c,
               rotateWithView: true,
               animation: this.animation,
               stroke: new Stroke({
                 color: "#fff",
                 width: 2,
+              }),
+            }),
+            text: new Text({
+              textAlign: "center",
+              textBaseline: "middle",
+              font: "bold 12px 微软雅黑",
+              text: feature.get("市"),
+              offsetY: 15,
+              offsetX: -15,
+              fill: new Fill({
+                color: "black",
               }),
             }),
           }),
@@ -425,6 +642,10 @@ export default {
         //   });
         // do something
       });
+    },
+    selectindexchange() {
+      console.log(this.value);
+      this.vectorLayer.setStyle(this.setstyle);
     },
   },
   mounted() {
@@ -482,6 +703,7 @@ export default {
 /deep/.text {
   // display: flex;
   height: 20px;
+  font-weight: 400;
 }
 /deep/.blue {
   width: 20px;
@@ -491,6 +713,7 @@ export default {
   border-radius: 2px;
   border: #fff 1px;
   margin-right: 5px;
+  margin-left: 20px;
 }
 /deep/.red {
   width: 20px;
@@ -499,6 +722,7 @@ export default {
   // display: flex;
   border-radius: 2px;
   margin-right: 5px;
+  margin-left: 20px;
 }
 /deep/.yellow {
   width: 20px;
@@ -507,14 +731,15 @@ export default {
   // display: flex;
   border-radius: 2px;
   margin-right: 5px;
+  margin-left: 20px;
 }
 /deep/.title {
   width: 20%;
   margin: auto;
-  font-weight: 300;
+  font-weight: 800;
   font-size: 18px;
 }
-/deep/.map-legend {
+/deep/.map-legend-1 {
   width: 100%;
   height: 50px;
 }
@@ -565,6 +790,76 @@ export default {
   width: 43px;
   background-color: rgba(210, 86, 1, 1);
 }
+/deep/.c7 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(234, 247, 243, 1);
+}
+/deep/.c8 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(176, 209, 206, 1);
+}
+/deep/.c9 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(121, 171, 167, 1);
+}
+/deep/.c10 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(69, 134, 133, 1);
+}
+/deep/.c11 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(17, 105, 106, 1);
+}
+/deep/.c12 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(242, 242, 254, 1);
+}
+/deep/.c13 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(207, 207, 242, 1);
+}
+/deep/.c14 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(147, 150, 204, 1);
+}
+/deep/.c15 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(86, 95, 152, 1);
+}
+/deep/.c16 {
+  border-top: 1px black solid;
+  border-bottom: 1px black solid;
+  height: 20px;
+  width: 43px;
+  background-color: rgba(42, 55, 115, 1);
+}
 /deep/.descrip {
   display: flex;
   margin-left: 18px;
@@ -575,5 +870,21 @@ export default {
 }
 /deep/.first {
   margin-right: 5px;
+}
+/deep/.selectbox {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+}
+/deep/.select {
+  // background-color: #fff;
+  font-size: 18px;
+  padding-top: 7px;
+  font-weight: 600;
+  // border-radius: 5px;
+  // border: 1px solid #fff;
+  // text-align: center;
+  // line-height: inherit;
 }
 </style>

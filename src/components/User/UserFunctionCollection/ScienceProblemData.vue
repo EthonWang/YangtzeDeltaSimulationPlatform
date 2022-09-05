@@ -181,7 +181,7 @@ h2 {
   position: relative;
   font-size: 23px;
   z-index: 400;
-  // background: hsl(0,0,98%);
+  // background:#fafafa;
 }
 </style>
 

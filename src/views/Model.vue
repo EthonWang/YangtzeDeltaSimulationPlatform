@@ -226,6 +226,8 @@
     </template>
   </el-dialog>
   <el-dialog v-model="show_task_model" title="添加模型到实验室" width="30%">
+    <h3 style="margin-bottom: 15px">模型描述</h3>
+    {{ selectedRes.description }}
     <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
     <el-button @click="addtoLab()" style="margin: 5px">
       <el-icon><Monitor /></el-icon> &nbsp;
@@ -273,7 +275,7 @@ export default {
   },
   data() {
     return {
-      show_task_model:false,
+      show_task_model: false,
       task_api: new taskApi(),
       recommendShowOne: {},
       recommendList: true,
@@ -381,7 +383,7 @@ export default {
         this.show_task = true;
         console.log(this.show_task);
       } else if (data.type == "model") {
-        this.show_task_model=true
+        this.show_task_model = true;
       } else {
         this.recommendVisible = true;
       }
@@ -450,22 +452,22 @@ export default {
     },
     addtoLab() {
       //长三角数据中心的数据
-      if(this.recommendShowOne.type=='model'){
+      if (this.recommendShowOne.type == "model") {
         let data = this.recommendShowOne;
-         ElMessage({
-            type: "success",
-            message: "成功加入实验室",
-          });
-          let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
-          this.task_api.addData(newTask, [data]); //传入newTask指针，里面进行push
+        ElMessage({
+          type: "success",
+          message: "成功加入实验室",
+        });
+        let newTask = JSON.parse(Decrypt(localStorage.getItem("task")));
+        this.task_api.addData(newTask, [data]); //传入newTask指针，里面进行push
 
-          localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
+        localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
       } else if (this.recommendShowOne.visualizationBoolean == false) {
         window.open(this.recommendShowOne.fileWebAddress);
-      }else if (this.selectedVisualDataItems.length <= 0) {
+      } else if (this.selectedVisualDataItems.length <= 0) {
         ElMessage.error("您未选择数据");
         return;
-      }  else {
+      } else {
         //我们平台的数据 公共+私有
         if ("id_backup" in this.recommendShowOne) {
           this.recommendShowOne["id"] = this.recommendShowOne["id_backup"];
@@ -540,7 +542,7 @@ export default {
 
         this.recommendVisible = false;
         this.show_task = false;
-        this.show_task_model=false;
+        this.show_task_model = false;
         let loading = ElLoading.service({
           lock: true,
           text: "更新实验室数据...",

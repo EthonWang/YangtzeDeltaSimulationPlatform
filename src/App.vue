@@ -12,8 +12,8 @@
       @showTopbarBackground="showTopbarBackground"
       class="main"
     ></router-view>
-    <el-button class="btnback" style="" @click="myRouter.go(-1)">
-      返回
+    <el-button v-if="route.path.includes('/case/')" class="btnback" style="" @click="myRouter.go(-1)">
+      返回&nbsp;<el-icon><Back /></el-icon>
     </el-button>
     <!-- </el-scrollbar> -->
     <!-- <div> OPENGMS</div> -->
@@ -53,14 +53,14 @@ const routerGo = (router) => {
   background: hsl(220, 100%, 5%);
 }
 .btnback {
-  position: absolute;
+  position: fixed;
   top: 65px;
   left: -45px;
-  z-index: 999;
-  opacity: 0.25;
+  z-index: 9999;
+  opacity: 0.75;
   &:hover {
     left: 0;
-    opacity: 0.75;
+    opacity: 1;
   }
 }
 .main {

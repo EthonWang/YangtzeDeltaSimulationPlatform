@@ -41,7 +41,7 @@
           margin-left: 15px;
           margin-right: 15px;
           margin-top: 0px;
-          color: hsl(0,0,98%);
+          color:#fafafa;
           position: relative;
           z-index: 5;
         "
@@ -170,7 +170,7 @@ watch(
         if (fromHome == "true") {
           let loading = ElLoading.service({
             lock: true,
-            text: "清理缓存中...",
+            text: "清理首页缓存...",
             background: "rgba(0, 0, 0, 0.7)",
           });
           localStorage.setItem("fromHome", Encrypt("false"));
@@ -353,7 +353,7 @@ setTimeout(searchIndexInRoutes, 100);
 .head {
   width: 100%;
   height: 100%;
-  color: hsl(0,0,98%);
+  color:#fafafa;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -417,13 +417,13 @@ setTimeout(searchIndexInRoutes, 100);
 
 .head .main-user i {
   font-size: 30px;
-  color: hsl(0,0,98%);
+  color:#fafafa;
   font-size: 28px;
 }
 
 .head .main-user p {
   margin-left: 10px;
   font-size: 20px;
-  color: hsl(0,0,98%);
+  color:#fafafa;
 }
 </style>

@@ -156,4 +156,10 @@ const toRouter = (route) => {
   transition: all 1s;
   opacity: 0;
 }
+/deep/.el-pane{
+  height: 0 !important;
+}
+/deep/.el-tab-pane{
+  height: 0 !important;
+}
 </style>

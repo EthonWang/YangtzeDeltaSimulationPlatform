@@ -308,7 +308,7 @@ export default {
   height: 100%;
 }
 /deep/.el-card{
-  background: hsl(0,0,98%);
+  background:#fafafa;
 }
 .info-card {
   position: absolute;
@@ -316,7 +316,7 @@ export default {
   top: 75px;
   width: 27%;
   height: 45vh;
-  background: hsl(0,0,98%) !important;
+  background:#fafafa !important;
 }
 .scrollbar-demo-item {
   display: flex;

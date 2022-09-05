@@ -2,7 +2,7 @@
   <div>
     <div
       style="
-        background-color: hsl(0,0,98%);
+        background-color:#fafafa;
         box-shadow: 0 1px 6px rgb(0 0 0 / 20%);
         padding-top: 5%;
         padding-bottom: 5%;

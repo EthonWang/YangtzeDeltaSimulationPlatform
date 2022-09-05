@@ -46,7 +46,7 @@
       </div>
       <div
         v-loading="loading"
-        element-loading-text="切换数据空间"
+        element-loading-text="等待..."
         element-loading-background="hsla(210, 50%, 15%, 0.6)"
         class="file-container"
         :class="{ public_file_container: publicState }"
@@ -141,7 +141,7 @@
           <el-upload
             v-model:file-list="fileList"
             class="upload-demo"
-            action="http://172.21.213.44:8999/resource/saveDataItem"
+            :action="backUrl_backup1+'/resource/saveDataItem'"
             :headers="upload_header"
             :data="{
               name: upload_file.name,
@@ -264,7 +264,9 @@ import FileItem from "./FileItem.vue";
 import { scienceChoose } from "@/assets/user/scienceChoose";
 import { ElLoading } from "element-plus";
 import { Encrypt, Decrypt } from "@/util/codeUtil";
+import { backUrl,backUrl_backup } from "../../../../public/backURL/backurl";
 
+const backUrl_backup1=ref(backUrl_backup)
 const userInfo = JSON.parse(Decrypt(localStorage.getItem("userInfo")));
 const task_api = new taskApi();
 const show_task = ref(false);
@@ -593,7 +595,7 @@ const downloadData = () => {
     } else {
       api.downloadFile(file).then(() => {
         ElMessage({
-          message: "下载成功",
+          message: "下载开始",
           type: "success",
         });
       });

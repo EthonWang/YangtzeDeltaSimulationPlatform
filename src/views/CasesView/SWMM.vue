@@ -310,7 +310,7 @@
       <div
         id="time-slider"
         style="
-          background: hsl(0,0,98%);
+          background:#fafafa;
           border-radius: 15px;
           width: 100%;
           bottom: -20%;
@@ -1182,7 +1182,7 @@ const pauseAnimation = () => {
   border: 3px solid #73ad21;
 }
 .tool {
-  background: hsl(0,0,98%);
+  background: #fafafa;
   height: 60%;
   width: 25%;
   position: absolute;

@@ -43,7 +43,7 @@ const store = useStore(); //vuex直接用store.commit
   left: 0px;
   height: calc(100vh - $top);
   width: calc(100% - $left);
-  background-color: hsl(0,0,98%);
+  background-color:#fafafa;
   overflow-x: hidden;
 }
 .about{

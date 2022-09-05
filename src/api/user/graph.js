@@ -74,11 +74,11 @@ export default class {
                     }
                 }
                 let newrelation=JSON.parse(JSON.stringify(relation.nodes))
-                for (let i in newrelation.nodes) {
-                    if (newrelation[i].type=='model') {
-                        newrelation[i].weight*=5
-                    }
-                }
+                // for (let i in newrelation.nodes) {
+                //     if (newrelation[i].type=='model') {
+                //         newrelation[i].weight*=5
+                //     }
+                // }
                 newrelation.sort((a, b) => { return b.weight - a.weight })
                 let output = []
                 for (let i = 0; i < newrelation.length; i++) {

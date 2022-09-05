@@ -216,7 +216,7 @@ const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
 
 //是否是管理员
-const isAdmin = ref("false");
+const isAdmin = ref(false);
 let user_info = localStorage.getItem("userInfo");
 if (user_info) {
   user_info = JSON.parse(Decrypt(user_info));

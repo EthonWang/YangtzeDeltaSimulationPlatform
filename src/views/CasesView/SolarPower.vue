@@ -119,6 +119,7 @@ export default {
   name: "openLys",
   data() {
     return {
+      // backUrl_backup:backUrl_backup,
       openmap: null,
       showinfo: false,
       ovlay: null,

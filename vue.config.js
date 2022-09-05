@@ -8,6 +8,7 @@ function resolve(dir) {
 }
 
 module.exports = {
+    publicPath: './',
     chainWebpack: (config) => {
         const oneOfsMap = config.module.rule("less").oneOfs.store;
         oneOfsMap.forEach(item => {
@@ -60,50 +61,51 @@ module.exports = {
         }
     },
     devServer: {
+        assetsPublicPath : './',
         open: true,
         host: "http://172.21.213.222/",
         port: 3030,
         https: false,
         hotOnly: false,
-        proxy: {
-            // 配置跨域
-            '/back': {
-                target: "http://172.21.213.44:8999",
-                ws: true,
-                timeout: 3600000,
-                changOrigin: true,
-                pathRewrite: {
-                    '^/back': '',
-                },
-            },
-            "/back_backup": {
-                target: "http://172.21.213.248:9999",
-                ws: true,
-                timeout: 3600000,
-                changOrigin: true,
-                pathRewrite: {
-                    "/back_backup": "",
-                },
-            },
-            "/back_data": {
-                target: "http://172.21.213.248:8999",
-                ws: true,
-                timeout: 3600000,
-                changOrigin: true,
-                pathRewrite: {
-                    "/back_data": "",
-                },
-            },
-            "/echarts": {
-                target: "https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples",
-                ws: true,
-                timeout: 3600000,
-                changOrigin: true,
-                pathRewrite: {
-                    "/echarts": "",
-                },
-            },
-        }, // 设置代理
+        // proxy: {
+        //     // 配置跨域
+        //     '/back': {
+        //         target: "http://172.21.213.44:8999",
+        //         ws: true,
+        //         timeout: 3600000,
+        //         changOrigin: true,
+        //         pathRewrite: {
+        //             '^/back': '',
+        //         },
+        //     },
+        //     "/back_backup": {
+        //         target: "http://172.21.213.248:9999",
+        //         ws: true,
+        //         timeout: 3600000,
+        //         changOrigin: true,
+        //         pathRewrite: {
+        //             "/back_backup": "",
+        //         },
+        //     },
+        //     "/back_data": {
+        //         target: "http://172.21.213.248:8999",
+        //         ws: true,
+        //         timeout: 3600000,
+        //         changOrigin: true,
+        //         pathRewrite: {
+        //             "/back_data": "",
+        //         },
+        //     },
+        //     "/echarts": {
+        //         target: "https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples",
+        //         ws: true,
+        //         timeout: 3600000,
+        //         changOrigin: true,
+        //         pathRewrite: {
+        //             "/echarts": "",
+        //         },
+        //     },
+        // }, // 设置代理
         // before: (app) => { },
     },
 

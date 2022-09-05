@@ -81,6 +81,7 @@ export default {
       maxzoom: 0,
       minzoom: 0,
       radius: 10,
+      dataServer: this.$store.state.devIpAddress
     };
   },
   methods: {
@@ -89,7 +90,7 @@ export default {
         // background: "#1a2b39",
         source: new VectorSource({
           // features: new GeoJSON().readFeatures("china_sim.json"),
-          url: "http://172.21.213.44:8999/store/data/china_sim2.json",
+          url: this.dataServer + "/store/data/china_sim2.json",
           format: new GeoJSON(),
         }),
         style: this.setstyle,

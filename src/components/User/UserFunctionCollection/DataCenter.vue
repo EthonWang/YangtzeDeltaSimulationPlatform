@@ -141,7 +141,7 @@
           <el-upload
             v-model:file-list="fileList"
             class="upload-demo"
-            action="http://172.21.213.44:8999/resource/saveDataItem"
+            :action='dataServer + "/resource/saveDataItem"'
             :headers="upload_header"
             :data="{
               name: upload_file.name,
@@ -368,6 +368,7 @@ const api = new Api();
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
+let dataServer = store.state.devIpAddress;
 const dialogVisible = ref(false);
 const innerVisible = ref(false);
 const file_data = ref([

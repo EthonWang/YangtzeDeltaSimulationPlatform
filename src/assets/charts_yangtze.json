@@ -1,0 +1,330 @@
+[
+    {
+        "x": 116.486458413,
+        "y": 30.5756032718,
+        "name": "\u5b89\u5e86\u5e02",
+        "InstalledCapacity": "14.24",
+        "PowerGeneration": "14.65",
+        "VolumeofCarbonMitigation": "10.12"
+    },
+    {
+        "x": 117.324723287,
+        "y": 33.1092867276,
+        "name": "\u868c\u57e0\u5e02",
+        "InstalledCapacity": "10.14",
+        "PowerGeneration": "11.03",
+        "VolumeofCarbonMitigation": "7.62"
+    },
+    {
+        "x": 116.180200302,
+        "y": 33.4355723336,
+        "name": "\u4eb3\u5dde\u5e02",
+        "InstalledCapacity": "18.55",
+        "PowerGeneration": "19.65",
+        "VolumeofCarbonMitigation": "13.58"
+    },
+    {
+        "x": 117.363747974,
+        "y": 30.2838048837,
+        "name": "\u6c60\u5dde\u5e02",
+        "InstalledCapacity": "4.86",
+        "PowerGeneration": "5",
+        "VolumeofCarbonMitigation": "3.45"
+    },
+    {
+        "x": 118.102333331,
+        "y": 32.5442264274,
+        "name": "\u6ec1\u5dde\u5e02",
+        "InstalledCapacity": "14.78",
+        "PowerGeneration": "16.04",
+        "VolumeofCarbonMitigation": "11.08"
+    },
+    {
+        "x": 115.704105611,
+        "y": 32.9170843157,
+        "name": "\u961c\u9633\u5e02",
+        "InstalledCapacity": "31.69",
+        "PowerGeneration": "32.74",
+        "VolumeofCarbonMitigation": "22.62"
+    },
+    {
+        "x": 117.35509052,
+        "y": 31.7626230785,
+        "name": "\u5408\u80a5\u5e02",
+        "InstalledCapacity": "16.69",
+        "PowerGeneration": "17.54",
+        "VolumeofCarbonMitigation": "12.12"
+    },
+    {
+        "x": 116.739052693,
+        "y": 33.7209606001,
+        "name": "\u6dee\u5317\u5e02",
+        "InstalledCapacity": "6.79",
+        "PowerGeneration": "7.44",
+        "VolumeofCarbonMitigation": "5.14"
+    },
+    {
+        "x": 116.784573092,
+        "y": 32.4168972679,
+        "name": "\u6dee\u5357\u5e02",
+        "InstalledCapacity": "9.77",
+        "PowerGeneration": "10.48",
+        "VolumeofCarbonMitigation": "7.24"
+    },
+    {
+        "x": 118.070946253,
+        "y": 29.9065305386,
+        "name": "\u9ec4\u5c71\u5e02",
+        "InstalledCapacity": "4.27",
+        "PowerGeneration": "4.4",
+        "VolumeofCarbonMitigation": "3.04"
+    },
+    {
+        "x": 116.228761549,
+        "y": 31.6589211975,
+        "name": "\u516d\u5b89\u5e02",
+        "InstalledCapacity": "16.64",
+        "PowerGeneration": "17.36",
+        "VolumeofCarbonMitigation": "11.99"
+    },
+    {
+        "x": 118.365564489,
+        "y": 31.6385149399,
+        "name": "\u9a6c\u978d\u5c71\u5e02",
+        "InstalledCapacity": "7.45",
+        "PowerGeneration": "7.98",
+        "VolumeofCarbonMitigation": "5.51"
+    },
+    {
+        "x": 117.210007921,
+        "y": 33.8595451734,
+        "name": "\u5bbf\u5dde\u5e02",
+        "InstalledCapacity": "18.63",
+        "PowerGeneration": "20.52",
+        "VolumeofCarbonMitigation": "14.18"
+    },
+    {
+        "x": 117.561425381,
+        "y": 30.8903473107,
+        "name": "\u94dc\u9675\u5e02",
+        "InstalledCapacity": "3.91",
+        "PowerGeneration": "4.04",
+        "VolumeofCarbonMitigation": "2.79"
+    },
+    {
+        "x": 118.134838533,
+        "y": 31.1623650429,
+        "name": "\u829c\u6e56\u5e02",
+        "InstalledCapacity": "12.23",
+        "PowerGeneration": "12.75",
+        "VolumeofCarbonMitigation": "8.81"
+    },
+    {
+        "x": 118.851778746,
+        "y": 30.6856980574,
+        "name": "\u5ba3\u57ce\u5e02",
+        "InstalledCapacity": "9.76",
+        "PowerGeneration": "10.22",
+        "VolumeofCarbonMitigation": "7.06"
+    },
+    {
+        "x": 119.400485279,
+        "y": 31.506849135,
+        "name": "\u5e38\u5dde\u5e02",
+        "InstalledCapacity": "18.66",
+        "PowerGeneration": "20.27",
+        "VolumeofCarbonMitigation": "14.01"
+    },
+    {
+        "x": 118.964861173,
+        "y": 33.3517608868,
+        "name": "\u6dee\u5b89\u5e02",
+        "InstalledCapacity": "17.61",
+        "PowerGeneration": "19.41",
+        "VolumeofCarbonMitigation": "13.41"
+    },
+    {
+        "x": 119.108763523,
+        "y": 34.6314474988,
+        "name": "\u8fde\u4e91\u6e2f\u5e02",
+        "InstalledCapacity": "19.41",
+        "PowerGeneration": "21.97",
+        "VolumeofCarbonMitigation": "15.18"
+    },
+    {
+        "x": 118.842761327,
+        "y": 31.9277775996,
+        "name": "\u5357\u4eac\u5e02",
+        "InstalledCapacity": "19.17",
+        "PowerGeneration": "20.77",
+        "VolumeofCarbonMitigation": "14.35"
+    },
+    {
+        "x": 121.044216246,
+        "y": 32.1829029384,
+        "name": "\u5357\u901a\u5e02",
+        "InstalledCapacity": "41.07",
+        "PowerGeneration": "44.9",
+        "VolumeofCarbonMitigation": "31.02"
+    },
+    {
+        "x": 120.655859631,
+        "y": 31.3834919645,
+        "name": "\u82cf\u5dde\u5e02",
+        "InstalledCapacity": "44.15",
+        "PowerGeneration": "47.79",
+        "VolumeofCarbonMitigation": "33.02"
+    },
+    {
+        "x": 118.52019076,
+        "y": 33.7842385411,
+        "name": "\u5bbf\u8fc1\u5e02",
+        "InstalledCapacity": "18.56",
+        "PowerGeneration": "20.45",
+        "VolumeofCarbonMitigation": "14.13"
+    },
+    {
+        "x": 120.056357082,
+        "y": 32.5709736548,
+        "name": "\u6cf0\u5dde\u5e02",
+        "InstalledCapacity": "21.16",
+        "PowerGeneration": "23.39",
+        "VolumeofCarbonMitigation": "16.16"
+    },
+    {
+        "x": 120.329828694,
+        "y": 31.6915443997,
+        "name": "\u65e0\u9521\u5e02",
+        "InstalledCapacity": "23",
+        "PowerGeneration": "24.91",
+        "VolumeofCarbonMitigation": "17.21"
+    },
+    {
+        "x": 117.512917523,
+        "y": 34.2658206696,
+        "name": "\u5f90\u5dde\u5e02",
+        "InstalledCapacity": "31.98",
+        "PowerGeneration": "35.43",
+        "VolumeofCarbonMitigation": "24.47"
+    },
+    {
+        "x": 120.194861224,
+        "y": 33.5141500068,
+        "name": "\u76d0\u57ce\u5e02",
+        "InstalledCapacity": "30.22",
+        "PowerGeneration": "33.7",
+        "VolumeofCarbonMitigation": "23.28"
+    },
+    {
+        "x": 119.474471986,
+        "y": 32.7372953876,
+        "name": "\u626c\u5dde\u5e02",
+        "InstalledCapacity": "18.16",
+        "PowerGeneration": "20.04",
+        "VolumeofCarbonMitigation": "13.84"
+    },
+    {
+        "x": 119.46753004,
+        "y": 32.0688511711,
+        "name": "\u9547\u6c5f\u5e02",
+        "InstalledCapacity": "13.38",
+        "PowerGeneration": "14.65",
+        "VolumeofCarbonMitigation": "10.12"
+    },
+    {
+        "x": 121.434471381,
+        "y": 31.0741469344,
+        "name": "\u4e0a\u6d77\u5e02",
+        "InstalledCapacity": "46.32",
+        "PowerGeneration": "50.46",
+        "VolumeofCarbonMitigation": "34.86"
+    },
+    {
+        "x": 119.470814614,
+        "y": 29.8998621913,
+        "name": "\u676d\u5dde\u5e02",
+        "InstalledCapacity": "27.74",
+        "PowerGeneration": "29.22",
+        "VolumeofCarbonMitigation": "20.19"
+    },
+    {
+        "x": 119.86877637,
+        "y": 30.7448119773,
+        "name": "\u6e56\u5dde\u5e02",
+        "InstalledCapacity": "14.89",
+        "PowerGeneration": "15.86",
+        "VolumeofCarbonMitigation": "10.96"
+    },
+    {
+        "x": 120.778989939,
+        "y": 30.6219318958,
+        "name": "\u5609\u5174\u5e02",
+        "InstalledCapacity": "19.6",
+        "PowerGeneration": "21.31",
+        "VolumeofCarbonMitigation": "14.72"
+    },
+    {
+        "x": 119.952215942,
+        "y": 29.117107242,
+        "name": "\u91d1\u534e\u5e02",
+        "InstalledCapacity": "23.5",
+        "PowerGeneration": "24.97",
+        "VolumeofCarbonMitigation": "17.25"
+    },
+    {
+        "x": 119.51202751,
+        "y": 28.1992770822,
+        "name": "\u4e3d\u6c34\u5e02",
+        "InstalledCapacity": "7.98",
+        "PowerGeneration": "8.47",
+        "VolumeofCarbonMitigation": "5.85"
+    },
+    {
+        "x": 121.475361581,
+        "y": 29.7337930087,
+        "name": "\u5b81\u6ce2\u5e02",
+        "InstalledCapacity": "33.76",
+        "PowerGeneration": "36.13",
+        "VolumeofCarbonMitigation": "24.96"
+    },
+    {
+        "x": 118.674539818,
+        "y": 28.9343670224,
+        "name": "\u8862\u5dde\u5e02",
+        "InstalledCapacity": "11.29",
+        "PowerGeneration": "11.82",
+        "VolumeofCarbonMitigation": "8.17"
+    },
+    {
+        "x": 120.636560372,
+        "y": 29.7346077044,
+        "name": "\u7ecd\u5174\u5e02",
+        "InstalledCapacity": "19.47",
+        "PowerGeneration": "20.9",
+        "VolumeofCarbonMitigation": "14.44"
+    },
+    {
+        "x": 121.028942174,
+        "y": 28.8963275253,
+        "name": "\u53f0\u5dde\u5e02",
+        "InstalledCapacity": "21.53",
+        "PowerGeneration": "22.98",
+        "VolumeofCarbonMitigation": "15.87"
+    },
+    {
+        "x": 120.458843984,
+        "y": 27.8961471358,
+        "name": "\u6e29\u5dde\u5e02",
+        "InstalledCapacity": "19.45",
+        "PowerGeneration": "20.82",
+        "VolumeofCarbonMitigation": "14.38"
+    },
+    {
+        "x": 122.142496876,
+        "y": 30.0588363126,
+        "name": "\u821f\u5c71\u5e02",
+        "InstalledCapacity": "4.2",
+        "PowerGeneration": "4.53",
+        "VolumeofCarbonMitigation": "3.13"
+    }
+]

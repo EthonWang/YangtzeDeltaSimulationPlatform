@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 //@Api(tags = "大文件数据上传接口")
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/fileTransfer")
 @Slf4j

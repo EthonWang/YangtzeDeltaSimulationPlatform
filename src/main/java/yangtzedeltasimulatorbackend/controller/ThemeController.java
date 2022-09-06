@@ -17,6 +17,7 @@ import yangtzedeltasimulatorbackend.utils.ResultUtils;
  * @Auther wyjq
  * @Date 2022/4/6
  **/
+@CrossOrigin
 @RestController
 public class ThemeController {
 

@@ -15,6 +15,8 @@ import yangtzedeltasimulatorbackend.service.MyCaseService;
  * @Author wyjq
  * @Date 2022/05/25
  */
+
+@CrossOrigin
 @RestController
 @RequestMapping(value="/case")
 public class MyCaseController {

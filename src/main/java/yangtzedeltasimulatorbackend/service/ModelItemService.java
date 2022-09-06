@@ -73,9 +73,6 @@ public class ModelItemService {
     @Autowired
     LabTaskDao labTaskDao;
 
-    @Autowired
-    FolderDao folderDao;
-
     @Value("${dataStoreDir}"+"/temp")
     private  String tempDir;
 

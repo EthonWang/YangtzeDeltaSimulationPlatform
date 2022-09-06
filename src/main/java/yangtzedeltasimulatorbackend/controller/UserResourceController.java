@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  * @Date 2022/4/6
  **/
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/resource")
 public class UserResourceController {

@@ -13,7 +13,7 @@ import yangtzedeltasimulatorbackend.utils.ResultUtils;
  * @Auther wyjq
  * @Date 2022/4/6
  **/
-
+@CrossOrigin
 @RestController
 @RequestMapping(value="/task")
 public class TaskController {

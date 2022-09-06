@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
  * @Auther wyjq
  * @Date 2022/4/6
  **/
+
+@CrossOrigin
 @RestController
 public class ResourceController {
 

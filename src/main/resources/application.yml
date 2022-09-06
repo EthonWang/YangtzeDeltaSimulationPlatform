@@ -4,11 +4,12 @@ server:
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost/yangtze_delta_simulator
+      uri: mongodb://172.21.213.92/yangtze_delta_simulator
+#      uri: mongodb://localhost/yangtze_delta_simulator
   servlet:
     multipart:
-     max-file-size: 1024MB
-     max-request-size: 10240MB
+      max-file-size: 1024MB
+      max-request-size: 10240MB
   web:
     resources:
       static-locations: classpath:/META-INF/resources/,classpath:/resources/, classpath:/static/, classpath:/public/, file:${dataStoreDir}
@@ -18,17 +19,18 @@ spring:
 #静态资源的映射地址前面部分
 staticFilePattern: /store
 
-dataStoreDir: E:/GitProject/YangtzeDataStoreNew
+#dataStoreDir: E:/GitProject/YangtzeDataStoreNew
+#dataStoreDir: Z:/YangtzeDataStore
+dataStoreDir: F:/YangtzeDataStore
 bigFileUploadDir: ${dataStoreDir}/bigFileTemp
 
 dataContainerIpAndPort: geomodeling.njnu.edu.cn/dataTransferServer
 managerServerIpAndPort: 222.192.7.75:8084
 
-geoserverUrl: http://172.21.213.92:8089/geoserver
+#geoserverUrl: http://172.21.213.92:8089/geoserver
+geoserverUrl: /YangtzeVGLabGeoServer
 geoserverUserName: admin
 geoserverPassword: geoserver
-
-geoserverUrl_SHP: http://172.21.213.44:8088/geoserver
 
 
 

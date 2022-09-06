@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.SocketUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import yangtzedeltasimulatorbackend.dao.FolderDao;
@@ -25,6 +26,7 @@ import yangtzedeltasimulatorbackend.dao.ResourceDataDao;
 import yangtzedeltasimulatorbackend.entity.doo.JsonResult;
 import yangtzedeltasimulatorbackend.entity.po.QuestionItem;
 import yangtzedeltasimulatorbackend.entity.po.ResourceData;
+import yangtzedeltasimulatorbackend.entity.po.VisualDataItem;
 import yangtzedeltasimulatorbackend.service.LabTaskService;
 import yangtzedeltasimulatorbackend.utils.GeoServerUtils;
 import yangtzedeltasimulatorbackend.utils.MyFileUtils;
@@ -302,6 +304,67 @@ class YangtzeDeltaSimulatorBackendApplicationTests {
 //            System.out.println(filesize);
             item.setFilesizeLong(filesize);
             resourceDataDao.save(item);
+        }
+    }
+
+    @Test
+    void saveResPic(){
+        String txtPath = "Z:\\YangtzeDataStore\\requestResult1 - 副本.txt";
+        try{
+            File file = new File(txtPath);
+            // 将字节流向字符流转换
+            InputStreamReader inputStreamReader = new InputStreamReader(new FileInputStream(file),
+                    "GBK");
+            // 创建字符流缓冲区
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String string = null;
+            while ((string = bufferedReader.readLine()) != null) {
+//                System.out.println(string);
+                String[] strList = string.split("\t");
+                String name = strList[1];
+                String picPath = "/store/resourceData" + strList[4].substring(strList[4].lastIndexOf("/"));
+//                ResourceData item = (ResourceData) resourceDataDao.findByName(name);
+//                item.setImgWebAddress(picPath);
+//                resourceDataDao.save(item);
+                String webUrl = "http://img.data.ac.cn/" + strList[4];
+                String storePath = "D:/zym/opengms/yangtzeRiver_test/pic" + strList[4].substring(strList[4].lastIndexOf("/"));
+                URL url1 = new URL(webUrl);
+                URLConnection uc = url1.openConnection();
+                InputStream inputStream = uc.getInputStream();
+
+                FileOutputStream out = new FileOutputStream(storePath);
+                int j = 0;
+                while ((j = inputStream.read()) != -1) {
+                    out.write(j);
+                }
+                inputStream.close();
+                System.out.println("success!");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    void changeVisualWebAddress(){
+        List<ResourceData> all = resourceDataDao.findAll();
+        for (int i = 0; i < all.size(); i++) {
+            ResourceData resourceData = all.get(i);
+            ArrayList<VisualDataItem> visualDataItems = resourceData.getVisualDataItems();
+            if(visualDataItems.size() > 0){
+                for (int j = 0; j < visualDataItems.size(); j++) {
+                    String visualWebAddress = visualDataItems.get(j).getVisualWebAddress();
+                    visualWebAddress = visualWebAddress.replace("http://172.21.213.92:8089/geoserver","/YangtzeVGLabGeoServer");
+                    visualDataItems.get(j).setVisualWebAddress(visualWebAddress);
+                }
+            }
+            resourceData.setUserEmail("opengms@126.com");
+            resourceDataDao.save(resourceData);
         }
     }
 

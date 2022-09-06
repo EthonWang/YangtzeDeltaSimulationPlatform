@@ -1,6 +1,7 @@
 package yangtzedeltasimulatorbackend.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,11 +17,14 @@ import java.util.List;
 @Slf4j
 public class ExecCmdUtils {
 
+    @Value("${dataStoreDir}")
+    private static String dataResourceDir;
+
     //执行python脚本
     public static int execPython(String pyScriptName, List<String> argvList){
 
-        String scriptsDir=ClassLoader.getSystemResource("static/myScripts/").getPath().substring(1); //eg: e:\\xx\static\\myScripts\\
-        String pyPath=scriptsDir+pyScriptName; //eg: eg: e:\\xx\static\\myScripts\\test.py
+        String scriptsDir= dataResourceDir + "/static/myScripts/"; //eg: e:\\xx\static\\myScripts\\
+        String pyPath = scriptsDir + pyScriptName; //eg: eg: e:\\xx\static\\myScripts\\test.py
 
         String cmdString="python ";
         cmdString+=pyPath;  //eg: python eg: e:\\xx\static\\myScripts\\test.py

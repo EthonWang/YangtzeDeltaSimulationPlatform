@@ -19,7 +19,7 @@ import java.io.File;
  * @Auther wyjq
  * @Date 2022/6/28
  **/
-
+@CrossOrigin
 @RestController
 @RequestMapping(value="/script")
 public class ScriptExecController {

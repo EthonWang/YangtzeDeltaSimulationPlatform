@@ -16,7 +16,7 @@ import yangtzedeltasimulatorbackend.service.ModelItemService;
  * @Auther wyjq
  * @Date 2022/4/6
  **/
-
+@CrossOrigin
 @RestController
 @RequestMapping(value="/model")
 public class ModelController {

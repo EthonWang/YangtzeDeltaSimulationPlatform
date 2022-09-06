@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Auther wyjq
  * @Date 2022/4/6
  **/
-
+@CrossOrigin
 @RestController
 @RequestMapping(value="/LabTask")
 public class LabTaskController {

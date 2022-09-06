@@ -12,7 +12,7 @@ import yangtzedeltasimulatorbackend.service.DashboardService;
  * @Author bin
  * @Date 2022/05/25
  */
-
+@CrossOrigin
 @RestController
 @RequestMapping(value="/dashboard")
 public class DashboardController {

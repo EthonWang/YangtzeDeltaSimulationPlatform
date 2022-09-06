@@ -2,6 +2,7 @@ package yangtzedeltasimulatorbackend.service;
 
 import io.swagger.annotations.ApiOperation;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,8 @@ import java.util.function.BiFunction;
 @Service
 public class DashboardService {
 
+    @Value("${dataStoreDir}")
+    private String dataStoreDir;
 
     public JsonResult sortRainfallByDistrict(SortDTO sortDTO) {
 
@@ -80,8 +83,6 @@ public class DashboardService {
 
         }
         return ResultUtils.success(dailyResult);
-
-
     }
 
     /**
@@ -90,7 +91,8 @@ public class DashboardService {
     private Map<String, DistrictRainfall> calcRainfall(String aggKey){
         Map map = null;
         try {
-            File file = ResourceUtils.getFile("classpath:static/output.json");
+//            File file = ResourceUtils.getFile("classpath:static/output.json");
+            File file=new File(dataStoreDir,"output.json");
             map = MyFileUtils.readJson(file);
         }catch (Exception e){
             e.printStackTrace();

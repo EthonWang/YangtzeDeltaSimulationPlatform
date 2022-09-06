@@ -371,7 +371,7 @@ public class ScriptExecService {
         } else if (chartsType.equals("scatter")) {
             templateOptionsName = "scatter_simple.json";
         }
-        String scriptsDir = ClassLoader.getSystemResource("static/myChartOptions/").getPath().substring(1); //eg: e:\\xx\static\\myScripts\\
+        String scriptsDir = dataResourceDir + "/static/myChartOptions/"; //eg: e:\\xx\static\\myScripts\\
         String optionsPath = scriptsDir + templateOptionsName; //eg: eg: e:\\xx\static\\myScripts\\test.py
         String optionsStr = "";
         try {

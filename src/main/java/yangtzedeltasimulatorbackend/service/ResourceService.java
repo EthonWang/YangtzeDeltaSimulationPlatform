@@ -56,9 +56,6 @@ public class ResourceService {
     @Value("${geoserverUrl}")
     String geoserverUrl;
 
-    @Value("${geoserverUrl_SHP}")
-    String geoserverUrl_SHP;
-
     @Autowired
     ResourceDataDao resourceDataDao;
 

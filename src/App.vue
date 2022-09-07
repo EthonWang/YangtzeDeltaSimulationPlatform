@@ -12,8 +12,13 @@
       @showTopbarBackground="showTopbarBackground"
       class="main"
     ></router-view>
-    <el-button v-if="route.path.includes('/case/')" class="btnback" style="" @click="myRouter.go(-1)">
-      返回&nbsp;<el-icon><Back /></el-icon>
+    <el-button
+      v-if="route.path.includes('/case/')"
+      class="btnback"
+      style=""
+      @click="myRouter.go(-1)"
+    >
+      <el-icon><Back /></el-icon>&nbsp;返回
     </el-button>
     <!-- </el-scrollbar> -->
     <!-- <div> OPENGMS</div> -->
@@ -37,7 +42,6 @@ const routerGo = (router) => {
 // window.onload=function(){document.getElementsByClassName("main")[0].height=window.innerHeight}
 </script>
 <style lang="less">
-
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -54,11 +58,11 @@ const routerGo = (router) => {
 .btnback {
   position: fixed;
   top: 65px;
-  left: -45px;
+  right: -45px;
   z-index: 9999;
   opacity: 0.75;
   &:hover {
-    left: 0;
+    right: 0;
     opacity: 1;
   }
 }

@@ -3,15 +3,14 @@
     <div class="container">
       <h1
         style="
-          margin-top: 3.75%;
+          margin-top: 65px;
           position: relative;
           z-index: 2;
           display: flex;
           justify-content: center;
         "
       >
-        <!--        <span style="background: transparent" class="border-box">长三角综合模拟器</span>-->
-        <dv-border-box8 dur="3" style="width: 33%; padding: 3px"
+        <dv-border-box8 dur="3" style="width: 450px; padding: 3px"
           >长三角虚拟地理实验平台</dv-border-box8
         >
       </h1>
@@ -20,7 +19,7 @@
           position: absolute;
           width: 100vw;
           height: 5vh;
-          top: 17vh;
+          top: 135px;
           z-index: 2;
           display: flex;
           justify-content: space-around;
@@ -42,9 +41,12 @@
         </div>
       </div>
 
-      <div
+      <!-- <div
         class="desContainer"
         :class="{ show_ani: props.show, hide_ani: !props.show }"
+      > -->
+      <div
+        class="desContainer"
       >
         <el-divider style="margin: 5px 0 5px 0"></el-divider>
         <p>
@@ -52,13 +54,6 @@
         </p>
         <el-divider style="margin: 15px 0 -5px 0"></el-divider>
         <div class="login">
-          <!-- <el-input
-            v-model="input"
-            type="password"
-            placeholder="邮件地址"
-            show-password
-          /> -->
-
           <button
             @click="toSci()"
             class="button-87"
@@ -73,8 +68,9 @@
         <div id="main1"></div>
         <div id="main2"></div>
       </div>
-      <div class="merge-earth"></div>
-      <MapCharts class="earth"></MapCharts>
+      <!-- <div class="merge-earth"></div> -->
+      <!-- <MapCharts class="earth"></MapCharts> -->
+      <img class="earth_img" src="../../assets/img/earth.png" alt="" />
       <img class="triangle" src="../../assets/triangle.png" alt="" />
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -87,7 +83,6 @@
         <path d="M0 40h1680V30S1340 0 840 0 0 30 0 30z" fill="#fff"></path>
       </svg>
     </div>
-   
   </div>
 </template>
 
@@ -210,6 +205,7 @@ setTimeout(() => {
     title: {
       text: "资源分布情况",
     },
+    
     toolbox: {
       // y: 'bottom',
       feature: {
@@ -223,32 +219,28 @@ setTimeout(() => {
       },
     },
     tooltip: {
-      // 鼠标悬浮提示框显示 X和Y 轴数据
-      // trigger: "axis",
-      // backgroundColor: "rgba(32, 33, 36,.7)",
-      // borderColor: "rgba(32, 33, 36,0.20)",
-      // borderWidth: 1,
-      // textStyle: {
-      //   // 文字提示样式
-      //   color: "#fff",
-      //   fontSize: "12",
-      // },
       axisPointer: {
         // 坐标轴虚线
         type: "cross",
         label: {
           backgroundColor: "#6a7985",
-          show:false,
-          // formatter: (params) => {
-          //   return String(restoreNum(params.value));
-          // },
+          show: false,
         },
       },
       formatter: (params) => {
-        return params.name.replace('\n','')+"-"+params.seriesName + "：" + String(restoreNum(params.value)) + "条";
+        return (
+          params.name.replace("\n", "") +
+          "-" +
+          params.seriesName +
+          "：" +
+          String(restoreNum(params.value)) +
+          "条"
+        );
       },
     },
-
+polar: {
+    radius: [20, '60%']
+  },
     angleAxis: {
       type: "category",
       data: [
@@ -260,9 +252,7 @@ setTimeout(() => {
     },
     radiusAxis: {
       type: "value",
-      scale: true,
-      // minInterval:1,
-      // maxInterval:1000,
+      scale: false,
       axisLabel: {
         //v值 i系统分层值
         formatter: (v, i) => {
@@ -294,7 +284,7 @@ setTimeout(() => {
         },
       },
     },
-    polar: {},
+
     backgroundColor: "transparent",
     series: [
       {
@@ -302,32 +292,18 @@ setTimeout(() => {
         data: resourceModelNum,
         coordinateSystem: "polar",
         name: "模型",
-        // stack: "a",
-        itemStyle:{
-          opacity:"0.75"
+        itemStyle: {
+          opacity: "0.75",
         },
-        // emphasis: {
-        //   focus: "series",
-        // },
       },
       {
         type: "bar",
         data: resourceNum,
         coordinateSystem: "polar",
         name: "数据",
-        itemStyle:{
-          opacity:"0.65"
+        itemStyle: {
+          opacity: "0.65",
         },
-        // label: {
-        //   formatter: (params) => {
-        //     return params.value * 2;
-        //   },
-        // },
-
-        // stack: "a",
-        // emphasis: {
-        //   focus: "series",
-        // },
       },
     ],
     legend: {
@@ -352,6 +328,12 @@ setTimeout(() => {
   option2 = {
     title: {
       text: "资源使用热点",
+    },
+     grid: {
+      top:'35px',
+       right:'5%',
+        bottom:'10%',
+        left:'10%'
     },
     backgroundColor: "transparent",
     legend: {
@@ -431,7 +413,7 @@ setTimeout(() => {
   text-transform: uppercase;
   transition: 0.5s;
   background-size: 200% auto;
-  color:#fafafa;
+  color: #fafafa;
   border-radius: 10px;
   display: block;
   border: 0px;
@@ -457,10 +439,10 @@ setTimeout(() => {
 .container {
   backdrop-filter: blur(5px);
   .flowbtn {
-    height: 5vh;
-    width: 16%;
+    height: 44px;
+    width: 350px;
     margin-right: 4.5%;
-    font-size: 1.1vw;
+    font-size: 20px;
     display: flex;
     justify-content: center;
     cursor: text;
@@ -490,8 +472,8 @@ setTimeout(() => {
     transform: scale(1) perspective(1200px) rotateY(-15deg);
   }
   h1 {
-    color:#fafafa;
-    font-size: 2.24vw;
+    color: #fafafa;
+    font-size: 35px;
     text-align: center;
   }
   position: absolute;
@@ -529,7 +511,7 @@ setTimeout(() => {
   border-radius: 5%;
   transform: scale(1) perspective(1200px) rotateY(15deg);
   h1 {
-    color:#fafafa;
+    color: #fafafa;
     font-size: 3.75vw;
     margin-top: -10px;
     margin-bottom: 10px;
@@ -538,7 +520,7 @@ setTimeout(() => {
   p {
     // margin-top: -10px;
     font-size: 1.1vw;
-    color:#fafafa;
+    color: #fafafa;
     line-height: 170%;
     width: 100%;
   }
@@ -590,6 +572,19 @@ setTimeout(() => {
   // &:hover {
   // transform: translate(-50px,50px) scale(1.35);
   // }
+}
+.container .earth_img {
+  position: absolute;
+  left: 5vw;
+  top: 25%;
+  // bottom: 50px;
+  // width: 39.06vw;
+  width: 90vw;
+  // height: $width*2/3;
+  z-index: 0;
+  // background-color: red;
+  transition: all 1s;
+  transform-origin: 50% 0%;
 }
 // 兼容css
 @right-color: hsla(351, 73%, 22%, 0);
@@ -698,7 +693,7 @@ setTimeout(() => {
   height: 50%;
 }
 .border-box {
-  color:#fafafa;
+  color: #fafafa;
   position: relative;
   // margin:300px auto;
   // width:400px;

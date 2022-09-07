@@ -14,12 +14,12 @@ const quadVertices = [
 ];
 
 const vsURL = [
-    '/shaders/screen_new.vert', '/shaders/coastline.vert', '/shaders/gabriel.vert', '/shaders/newSimulation.vert', 
-    '/shaders/particlePoolUpdate.vert', '/shaders/ribbonParticle_instancedLineStrips.vert', '/shaders/debug.vert'
+    '../../../../public/shaders/screen_new.vert', '../../../../public/shaders/coastline.vert', '../../../../public/shaders/gabriel.vert', '../../../../public/shaders/newSimulation.vert', 
+    '../../../../public/shaders/particlePoolUpdate.vert', '../../../../public/shaders/ribbonParticle_instancedLineStrips.vert', '../../../../public/shaders/debug.vert'
 ];
 const fsURL = [
-    '/shaders/screen.frag', '/shaders/coastline.frag', '/shaders/gabriel.frag', '/shaders/newSimulation.frag', 
-    '/shaders/particlePoolUpdate.frag', '/shaders/ribbonParticle_instancedLineStrips_new.frag', '/shaders/debug.frag'
+    '../../../../public/shaders/screen.frag', '../../../../public/shaders/coastline.frag', '../../../../public/shaders/gabriel.frag', '../../../../public/shaders/newSimulation.frag', 
+    '../../../../public/shaders/particlePoolUpdate.frag', '../../../../public/shaders/ribbonParticle_instancedLineStrips_new.frag', '../../../../public/shaders/debug.frag'
 ];
 
 const shaderNames = ['screen', 'coastline', 'gabriel', 'simulation', 'particlePoolUpdate', 'ribbonParticleLineStrips', 'debug'];

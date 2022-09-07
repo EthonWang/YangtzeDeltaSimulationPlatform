@@ -75,7 +75,7 @@
       </div>
       <div class="merge-earth"></div>
       <MapCharts class="earth"></MapCharts>
-      <img class="triangle" src="@/assets/triangle.png" alt="" />
+      <img class="triangle" src="../../assets/triangle.png" alt="" />
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -431,7 +431,7 @@ setTimeout(() => {
   text-transform: uppercase;
   transition: 0.5s;
   background-size: 200% auto;
-  color: hsl(0,0,98%);
+  color:#fafafa;
   border-radius: 10px;
   display: block;
   border: 0px;
@@ -490,7 +490,7 @@ setTimeout(() => {
     transform: scale(1) perspective(1200px) rotateY(-15deg);
   }
   h1 {
-    color: hsl(0,0,98%);
+    color:#fafafa;
     font-size: 2.24vw;
     text-align: center;
   }
@@ -529,7 +529,7 @@ setTimeout(() => {
   border-radius: 5%;
   transform: scale(1) perspective(1200px) rotateY(15deg);
   h1 {
-    color: hsl(0,0,98%);
+    color:#fafafa;
     font-size: 3.75vw;
     margin-top: -10px;
     margin-bottom: 10px;
@@ -538,7 +538,7 @@ setTimeout(() => {
   p {
     // margin-top: -10px;
     font-size: 1.1vw;
-    color: hsl(0,0,98%);
+    color:#fafafa;
     line-height: 170%;
     width: 100%;
   }
@@ -698,7 +698,7 @@ setTimeout(() => {
   height: 50%;
 }
 .border-box {
-  color: hsl(0,0,98%);
+  color:#fafafa;
   position: relative;
   // margin:300px auto;
   // width:400px;

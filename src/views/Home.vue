@@ -66,7 +66,7 @@ const mousedown = () => {
   }
   if (
     scrollTop.value > 0.9 * window.innerHeight &&
-    scrollTop.value < 1.1 * window.innerHeight
+    scrollTop.value < 1.0 * window.innerHeight
   ) {
     explore();
     document.getElementsByClassName("block_home")[0].style.opacity = 1;
@@ -95,6 +95,8 @@ const mousedown = () => {
 
 const toSci = () => {
   home_scroll_listen.value.scrollTop = window.innerHeight * 1.96;
+  document.getElementsByClassName("container")[0].style.width = "100vw";
+  
 };
 
 const suitable = () => {

@@ -310,7 +310,7 @@
       <div
         id="time-slider"
         style="
-          background: hsl(0,0,98%);
+          background:#fafafa;
           border-radius: 15px;
           width: 100%;
           bottom: -20%;

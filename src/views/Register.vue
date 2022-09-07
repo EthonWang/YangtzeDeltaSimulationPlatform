@@ -142,7 +142,7 @@ const toLogin = (index = 0, formEl) => {
 <style lang="less" scoped>
 // 兼容css
 .login-page {
-  background-color: hsl(0,0,98%);
+  background-color:#fafafa;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -160,10 +160,10 @@ h4 {
   position: relative;
   font-size: 1.5vw;
   font-weight: 400;
-  color: hsl(0,0,98%);
+  color:#fafafa;
 }
 /deep/.el-form-item__label {
-  color: hsl(0,0,98%);
+  color:#fafafa;
 }
 .user-info {
   width: fit-content;

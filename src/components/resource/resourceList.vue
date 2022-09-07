@@ -107,7 +107,9 @@
     </template>
   </el-dialog>
   <el-dialog v-model="show_task_model" title="添加模型到实验室" width="30%">
-    <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
+    <h3 style="margin-bottom: 5px">模型描述</h3>
+    {{ selectedRes.description }}
+    <h3 style="margin: 15px 0 5px 0">选择要添加到的实验室</h3>
     <el-button
       v-for="(task, index) in task_list"
       :key="task"
@@ -177,14 +179,14 @@
     />
     <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
     <el-button
-      v-for="(task) in task_list"
+      v-for="task in task_list"
       :key="task"
       @click="addDataToTask(task)"
       style="margin: 5px"
     >
-      <el-icon><Monitor /></el-icon> &nbsp;
-      
-      ><span>{{ task.name }}</span></el-button
+      <el-icon><Monitor /></el-icon> &nbsp; ><span>{{
+        task.name
+      }}</span></el-button
     >
     <template #footer>
       <span class="dialog-footer">
@@ -257,8 +259,8 @@ const addDataToTask = (task) => {
     task_api.addData(task, [data]);
   } else if (selectedVisualDataItems.value.length <= 0) {
     ElMessage.error("您未选择数据");
-    return
-  }  else {
+    return;
+  } else {
     let dataList = [];
     if (setSelectedVisualDataItemsDataSet.value) {
       //设置集
@@ -498,7 +500,7 @@ const guideMarks = computed(() => {
   // border-top: solid 0.1px rgba(176, 174, 174, 0.445);
 }
 .cardTitle {
-  // color: hsl(0,0,98%);
+  // color:#fafafa;
   height: 30px;
   line-height: 30px;
   width: 62%;
@@ -527,9 +529,13 @@ const guideMarks = computed(() => {
 .el-card {
   --el-card-padding: 0px;
 }
-/deep/.el-dialog {
-  background: hsl(220, 100%, 5%) !important;
-}
+// /deep/.el-dialog {
+//   background: hsl(220, 100%, 5%) !important;
+  
+// }
+/deep/.el-dialog__title {
+    font-weight: 800 !important;
+  }
 </style>
 <style lang="less">
 .mapboxCardDialog .el-dialog__body {

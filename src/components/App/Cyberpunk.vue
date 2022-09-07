@@ -6,7 +6,7 @@
 
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 button, button::after {
   width: 300px;
   height: 86px;

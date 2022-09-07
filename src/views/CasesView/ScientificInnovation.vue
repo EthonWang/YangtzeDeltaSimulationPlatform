@@ -110,7 +110,7 @@ const changeImage = () => {
 }
 let rawData = []
 const getData = (radioArea)=>{
-  fetch('../../../public/case/scientificInnovation/'+radioArea+'/'+radioArea+'_values.csv').then(res=>{
+  fetch('/YangtzeVGLab/case/scientificInnovation/'+radioArea+'/'+radioArea+'_values.csv').then(res=>{
     return res.text()
   }).then(res=>{
     rawData = d3.csvParse(res);

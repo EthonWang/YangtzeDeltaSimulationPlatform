@@ -117,7 +117,7 @@
           border-radius: 5px;
           background-color: hsl(150, 100%, 95%);
         "
-        v-if="recommendVisible"
+        v-if="recommendVisible&&!edit_task"
       >
         <el-card
           :body-style="{ padding: '0px' }"

@@ -9,6 +9,7 @@
     <img class="img-ava" :src="devServer + userAvatar" alt="" v-else />
     <el-upload
       v-model:file-list="fileList_ava"
+      :show-file-list="false"
       class="upload-demo"
       action=""
       accept="image/jpg,image/jpeg,image/png"

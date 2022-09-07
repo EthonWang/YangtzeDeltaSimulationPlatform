@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div></div>
 </template>
 
@@ -6,7 +6,7 @@
 
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 button, button::after {
   width: 300px;
   height: 86px;
@@ -56,4 +56,4 @@ button:hover::after {
   100% { clip-path: var(--slice-1); transform: translate(0); }
 }
 
-</style>
+</style> -->

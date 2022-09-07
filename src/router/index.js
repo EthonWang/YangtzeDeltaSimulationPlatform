@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory,createWebHashHistory } from "vue-router";
 import Home from "../views/Home.vue";
 // import Data from "@/views/Data.vue";
 import Model from "@/views/Model.vue";
@@ -85,28 +85,28 @@ const routes = [
         path: '',
         name: '概览',
         component: () =>
-          import("@/components/User/UserFunctionCollection/Overview.vue")
+          import("../components/User/UserFunctionCollection/Overview.vue")
       },
       {
         isBar: false,
         path: 'data',
         name: '数据中心',
         component: () =>
-          import("@/components/User/UserFunctionCollection/DataCenter.vue")
+          import("../components/User/UserFunctionCollection/DataCenter.vue")
       },
       {
         isBar: false,
         path: 'model',
         name: '模型中心',
         component: () =>
-          import("@/components/User/UserFunctionCollection/ModelCenter.vue")
+          import("../components/User/UserFunctionCollection/ModelCenter.vue")
       },
       {
         isBar: false,
         path: 'task',
         name: '任务中心',
         component: () =>
-          import("@/components/User/UserFunctionCollection/TaskCenter.vue")
+          import("../components/User/UserFunctionCollection/TaskCenter.vue")
       },
     ]
   },
@@ -150,6 +150,7 @@ routes[4].children = routes[4].children.concat(cases_config)
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
+  // base: '/YangtzeDelta/', //打包项目的根目录
   routes,
 });
 

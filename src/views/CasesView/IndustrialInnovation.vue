@@ -203,7 +203,7 @@ function updateValues(cate) {
       // lable3.id = "unit" + i.toString();
       createDiv1.style = "width:18vw; height: 50px;position: absolute; left: 10px;top:" + (Math.floor(i * 54 + 30)).toString() + "px";
       createDiv2.style = " border:1.5px solid  #C0C0C0;width:90%;height:40px;margin-top:10px;"
-      lable1.style = " font-size:12px;background: hsl(0,0,98%);position: relative; top:-13px;left: 5px;color:#ff7800;font-weight:normal;"
+      lable1.style = " font-size:12px;background:#fafafa;position: relative; top:-13px;left: 5px;color:#ff7800;font-weight:normal;"
       lable2.style = "font-size:16px;margin-top:-12px;margin-right:5px;font-weight:bold;color:#696969;text-align: right;"
       // lable3.style = "font-size:12px;margin-top:-10px;margin-right:5px;color:#696969;text-align: right;"
       lable1.innerHTML = csvdata[i].name + "<br>"
@@ -233,9 +233,9 @@ function addMap(cate) {
   console.log("dd",process.env.BASE_URL)
   let spriteUrl;
   if((screenWidth == 1920 && screenHeight == 1080)||(screenWidth == 2048 && screenHeight == 1152)){
-    spriteUrl ="../../../public/case/industrialInnovation/mapbox_resource/sprite/" + cate + "@2x";
+    spriteUrl ="/YangtzeVGLab/case/industrialInnovation/mapbox_resource/sprite/" + cate + "@2x";
   }else if(screenWidth == 2560 && screenHeight == 1440) {
-    spriteUrl = "../../../public/case/industrialInnovation/mapbox_resource/sprite/" + cate;
+    spriteUrl ="/YangtzeVGLab/case/industrialInnovation/mapbox_resource/sprite/" + cate;
   }
   document.getElementById('map').innerHTML = "";
   mapboxgl.accessToken =
@@ -247,7 +247,7 @@ function addMap(cate) {
     style: {
       "version": 8,
       "sprite": spriteUrl,
-      "glyphs": "../../../public/case/industrialInnovation/mapbox_resource/fonts/{fontstack}/{range}.pbf",
+      "glyphs": "/YangtzeVGLab/case/industrialInnovation/mapbox_resource/fonts/{fontstack}/{range}.pbf",
       "sources": {
         'boundary': {
           type: 'geojson',

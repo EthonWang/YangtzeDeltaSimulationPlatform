@@ -163,6 +163,7 @@ export default {
       mode: "3D",
       stat: true,
       gridIsshown: false,
+      imageUrl: url,
       options: [
         {
           value: "3D",
@@ -177,8 +178,6 @@ export default {
           label: "哥伦布视图",
         },
       ],
-      dataServer: useStore().state.devIpAddress,
-      imageUrl:"/store/platecase_img/raster_Topography_410.00Ma.png",
     };
   },
   computed: {
@@ -189,7 +188,6 @@ export default {
     this.InitTimelist();
   },
   mounted() {
-    this.imageUrl = this.dataServer + this.imageUrl;
     this.Init();
   },
   updated() {
@@ -366,10 +364,10 @@ export default {
         url: this.imageUrl,
       });
       // this.requireJsonData("/case/cities.json");
-      this.requireJsonData("/case/province_pm.json");
-      this.requireJsonData("/case/polyline.json");
-      this.requireJsonData("/case/label.json");
-      this.requireJsonData("/case/plate_border.json");
+      this.requireJsonData("/YangtzeVGLab/case/province_pm.json");
+      this.requireJsonData("/YangtzeVGLab/case/polyline.json");
+      this.requireJsonData("/YangtzeVGLab/case/label.json");
+      this.requireJsonData("/YangtzeVGLab/case/plate_border.json");
       // this.viewer.zoomTo(this.viewer.dataSources._dataSources[0]);
       imageryLayers.addImageryProvider(imagelayer, this.layercount);
       this.layercount++;
@@ -423,10 +421,10 @@ export default {
       // } else {
       // this.viewer.dataSources.removeAll();
       this.time_slider = 410 - this.time;
-      this.requireJsonData("/case/province_pm.json");
-      this.requireJsonData("/case/polyline.json");
-      this.requireJsonData("/case/label.json");
-      this.requireJsonData("/case/plate_border.json");
+      this.requireJsonData("/YangtzeVGLab/case/province_pm.json");
+      this.requireJsonData("/YangtzeVGLab/case/polyline.json");
+      this.requireJsonData("/YangtzeVGLab/case/label.json");
+      this.requireJsonData("/YangtzeVGLab/case/plate_border.json");
       this.requirePngData();
       // }
 
@@ -531,7 +529,7 @@ export default {
       } else {
         const data = axios({
           method: "GET",
-          url: this.dataServer + "/store/platecase_img/raster_Topography_" + this.time + ".00Ma.png",
+          url: "/case/img_1/raster_Topography_" + this.time + ".00Ma.png",
           responseType: "arraybuffer",
         })
           .then((response) => {

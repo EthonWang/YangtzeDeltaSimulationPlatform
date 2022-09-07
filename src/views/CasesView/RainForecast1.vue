@@ -3,9 +3,9 @@
 
     <!--    标题-->
     <div class="flex-row-center" style="height: 75px;">
-      <!--      <h2 style="color: hsl(0,0,98%)"></h2>-->
+      <!--      <h2 style="color:#fafafa"></h2>-->
       <dv-decoration-3 style="width:250px;height:40px;"/>
-      <dv-decoration-11 style="width:400px;height:75px;color: hsl(0,0,98%)"><h1>王家坝流域降雨预报专题</h1></dv-decoration-11>
+      <dv-decoration-11 style="width:400px;height:75px;color:#fafafa"><h1>王家坝流域降雨预报专题</h1></dv-decoration-11>
       <dv-decoration-3 style="width:250px;height:40px;"/>
 
     </div>

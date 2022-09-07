@@ -1,4 +1,4 @@
-input[type="text"].cyberpunk,
+/* input[type="text"].cyberpunk,
 textarea.cyberpunk {
     width: calc(100% - 30px);
     border: 30px solid #000;
@@ -86,4 +86,4 @@ input[type="checkbox"].cyberpunk:checked:before {
 
 input[type="checkbox"].cyberpunk:checked:after {
     background-color: var(--border-color);
-}
+} */

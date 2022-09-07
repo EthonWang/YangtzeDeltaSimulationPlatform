@@ -149,8 +149,8 @@ class base_route {
 routes[4].children = routes[4].children.concat(cases_config)
 
 const router = createRouter({
-  // history: createWebHistory(process.env.BASE_URL),
-  history: createWebHashHistory(),
+  history: createWebHistory(process.env.BASE_URL),
+  // base: '/YangtzeDelta/', //打包项目的根目录
   routes,
 });
 

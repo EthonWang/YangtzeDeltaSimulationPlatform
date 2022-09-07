@@ -17,9 +17,9 @@
       
       <div class="segmented-control__color"></div>
     </div>
-    <button class="cyberpunk">12123</button>
-    <input class="cyberpunk" type="text" placeholder="input 输入框" />
-<textarea class="cyberpunk" placeholder="textarea 文本框"></textarea>
+    <!-- <button class="cyberpunk">12123</button> -->
+    <!-- <input class="cyberpunk" type="text" placeholder="input 输入框" /> -->
+<!-- <textarea class="cyberpunk" placeholder="textarea 文本框"></textarea>
 <label class="cyberpunk"><input class="cyberpunk" name="test" type="radio" />单选框1</label>
 <label class="cyberpunk"><input class="cyberpunk" name="test" type="radio" />单选框2</label><br />
 <label class="cyberpunk"><input class="cyberpunk" type="checkbox" />多选框</label><br />
@@ -28,7 +28,7 @@
 <p class="cyberpunk">经典的赛博朋克角色是边缘且性格疏远的独行者。他们生活在社会群体的边缘，一个弥漫反乌托邦氛围的未来：日常生活受到急剧改变的科技影响，普及的计算机化信息笼罩全球，以及侵入性的人体改造。</p>
 <p class="cyberpunk inverse">经典的赛博朋克角色是边缘且性格疏远的独行者。他们生活在社会群体的边缘，一个弥漫反乌托邦氛围的未来：日常生活受到急剧改变的科技影响，普及的计算机化信息笼罩全球，以及侵入性的人体改造。</p>
 <p class="cyberpunk inverse dotted">经典的赛博朋克角色是边缘且性格疏远的独行者。他们生活在社会群体的边缘，一个弥漫反乌托邦氛围的未来：日常生活受到急剧改变的科技影响，普及的计算机化信息笼罩全球，以及侵入性的人体改造。</p>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br> -->
   </div>
 </template>
 

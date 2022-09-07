@@ -797,10 +797,10 @@ const loadMidChart1 = () => {
   date.value.month = timeList[timeIndex].slice(8,9)
   date.value.day = timeList[timeIndex].slice(9,11)
 
-  fetch('/case/economicRun/cityArea.geojson').then(res=>{
+  fetch('/YangtzeVGLab/case/economicRun/cityArea.geojson').then(res=>{
     return res.json()
   }).then(json=>{
-    fetch('/case/economicRun/province.geojson').then(resProv=>{
+    fetch('/YangtzeVGLab/case/economicRun/province.geojson').then(resProv=>{
       return resProv.json()
     }).then(prov=>{
       echarts.registerMap('prov',prov)

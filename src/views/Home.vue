@@ -12,7 +12,7 @@
       @to-sci="toSci()"
     ></HomeView1>
     <HomeView2 :show="show2" style="width: 100%; height: 99.96vh"></HomeView2>
-    <HomeViewFooter style="width: 100%; height: 35vh"></HomeViewFooter>
+    <HomeViewFooter style="width: 100%; height: fit-content"></HomeViewFooter>
   </div>
 </template>
 
@@ -27,11 +27,11 @@ import HomeView3 from "./Home/HomeView3.vue";
 import HomeViewFooter from "./Home/HomeViewFooter.vue";
 import { Encrypt, Decrypt } from "@/util/codeUtil";
 
-localStorage.setItem("fromHome", Encrypt("true"));
+localStorage.setItem("fromHome", Encrypt("false"));
 
 const scrollTop = ref(0);
 const emit = defineEmits(["showTopbarBackground"]);
-
+const x = window.innerHeight;
 const standardizeHeight = (top) => {
   let clientH = window.innerHeight;
   return (top * clientH) / 937;
@@ -40,7 +40,7 @@ const show1 = computed(() => {
   //计算属性只能监听ref而非reactive，因为ref有包装便于script属性之间响应式交互
   return scrollTop.value < standardizeHeight(260 + x);
 });
-const x = window.innerHeight;
+
 const show2 = computed(() => {
   return (
     scrollTop.value > standardizeHeight(430 + x) &&
@@ -66,7 +66,7 @@ const mousedown = () => {
   }
   if (
     scrollTop.value > 0.9 * window.innerHeight &&
-    scrollTop.value < 1.0 * window.innerHeight
+    scrollTop.value < 1.1 * window.innerHeight
   ) {
     explore();
     document.getElementsByClassName("block_home")[0].style.opacity = 1;
@@ -101,10 +101,10 @@ const toSci = () => {
 
 const suitable = () => {
   let compare = window.innerWidth / 1920;
-  document.getElementsByClassName("earth")[0].style.transform =
+  document.getElementsByClassName("earth_img")[0].style.transform =
     "scale(" + compare + ")";
   document.getElementsByClassName("sunburst")[0].style.transform =
-    "perspective(1500px) rotateY(0deg) scale(" + compare + ")";
+    "perspective(1500px) rotateY(0deg) scale(" + compare*0.9 + ")";
 };
 window.onresize = suitable;
 setTimeout(() => {

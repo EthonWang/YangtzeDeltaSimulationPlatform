@@ -81,7 +81,7 @@ function init() {
       viewControl: {
         autoRotate: true,
         zoomSensitivity: 0,
-        autoRotateSpeed:2,
+        autoRotateSpeed:5,
         animation: true,
         animationDurationUpdate: 1000,
         animationEasingUpdate: "cubicInOut",

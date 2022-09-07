@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; height: 100%">
+  <div style="width: 100%; height: fit-content">
     <div style="margin-bottom: -10px">
       <el-button
         type="primary"
@@ -9,7 +9,7 @@
       >
     </div>
     <el-divider></el-divider>
-    <div style="height: 100%; width: 100%; padding-bottom: 100px">
+    <div style="height: fit-content; width: 100%; padding-bottom: 100px">
       <TaskItem
         class="task"
         v-for="task in tasks"

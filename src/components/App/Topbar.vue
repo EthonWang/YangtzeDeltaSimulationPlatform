@@ -28,10 +28,13 @@
       "
     />
     <div class="head">
-      
       <!-- <span class="logo">长 三 角 模 拟 器</span> -->
-      
-      <img style="width: 150px;margin-left: 25px;margin-right: 15px;" src="@/assets/app/logo.png" alt="" />
+
+      <img
+        style="width: 150px; margin-left: 25px; margin-right: 15px"
+        src="@/assets/app/logo.png"
+        alt=""
+      />
       <img
         src="../../assets/globle.svg"
         id="logo"
@@ -41,7 +44,7 @@
           margin-left: 15px;
           margin-right: 15px;
           margin-top: 0px;
-          color:#fafafa;
+          color: #fafafa;
           position: relative;
           z-index: 5;
         "
@@ -65,7 +68,7 @@
       <!-- <avatar class="user-topbar" ref="user" /> -->
       <img
         class="user-topbar"
-        src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.ntimg.cn%2F20140727%2F6608733_095451721000_2.jpg&refer=http%3A%2F%2Fpic.ntimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1662540904&t=bf172540a1b26f7eb55b539080c3b0a1"
+        src="../../assets/img/icon/avator.png"
         alt=""
         v-if="userAvatar == null"
         @click="sendRouterToFather('/user', 3)"
@@ -107,7 +110,6 @@ if (user_info != null && user_info != undefined) {
     console.log(res);
   });
 }
-
 
 const barList = reactive(
   router.options.routes.filter((item) => item.isBar == true)
@@ -152,6 +154,8 @@ watch(
         document.getElementsByClassName("bg_pro")[0].style.opacity = "0";
         document.getElementsByClassName("container")[0].style.background =
           "#24292f3b";
+        document.getElementsByClassName("container")[0].style.width = "100vw";
+        document.getElementsByClassName("user-topbar")[0].style.opacity = "1";
       }, 100);
       setTimeout(() => {
         pick.value = new Array(barList.length).fill(0);
@@ -175,7 +179,6 @@ watch(
           });
           localStorage.setItem("fromHome", Encrypt("false"));
           setTimeout(() => {
-            
             location.reload();
           }, 700);
         }
@@ -353,7 +356,7 @@ setTimeout(searchIndexInRoutes, 100);
 .head {
   width: 100%;
   height: 100%;
-  color:#fafafa;
+  color: #fafafa;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -417,13 +420,13 @@ setTimeout(searchIndexInRoutes, 100);
 
 .head .main-user i {
   font-size: 30px;
-  color:#fafafa;
+  color: #fafafa;
   font-size: 28px;
 }
 
 .head .main-user p {
   margin-left: 10px;
   font-size: 20px;
-  color:#fafafa;
+  color: #fafafa;
 }
 </style>

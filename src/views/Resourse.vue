@@ -18,7 +18,7 @@
           type="info"
           >新建资源条目</el-button
         >
-        <el-row style="padding-top: 7%">
+        <el-row style="padding-top: 4%">
           <div style="margin: auto; display: flex">
             <h1
               style="
@@ -72,19 +72,19 @@
               type="primary"
               class="startSearchButton"
               @click="startSearch()"
-              >更多...</el-button
+              >查看...</el-button
             >
           </div>
         </el-row>
         <el-row style="padding-top: 3%">
-          <div style="width: 47%; margin: auto; color: hsl(0, 0, 98%)">
+          <div style="width: 900px; margin: auto; color: hsl(0, 0, 98%)">
             <h3>热门搜索></h3>
             <ul
               style="
                 display: block;
                 margin-left: 5px;
                 font-size: 16px;
-                margin-top: 10px;
+                margin-top: 1px;
               "
               v-if="hotsearchData.length > 0"
             >
@@ -145,7 +145,7 @@
             </ul>
           </div>
         </el-row>
-        <el-row style="padding-top: 3%">
+        <el-row style="padding-top: 2%">
           <div
             style="width: 100%; margin: auto; border-radius: 20px"
             class="el-row"

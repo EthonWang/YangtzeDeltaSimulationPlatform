@@ -80,6 +80,7 @@ const configs = reactive([
   line-height: 120%;
   text-align: left !important;
   float: left !important;
+  overflow: scroll;
   .des {
     color: rgb(58, 58, 58);
     width: 90%;

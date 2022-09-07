@@ -10,10 +10,15 @@
       class="sunburst"
       @sendProblem="recieveProblem"
     ></ProblemCharts>
-    <VisibalSpan
+    <!-- <VisibalSpan
       ref="visibility"
       :new_data="new_data"
       :class="{ hide_ani: !props.show, show_ani: props.show }"
+      class="visible"
+    ></VisibalSpan> -->
+    <VisibalSpan
+      ref="visibility"
+      :new_data="new_data"
       class="visible"
     ></VisibalSpan>
     <!-- <img
@@ -163,7 +168,7 @@ const visibility = ref();
   //   background-color: hsla(230, 100%, 70%, 0.08);
   opacity: 0.9;
   z-index: 2;
-  transform-origin: 100% 0;
+  transform-origin: 90% 10%;
   transform: perspective(1500px) rotateY(-2deg) scale(1);
   transition: all @hover-time;
 }

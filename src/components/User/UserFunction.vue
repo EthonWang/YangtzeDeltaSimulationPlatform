@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; height: 100%;overflow-y: hidden;">
+  <div style="width: 100%; height: fit-content;overflow-y: hidden;">
     <div class="tabs-page">
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane name="">
@@ -128,7 +128,8 @@ const toRouter = (route) => {
     overflow: hidden;
     position: relative;
     width: 100%;
-    height: 100%;
+    min-height: 100%;
+    height: fit-content;
     // background-color: aqua;
   }
 }
@@ -140,7 +141,7 @@ const toRouter = (route) => {
 
 .data-center {
   width: 90%;
-  height: 100%;
+  height: fit-content;
   overflow-y: scroll;
 }
 .science {

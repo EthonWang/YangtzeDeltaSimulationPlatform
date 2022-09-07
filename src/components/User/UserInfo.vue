@@ -2,7 +2,7 @@
   <div style="" class="user-span">
     <img
       class="img-ava"
-      src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.ntimg.cn%2F20140727%2F6608733_095451721000_2.jpg&refer=http%3A%2F%2Fpic.ntimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1662540904&t=bf172540a1b26f7eb55b539080c3b0a1"
+      src="../../assets/img/icon/avator.png"
       alt=""
       v-if="userAvatar == null"
     />

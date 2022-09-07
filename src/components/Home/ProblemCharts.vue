@@ -17,8 +17,9 @@ const sendProblemToFather = (name, path, des) => {
   emit("sendProblem", name, path, des);
 };
 
-
-  setTimeout(()=>{init();},5000)
+onMounted(()=>{
+  init();
+})
   
 
 function init() {

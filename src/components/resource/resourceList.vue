@@ -529,10 +529,10 @@ const guideMarks = computed(() => {
 .el-card {
   --el-card-padding: 0px;
 }
-// /deep/.el-dialog {
-//   background: hsl(220, 100%, 5%) !important;
+/deep/.el-dialog {
+  background: hsl(220, 100%, 5%) !important;
   
-// }
+}
 /deep/.el-dialog__title {
     font-weight: 800 !important;
   }

@@ -4,7 +4,7 @@
 <!-- 介绍个人实验室（个人空间） -->
 <template>
   <div class="about">
-    <div style="height: 100%; width: 100%; text-align: center">
+    <div style="height: 100%; width: 100%; text-align: center;overflow: scroll;">
       <div style="margin: 3%"></div>
     
       <img height="56" width="56" src="../../../assets/earth_global.svg" alt="" />

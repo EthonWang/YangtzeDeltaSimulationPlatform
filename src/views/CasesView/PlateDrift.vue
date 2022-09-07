@@ -364,10 +364,10 @@ export default {
         url: this.imageUrl,
       });
       // this.requireJsonData("/case/cities.json");
-      this.requireJsonData("/case/province_pm.json");
-      this.requireJsonData("/case/polyline.json");
-      this.requireJsonData("/case/label.json");
-      this.requireJsonData("/case/plate_border.json");
+      this.requireJsonData("/YangtzeVGLab/case/province_pm.json");
+      this.requireJsonData("/YangtzeVGLab/case/polyline.json");
+      this.requireJsonData("/YangtzeVGLab/case/label.json");
+      this.requireJsonData("/YangtzeVGLab/case/plate_border.json");
       // this.viewer.zoomTo(this.viewer.dataSources._dataSources[0]);
       imageryLayers.addImageryProvider(imagelayer, this.layercount);
       this.layercount++;
@@ -421,10 +421,10 @@ export default {
       // } else {
       // this.viewer.dataSources.removeAll();
       this.time_slider = 410 - this.time;
-      this.requireJsonData("/case/province_pm.json");
-      this.requireJsonData("/case/polyline.json");
-      this.requireJsonData("/case/label.json");
-      this.requireJsonData("/case/plate_border.json");
+      this.requireJsonData("/YangtzeVGLab/case/province_pm.json");
+      this.requireJsonData("/YangtzeVGLab/case/polyline.json");
+      this.requireJsonData("/YangtzeVGLab/case/label.json");
+      this.requireJsonData("/YangtzeVGLab/case/plate_border.json");
       this.requirePngData();
       // }
 

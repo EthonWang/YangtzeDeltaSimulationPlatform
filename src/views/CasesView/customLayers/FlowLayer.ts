@@ -14,12 +14,12 @@ const quadVertices = [
 ];
 
 const vsURL = [
-    '/shaders/screen_new.vert', '/shaders/coastline.vert', '/shaders/gabriel.vert', '/shaders/newSimulation.vert', 
-    '/shaders/particlePoolUpdate.vert', '/shaders/ribbonParticle_instancedLineStrips.vert', '/shaders/debug.vert'
+    '/YangtzeVGLab/shaders/screen_new.vert', '/YangtzeVGLab/shaders/coastline.vert', '/YangtzeVGLab/shaders/gabriel.vert', '/YangtzeVGLab/shaders/newSimulation.vert', 
+    '/YangtzeVGLab/shaders/particlePoolUpdate.vert', '/YangtzeVGLab/shaders/ribbonParticle_instancedLineStrips.vert', '/YangtzeVGLab/shaders/debug.vert'
 ];
 const fsURL = [
-    '/shaders/screen.frag', '/shaders/coastline.frag', '/shaders/gabriel.frag', '/shaders/newSimulation.frag', 
-    '/shaders/particlePoolUpdate.frag', '/shaders/ribbonParticle_instancedLineStrips_new.frag', '/shaders/debug.frag'
+    '/YangtzeVGLab/shaders/screen.frag', '/YangtzeVGLab/shaders/coastline.frag', '/YangtzeVGLab/shaders/gabriel.frag', '/YangtzeVGLab/shaders/newSimulation.frag', 
+    '/YangtzeVGLab/shaders/particlePoolUpdate.frag', '/YangtzeVGLab/shaders/ribbonParticle_instancedLineStrips_new.frag', '/YangtzeVGLab/shaders/debug.frag'
 ];
 
 const shaderNames = ['screen', 'coastline', 'gabriel', 'simulation', 'particlePoolUpdate', 'ribbonParticleLineStrips', 'debug'];

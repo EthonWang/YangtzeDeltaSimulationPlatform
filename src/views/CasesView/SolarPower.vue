@@ -30,11 +30,11 @@
       </div>
       <div class="lgd">
         <div class="blue"></div>
-        <div class="text">发电量(TWh)</div>
+        <div class="text">年发电量(TWh)</div>
       </div>
       <div class="lgd" style="margin-bottom: 5px">
         <div class="red"></div>
-        <div class="text">碳减排量(Million ton)</div>
+        <div class="text">年碳减排量(Million ton)</div>
       </div>
       <hr />
       <div class="map-legend-1" v-if="this.value == '1'">
@@ -114,9 +114,9 @@ import Chart from "ol-ext/style/Chart.js";
 // import { Select } from "ol/interaction";
 import ol_ordering from "ol-ext/render/Ordering";
 import chats from "@/assets/charts_yangtze.json";
-
-import { backUrl,backUrl_backup } from "../../../public/backURL/backurl";
-
+// import { backUrl } from "public/backURL/backurl";
+import { backUrl, backUrl_backup } from "./../../../public/backURL/backurl";
+// import yangtze_delta from "yangtze_delta.json";
 // import "@/assets/ol-ext.js";
 export default {
   name: "openLys",
@@ -142,15 +142,15 @@ export default {
       options: [
         {
           value: "1",
-          label: "装机容量",
+          label: "装机容量(区域太阳能光伏板总功率)",
         },
         {
           value: "2",
-          label: "发电量",
+          label: "年发电量(年度地区生产电量总和)",
         },
         {
           value: "3",
-          label: "碳减排量",
+          label: "年碳减排量(年度地区碳减排量总和)",
         },
       ],
     };
@@ -161,7 +161,7 @@ export default {
         // background: "#1a2b39",
         source: new VectorSource({
           // features: new GeoJSON().readFeatures("china_sim.json"),
-          url: backUrl+"/store/data/yangtze_delta.json",
+          url: backUrl + "/store/data/yangtze_delta.json",
           format: new GeoJSON(),
         }),
         style: this.setstyle,
@@ -301,9 +301,9 @@ export default {
           this.$refs.city.innerHTML = feature.get("市");
           this.$refs.info.innerHTML = `<p>装机容量(GW):${feature.get(
             "IC"
-          )}</p><p>发电量(TWh):${feature.get(
+          )}</p><p>年发电量(TWh):${feature.get(
             "PG"
-          )}</p><p>碳减排量(Million ton):${feature.get("VC")}</p>`;
+          )}</p><p>年碳减排量(Million ton):${feature.get("VC")}</p>`;
           const pixel = this.openmap.getEventPixel(e.originalEvent);
           this.click(pixel);
         } else {

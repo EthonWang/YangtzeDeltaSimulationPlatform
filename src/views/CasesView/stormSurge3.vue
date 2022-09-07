@@ -10,7 +10,7 @@
         <span class="demonstration" style="float: right"
           >当前时间：{{ converTime }}</span
         >
-        <el-slider v-model="dateNum" :max="1459" @change="sliderChangePic" />
+        <el-slider v-model="dateNum" :max="1459" @change="sliderChangePic" style="width: 90%;" />
       </div>
       <div class="info-button-box">
         <ButtonGroup class="info-buttonGroup">
@@ -217,7 +217,7 @@ onMounted(async () => {
 });
 </script>
 
-<style>
+<style lang="less" scoped>
 body {
   margin: 0;
 }
@@ -245,5 +245,8 @@ body {
 }
 .info-buttonGroup {
   margin-top: 10px;
+}
+/deep/ .slider-demo-block{
+  display: none;
 }
 </style>

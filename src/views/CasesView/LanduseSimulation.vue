@@ -5,7 +5,7 @@
     <div id="info"></div>
   </div>
   <el-card shadow="always" class="info-title">
-    <h1>长三角区域气候模拟</h1>
+    <h1>土地利用模拟</h1>
   </el-card>
   <el-card shadow="always" class="info-card">
     <el-scrollbar max-height="20vh">
@@ -15,7 +15,7 @@
         v-model="paneType"
         @tab-change="tabChangeHandle"
       >
-        <el-tab-pane label="气温" name="ts">
+        <el-tab-pane label="基础" name="basic">
           <div class="slider-demo-block">
             <span class="demonstration"><strong>时间轴</strong></span>
             <span class="demonstration" style="float: right"
@@ -49,7 +49,75 @@
             </ButtonGroup>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="降水" name="pr">
+        <el-tab-pane label="经济" name="economy">
+          <div class="slider-demo-block">
+            <span class="demonstration"><strong>时间轴</strong></span>
+            <span class="demonstration" style="float: right"
+              >当前时间：{{ converTime }}</span
+            >
+            <el-slider
+              v-model="dateNum"
+              :max="1459"
+              @change="sliderChangePic"
+              style="width: 90%"
+            />
+          </div>
+          <div class="info-button-box">
+            <ButtonGroup class="info-buttonGroup">
+              <Button type="primary" @click="btngoback()">
+                <Icon type="ios-arrow-back"></Icon>
+                向前
+              </Button>
+              <Button type="primary" @click="btngoplay()" v-if="!btnIsPlay">
+                <Icon type="ios-play-outline"></Icon>
+                播放
+              </Button>
+              <Button type="primary" @click="btngoplay()" v-else>
+                <Icon type="ios-pause-outline"></Icon>
+                暂停
+              </Button>
+              <Button type="primary" @click="btngoforward()">
+                向后
+                <Icon type="ios-arrow-forward"></Icon>
+              </Button>
+            </ButtonGroup>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="环境" name="environment">
+          <div class="slider-demo-block">
+            <span class="demonstration"><strong>时间轴</strong></span>
+            <span class="demonstration" style="float: right"
+              >当前时间：{{ converTime }}</span
+            >
+            <el-slider
+              v-model="dateNum"
+              :max="1459"
+              @change="sliderChangePic"
+              style="width: 90%"
+            />
+          </div>
+          <div class="info-button-box">
+            <ButtonGroup class="info-buttonGroup">
+              <Button type="primary" @click="btngoback()">
+                <Icon type="ios-arrow-back"></Icon>
+                向前
+              </Button>
+              <Button type="primary" @click="btngoplay()" v-if="!btnIsPlay">
+                <Icon type="ios-play-outline"></Icon>
+                播放
+              </Button>
+              <Button type="primary" @click="btngoplay()" v-else>
+                <Icon type="ios-pause-outline"></Icon>
+                暂停
+              </Button>
+              <Button type="primary" @click="btngoforward()">
+                向后
+                <Icon type="ios-arrow-forward"></Icon>
+              </Button>
+            </ButtonGroup>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="社会" name="society">
           <div class="slider-demo-block">
             <span class="demonstration"><strong>时间轴</strong></span>
             <span class="demonstration" style="float: right"
@@ -86,11 +154,8 @@
       </el-tabs>
     </el-scrollbar>
   </el-card>
-  <div class="colorbar" v-if="paneType == 'ts'">
-    <el-image :src="colorbarUrl" :fit="cover"/>
-  </div>
-  <div class="colorbar-pr" v-if="paneType == 'pr'">
-    <el-image :src="colorbarUrl" :fit="cover"/>
+  <div class="colorbar">
+    <el-image :src="colorbarUrl" :fit="cover" />
   </div>
 </template>
 
@@ -140,8 +205,8 @@ export default {
       newShpInfo: {},
       tagList: [],
       dataServer: useStore().getters.devIpAddress,
-      colorbarUrl: "",
-      paneType: "ts",
+      colorbarUrl: "/YangtzeVGLabBack/store/data/landusesimulation.png",
+      paneType: "basic",
       dateNum: 0,
       btnIsPlay: false,
       picPlayer: null,
@@ -233,26 +298,14 @@ export default {
       this.beforeAddTsImg();
     },
     btngoback() {
-      if (this.paneType == "ts") {
-        if (this.dateNum > 0) {
-          this.dateNum = this.dateNum - 1;
-          this.beforeAddTsImg();
-        } else {
-          ElMessage({
-            message: "已经是第一张",
-            type: "warning",
-          });
-        }
-      } else if (this.paneType == "pr") {
-        if (this.dateNum > 0) {
-          this.dateNum = this.dateNum - 1;
-          this.beforeAddTsImg();
-        } else {
-          ElMessage({
-            message: "已经是第一张",
-            type: "warning",
-          });
-        }
+      if (this.dateNum > 0) {
+        this.dateNum = this.dateNum - 1;
+        this.beforeAddTsImg();
+      } else {
+        ElMessage({
+          message: "已经是第一张",
+          type: "warning",
+        });
       }
     },
     btngoplay() {
@@ -270,33 +323,17 @@ export default {
       }
     },
     btngoforward() {
-      if (this.paneType == "ts") {
-        if (this.dateNum < 1459) {
-          this.dateNum = this.dateNum + 1;
-          this.beforeAddTsImg();
-        } else {
-          ElMessage({
-            message: "已经是最后一张",
-            type: "warning",
-          });
-          if (this.btnIsPlay) {
-            this.btnIsPlay = false;
-            clearInterval(this.picPlayer);
-          }
-        }
-      } else if (this.paneType == "pr") {
-        if (this.dateNum < 1459) {
-          this.dateNum = this.dateNum + 1;
-          this.beforeAddTsImg();
-        } else {
-          ElMessage({
-            message: "已经是最后一张",
-            type: "warning",
-          });
-          if (this.btnIsPlay) {
-            this.btnIsPlay = false;
-            clearInterval(this.picPlayer);
-          }
+      if (this.dateNum < 9) {
+        this.dateNum = this.dateNum + 1;
+        this.beforeAddTsImg();
+      } else {
+        ElMessage({
+          message: "已经是最后一张",
+          type: "warning",
+        });
+        if (this.btnIsPlay) {
+          this.btnIsPlay = false;
+          clearInterval(this.picPlayer);
         }
       }
     },
@@ -307,59 +344,30 @@ export default {
     },
     addTsImg() {
       // console.log(this.dataServer + "/ts_output/ts_4_0 copy.png");
-      if (this.paneType == "ts") {
-        this.colorbarUrl = this.dataServer + "/store/ts_output/ts_colorbar.png";
-        map.addSource("tsimg_01", {
-          type: "image",
-          url:
-            this.dataServer +
-            "/store/ts_output/ts_4_" +
-            this.dateNum +
-            " 拷贝.png", //图像地址
-          coordinates: [
-            //图像显示4个点的位置信息114.87846289, 122.84646289,27.1434226850001, 35.1114226850001
-            [114.87846289, 35.1114226850001], //左上
-            [122.84646289, 35.1114226850001], //右上
-            [122.84646289, 27.1434226850001], //右下
-            [114.87846289, 27.1434226850001], //左下
-          ],
-        });
-        let newLayer = {
-          id: "tsimg_01_layer",
-          source: "tsimg_01",
-          type: "raster",
-          // paint: this.layerStyle["fill"].paint,
-          // "source-layer": newShpInfo.visualDataItems[index].name.split(".shp")[0],
-        };
-        // console.log(newLayer);
-        map.addLayer(newLayer);
-      } else if (this.paneType == "pr") {
-        this.colorbarUrl = this.dataServer + "/store/ts_output/pr_colorbar.png";
-        map.addSource("tsimg_01", {
-          type: "image",
-          url:
-            this.dataServer +
-            "/store/ts_output/pr_4_" +
-            this.dateNum +
-            " 拷贝.png", //图像地址
-          coordinates: [
-            //图像显示4个点的位置信息114.87846289, 122.84646289,27.1434226850001, 35.1114226850001
-            [114.87846289, 35.1114226850001], //左上
-            [122.84646289, 35.1114226850001], //右上
-            [122.84646289, 27.1434226850001], //右下
-            [114.87846289, 27.1434226850001], //左下
-          ],
-        });
-        let newLayer = {
-          id: "tsimg_01_layer",
-          source: "tsimg_01",
-          type: "raster",
-          // paint: this.layerStyle["fill"].paint,
-          // "source-layer": newShpInfo.visualDataItems[index].name.split(".shp")[0],
-        };
-        // console.log(newLayer);
-        map.addLayer(newLayer);
+      let name = "basic2021";
+      let time = 2021 + this.dateNum;
+      if (this.paneType == "basic") {
+        name = "basic" + time;
+      } else if (this.paneType == "economy") {
+        name = "economy" + time;
+      } else if (this.paneType == "environment") {
+        name = "environment" + time;
+      } else if (this.paneType == "society") {
+        name = "society" + time;
       }
+      let pathUrl = "/YangtzeVGLabGeoServer/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A" + name + "&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857&WIDTH=512&HEIGHT=512&BBOX={bbox-epsg-3857}"
+      
+      map.addSource("tsimg_01", {
+        type: "raster",
+        tiles: [pathUrl],
+        tileSize: 256, // 切片的最小展示尺寸（可选，单位：像素，默认值为 512，即 1024/2）
+      });
+      let newLayer = {
+        id: "tsimg_01_layer",
+        source: "tsimg_01",
+        type: "raster",
+      };
+      map.addLayer(newLayer);
     },
     tabChangeHandle(value) {
       this.paneType = value;
@@ -372,20 +380,7 @@ export default {
   },
   computed: {
     converTime: function () {
-      let startTimeString = "2017-1-1 6:00:00";
-      let time = new Date(startTimeString);
-      let newDate = time.setHours(time.getHours() + this.dateNum * 6);
-      let newTime = new Date(newDate);
-      return (
-        newTime.getFullYear() +
-        "-" +
-        (newTime.getMonth() + 1) +
-        "-" +
-        newTime.getDate() +
-        " " +
-        newTime.getHours() +
-        ":00:00"
-      );
+      return 2021 + this.dateNum;
     },
   },
 };
@@ -415,7 +410,7 @@ export default {
   height: 23vh;
   opacity: 0.9;
 }
-.demonstration{
+.demonstration {
   widows: 10vw;
 }
 .info-button-box {
@@ -439,7 +434,7 @@ export default {
   width: 70px;
   height: 260px;
 }
-/deep/ .slider-demo-block{
+/deep/ .slider-demo-block {
   display: none;
 }
 </style>

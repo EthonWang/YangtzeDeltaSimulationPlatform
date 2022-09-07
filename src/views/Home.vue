@@ -104,7 +104,7 @@ const suitable = () => {
   document.getElementsByClassName("earth_img")[0].style.transform =
     "scale(" + compare + ")";
   document.getElementsByClassName("sunburst")[0].style.transform =
-    "perspective(1500px) rotateY(0deg) scale(" + compare + ")";
+    "perspective(1500px) rotateY(0deg) scale(" + compare*0.9 + ")";
 };
 window.onresize = suitable;
 setTimeout(() => {

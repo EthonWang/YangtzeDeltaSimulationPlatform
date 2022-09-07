@@ -61,7 +61,7 @@
                 <p class="blockTitle"><span id="cate2">{{cateName}}</span>相关性概览图</p>
                 <div style="display: flex;justify-content: center">
                   <el-image :src=imagePath style="height: calc(38vh - 25px);margin-left: 0px;min-height: 320px"></el-image>
-                  <img src="/case/industrialInnovation/legend.png" style="width:50px;height: calc(38vh - 25px)">
+                  <img src="/YangtzeVGLab/case/industrialInnovation/legend.png" style="width:50px;height: calc(38vh - 25px)">
                 </div>
               </div>
             </el-col>
@@ -136,17 +136,17 @@ window.onresize = () =>{
 }
 
 function addCorrImage(cate) {
-  imagePath.value = "/case/industrialInnovation/"+cate+".png"
+  imagePath.value = "/YangtzeVGLab/case/industrialInnovation/"+cate+".png"
 }
 function addMapLegend(cate) {
-  legendImagePath.value = "/case/industrialInnovation/"+cate+"-legend.png"
+  legendImagePath.value = "/YangtzeVGLab/case/industrialInnovation/"+cate+"-legend.png"
 }
 let myChart;
 
 function loadChart(cate){
   let parallelAxis = [];
   let data = []
-  fetch("/case/industrialInnovation/"+cate+".csv").then(res=>{
+  fetch("/YangtzeVGLab/case/industrialInnovation/"+cate+".csv").then(res=>{
     return res.text()
   }).then(res=>{
     let rawData = d3.csvParse(res);
@@ -186,7 +186,7 @@ function loadChart(cate){
 
 function updateValues(cate) {
   document.getElementById('valueGroup').innerHTML = "";
-  fetch("/case/industrialInnovation/" + cate + "-jiangsu.csv").then(res=>{
+  fetch("/YangtzeVGLab/case/industrialInnovation/" + cate + "-jiangsu.csv").then(res=>{
     return res.text()
   }).then(res=>{
     let csvdata = d3.csvParse(res);
@@ -218,7 +218,6 @@ function updateValues(cate) {
   })
 }
 var map;
-const address = "/case/industrialInnovation/";
 const radar_size = 0.09;
 const screenWidth = window.screen.width * window.devicePixelRatio;
 const screenHeight = window.screen.height * window.devicePixelRatio;
@@ -234,9 +233,9 @@ function addMap(cate) {
   console.log("dd",process.env.BASE_URL)
   let spriteUrl;
   if((screenWidth == 1920 && screenHeight == 1080)||(screenWidth == 2048 && screenHeight == 1152)){
-    spriteUrl =baseUrl+ "/case/industrialInnovation/mapbox_resource/sprite/" + cate + "@2x";
+    spriteUrl ="../../../public/case/industrialInnovation/mapbox_resource/sprite/" + cate + "@2x";
   }else if(screenWidth == 2560 && screenHeight == 1440) {
-    spriteUrl = baseUrl+"/case/industrialInnovation/mapbox_resource/sprite/" + cate;
+    spriteUrl = "../../../public/case/industrialInnovation/mapbox_resource/sprite/" + cate;
   }
   document.getElementById('map').innerHTML = "";
   mapboxgl.accessToken =
@@ -248,7 +247,7 @@ function addMap(cate) {
     style: {
       "version": 8,
       "sprite": spriteUrl,
-      "glyphs": "http://localhost:3030/case/industrialInnovation/mapbox_resource/fonts/{fontstack}/{range}.pbf",
+      "glyphs": "../../../public/case/industrialInnovation/mapbox_resource/fonts/{fontstack}/{range}.pbf",
       "sources": {
         'boundary': {
           type: 'geojson',

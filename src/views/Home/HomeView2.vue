@@ -10,10 +10,15 @@
       class="sunburst"
       @sendProblem="recieveProblem"
     ></ProblemCharts>
-    <VisibalSpan
+    <!-- <VisibalSpan
       ref="visibility"
       :new_data="new_data"
       :class="{ hide_ani: !props.show, show_ani: props.show }"
+      class="visible"
+    ></VisibalSpan> -->
+    <VisibalSpan
+      ref="visibility"
+      :new_data="new_data"
       class="visible"
     ></VisibalSpan>
     <!-- <img

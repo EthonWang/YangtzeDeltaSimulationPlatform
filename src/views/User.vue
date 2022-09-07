@@ -27,14 +27,14 @@ import UserFunction from "@/components/User/UserFunction.vue";
     height: calc(100vh - 65px);
     top: 65px;
     background-color: hsl(0, 0%, 98%);
-    overflow-y: hidden;
+    overflow-y: scroll;
 }
 
 .user-info {
     position: absolute;
     // background: red;
     width: 18vw;
-    height: 88vh;
+    min-height: 88vh;
     left: 16.5vw;
     top: 3vh;
       transition: all 1s;

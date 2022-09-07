@@ -61,9 +61,9 @@ module.exports = {
         }
     },
     devServer: {
-        assetsPublicPath : './',
+        // assetsPublicPath : './',
         open: true,
-        host: "http://172.21.213.222/",
+        host: "http://172.21.213.222",
         port: 3030,
         https: false,
         hotOnly: false,

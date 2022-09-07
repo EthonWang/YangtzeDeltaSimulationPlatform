@@ -637,7 +637,7 @@ const rightChartOption1 = ref({})
 
 const getJsonData = () => {
   let mapEcharts = echarts.init(document.getElementById('rightChart1'))
-  fetch('/YangtzeVGLab/case/economicRun/cityArea.geojson').then(res=>{
+  fetch('../../../public/case/economicRun/cityArea.geojson').then(res=>{
     return res.json()
   }).then(cityArea=>{
     echarts.registerMap('cityArea',cityArea)

@@ -143,7 +143,7 @@ const loadMap1 = () => {
       }
   ).addTo(map1);
 
-  fetch("/case/scientificInnovation/YRD_cities_projection.json").then(res=>{
+  fetch("../../../public/case/scientificInnovation/YRD_cities_projection.json").then(res=>{
     return res.json()
   }).then(jsonData=>{
     jsonLayer = L.geoJSON(jsonData, {
@@ -164,7 +164,7 @@ function regionalMap(area) {
   console.log("jsonLayer",area,jsonLayer)
   jsonLayer.remove();
   if (area == "YRD") {
-    fetch("/case/scientificInnovation/YRD_cities_projection.json").then(res=>{
+    fetch("../../../public/case/scientificInnovation/YRD_cities_projection.json").then(res=>{
       return res.json()
     }).then(res=>{
       jsonLayer = L.geoJSON(res, {
@@ -176,7 +176,7 @@ function regionalMap(area) {
       jsonLayer.addTo(map1)
     })
   } else {
-    fetch("/case/scientificInnovation/yrd_districts.json").then(res=>{
+    fetch("../../../public/case/scientificInnovation/yrd_districts.json").then(res=>{
       return res.json()
     }).then(res=>{
       jsonLayer = L.geoJSON(res, {
@@ -188,7 +188,7 @@ function regionalMap(area) {
       jsonLayer.addTo(map1)
     })
   }
-  fetch('/case/scientificInnovation/'+area+'/'+area+'_YRD_nodes.csv').then(res=>{
+  fetch('../../../public/case/scientificInnovation/'+area+'/'+area+'_YRD_nodes.csv').then(res=>{
     return res.text()
   }).then(res=>{
     let nodes = d3.csvParse(res);
@@ -202,7 +202,7 @@ function regionalMap(area) {
       }).addTo(yrdLinksLayer)
     }
   })
-  fetch('/case/scientificInnovation/'+area+'/'+area+'_YRD_edges.csv').then(res=>{
+  fetch('../../../public/case/scientificInnovation/'+area+'/'+area+'_YRD_edges.csv').then(res=>{
     return res.text()
   }).then(res=>{
     let edges = d3.csvParse(res);
@@ -291,7 +291,7 @@ var chinaLinksLayer = L.layerGroup();
 
 function chinaMap(area) {
   chinaLinksLayer.clearLayers();
-  fetch('/case/scientificInnovation/'+area+'/'+area+'_China_nodes.csv').then(res=>{
+  fetch('../../../public/case/scientificInnovation/'+area+'/'+area+'_China_nodes.csv').then(res=>{
     return res.text()
   }).then(res=> {
     let nodes = d3.csvParse(res);
@@ -305,7 +305,7 @@ function chinaMap(area) {
       }).addTo(chinaLinksLayer)
     }
   })
-  fetch('/case/scientificInnovation/'+area+'/'+area+'_China_edges.csv').then(res=>{
+  fetch('../../../public/case/scientificInnovation/'+area+'/'+area+'_China_edges.csv').then(res=>{
     return res.text()
   }).then(res=> {
     let edges = d3.csvParse(res);
@@ -368,7 +368,7 @@ const loadMap3 = () => {
 var globalLinksLayer = L.layerGroup();
 function globalMap(area) {
   globalLinksLayer.clearLayers();
-  fetch('/case/scientificInnovation/'+area+'/'+area+'_global_nodes.csv').then(res=>{
+  fetch('../../../public/case/scientificInnovation/'+area+'/'+area+'_global_nodes.csv').then(res=>{
     return res.text()
   }).then(res=> {
     let nodes = d3.csvParse(res);
@@ -382,7 +382,7 @@ function globalMap(area) {
       }).addTo(globalLinksLayer)
     }
   });
-  fetch('/case/scientificInnovation/'+area+'/'+area+'_global_edges.csv').then(res=>{
+  fetch('../../../public/case/scientificInnovation/'+area+'/'+area+'_global_edges.csv').then(res=>{
     return res.text()
   }).then(res=> {
     let edges = d3.csvParse(res);

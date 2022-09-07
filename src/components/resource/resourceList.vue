@@ -107,9 +107,9 @@
     </template>
   </el-dialog>
   <el-dialog v-model="show_task_model" title="添加模型到实验室" width="30%">
-    <h3 style="margin-bottom: 15px">模型描述</h3>
+    <h3 style="margin-bottom: 5px">模型描述</h3>
     {{ selectedRes.description }}
-    <h3 style="margin-bottom: 15px">选择要添加到的实验室</h3>
+    <h3 style="margin: 15px 0 5px 0">选择要添加到的实验室</h3>
     <el-button
       v-for="(task, index) in task_list"
       :key="task"
@@ -529,9 +529,13 @@ const guideMarks = computed(() => {
 .el-card {
   --el-card-padding: 0px;
 }
-/deep/.el-dialog {
-  background: hsl(220, 100%, 5%) !important;
-}
+// /deep/.el-dialog {
+//   background: hsl(220, 100%, 5%) !important;
+  
+// }
+/deep/.el-dialog__title {
+    font-weight: 800 !important;
+  }
 </style>
 <style lang="less">
 .mapboxCardDialog .el-dialog__body {

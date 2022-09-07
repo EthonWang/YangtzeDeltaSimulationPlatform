@@ -374,7 +374,7 @@ import tagTree from "@/components/resource/tagTree.vue";
 import resourceList from "@/components/resource/resourceList.vue";
 import { Decrypt } from "@/util/codeUtil";
 
-const isAdmin = ref("false");
+const isAdmin = ref(false);
 let user_info = localStorage.getItem("userInfo");
 if (user_info) {
   user_info = JSON.parse(Decrypt(user_info));

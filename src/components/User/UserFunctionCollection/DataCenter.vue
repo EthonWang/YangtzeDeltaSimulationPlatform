@@ -141,7 +141,7 @@
           <el-upload
             v-model:file-list="fileList"
             class="upload-demo"
-            :action='dataServer + "/resource/saveDataItem"'
+            :action="backUrl_backup1+'/resource/saveDataItem'"
             :headers="upload_header"
             :data="{
               name: upload_file.name,
@@ -264,7 +264,9 @@ import FileItem from "./FileItem.vue";
 import { scienceChoose } from "@/assets/user/scienceChoose";
 import { ElLoading } from "element-plus";
 import { Encrypt, Decrypt } from "@/util/codeUtil";
+import { backUrl,backUrl_backup } from "../../../../public/backURL/backurl";
 
+const backUrl_backup1=ref(backUrl_backup)
 const userInfo = JSON.parse(Decrypt(localStorage.getItem("userInfo")));
 const task_api = new taskApi();
 const show_task = ref(false);
@@ -368,7 +370,6 @@ const api = new Api();
 
 const router = useRouter(); //路由直接用router.push(...)
 const store = useStore(); //vuex直接用store.commit
-let dataServer = store.state.devIpAddress;
 const dialogVisible = ref(false);
 const innerVisible = ref(false);
 const file_data = ref([

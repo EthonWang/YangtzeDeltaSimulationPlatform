@@ -1,5 +1,7 @@
 import { get, post } from "@/request/request_backup"
-const dataServer = "http://172.21.213.92:8999";
+import { useStore } from "vuex"
+import { backUrl,backUrl_backup } from "../../../public/backURL/backurl";
+const dataServer = backUrl_backup;
 // 上传文件
 export default class {
     getAllFile(user_id) {

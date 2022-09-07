@@ -29,12 +29,14 @@
 import * as Cesium from "cesium/Cesium";
 import axios from "axios";
 import proj4 from "proj4";
+import { backUrl,backUrl_backup } from "../../../public/backURL/backurl";
 
 export default {
   name: "Cesium",
   props: ["tifList", "jsonList"],
   data() {
     return {
+      backUrl_backup:backUrl_backup,
       viewer: null,
       startButton: false,
       redBox: null,
@@ -192,7 +194,7 @@ export default {
       this.viewer.dataSources
         .add(
           Cesium.KmlDataSource.load(
-            "http://172.21.212.63:8999/store" + this.loadedTifList[index].path,
+            backUrl_backup+"/store" + this.loadedTifList[index].path,
             options
           )
         )
@@ -216,7 +218,7 @@ export default {
       let tempDataList = [];
       for (let i = 0; i < fileNameList.length; i++) {
         let path = item.path.replace("color.json", fileNameList[i]);
-        axios.get("http://172.21.212.63:8999/store" + path).then((res) => {
+        axios.get(backUrl_backup+"/store" + path).then((res) => {
           tempDataList[i] = res.data;
         });
         if (i == 1) {

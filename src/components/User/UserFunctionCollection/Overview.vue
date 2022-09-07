@@ -7,7 +7,7 @@
     <div style="height: 100%; width: 100%; text-align: center">
       <div style="margin: 3%"></div>
     
-      <img height="56" width="56" src="@/assets/earth_global.svg" alt="" />
+      <img height="56" width="56" src="../../../assets/earth_global.svg" alt="" />
       <div style="margin: 1.5vh"></div>
       <h1>欢迎进入长三角虚拟地理实验室</h1>
       <div style="margin: 1.5vh"></div>

@@ -17,7 +17,7 @@
 
     <img
       class="bg_pro"
-      src="@/assets/img/mesh-673.png"
+      src="../../assets/img/mesh-673.png"
       style="
         position: absolute;
         z-index: 2;

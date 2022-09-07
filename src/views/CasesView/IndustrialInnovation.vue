@@ -234,9 +234,9 @@ function addMap(cate) {
   console.log("dd",process.env.BASE_URL)
   let spriteUrl;
   if((screenWidth == 1920 && screenHeight == 1080)||(screenWidth == 2048 && screenHeight == 1152)){
-    spriteUrl =baseUrl+ "/case/industrialInnovation/mapbox_resource/sprite/" + cate + "@2x";
+    spriteUrl =baseUrl+ "/YangtzeVGLab/case/industrialInnovation/mapbox_resource/sprite/" + cate + "@2x";
   }else if(screenWidth == 2560 && screenHeight == 1440) {
-    spriteUrl = baseUrl+"/case/industrialInnovation/mapbox_resource/sprite/" + cate;
+    spriteUrl = baseUrl+"/YangtzeVGLab/case/industrialInnovation/mapbox_resource/sprite/" + cate;
   }
   document.getElementById('map').innerHTML = "";
   mapboxgl.accessToken =
@@ -248,7 +248,7 @@ function addMap(cate) {
     style: {
       "version": 8,
       "sprite": spriteUrl,
-      "glyphs": "http://localhost:3030/case/industrialInnovation/mapbox_resource/fonts/{fontstack}/{range}.pbf",
+      "glyphs": "/YangtzeVGLab/case/industrialInnovation/mapbox_resource/fonts/{fontstack}/{range}.pbf",
       "sources": {
         'boundary': {
           type: 'geojson',

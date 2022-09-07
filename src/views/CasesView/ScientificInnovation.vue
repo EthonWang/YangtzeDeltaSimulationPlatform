@@ -106,11 +106,11 @@ const checkRadio = (label) => {
   chinaMap(label);
 }
 const changeImage = () => {
-  imagePath.value = "/case/scientificInnovation/"+radioArea.value+"/"+radioArea.value+"_treemap.svg"
+  imagePath.value = "/YangtzeVGLab/case/scientificInnovation/"+radioArea.value+"/"+radioArea.value+"_treemap.svg"
 }
 let rawData = []
 const getData = (radioArea)=>{
-  fetch('/case/scientificInnovation/'+radioArea+'/'+radioArea+'_values.csv').then(res=>{
+  fetch('/YangtzeVGLab/case/scientificInnovation/'+radioArea+'/'+radioArea+'_values.csv').then(res=>{
     return res.text()
   }).then(res=>{
     rawData = d3.csvParse(res);

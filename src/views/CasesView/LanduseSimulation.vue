@@ -5,7 +5,7 @@
     <div id="info"></div>
   </div>
   <el-card shadow="always" class="info-title">
-    <h1>土地利用模拟</h1>
+    <h1>长三角土地利用演变多情景模拟</h1>
   </el-card>
   <el-card shadow="always" class="info-card">
     <el-scrollbar max-height="20vh">
@@ -15,7 +15,7 @@
         v-model="paneType"
         @tab-change="tabChangeHandle"
       >
-        <el-tab-pane label="基础" name="basic">
+        <el-tab-pane label="基准情景" name="basic">
           <div class="slider-demo-block">
             <span class="demonstration"><strong>时间轴</strong></span>
             <span class="demonstration" style="float: right"
@@ -25,7 +25,7 @@
               v-model="dateNum"
               :max="1459"
               @change="sliderChangePic"
-              style="width: 90%"
+              style="width: 100%"
             />
           </div>
           <div class="info-button-box">
@@ -49,7 +49,7 @@
             </ButtonGroup>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="经济" name="economy">
+        <el-tab-pane label="经济发展情景" name="economy">
           <div class="slider-demo-block">
             <span class="demonstration"><strong>时间轴</strong></span>
             <span class="demonstration" style="float: right"
@@ -59,7 +59,7 @@
               v-model="dateNum"
               :max="1459"
               @change="sliderChangePic"
-              style="width: 90%"
+              style="width: 100%"
             />
           </div>
           <div class="info-button-box">
@@ -83,7 +83,7 @@
             </ButtonGroup>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="环境" name="environment">
+        <el-tab-pane label="环境友好情景" name="environment">
           <div class="slider-demo-block">
             <span class="demonstration"><strong>时间轴</strong></span>
             <span class="demonstration" style="float: right"
@@ -93,7 +93,7 @@
               v-model="dateNum"
               :max="1459"
               @change="sliderChangePic"
-              style="width: 90%"
+              style="width: 100%"
             />
           </div>
           <div class="info-button-box">
@@ -117,7 +117,7 @@
             </ButtonGroup>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="社会" name="society">
+        <el-tab-pane label="社会进步情景" name="society">
           <div class="slider-demo-block">
             <span class="demonstration"><strong>时间轴</strong></span>
             <span class="demonstration" style="float: right"
@@ -127,7 +127,7 @@
               v-model="dateNum"
               :max="1459"
               @change="sliderChangePic"
-              style="width: 90%"
+              style="width: 100%"
             />
           </div>
           <div class="info-button-box">
@@ -355,8 +355,11 @@ export default {
       } else if (this.paneType == "society") {
         name = "society" + time;
       }
-      let pathUrl = "/YangtzeVGLabGeoServer/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A" + name + "&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857&WIDTH=512&HEIGHT=512&BBOX={bbox-epsg-3857}"
-      
+      let pathUrl =
+        "/YangtzeVGLabGeoServer/yangtzeRiver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=yangtzeRiver%3A" +
+        name +
+        "&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A3857&WIDTH=512&HEIGHT=512&BBOX={bbox-epsg-3857}";
+
       map.addSource("tsimg_01", {
         type: "raster",
         tiles: [pathUrl],
@@ -423,18 +426,13 @@ export default {
 .colorbar {
   position: absolute;
   right: 55px;
-  bottom: 55px;
-  width: 60px;
-  height: 260px;
-}
-.colorbar-pr {
-  position: absolute;
-  right: 55px;
-  bottom: 42px;
-  width: 70px;
-  height: 260px;
+  bottom: -225px;
+  width: 120px;
+  height: 450px;
 }
 /deep/ .slider-demo-block {
-  display: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 </style>

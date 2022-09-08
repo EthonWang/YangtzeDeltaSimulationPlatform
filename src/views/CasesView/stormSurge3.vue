@@ -10,7 +10,12 @@
         <span class="demonstration" style="float: right"
           >当前时间：{{ converTime }}</span
         >
-        <el-slider v-model="dateNum" :max="1459" @change="sliderChangePic" style="width: 90%;" />
+        <el-slider
+          v-model="dateNum"
+          :max="1459"
+          @change="sliderChangePic"
+          style="width: 100%"
+        />
       </div>
       <div class="info-button-box">
         <ButtonGroup class="info-buttonGroup">
@@ -117,7 +122,7 @@ const beforeAddTsImg = function () {
   map.removeLayer("flow");
   //   map.removeSource("tsimg_01");
   let timeString = computedTime();
-  let url = dataServer + "/store/textures/" +timeString +".png";
+  let url = dataServer + "/store/textures/" + timeString + ".png";
   addUVAnimation(url);
 };
 const addUVAnimation = function (url) {
@@ -140,31 +145,31 @@ const addUVAnimation = function (url) {
   }
   map.addLayer(partLayer, firstSymbolId); // add flow layer before symbols layer
 };
-const computedTime = function(){
+const computedTime = function () {
   let startTimeString = "2017-1-1 6:00:00";
   let time = new Date(startTimeString);
   let newDate = time.setHours(time.getHours() + dateNum.value * 6);
   let newTime = new Date(newDate);
   let year = newTime.getFullYear().toString();
-  let month = (newTime.getMonth() + 1);
+  let month = newTime.getMonth() + 1;
   let date = newTime.getDate();
   let hours = newTime.getHours();
-  if(month < 10){
+  if (month < 10) {
     year = year + "0" + month.toString();
   } else {
     year = year + month.toString();
   }
-  if(date < 10){
+  if (date < 10) {
     year = year + "0" + date.toString();
   } else {
     year = year + date.toString();
   }
-  if(hours < 10){
+  if (hours < 10) {
     year = year + "0" + hours.toString();
   } else {
     year = year + hours.toString();
   }
-  return year
+  return year;
 };
 const converTime = computed(() => {
   let startTimeString = "2017-1-1 6:00:00";
@@ -246,7 +251,9 @@ body {
 .info-buttonGroup {
   margin-top: 10px;
 }
-/deep/ .slider-demo-block{
-  display: none;
+/deep/ .slider-demo-block {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 </style>

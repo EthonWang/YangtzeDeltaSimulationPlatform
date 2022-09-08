@@ -25,7 +25,7 @@
               v-model="dateNum"
               :max="1459"
               @change="sliderChangePic"
-              style="width: 90%"
+              style="width: 100%"
             />
           </div>
           <div class="info-button-box">
@@ -59,7 +59,7 @@
               v-model="dateNum"
               :max="1459"
               @change="sliderChangePic"
-              style="width: 90%"
+              style="width: 100%"
             />
           </div>
           <div class="info-button-box">
@@ -439,7 +439,9 @@ export default {
   width: 70px;
   height: 260px;
 }
-/deep/ .slider-demo-block{
-  display: none;
+/deep/ .slider-demo-block {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 </style>

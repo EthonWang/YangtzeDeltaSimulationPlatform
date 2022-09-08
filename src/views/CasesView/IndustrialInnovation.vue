@@ -70,7 +70,7 @@
             <el-col :span="24">
               <div style="height: 30vh;background-color: #fafafa;border: 1px solid #DCDCDC;">
                 <p class="blockTitle">各市<span id="cate3">{{cateName}}</span>对比图</p>
-                <div id="contrastChart" style="height: 30vh"></div>
+                <div id="contrastChart" v-if="isShowEcharts" style="height: 30vh"></div>
               </div>
             </el-col>
           </el-row>
@@ -80,7 +80,7 @@
 
 <script setup>
 import * as d3 from 'd3';
-import {onMounted, ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import * as echarts from 'echarts';
 import mapboxgl from 'mapbox-gl';
 import city_geojson from "@/components/Cases/city_boundary_simplified"
@@ -130,6 +130,9 @@ onMounted(()=>{
   loadChart(radioCate.value);
   addMap(radioCate.value);
 })
+onUnmounted(()=>{
+  isShowEcharts.value = false;
+})
 //使echarts高度宽度自动变化
 window.onresize = () =>{
   myChart.resize();
@@ -142,6 +145,8 @@ function addMapLegend(cate) {
   legendImagePath.value = "/YangtzeVGLab/case/industrialInnovation/"+cate+"-legend.png"
 }
 let myChart;
+
+const isShowEcharts = ref(true);
 
 function loadChart(cate){
   let parallelAxis = [];
@@ -227,15 +232,16 @@ let wPath = window.document.location.href;
 let pathName =  route.path;
 let pos = wPath.indexOf(pathName);
 let localhostPath = wPath.substring(0, pos);
+let webDomain = "https://geomodeling.njnu.edu.cn";
 function addMap(cate) {
   console.log(window.screen.width,window.screen.height)
   let baseUrl = localhostPath;
   console.log("dd",process.env.BASE_URL)
   let spriteUrl;
   if((screenWidth == 1920 && screenHeight == 1080)||(screenWidth == 2048 && screenHeight == 1152)){
-    spriteUrl ="/YangtzeVGLab/case/industrialInnovation/mapbox_resource/sprite/" + cate + "@2x";
+    spriteUrl = webDomain+"/YangtzeVGLab/case/industrialInnovation/mapbox_resource/sprite/" + cate + "@2x";
   }else if(screenWidth == 2560 && screenHeight == 1440) {
-    spriteUrl ="/YangtzeVGLab/case/industrialInnovation/mapbox_resource/sprite/" + cate;
+    spriteUrl = webDomain+"/YangtzeVGLab/case/industrialInnovation/mapbox_resource/sprite/" + cate;
   }
   document.getElementById('map').innerHTML = "";
   mapboxgl.accessToken =
@@ -247,7 +253,7 @@ function addMap(cate) {
     style: {
       "version": 8,
       "sprite": spriteUrl,
-      "glyphs": "/YangtzeVGLab/case/industrialInnovation/mapbox_resource/fonts/{fontstack}/{range}.pbf",
+      "glyphs": webDomain+"/YangtzeVGLab/case/industrialInnovation/mapbox_resource/fonts/{fontstack}/{range}.pbf",
       "sources": {
         'boundary': {
           type: 'geojson',

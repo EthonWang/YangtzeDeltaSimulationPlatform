@@ -77,14 +77,14 @@ img {
   ul {
     position: absolute;
     overflow: hidden;
-    width: 200%;
+    width: 300%;
     animation: scrll 20s infinite linear;
     @keyframes scrll {
       0% {
         transform: translateX(0);
       }
       100% {
-        transform: translateX(-25%);
+        transform: translateX(-30%);
       }
     }
   }

@@ -581,21 +581,21 @@ h4 {
   }
 }
 
-/deep/.file-container[data-v-017137ce] {
+/deep/.file-container{
   width: 92%;
 }
-/deep/.file-operation[data-v-017137ce] {
+/deep/.file-operation{
   width: 92%;
 }
-/deep/.file-controller[data-v-017137ce] {
+/deep/.file-controller{
   height: calc(98% - 60px);
 }
-/deep/.file-detail-controller[data-v-017137ce] {
+/deep/.file-detail-controller{
   height: calc(98% - 120px);
   right: 3%;
 }
 
-.resourceDialog[data-v-f5288c9c]/deep/.el-dialog {
+.resourceDialog/deep/.el-dialog {
   padding: 0;
   background: #1b233a;
   .el-dialog {

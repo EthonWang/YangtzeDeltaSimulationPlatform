@@ -720,16 +720,16 @@ const store = useStore(); //vuex直接用store.commit
   }
 }
 
-/deep/.file-container[data-v-017137ce] {
+/deep/.file-container {
   width: 60%;
 }
-/deep/.file-operation[data-v-017137ce] {
+/deep/.file-operation {
   width: 60%;
 }
-/deep/.file-controller[data-v-017137ce] {
+/deep/.file-controller {
   height: calc(98% - 60px);
 }
-/deep/.file-detail-controller[data-v-017137ce] {
+/deep/.file-detail-controller {
   height: calc(98% - 120px);
   right: 3%;
 }

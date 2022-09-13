@@ -441,7 +441,7 @@ const options = [
       border-radius: 5px;
       border: auto;
     }
-    [data-v-29467f59] .el-input.is-disabled .el-input__inner {
+    .el-input.is-disabled .el-input__inner {
       background-color: #414141;
       color: #ebebeb;
       box-shadow: auto;
@@ -449,7 +449,7 @@ const options = [
     .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
       background-color: rgb(51, 51, 51);
     }
-    .modelConfigBox[data-v-3b81a03d] {
+    .modelConfigBox {
       background-color: transparent;
       color: @color-config;
     }
@@ -477,7 +477,7 @@ const options = [
       color: @color-config;
       background: @bg-config;
       border: 1px solid @color-config;
-      .modelState[data-v-7f800fce] {
+      .modelState {
         background: @bg-config;
       }
     }

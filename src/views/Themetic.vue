@@ -98,6 +98,7 @@
                 @saveCase="saveCase"
                 @cancelCase="cancelCase"
                 theme=""
+                style="width: 800px;"
               >
               </edit-case-draw>
             </div>
@@ -253,7 +254,7 @@
         :data="tableData"
         table-layout="auto"
         style="width: 100%"
-        max-height="300"
+        max-height="600"
       >
         <el-table-column prop="name" label="案例名称" />
         <el-table-column prop="path" label="path" />
@@ -546,7 +547,7 @@ const getAllCases = () => {
   tableData.value = [];
   get("/case/getAllCase").then((res) => {
     res.data.data.map((item) => {
-      tableData.value.push({
+      tableData.value.unshift({
         name: item.name,
         path: item.path,
         createTime: item.createTime,
@@ -1108,5 +1109,11 @@ const findParentName = (childName) => {
 
     // position: relative;
   }
+}
+/deep/.el-drawer.rtl {
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    width: 800px !important;
 }
 </style>

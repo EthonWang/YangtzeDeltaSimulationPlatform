@@ -2,13 +2,13 @@
   <div class="mapbox-page">
     <!-- <ModelConfig :modelId="modelId" ref="refModelConfig"> </ModelConfig> -->
     <div class="des_icon" style="">
-      <div style="height: 29px;">绘制线段</div>
-      <div style="height: 29px;">绘制多边形</div>
-      <div style="height: 29px;">删除绘制内容</div>
-      <div style="height: 29px;">保存绘制内容</div>
-      <div style="height: 29px;">图像裁剪</div>
-      <div style="height: 29px;">数据图表分析</div>
-      <div style="height: 29px;">新建txt文件</div>
+      <div style="height: 29px">绘制线段</div>
+      <div style="height: 29px">绘制多边形</div>
+      <div style="height: 29px">删除绘制内容</div>
+      <div style="height: 29px">保存绘制内容</div>
+      <div style="height: 29px">图像裁剪</div>
+      <div style="height: 29px">数据图表分析</div>
+      <div style="height: 29px">新建txt文件</div>
     </div>
     <el-tag class="map-zoom-lnglat" type="info">
       Zoom:{{ zoom }} &nbsp; LngLat:{{ showCenter }}
@@ -1118,7 +1118,9 @@ export default {
         type != "csv" &&
         type != "xlsx" &&
         type != "rar" &&
-        type != "asc"
+        type != "asc" &&
+        type != "inp" &&
+        type != "pptx"
       ) {
         return true;
       } else {
@@ -1885,14 +1887,13 @@ export default {
   position: absolute;
   top: 85px;
   right: 9px;
-  background-color:#fafafa;
+  background-color: #fafafa;
   width: 100px;
   height: 203px;
   z-index: 50;
   border-radius: 5px;
- 
+
   padding: 5px;
-  
 }
 .mapbox-page {
   position: absolute;
@@ -1924,7 +1925,7 @@ export default {
   top: 110px;
   left: 40px;
   z-index: 1009;
-  background-color:#fafafa;
+  background-color: #fafafa;
   width: 350px;
   height: auto;
   border-radius: 4px;

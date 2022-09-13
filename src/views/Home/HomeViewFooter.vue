@@ -5,16 +5,12 @@
       <el-col :span="9">
         <h1>开发机构</h1>
         <div style="margin: 2vh"></div>
-        <div class="scroll_img">
+        <div class="scroll_img1">
           <ul>
-            <div style="margin-left: 5vw;"></div>
-              <img src="@/assets/img/coorporation/NNUGEO.jpg" alt="" />
-              <img src="@/assets/img/coorporation/VGE.jpg" alt="" />
-              <img src="@/assets/app/logo.png" alt="" />
-
-              <img src="@/assets/img/coorporation/NNUGEO.jpg" alt="" />
-              <img src="@/assets/img/coorporation/VGE.jpg" alt="" />
-              <img src="@/assets/app/logo.png" alt="" />
+            <div style="margin: 3vw;float: left;"></div>
+            <img src="@/assets/img/coorporation/NNUGEO.jpg" alt="" />
+            <img src="@/assets/img/coorporation/VGE.jpg" alt="" />
+            <img src="@/assets/app/logo.png" alt="" />
           </ul>
         </div>
       </el-col>
@@ -30,17 +26,17 @@
         <div style="margin: 2vh"></div>
         <div class="scroll_img">
           <ul>
-          <img src="@/assets/img/coorporation/logo_datacenter.png" alt="" />
-          <img src="@/assets/img/coorporation/logo_hehai.png" alt="" />
+            <img src="@/assets/img/coorporation/logo_datacenter.png" alt="" />
+            <img src="@/assets/img/coorporation/logo_hehai.png" alt="" />
 
-          <img src="@/assets/img/coorporation/LZU.png" alt="" />
+            <img src="@/assets/img/coorporation/LZU.png" alt="" />
 
-          <img src="@/assets/img/coorporation/logo_datacenter.png" alt="" />
-          <img src="@/assets/img/coorporation/logo_hehai.png" alt="" />
+            <img src="@/assets/img/coorporation/logo_datacenter.png" alt="" />
+            <img src="@/assets/img/coorporation/logo_hehai.png" alt="" />
 
-          <img src="@/assets/img/coorporation/LZU.png" alt="" />
+            <img src="@/assets/img/coorporation/LZU.png" alt="" />
           </ul>
-     
+
           <!-- <el-row>
         
       </el-row> -->
@@ -73,28 +69,37 @@ img {
   object-fit: contain;
 }
 .scroll_img {
-    position: relative;
-    height: 9vh;
-    margin:0 2vw 0 2vw;
-    width: 40vw;
-    overflow-x: hidden;
-    ul{
-        position: absolute;
-        overflow: hidden;
-        width: 200%;
-        animation: scrll 20s infinite linear;
-        @keyframes scrll {
-            0%{
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-25%);
-            }
-        }
+  position: relative;
+  height: 9vh;
+  margin: 0 2vw 0 2vw;
+  width: 40vw;
+  overflow-x: hidden;
+  ul {
+    position: absolute;
+    overflow: hidden;
+    width: 200%;
+    animation: scrll 20s infinite linear;
+    @keyframes scrll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-25%);
+      }
     }
-    img{
-        float: left;
-    }
+  }
+  img {
+    float: left;
+  }
+}
+.scroll_img1 {
+  position: relative;
+  height: 9vh;
+  margin: 0 2vw 0 2vw;
+  width: 40vw;
+  img {
+    float: left;
+  }
 }
 </style>
 

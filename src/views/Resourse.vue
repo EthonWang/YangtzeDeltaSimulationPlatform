@@ -77,7 +77,7 @@
           </div>
         </el-row>
         <el-row style="padding-top: 3%">
-          <div style="width: 900px; margin: auto; color: hsl(0, 0, 98%)">
+          <div style="width: 900px; margin: auto; color:#fafafa">
             <h3>热门搜索></h3>
             <ul
               style="

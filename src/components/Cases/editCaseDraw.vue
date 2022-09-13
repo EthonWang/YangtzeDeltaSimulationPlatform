@@ -144,7 +144,7 @@
         </el-col>
       </el-row>
     </template>
-    <el-divider>案例数据</el-divider>
+    <el-divider>相关数据</el-divider>
     <el-row class="editDialogRow">
       <el-button :icon="Plus" @click="newCaseDataList"  plain>添加-移除数据条目</el-button>
     </el-row>

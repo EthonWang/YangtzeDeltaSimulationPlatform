@@ -70,7 +70,7 @@
       </div>
       <!-- <div class="merge-earth"></div> -->
       <!-- <MapCharts class="earth"></MapCharts> -->
-      <img class="earth_img" src="../../assets/img/earth.png" alt="" />
+      <img class="earth_img" src="../../assets/img/earth_zip.gif" alt="" />
       <img class="triangle" src="../../assets/triangle.png" alt="" />
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -203,7 +203,7 @@ setTimeout(() => {
   var option1;
   option1 = {
     title: {
-      text: "资源分布情况",
+      text: "资源分布",
     },
     
     toolbox: {
@@ -582,6 +582,7 @@ polar: {
   width: 90vw;
   // height: $width*2/3;
   z-index: 0;
+  filter:blur(5px);
   // background-color: red;
   transition: all 1s;
   transform-origin: 50% 0%;

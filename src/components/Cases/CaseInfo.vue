@@ -46,7 +46,7 @@
             </template>
           </div>
           <div class="descriptionText" v-else>暂无描述</div>
-          <h3 class="typeName">案例数据</h3>
+          <h3 class="typeName">相关数据</h3>
           <el-divider ></el-divider>
           <template v-if="caseInfo.resourceDataList != null">
               <div style="display: flex;align-items: center;width: 100%;flex-wrap: wrap;" v-if="caseInfo.resourceDataList.length != 0">
@@ -103,7 +103,7 @@
       <el-col :span="4" :offset="1">
         <div class="rightBox1">
           <div><el-button @click="router.push('/themetic')" class="rightButton hvr-shutter-out-horizontal" plain><ArrowLeft style="width: 1em"/>&nbsp;<span>返回专题</span></el-button></div>
-          <div><el-button  class="rightButton hvr-shutter-out-horizontal" @click="toCase(caseInfo.path)" plain><View style="width: 1em"/>&nbsp;<span>打开案例系统</span></el-button></div>
+          <div><el-button class="rightButton hvr-shutter-out-horizontal" @click="toCase(caseInfo.path)" plain><View style="width: 1em"/>&nbsp;<span>打开案例系统</span></el-button></div>
            <div><el-button @click="openInLab()" class="rightButton hvr-shutter-out-horizontal" plain><DataLine style="width: 1em"/>&nbsp;<span>在实验室中打开</span></el-button></div>
           <div><el-button v-if="isAdmin" class="rightButton hvr-shutter-out-horizontal" @click="editCases" plain><Setting style="width: 1em"/>&nbsp;<span>编辑案例</span></el-button></div>
           <edit-case-draw

@@ -58,6 +58,11 @@ export const cases_config = [
         component: () => import("views/CasesView/Taihu.vue")
     },
     {
+        problem: "长三角土地利用模拟",
+        path: "LanduseSimulation",
+        component: () => import("views/CasesView/LanduseSimulation.vue")
+    },
+    {
         problem: "夹江水污染扩散模拟",
         path: "Jiajiang",
         component: () => import("views/CasesView/Jiajiang.vue")

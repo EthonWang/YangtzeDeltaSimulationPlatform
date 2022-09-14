@@ -30,11 +30,13 @@
             <img src="@/assets/img/coorporation/logo_hehai.png" alt="" />
 
             <img src="@/assets/img/coorporation/LZU.png" alt="" />
-
+<img src="@/assets/img/coorporation/chengfang.jpg" alt="" />
+            
             <img src="@/assets/img/coorporation/logo_datacenter.png" alt="" />
             <img src="@/assets/img/coorporation/logo_hehai.png" alt="" />
 
             <img src="@/assets/img/coorporation/LZU.png" alt="" />
+            <img src="@/assets/img/coorporation/chengfang.jpg" alt="" />
           </ul>
 
           <!-- <el-row>
@@ -77,7 +79,7 @@ img {
   ul {
     position: absolute;
     overflow: hidden;
-    width: 300%;
+    width: 400%;
     animation: scrll 20s infinite linear;
     @keyframes scrll {
       0% {

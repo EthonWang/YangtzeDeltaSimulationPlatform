@@ -86,7 +86,7 @@ img {
         transform: translateX(0);
       }
       100% {
-        transform: translateX(-30%);
+        transform: translateX(-50%);
       }
     }
   }

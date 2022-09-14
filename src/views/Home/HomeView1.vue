@@ -45,9 +45,7 @@
         class="desContainer"
         :class="{ show_ani: props.show, hide_ani: !props.show }"
       > -->
-      <div
-        class="desContainer"
-      >
+      <div class="desContainer">
         <el-divider style="margin: 5px 0 5px 0"></el-divider>
         <p>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长三角虚拟地理实验平台是以长三角区域为研究对象，以区域发展问题为驱动，将自然地理过程和社会经济过程相耦合的虚拟地理环境模拟和实验平台；强调了大气、陆面和海洋之间的循环演变，自然和城市之间的互联互动，学科之间的深度交叉；具有汇聚模拟资源、构建模拟模型和开展模型实验三大功能，可应用于地理过程模拟、自然灾害预报和综合决策制定多个领域，服务于长三角高质量一体化发展国家战略。
@@ -88,7 +86,7 @@
 
 <script setup>
 //采用vue2写法的话把setup去掉，
-import { ref, defineProps, defineEmits } from "vue";
+import { ref, defineProps, defineEmits, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import MapCharts from "components/Home/MapCharts.vue";
@@ -146,259 +144,263 @@ const restoreNum = (num) => {
   //         ((resourceModelNum[i] - min_v) / (max_v - min_v)) * 10 + index * 10;
   // ((x- index * 10)/ 10)*(max_v - min_v)+ min_v = num   ;
 };
-setTimeout(() => {
-  let allResourceNum = localStorage.getItem("allResourceNum");
+onMounted(() => {
+  setTimeout(() => {
+    let allResourceNum = localStorage.getItem("allResourceNum");
 
-  if (allResourceNum) {
-    allResourceNum = JSON.parse(Decrypt(allResourceNum));
-    resourceNum[0] = allResourceNum.disasterNum;
-    resourceNum[1] = allResourceNum.globalNum;
-    resourceNum[2] = allResourceNum.riverNum;
-    resourceNum[3] = allResourceNum.cityNum;
-    resourceNum_ori[0] = allResourceNum.disasterNum;
-    resourceNum_ori[1] = allResourceNum.globalNum;
-    resourceNum_ori[2] = allResourceNum.riverNum;
-    resourceNum_ori[3] = allResourceNum.cityNum;
-    resourceModelNum[0] = allResourceNum.disasterModelNum;
-    resourceModelNum[1] = allResourceNum.globalModelNum;
-    resourceModelNum[2] = allResourceNum.riverModelNum;
-    resourceModelNum[3] = allResourceNum.cityModelNum;
-    resourceModelNum_ori[0] = allResourceNum.disasterModelNum;
-    resourceModelNum_ori[1] = allResourceNum.globalModelNum;
-    resourceModelNum_ori[2] = allResourceNum.riverModelNum;
-    resourceModelNum_ori[3] = allResourceNum.cityModelNum;
+    if (allResourceNum) {
+      allResourceNum = JSON.parse(Decrypt(allResourceNum));
+      resourceNum[0] = allResourceNum.disasterNum;
+      resourceNum[1] = allResourceNum.globalNum;
+      resourceNum[2] = allResourceNum.riverNum;
+      resourceNum[3] = allResourceNum.cityNum;
+      resourceNum_ori[0] = allResourceNum.disasterNum;
+      resourceNum_ori[1] = allResourceNum.globalNum;
+      resourceNum_ori[2] = allResourceNum.riverNum;
+      resourceNum_ori[3] = allResourceNum.cityNum;
+      resourceModelNum[0] = allResourceNum.disasterModelNum;
+      resourceModelNum[1] = allResourceNum.globalModelNum;
+      resourceModelNum[2] = allResourceNum.riverModelNum;
+      resourceModelNum[3] = allResourceNum.cityModelNum;
+      resourceModelNum_ori[0] = allResourceNum.disasterModelNum;
+      resourceModelNum_ori[1] = allResourceNum.globalModelNum;
+      resourceModelNum_ori[2] = allResourceNum.riverModelNum;
+      resourceModelNum_ori[3] = allResourceNum.cityModelNum;
 
-    for (let i = 0; i < resourceNum.length; i++) {
-      // 1.寻找在数据间隔里小于Data的最大值
-      let min_v = Math.max(...dataInterval.filter((v) => v <= resourceNum[i]));
-      // 2.寻找在数据间隔里大于Data的最小值
-      let max_v = Math.min(...dataInterval.filter((v) => v > resourceNum[i]));
-      //  3.寻找 min_v 所在的下标
-      let index = dataInterval.findIndex((v) => v === min_v);
-      //  4.计算该Data在y轴上应该展示的位置
-      let y_value =
-        ((resourceNum[i] - min_v) / (max_v - min_v)) * 10 + index * 10;
-      resourceNum[i] = y_value;
+      for (let i = 0; i < resourceNum.length; i++) {
+        // 1.寻找在数据间隔里小于Data的最大值
+        let min_v = Math.max(
+          ...dataInterval.filter((v) => v <= resourceNum[i])
+        );
+        // 2.寻找在数据间隔里大于Data的最小值
+        let max_v = Math.min(...dataInterval.filter((v) => v > resourceNum[i]));
+        //  3.寻找 min_v 所在的下标
+        let index = dataInterval.findIndex((v) => v === min_v);
+        //  4.计算该Data在y轴上应该展示的位置
+        let y_value =
+          ((resourceNum[i] - min_v) / (max_v - min_v)) * 10 + index * 10;
+        resourceNum[i] = y_value;
+      }
+      for (let i = 0; i < resourceNum.length; i++) {
+        // 1.寻找在数据间隔里小于Data的最大值
+        let min_v = Math.max(
+          ...dataInterval.filter((v) => v <= resourceModelNum[i])
+        );
+        // 2.寻找在数据间隔里大于Data的最小值
+        let max_v = Math.min(
+          ...dataInterval.filter((v) => v > resourceModelNum[i])
+        );
+        //  3.寻找 min_v 所在的下标
+        let index = dataInterval.findIndex((v) => v === min_v);
+        //  4.计算该Data在y轴上应该展示的位置
+        let y_value =
+          ((resourceModelNum[i] - min_v) / (max_v - min_v)) * 10 + index * 10;
+        resourceModelNum[i] = y_value;
+      }
     }
-    for (let i = 0; i < resourceNum.length; i++) {
-      // 1.寻找在数据间隔里小于Data的最大值
-      let min_v = Math.max(
-        ...dataInterval.filter((v) => v <= resourceModelNum[i])
-      );
-      // 2.寻找在数据间隔里大于Data的最小值
-      let max_v = Math.min(
-        ...dataInterval.filter((v) => v > resourceModelNum[i])
-      );
-      //  3.寻找 min_v 所在的下标
-      let index = dataInterval.findIndex((v) => v === min_v);
-      //  4.计算该Data在y轴上应该展示的位置
-      let y_value =
-        ((resourceModelNum[i] - min_v) / (max_v - min_v)) * 10 + index * 10;
-      resourceModelNum[i] = y_value;
-    }
-  }
 
-  var chartDom1 = document.getElementById("main1");
-  var myChart1 = echarts.init(chartDom1, "dark");
-  var option1;
-  option1 = {
-    title: {
-      text: "资源分布",
-    },
-    
-    toolbox: {
-      // y: 'bottom',
-      feature: {
-        magicType: {
-          type: ["stack"],
-        },
-        dataView: {},
-        saveAsImage: {
-          pixelRatio: 2,
+    var chartDom1 = document.getElementById("main1");
+    var myChart1 = echarts.init(chartDom1, "dark");
+    var option1;
+    option1 = {
+      title: {
+        text: "资源分布",
+      },
+
+      toolbox: {
+        // y: 'bottom',
+        feature: {
+          magicType: {
+            type: ["stack"],
+          },
+          dataView: {},
+          saveAsImage: {
+            pixelRatio: 2,
+          },
         },
       },
-    },
-    tooltip: {
-      axisPointer: {
-        // 坐标轴虚线
-        type: "cross",
-        label: {
-          backgroundColor: "#6a7985",
+      tooltip: {
+        axisPointer: {
+          // 坐标轴虚线
+          type: "cross",
+          label: {
+            backgroundColor: "#6a7985",
+            show: false,
+          },
+        },
+        formatter: (params) => {
+          return (
+            params.name.replace("\n", "") +
+            "-" +
+            params.seriesName +
+            "：" +
+            String(restoreNum(params.value)) +
+            "条"
+          );
+        },
+      },
+      polar: {
+        radius: [20, "60%"],
+      },
+      angleAxis: {
+        type: "category",
+        data: [
+          "灾害响应与治理",
+          "全球变化与\n区域环境演化",
+          "流域水循环\n及其驱动机制",
+          "城市化与人地关系\n协调发展",
+        ],
+      },
+      radiusAxis: {
+        type: "value",
+        scale: false,
+        axisLabel: {
+          //v值 i系统分层值
+          formatter: (v, i) => {
+            if (i === 0) {
+              v = String(dataInterval[i]);
+            }
+            if (i === 1) {
+              v = String(dataInterval[i]);
+            }
+            if (i === 2) {
+              v = String(dataInterval[i]);
+            }
+            if (i === 3) {
+              v = String(dataInterval[i]);
+            }
+            if (i === 4) {
+              v = String(dataInterval[i]);
+            }
+            if (i === 5) {
+              v = String(dataInterval[i]);
+            }
+            if (i === 6) {
+              v = String(dataInterval[i]);
+            }
+            if (i === 7) {
+              v = String(dataInterval[i]);
+            }
+            return v;
+          },
+        },
+      },
+
+      backgroundColor: "transparent",
+      series: [
+        {
+          type: "bar",
+          data: resourceModelNum,
+          coordinateSystem: "polar",
+          name: "模型",
+          itemStyle: {
+            opacity: "0.75",
+          },
+        },
+        {
+          type: "bar",
+          data: resourceNum,
+          coordinateSystem: "polar",
+          name: "数据",
+          itemStyle: {
+            opacity: "0.65",
+          },
+        },
+      ],
+      legend: {
+        show: true,
+        data: ["模型", "数据"],
+        selectedMode: false,
+      },
+    };
+
+    option1 && myChart1.setOption(option1);
+
+    var chartDom2 = document.getElementById("main2");
+    var myChart2 = echarts.init(chartDom2, "dark");
+    var option2;
+    var xAxisData = [];
+    var data1 = [];
+    var data2 = [];
+    for (let i in hotsearchData) {
+      data2.push(hotsearchData[i].pageviews);
+      xAxisData.push(hotsearchData[i].name);
+    }
+    option2 = {
+      title: {
+        text: "资源使用热点",
+      },
+      grid: {
+        top: "35px",
+        right: "5%",
+        bottom: "10%",
+        left: "10%",
+      },
+      backgroundColor: "transparent",
+      legend: {
+        selectedMode: false,
+        data: ["数据"],
+      },
+      toolbox: {
+        // y: 'bottom',
+        feature: {
+          magicType: {
+            type: ["stack"],
+          },
+          dataView: {},
+          saveAsImage: {
+            pixelRatio: 2,
+          },
+        },
+      },
+      tooltip: {
+        axisPointer: {
+          // 坐标轴虚线
+          type: "cross",
+          label: {
+            backgroundColor: "#6a7985",
+          },
+        },
+      },
+      xAxis: {
+        data: xAxisData,
+        splitLine: {
           show: false,
         },
       },
-      formatter: (params) => {
-        return (
-          params.name.replace("\n", "") +
-          "-" +
-          params.seriesName +
-          "：" +
-          String(restoreNum(params.value)) +
-          "条"
-        );
-      },
-    },
-polar: {
-    radius: [20, '60%']
-  },
-    angleAxis: {
-      type: "category",
-      data: [
-        "灾害响应与治理",
-        "全球变化与\n区域环境演化",
-        "流域水循环\n及其驱动机制",
-        "城市化与人地关系\n协调发展",
+      yAxis: {},
+      series: [
+        // {
+        //   name: "模型",
+        //   type: "bar",
+        //   data: data1,
+        //   emphasis: {
+        //     focus: "series",
+        //   },
+        //   animationDelay: function (idx) {
+        //     return idx * 10;
+        //   },
+        // },
+        {
+          name: "数据",
+          type: "bar",
+          data: data2,
+          emphasis: {
+            focus: "series",
+          },
+          animationDelay: function (idx) {
+            return idx * 10 + 100;
+          },
+        },
       ],
-    },
-    radiusAxis: {
-      type: "value",
-      scale: false,
-      axisLabel: {
-        //v值 i系统分层值
-        formatter: (v, i) => {
-          if (i === 0) {
-            v = String(dataInterval[i]);
-          }
-          if (i === 1) {
-            v = String(dataInterval[i]);
-          }
-          if (i === 2) {
-            v = String(dataInterval[i]);
-          }
-          if (i === 3) {
-            v = String(dataInterval[i]);
-          }
-          if (i === 4) {
-            v = String(dataInterval[i]);
-          }
-          if (i === 5) {
-            v = String(dataInterval[i]);
-          }
-          if (i === 6) {
-            v = String(dataInterval[i]);
-          }
-          if (i === 7) {
-            v = String(dataInterval[i]);
-          }
-          return v;
-        },
+      animationEasing: "elasticOut",
+      animationDelayUpdate: function (idx) {
+        return idx * 5;
       },
-    },
-
-    backgroundColor: "transparent",
-    series: [
-      {
-        type: "bar",
-        data: resourceModelNum,
-        coordinateSystem: "polar",
-        name: "模型",
-        itemStyle: {
-          opacity: "0.75",
-        },
-      },
-      {
-        type: "bar",
-        data: resourceNum,
-        coordinateSystem: "polar",
-        name: "数据",
-        itemStyle: {
-          opacity: "0.65",
-        },
-      },
-    ],
-    legend: {
-      show: true,
-      data: ["模型", "数据"],
-      selectedMode: false,
-    },
-  };
-
-  option1 && myChart1.setOption(option1);
-
-  var chartDom2 = document.getElementById("main2");
-  var myChart2 = echarts.init(chartDom2, "dark");
-  var option2;
-  var xAxisData = [];
-  var data1 = [];
-  var data2 = [];
-  for (let i in hotsearchData) {
-    data2.push(hotsearchData[i].pageviews);
-    xAxisData.push(hotsearchData[i].name);
-  }
-  option2 = {
-    title: {
-      text: "资源使用热点",
-    },
-     grid: {
-      top:'35px',
-       right:'5%',
-        bottom:'10%',
-        left:'10%'
-    },
-    backgroundColor: "transparent",
-    legend: {
-      selectedMode: false,
-      data: ["数据"],
-    },
-    toolbox: {
-      // y: 'bottom',
-      feature: {
-        magicType: {
-          type: ["stack"],
-        },
-        dataView: {},
-        saveAsImage: {
-          pixelRatio: 2,
-        },
-      },
-    },
-    tooltip: {
-      axisPointer: {
-        // 坐标轴虚线
-        type: "cross",
-        label: {
-          backgroundColor: "#6a7985",
-        },
-      },
-    },
-    xAxis: {
-      data: xAxisData,
-      splitLine: {
-        show: false,
-      },
-    },
-    yAxis: {},
-    series: [
-      // {
-      //   name: "模型",
-      //   type: "bar",
-      //   data: data1,
-      //   emphasis: {
-      //     focus: "series",
-      //   },
-      //   animationDelay: function (idx) {
-      //     return idx * 10;
-      //   },
-      // },
-      {
-        name: "数据",
-        type: "bar",
-        data: data2,
-        emphasis: {
-          focus: "series",
-        },
-        animationDelay: function (idx) {
-          return idx * 10 + 100;
-        },
-      },
-    ],
-    animationEasing: "elasticOut",
-    animationDelayUpdate: function (idx) {
-      return idx * 5;
-    },
-  };
-  option2 && myChart2.setOption(option2);
-}, 3500);
+    };
+    option2 && myChart2.setOption(option2);
+  }, 3500);
+});
 </script>
 
 <style lang="less" scoped>
@@ -581,7 +583,7 @@ polar: {
   width: 90vw;
   // height: $width*2/3;
   z-index: 0;
-  filter:blur(2px);
+  filter: blur(2px);
   // background-color: red;
   transition: all 1s;
   transform-origin: 50% 0%;

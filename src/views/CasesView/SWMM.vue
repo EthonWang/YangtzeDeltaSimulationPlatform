@@ -354,8 +354,9 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "mapbox-gl";
 import * as echarts from "echarts";
 import $ from "jquery";
-import axios from "axios";
 import { reactive, ref, toRefs, onMounted } from "vue";
+import { backUrl, backUrl_backup } from "./../../../public/backURL/backurl";
+import { get, post } from "@/request/request_backup"
 //定义变量使用
 const mapboxgl = require("mapbox-gl");
 let echar = ref("");
@@ -469,8 +470,7 @@ const handleClick = (tab, event) => {
 };
 const getrptResult = (url) => {
   return new Promise((resolve, reject) => {
-    axios
-      .get(url)
+get(backUrl+'/store/public/'+url)
       .then((res) => {
         resolve(res.data);
       })
@@ -481,8 +481,7 @@ const getrptResult = (url) => {
 };
 const getGeojson = (url) => {
   return new Promise((resolve, reject) => {
-    axios
-      .get(url)
+get(backUrl+'/store/public/'+url)
       .then((res) => {
         resolve(res.data);
       })

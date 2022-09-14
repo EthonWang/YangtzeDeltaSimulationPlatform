@@ -70,7 +70,7 @@
       </div>
       <!-- <div class="merge-earth"></div> -->
       <!-- <MapCharts class="earth"></MapCharts> -->
-      <img class="earth_img" src="../../assets/img/earth_zip.gif" alt="" />
+      <img class="earth_img" src="../../assets/img/earth.gif" alt="" />
       <img class="triangle" src="../../assets/triangle.png" alt="" />
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -398,7 +398,7 @@ polar: {
     },
   };
   option2 && myChart2.setOption(option2);
-}, 2000);
+}, 3500);
 </script>
 
 <style lang="less" scoped>
@@ -564,7 +564,6 @@ polar: {
   width: 90vw;
   height: $width;
   z-index: 0;
-  // background-color: red;
   transition: all 1s;
   transform-origin: 50% 0%;
 
@@ -582,7 +581,7 @@ polar: {
   width: 90vw;
   // height: $width*2/3;
   z-index: 0;
-  filter:blur(5px);
+  filter:blur(2px);
   // background-color: red;
   transition: all 1s;
   transform-origin: 50% 0%;
@@ -688,10 +687,12 @@ polar: {
 #main1 {
   width: 100%;
   height: 50%;
+  transform-origin: 0 0;
 }
 #main2 {
   width: 100%;
   height: 50%;
+  transform-origin: 0 0;
 }
 .border-box {
   color: #fafafa;

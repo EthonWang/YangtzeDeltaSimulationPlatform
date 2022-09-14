@@ -96,15 +96,18 @@ const mousedown = () => {
 const toSci = () => {
   home_scroll_listen.value.scrollTop = window.innerHeight * 1.96;
   document.getElementsByClassName("container")[0].style.width = "100vw";
-  
 };
 
 const suitable = () => {
   let compare = window.innerWidth / 1920;
-  document.getElementsByClassName("earth_img")[0].style.transform =
-    "scale(" + compare + ")";
+  // document.getElementsByClassName("earth_img")[0].style.transform =
+  //   "scale(" + compare + ")";
+  document.getElementById("main1").style.transform =
+    "perspective(1500px) rotateY(0deg) scale(" + compare * 0.95 + ")";
+  document.getElementById("main2").style.transform =
+    "perspective(1500px) rotateY(0deg) scale(" + compare * 0.95 + ")";
   document.getElementsByClassName("sunburst")[0].style.transform =
-    "perspective(1500px) rotateY(0deg) scale(" + compare*0.9 + ")";
+    "perspective(1500px) rotateY(0deg) scale(" + compare * 0.9 + ")";
 };
 window.onresize = suitable;
 setTimeout(() => {

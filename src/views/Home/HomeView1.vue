@@ -150,6 +150,18 @@ onMounted(() => {
 
     if (allResourceNum) {
       allResourceNum = JSON.parse(Decrypt(allResourceNum));
+    }else{
+      allResourceNum={
+        disasterNum:31,
+        globalNum:131,
+        riverNum:54,
+        cityNum:541,
+        disasterModelNum:1,
+        globalModelNum:1,
+        riverModelNum:9,
+        cityModelNum:3
+      }
+    }
       resourceNum[0] = allResourceNum.disasterNum;
       resourceNum[1] = allResourceNum.globalNum;
       resourceNum[2] = allResourceNum.riverNum;
@@ -166,7 +178,7 @@ onMounted(() => {
       resourceModelNum_ori[1] = allResourceNum.globalModelNum;
       resourceModelNum_ori[2] = allResourceNum.riverModelNum;
       resourceModelNum_ori[3] = allResourceNum.cityModelNum;
-
+    
       for (let i = 0; i < resourceNum.length; i++) {
         // 1.寻找在数据间隔里小于Data的最大值
         let min_v = Math.max(
@@ -197,7 +209,7 @@ onMounted(() => {
           ((resourceModelNum[i] - min_v) / (max_v - min_v)) * 10 + index * 10;
         resourceModelNum[i] = y_value;
       }
-    }
+    
 
     var chartDom1 = document.getElementById("main1");
     var myChart1 = echarts.init(chartDom1, "dark");

@@ -130,6 +130,7 @@ const login = (formEl) => {
             } else {
               localStorage.removeItem("toLast");
               router.push("/user");
+              setTimeout(()=>{location.reload()},200)
             }
           });
         });

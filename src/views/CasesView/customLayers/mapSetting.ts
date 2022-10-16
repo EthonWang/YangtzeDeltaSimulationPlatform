@@ -1,8 +1,11 @@
 import mapboxgl, { Map, MapboxOptions } from 'mapbox-gl';
 
 function changeRenderingContext(): void {
+    // @ts-ignore
     if (mapboxgl.Map.prototype._setupPainter.toString().indexOf("webgl2") == -1) {
+        // @ts-ignore
         const _setupPainter_old = mapboxgl.Map.prototype._setupPainter;
+        // @ts-ignore
         mapboxgl.Map.prototype._setupPainter = function () {
             const getContext_old = this._canvas.getContext;
             this._canvas.getContext = function(name: any, options: any): any {  

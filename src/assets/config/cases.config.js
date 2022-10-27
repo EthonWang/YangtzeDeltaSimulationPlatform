@@ -107,6 +107,29 @@ export const cases_config = [
         path: "FloodMultiScale",
         component: () => import("views/CasesView/FloodMultiScale.vue")
     },
+    {
+        problem:"长三角可持续发展",
+        path:'Sustainable',
+        component:() => import("views/CasesView/Sustainable.vue"),
+        // children:[{
+        //     problem:'可持续发展可视化大屏',
+        //     path:'Sustainable_vi',
+        //     component:() => import("views/CasesView/Sustainable_vi.vue")
+        // },{
+        //     problem:'可持续发展指标系统',
+        //     path:'Sustainable_in',
+        //     component:() => import("views/CasesView/Sustainable_in.vue")
+        // }]
+    },{
+        problem:'可持续发展可视化大屏',
+            path:'Sustainable_vi',
+            component:() => import("views/CasesView/Sustainable_vi.vue")
+    },{
+        problem:'可持续发展指标系统',
+            path:'Sustainable_in',
+            component:() => import("views/CasesView/Sustainable_in.vue")
+    }
+
     // {
     //     problem:"湖泊水环境监测",
     //     name:"滇池模型-富营养化水质参数",

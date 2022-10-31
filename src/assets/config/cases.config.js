@@ -120,13 +120,14 @@ export const cases_config = [
         //     path:'Sustainable_in',
         //     component:() => import("views/CasesView/Sustainable_in.vue")
         // }]
-    },{
+    },
+    {
         problem:'可持续发展可视化大屏',
-            path:'Sustainable_vi',
+            path:'Sustainable/Sustainable_vi',
             component:() => import("views/CasesView/Sustainable_vi.vue")
     },{
         problem:'可持续发展指标系统',
-            path:'Sustainable_in',
+            path:'Sustainable/Sustainable_in',
             component:() => import("views/CasesView/Sustainable_in.vue")
     }
 

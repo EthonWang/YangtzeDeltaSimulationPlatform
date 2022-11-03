@@ -1,12 +1,12 @@
-// 自动识别开发环境与部署环境，并在开发环境下自动识别并连接本地的后台
+// 自动识别开发环境与部署环境，并在开发环境下自动识别并连接backurl.json配置的后台
 let isdeploy = true
 let backIP = require('./backUrl.json').back_url
 const backIP_deploy = "https://geomodeling.njnu.edu.cn/YangtzeVGLabBack"
-const herf=window.location.href.toLowerCase()
-if (herf.indexOf('geomodeling.njnu.edu.cn')!=-1) {
-    isdeploy=true
+const herf = window.location.href.toLowerCase()
+if (herf.indexOf('geomodeling.njnu.edu.cn') != -1) {
+    isdeploy = true
 } else {
-    isdeploy=false
+    isdeploy = false
     // backIP=herf.split(':')[0]+':'+herf.split(':')[1]+':8999'
 }
 let backUrl
@@ -21,4 +21,4 @@ if (isdeploy) {
     YangtzeVGLab = ""//部署状态下为'/YangtzeVGLab'
     backUrl_backup = backUrl
 }
-export {backUrl,YangtzeVGLab,backUrl_backup}
+export { backUrl, YangtzeVGLab, backUrl_backup }

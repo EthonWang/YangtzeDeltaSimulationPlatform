@@ -98,7 +98,7 @@ export const cases_config = [
         component: () => import("views/CasesView/SUFS.vue")
     },
     {
-        problem: "测试案例",
+        problem: "测试案例",//台风烟花
         path: "testCase",
         component: () => import("views/CasesView/testCase.vue")
     },
@@ -106,6 +106,11 @@ export const cases_config = [
         problem: "长三角洪水灾害多尺度集合预警",
         path: "FloodMultiScale",
         component: () => import("views/CasesView/FloodMultiScale.vue")
+    },
+    {
+        problem: "长三角台风专题",
+        path: "Typhoon",
+        component: () => import("views/CasesView/Typhoon.vue")
     },
     // {
     //     problem:"湖泊水环境监测",

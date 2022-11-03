@@ -90,7 +90,7 @@ import {onMounted, ref} from "vue";
 import * as echarts from 'echarts';
 import ChartCase from "components/Cases/chartCase";
 import "echarts/extension/bmap/bmap";
-
+import {YangtzeVGLab} from "../../../public/backURL/backurl";
 const buttonType = ref(['','info','info','info'])
 const GDPClick = ()=>{
   buttonType.value[0] = ''
@@ -637,7 +637,7 @@ const rightChartOption1 = ref({})
 
 const getJsonData = () => {
   let mapEcharts = echarts.init(document.getElementById('rightChart1'))
-  fetch('/YangtzeVGLab/case/economicRun/cityArea.geojson').then(res=>{
+  fetch(YangtzeVGLab+'/case/economicRun/cityArea.geojson').then(res=>{
     return res.json()
   }).then(cityArea=>{
     echarts.registerMap('cityArea',cityArea)

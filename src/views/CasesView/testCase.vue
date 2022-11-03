@@ -49,7 +49,7 @@ import ollayervetor from 'ol/layer/Vector'
 import olsourcevector from 'ol/source/Vector'
 import {XYZ,TileImage} from 'ol/source';
 import {onMounted, ref} from "vue";
-
+import {YangtzeVGLab} from "../../../public/backURL/backurl";
 //折叠按钮
 const tableHeight = ref(450);
 const arrowIcon = ref(ArrowUpBold)
@@ -89,7 +89,7 @@ let typhoonPath = null;
 let trace = null;
 const loadTyphoonTrace = () => {
   if (typhoonPath == null) {
-    fetch('/case/typhoon/yanhua.json')
+    fetch(YangtzeVGLab+'/case/typhoon/yanhua.json')
         .then((res) => {
           return res.json();
         })

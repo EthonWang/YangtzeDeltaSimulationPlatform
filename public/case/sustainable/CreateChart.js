@@ -3,18 +3,17 @@ import {getGreenData, getMultiBarData, getMultiPieData, getSingleBarData} from "
 // 上方从左到右分别为左下角的绿色发展指数数据、左上角六个柱状图数据、右下角五个饼图数据，最后一个是安徽特有的横版柱状图数据
 
 export const initChart = (chartData,dom) =>{
-
     let myChart = echarts.init(document.getElementById(dom),'hxy_theme');
     myChart.setOption(chartData);
     window.addEventListener('resize',()=>{
         myChart.resize();
     })
-    return myChart;
+    // return myChart;
 
 };
 
 export const drawChart = (province) => {
-    console.log(province)
+    // console.log(province)
     // 绘制左下角的图表
     getGreenData(province).then(res=>{ 
         initChart(res,"greenDevelop");

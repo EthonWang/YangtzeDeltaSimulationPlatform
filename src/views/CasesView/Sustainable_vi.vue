@@ -8,7 +8,7 @@
       </router-link>
     </button> -->
 
-    <!-- 这个是点击式，一开始就是展开的 -->
+    <!-- 这个是滑块式，一开始就是展开的 -->
   <!-- <div>
     <el-radio-group v-model="radio2" size="small">
       <el-radio-button label="安徽省"></el-radio-button>
@@ -24,16 +24,19 @@
         <h3 class="header-title">{{province}}生态文明建设年度评价专题展示系统
        </h3>
     </header>
-    <el-select v-model="province" placeholder=province class="selection">
+    <el-select v-model="require" placeholder=require class="selection">
       <el-option
         v-for="item in options"
+        v-on:click="placeChange"
         :key="item.value"
         :label="item.label"
         :value="item.value">
       </el-option>
      </el-select>
 
-    <div id="content-panel">
+   
+   
+     <div id="content-panel">
       <!-- .row11是左上角的地图模型容器 -->
       <div class="card-panel row11">
         <div class="card" >
@@ -91,7 +94,6 @@
       <!-- .row22是右下角的五个饼图容器 -->
       <div class="card-panel row22">
         <div class="multi-pie card">
-
             <div id="pie-item-title" class="pie-item-title text-center"><h4 class="chart-title" style="text-align: center">Top5 城市</h4></div>
             <div id="pie-item1"  class="pie-item1 pie-item "></div>
             <div id="pie-item2"  class="pie-item2 pie-item "></div>
@@ -128,22 +130,37 @@ export default {
       require:'ZheJiang',
       chartData:{},
       options: [{
-          value: '安徽省',
+          value: 'AnHui',
           label: '安徽省'
         }, {
-          value: '浙江省',
+          value: 'ZheJiang',
           label: '浙江省'
         }, {
-          value: '江苏省',
+          value: 'JiangSu',
           label: '江苏省'
         }, {
-          value: '上海市',
+          value: 'ShangHai',
           label: '上海市'
         }],
-        value: 'province'
+        value: require
     }
   },
   mounted() {
+    // 重新获取数据时必须清空_echarts_instance_ 属性，否则不匹配就不会显示图表
+    document.getElementById("greenDevelop").removeAttribute('_echarts_instance_');
+    document.getElementById("pie-item1").removeAttribute('_echarts_instance_');
+    document.getElementById("pie-item2").removeAttribute('_echarts_instance_');
+    document.getElementById("pie-item3").removeAttribute('_echarts_instance_');
+    document.getElementById("pie-item4").removeAttribute('_echarts_instance_');
+    document.getElementById("pie-item5").removeAttribute('_echarts_instance_');
+    document.getElementById("pie-item-legend").removeAttribute('_echarts_instance_');
+    document.getElementById("bar-item1").removeAttribute('_echarts_instance_');
+    document.getElementById("bar-item2").removeAttribute('_echarts_instance_');
+    document.getElementById("bar-item3").removeAttribute('_echarts_instance_');
+    document.getElementById("bar-item4").removeAttribute('_echarts_instance_');
+    document.getElementById("bar-item5").removeAttribute('_echarts_instance_');
+    document.getElementById("bar-item6").removeAttribute('_echarts_instance_');
+
     document.title = this.province+'生态文明建设年度评价专题展示系统'
     // 通过require中的省份数据，绘制echarts图表
     drawChart(this.require);
@@ -158,6 +175,42 @@ export default {
     mapInit() {
       this.mapObj = new DataShowMap("map-show");
     },
+    // 点击省份切换下拉框，自动更新可视化图表
+    placeChange(){
+      document.getElementById("greenDevelop").removeAttribute('_echarts_instance_');
+      document.getElementById("pie-item1").removeAttribute('_echarts_instance_');
+      document.getElementById("pie-item2").removeAttribute('_echarts_instance_');
+      document.getElementById("pie-item3").removeAttribute('_echarts_instance_');
+      document.getElementById("pie-item4").removeAttribute('_echarts_instance_');
+      document.getElementById("pie-item5").removeAttribute('_echarts_instance_');
+      document.getElementById("pie-item-legend").removeAttribute('_echarts_instance_');
+      document.getElementById("bar-item1").removeAttribute('_echarts_instance_');
+      document.getElementById("bar-item2").removeAttribute('_echarts_instance_');
+      document.getElementById("bar-item3").removeAttribute('_echarts_instance_');
+      document.getElementById("bar-item4").removeAttribute('_echarts_instance_');
+      document.getElementById("bar-item5").removeAttribute('_echarts_instance_');
+      document.getElementById("bar-item6").removeAttribute('_echarts_instance_');
+      // console.log(this.require,"require");
+      if(this.require == 'AnHui'){
+        document.title = '安徽省生态文明建设年度评价专题展示系统';
+        this.province = '安徽省'
+      }else if(this.require == 'ZheJiang'){
+        document.title = '浙江省生态文明建设年度评价专题展示系统';
+        this.province = '浙江省'
+      }else if(this.require == 'JiangSu'){
+        document.title = '江苏省生态文明建设年度评价专题展示系统';
+        this.province = '江苏省'
+      }else if(this.require == 'ShangHai'){
+        document.title = '上海市生态文明建设年度评价专题展示系统';
+        this.province = '上海市'
+      }else{
+        document.title = '浙江省生态文明建设年度评价专题展示系统';
+      }
+    // 通过require中的省份数据，绘制echarts图表
+      drawChart(this.require);
+    // 左上角地图绘图方法
+      this.mapInit();
+    }
   },
 }
 

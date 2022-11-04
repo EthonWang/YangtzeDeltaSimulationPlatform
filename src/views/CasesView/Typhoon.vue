@@ -1756,8 +1756,8 @@ onMounted(() => {
   top: 20px;
   width: 500px;
 }
-.collapse-button {
-}
+// .collapse-button {
+// }
 #dataTableId {
   transition: height 250ms;
 }

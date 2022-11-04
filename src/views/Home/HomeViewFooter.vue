@@ -62,7 +62,7 @@ h1 {
 .footer-home {
   text-align: center;
   padding-top: 4vh;
-  background-color: hsl(0, 0, 90%);
+  background-color: rgb(183, 193, 206);
 }
 img {
   margin: 5px;

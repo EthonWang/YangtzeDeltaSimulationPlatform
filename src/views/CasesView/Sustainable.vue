@@ -17,31 +17,35 @@
             padding-top: 40px;
           "
         >
-          <el-row><h1 class="Title">可持续发展长三角系统</h1></el-row>
+         <el-row> <h1 class="Title">可持续发展长三角系统</h1></el-row>
           <el-row style="height: 40%; width: 100%" :gutter="20" type="flex">
             <el-card class="CardStyle">
-              <!-- <router-link  to="Sustainable/Sustainable_in" class="ButtonTitle">
+              <router-link  to="Sustainable/Sustainable_in" class="ButtonTitle">
                                 可持续指标体系浏览
                                 <el-image
                                         class="ImageStyle"
                                         :src="DingZhiUrl"
                                         :fit="full"
                                 ></el-image>
-                            </router-link> -->
-            <div @click="dialogVisible = true"   class="ButtonTitle">
+                            </router-link>
+
+                            <!-- 镶嵌到页面中的弹出表格写法 -->
+                            <!-- 镶嵌到页面中的弹出表格写法 -->
+                            <!-- 镶嵌到页面中的弹出表格写法 -->
+            <!-- <div @click="dialogVisible = true"   class="ButtonTitle">
                 可持续指标体系浏览
                 <el-image
                   class="ImageStyle"
                   :src="DingZhiUrl"
                   :fit="full"
                 ></el-image>
-            </div>
-              <el-dialog title="长三角可持续发展评价指标体系" v-model="dialogVisible" width="60%" >
+            </div> -->
+              <!-- <el-dialog title="长三角可持续发展评价指标体系" v-model="dialogVisible" width="60%" > -->
                 <!-- 内容存储位置 -->
                 <!-- :span-method是传递的一个合并行的方法，max-height是限定表格的长度（超出就滚动条），border边框，stripe斑马纹 -->
-                <el-table :data="gridData" :span-method="arraySpanMethod" max-height="400" border stripe>
+                <!-- <el-table :data="gridData" :span-method="arraySpanMethod" max-height="400" border stripe> -->
                     <!-- 这里写了宽度的就是确定的，不写就独揽剩下的空间 -->
-                    <el-table-column property="dimension" label="维度" width="200"></el-table-column>
+                    <!-- <el-table-column property="dimension" label="维度" width="200"></el-table-column>
                     <el-table-column property="index" label="指标" ></el-table-column>
                     <el-table-column property="value" label="值" width="150"></el-table-column>
                 </el-table>
@@ -50,7 +54,7 @@
                     >确 定</el-button
                   >
                 </slot>
-              </el-dialog>
+              </el-dialog> -->
             </el-card>
             <el-card class="CardStyle">
               <router-link to="Sustainable/Sustainable_vi" class="ButtonTitle">
@@ -342,181 +346,18 @@ export default {
       DingZhiUrl: require("../../../public/case/sustainable/DingZhi.png"),
       JiSuanUrl: require("../../../public/case/sustainable/JiSuan.png"),
       FenxiUrl: require("../../../public/case/sustainable/FenXi.png"), 
-      gridData: [{
-        dimension: '生态绿色发展',
-        index: '地表水水质优良（达到或好于Ⅲ类）比例（%）',
-        value: '1'
-        },{
-        dimension: '生态绿色发展',
-        index: '受污染耕地安全利用率（%）',
-        value: '2'
-        },{
-        dimension: '生态绿色发展',
-        index: '空气质量优良天数(天)',
-        value: '3'
-        },{
-        dimension: '生态绿色发展',
-        index: '森林覆盖率（%）',
-        value: '4'
-        },{
-        dimension: '生态绿色发展',
-        index: '能源消费总量',
-        value: '5'
-        },{
-        dimension: '生态绿色发展',
-        index: '人均公园绿地面积',
-        value: '6'
-        },{
-        dimension: '生态绿色发展',
-        index: '城镇生活污水集中收集率（%）',
-        value: '7'
-        },{
-        dimension: '经济社会协调',
-        index: '人均地区生产总值（万元）',
-        value: '1'
-        },{
-        dimension: '经济社会协调',
-        index: '社会保障和就业支出占财政支出比例',
-        value: '2'
-        },{
-        dimension: '经济社会协调',
-        index: '固定资产投资额占GDP比重（%）',
-        value: '3'
-        },{
-        dimension: '经济社会协调',
-        index: '城镇登记失业率(%)',
-        value: '4'
-        },{
-        dimension: '经济社会协调',
-        index: '养老保险参保率',
-        value: '5'
-        },{
-        dimension: '基础设施融合',
-        index: '交通（铁路、公路）路网密度',
-        value: '1'
-        },{
-        dimension: '基础设施融合',
-        index: '互联网覆盖率',
-        value: '2'
-        },{
-        dimension: '基础设施融合',
-        index: '公共文体设施覆盖率',
-        value: '3'
-        },{
-        dimension: '基础设施融合',
-        index: '城市二级及以上医院覆盖率',
-        value: '4'
-        },{
-        dimension: '基础设施融合',
-        index: '地方高等学校数量',
-        value: '5'
-        },{
-        dimension: '基础设施融合',
-        index: '人均避难场所面积',
-        value: '6'
-        },{
-        dimension: '创新驱动引领',
-        index: '科技拨款占财政拨款的比重',
-        value: '1'
-        },{
-        dimension: '创新驱动引领',
-        index: 'R&D经费占GDP比重',
-        value: '2'
-        },{
-        dimension: '创新驱动引领',
-        index: '发明专利授权数占专利授权数的比重',
-        value: '3'
-        },{
-        dimension: '创新驱动引领',
-        index: '单位GDP能耗',
-        value: '4'
-        },{
-        dimension: '创新驱动引领',
-        index: '劳动力中大专及以上学历人数',
-        value: '5'
-        },{
-        dimension: '创新驱动引领',
-        index: '每万人R&D人员全时当量',
-        value: '6'
-        },{
-        dimension: '对外开放共享',
-        index: '每万人R&D人员全时当量',
-        value: '1'
-        },{
-        dimension: '对外开放共享',
-        index: '港口年集装箱吞吐量',
-        value: '2'
-        },{
-        dimension: '对外开放共享',
-        index: '机场年旅客吞吐量',
-        value: '3'
-        },{
-        dimension: '对外开放共享',
-        index: '实际利用外资金额',
-        value: '4'
-        },{
-        dimension: '对外开放共享',
-        index: '跨国公司地区总部数',
-        value: '5'
-        },{
-        dimension: '对外开放共享',
-        index: '留学归国人员和外籍从业人员数',
-        value: '6'
-        },{
-        dimension: '对外开放共享',
-        index: '入境旅游人数占国内外旅游总人数的比重',
-        value: '7'
-        },{
-        dimension: '长三角一体化',
-        index: '沪苏浙毗邻区域行政服务事项互联互通比重',
-        value: '1'
-        },{
-        dimension: '长三角一体化',
-        index: '长三角异地门诊和住院直接结算联网率及开通率',
-        value: '2'
-        },{
-        dimension: '长三角一体化',
-        index: '都市圈1小时通勤人口覆盖率',
-        value: '3'
-        },{
-        dimension: '长三角一体化',
-        index: '企业外省市设立分子公司数量',
-        value: '4'
-        },
-    ],
-      // 控制dialog的初始状态
-      dialogVisible: false,
     };
   },
   methods: {
-      arraySpanMethod({ row, column, rowIndex, columnIndex }) {
-        if (columnIndex === 0) {
-          if (rowIndex === 0) {
-            return [7, 1];
-          } else if(rowIndex === 7){
-            return [5, 1];
-          }else if(rowIndex === 12){
-            return [6, 1];
-          }else if(rowIndex === 18){
-            return [6, 1];
-          }else if(rowIndex === 24){
-            return [7, 1];
-          }else if(rowIndex === 31){
-            return [4, 1];
-          }else{
-            return [0, 0];
-          }
-        }
-      },
     }
 };
 </script>
 
 <style scoped>
-@import "../../css/sustainable/MyStyle.css";
 @import "../../css/sustainable/WebsiteStyle.css";
+@import "../../css/sustainable/MyStyle.css";
 .CardStyle {
-  margin: 10px;
+  margin: 0.8vw;
   height: 100%;
   width: 28%;
   text-align: center;
@@ -530,12 +371,12 @@ export default {
   font-weight: 600;
   color: #ffffff;
   text-decoration: none;
-  cursor: pointer;
 }
 
 .ImageStyle {
   padding-top: 30px;
-  height: 40%;
-  width: 40%;
+  height: 50%;
+  width: 50%;
 }
+
 </style>

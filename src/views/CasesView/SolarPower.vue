@@ -169,7 +169,7 @@ export default {
       this.tilelayer = new TileLayer({
         source: new XYZ({
           url:
-            "http://t3.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=" +
+            "http://t3.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=" +
             this.key,
           //   attributions: attributions,
           crossOrigin: "anonymous",

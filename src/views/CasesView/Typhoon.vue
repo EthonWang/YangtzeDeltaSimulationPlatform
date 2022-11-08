@@ -57,7 +57,7 @@
     </el-table>
   </div>
   <el-card
-    style="position: absolute; z-index: 10; width: 300px; height: 320px"
+    style="position: absolute; z-index: 10; width: 300px; height: 360px"
     class="pane_data"
     v-show="paneData.name != ''"
   >
@@ -85,6 +85,14 @@
     <el-row>
       <el-col :span="12">坐标</el-col>
       <el-col :span="12">{{ paneData.coordinates }}</el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="12">中心气压</el-col>
+      <el-col :span="12">{{ paneData.prs + " HPa"}}</el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="12">当前风速</el-col>
+      <el-col :span="12">{{ paneData.speed + " m/s"}}</el-col>
     </el-row>
     <el-row>
       <el-col :span="12">基准时间</el-col>
@@ -238,6 +246,8 @@ let paneData = ref({
   seven: "",
   ten: "",
   eleven: "",
+  prs:900,
+  speed:0
 });
 const emptyPane = () => {
   paneData.value.name = "";
@@ -567,6 +577,8 @@ const init = () => {
         value.info.Hour +
         ":00:00";
       paneData.value.Validtime = value.info.Validtime;
+      paneData.value.prs=value.info.PRS;
+      paneData.value.speed=value.info.MoSpeed_Futrue.toFixed(2)
       paneData.value.name = value.info.TYPH_Name;
       paneData.value.coordinates = value.info.Lon + " , " + value.info.Lat;
     }

@@ -20,7 +20,7 @@
          <el-row> <h1 class="Title">可持续发展长三角系统</h1></el-row>
           <el-row style="height: 40%; width: 100%" :gutter="20" type="flex">
             <el-card class="CardStyle">
-              <router-link  to="Sustainable/Sustainable_in" class="ButtonTitle">
+              <router-link  to="Sustainable_in" class="ButtonTitle">
                                 可持续指标体系浏览
                                 <el-image
                                         class="ImageStyle"
@@ -57,7 +57,7 @@
               </el-dialog> -->
             </el-card>
             <el-card class="CardStyle">
-              <router-link to="Sustainable/Sustainable_vi" class="ButtonTitle">
+              <router-link to="Sustainable_vi" class="ButtonTitle">
                 可持续指标体系构建
                 <el-image
                   class="ImageStyle"
@@ -67,7 +67,7 @@
               </router-link>
             </el-card>
             <el-card class="CardStyle">
-              <router-link to="Sustainable/Sustainable_vi" class="ButtonTitle">
+              <router-link to="Sustainable_vi" class="ButtonTitle">
                 可持续指标体系分析
                 <el-image
                   class="ImageStyle"

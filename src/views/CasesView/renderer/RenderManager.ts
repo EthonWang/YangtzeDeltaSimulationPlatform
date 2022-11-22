@@ -12,7 +12,7 @@ type Vector4 = [number, number, number, number]
 class RManager<T> {
     //** objetc dict : [key-name]: object */
     // eslint-disable-next-line
-    public cMap: {[key: string]: T};
+    public cMap: { [key: string]: T };
     public idMap: string[];
     public num: number;
     public glCtx: WebGL2RenderingContext;
@@ -25,7 +25,7 @@ class RManager<T> {
     }
 
     protected CheckExist(name: string) {
-        if(name in this.cMap) {
+        if (name in this.cMap) {
             return true;
         }
         return false;
@@ -33,14 +33,14 @@ class RManager<T> {
 
     protected CheckOutName(progId: string | number) {
         let progName = '';
-        if(typeof(progId) === "number") {
-            if(progId > this.num) {
+        if (typeof (progId) === "number") {
+            if (progId > this.num) {
                 throw console.error('Program ID input exceeds maximum! Please double check!');
             }
             progName = this.idMap[progId];
         }
         else {
-            if(!this.CheckExist(progId)) {
+            if (!this.CheckExist(progId)) {
                 throw console.error("Program Name doesn't exist. Please double Check!!");
             }
             progName = progId;
@@ -49,7 +49,7 @@ class RManager<T> {
     }
 
     public add(name: string, component: T) {
-        if(this.CheckExist(name)) {
+        if (this.CheckExist(name)) {
             throw console.error('Name already exist in content map, Please Change!');
         }
         this.cMap[name] = component;
@@ -68,10 +68,10 @@ class ProgManager extends RManager<WebGLProgram> {
      */
     constructor(gl: WebGL2RenderingContext) {
         super(gl);
-    } 
+    }
 
-    public AddMulti(vsDic: {[key: string]: string}, fsDic: {[key: string]: string}, names :string[]) {
-        for(const name of names) {
+    public AddMulti(vsDic: { [key: string]: string }, fsDic: { [key: string]: string }, names: string[]) {
+        for (const name of names) {
             const aProg = this.CreateProg(vsDic[name], fsDic[name]);
             this.add(name, aProg);
         }
@@ -82,7 +82,7 @@ class ProgManager extends RManager<WebGLProgram> {
         this.glCtx.shaderSource(shader, source);
         this.glCtx.compileShader(shader);
         const success = this.glCtx.getShaderParameter(shader, this.glCtx.COMPILE_STATUS);
-        if(success) {
+        if (success) {
             return shader;
         }
         console.log(source);
@@ -95,14 +95,14 @@ class ProgManager extends RManager<WebGLProgram> {
         const prog = this.glCtx.createProgram() as WebGLProgram;
         const vs = this.CreateShader(this.glCtx.VERTEX_SHADER, vertSource);
         const fs = this.CreateShader(this.glCtx.FRAGMENT_SHADER, fragSource);
-        if(vs == null || fs == null) {
+        if (vs == null || fs == null) {
             throw console.error('Shader Create Failed! Please Check!');
         }
         this.glCtx.attachShader(prog, vs);
         this.glCtx.attachShader(prog, fs);
         this.glCtx.linkProgram(prog);
         const success = this.glCtx.getProgramParameter(prog, this.glCtx.LINK_STATUS);
-        if(!success) {
+        if (!success) {
             console.log(this.glCtx.getProgramInfoLog(prog));
             this.glCtx.deleteProgram(prog);
             throw console.error('Program Create Failed! Please Check!');
@@ -123,10 +123,10 @@ class ProgManager extends RManager<WebGLProgram> {
         this.glCtx.uniform1i(this.glCtx.getUniformLocation(prog, intName), val);
     }
 
-    public SetInts(progId: string | number, intDic: {[key: string]: number}) {
+    public SetInts(progId: string | number, intDic: { [key: string]: number }) {
         const progName = this.CheckOutName(progId);
         const prog = this.cMap[progName];
-        for(const key in intDic) {
+        for (const key in intDic) {
             this.glCtx.uniform1i(this.glCtx.getUniformLocation(prog, key), intDic[key]);
         }
     }
@@ -137,10 +137,10 @@ class ProgManager extends RManager<WebGLProgram> {
         this.glCtx.uniform1f(this.glCtx.getUniformLocation(prog, fName), val);
     }
 
-    public SetFloats(progId: string | number, fDic: {[key: string]: number}) {
+    public SetFloats(progId: string | number, fDic: { [key: string]: number }) {
         const progName = this.CheckOutName(progId);
         const prog = this.cMap[progName];
-        for(const key in fDic) {
+        for (const key in fDic) {
             this.glCtx.uniform1f(this.glCtx.getUniformLocation(prog, key), fDic[key]);
         }
     }
@@ -151,10 +151,10 @@ class ProgManager extends RManager<WebGLProgram> {
         this.glCtx.uniform2fv(this.glCtx.getUniformLocation(prog, vecName), val);
     }
 
-    public SetVec2s(progId: string | number, vecDic: {[key: string]: Vector2}) {
+    public SetVec2s(progId: string | number, vecDic: { [key: string]: Vector2 }) {
         const progName = this.CheckOutName(progId);
         const prog = this.cMap[progName];
-        for(const key in vecDic) {
+        for (const key in vecDic) {
             this.glCtx.uniform2fv(this.glCtx.getUniformLocation(prog, key), vecDic[key]);
         }
     }
@@ -165,10 +165,10 @@ class ProgManager extends RManager<WebGLProgram> {
         this.glCtx.uniform3fv(this.glCtx.getUniformLocation(prog, vecName), val);
     }
 
-    public SetVec3s(progId: string | number, vecDic: {[key: string]: Vector3}) {
+    public SetVec3s(progId: string | number, vecDic: { [key: string]: Vector3 }) {
         const progName = this.CheckOutName(progId);
         const prog = this.cMap[progName];
-        for(const key in vecDic) {
+        for (const key in vecDic) {
             this.glCtx.uniform3fv(this.glCtx.getUniformLocation(prog, key), vecDic[key]);
         }
     }
@@ -179,10 +179,10 @@ class ProgManager extends RManager<WebGLProgram> {
         this.glCtx.uniform4fv(this.glCtx.getUniformLocation(prog, vecName), val);
     }
 
-    public SetVec4s(progId: string | number, vecDic: {[key: string]: Vector4}) {
+    public SetVec4s(progId: string | number, vecDic: { [key: string]: Vector4 }) {
         const progName = this.CheckOutName(progId);
         const prog = this.cMap[progName];
-        for(const key in vecDic) {
+        for (const key in vecDic) {
             this.glCtx.uniform4fv(this.glCtx.getUniformLocation(prog, key), vecDic[key]);
         }
     }
@@ -193,10 +193,10 @@ class ProgManager extends RManager<WebGLProgram> {
         this.glCtx.uniformMatrix3fv(this.glCtx.getUniformLocation(prog, vecName), false, val.toArray());
     }
 
-    public SetMat3s(progId: string | number, vecDic: {[key: string]: Matrix3}) {
+    public SetMat3s(progId: string | number, vecDic: { [key: string]: Matrix3 }) {
         const progName = this.CheckOutName(progId);
         const prog = this.cMap[progName];
-        for(const key in vecDic) {
+        for (const key in vecDic) {
             this.glCtx.uniformMatrix3fv(this.glCtx.getUniformLocation(prog, key), false, vecDic[key].toArray());
         }
     }
@@ -207,10 +207,10 @@ class ProgManager extends RManager<WebGLProgram> {
         this.glCtx.uniformMatrix4fv(this.glCtx.getUniformLocation(prog, vecName), false, val.toArray());
     }
 
-    public SetMat4s(progId: string | number, vecDic: {[key: string]: Matrix4}) {
+    public SetMat4s(progId: string | number, vecDic: { [key: string]: Matrix4 }) {
         const progName = this.CheckOutName(progId);
         const prog = this.cMap[progName];
-        for(const key in vecDic) {
+        for (const key in vecDic) {
             this.glCtx.uniformMatrix4fv(this.glCtx.getUniformLocation(prog, key), false, vecDic[key].toArray());
         }
     }
@@ -225,7 +225,7 @@ class TexManager extends RManager<WebGLTexture> {
         super(gl);
     }
 
-    private CreateTex(textWidth: number, texHeight: number, texData: Array<number> , internalFormat: number, colorFormat:number, type: number) {
+    private CreateTex(textWidth: number, texHeight: number, texData: Array<number>, internalFormat: number, colorFormat: number, type: number) {
         const texture = this.glCtx.createTexture();
         this.glCtx.bindTexture(this.glCtx.TEXTURE_2D, texture);
 
@@ -253,15 +253,15 @@ class TexManager extends RManager<WebGLTexture> {
         return tex;
     }
 
-    public AddDataTex(names: string[], width: number, height: number, data: Array<number>, internalFormat: number, colorFormat:number, type: number) {
-        for(const name of names) {
+    public AddDataTex(names: string[], width: number, height: number, data: Array<number>, internalFormat: number, colorFormat: number, type: number) {
+        for (const name of names) {
             const tex = this.CreateTex(width, height, data, internalFormat, colorFormat, type) as WebGLTexture;
             this.add(name, tex);
         }
     }
 
     public AddEmptyTex(names: string[], texWidth: number, texHeight: number, internalFormat: number, colorFormat: number, type: number) {
-        for(const name of names) {
+        for (const name of names) {
             const tex = this.CreateEmptyTex(texWidth, texHeight, internalFormat, colorFormat, type) as WebGLTexture;
             this.add(name, tex);
         }
@@ -272,7 +272,9 @@ class TexManager extends RManager<WebGLTexture> {
 
         // this.glCtx.activeTexture(this.glCtx.TEXTURE0 + texIndex);
         this.glCtx.bindTexture(this.glCtx.TEXTURE_2D, texture);
+        this.glCtx.pixelStorei(this.glCtx.UNPACK_FLIP_Y_WEBGL, true);
         this.glCtx.texImage2D(this.glCtx.TEXTURE_2D, 0, this.glCtx.RGBA8, this.glCtx.RGBA, this.glCtx.UNSIGNED_BYTE, img);
+        this.glCtx.pixelStorei(this.glCtx.UNPACK_FLIP_Y_WEBGL, false);
         // this.glCtx.generateMipmap(this.glCtx.TEXTURE_2D);
         this.glCtx.texParameteri(this.glCtx.TEXTURE_2D, this.glCtx.TEXTURE_WRAP_S, this.glCtx.CLAMP_TO_EDGE);
         this.glCtx.texParameteri(this.glCtx.TEXTURE_2D, this.glCtx.TEXTURE_WRAP_T, this.glCtx.CLAMP_TO_EDGE);
@@ -283,7 +285,7 @@ class TexManager extends RManager<WebGLTexture> {
     }
 
     public AddImageTex(img: HTMLImageElement, name: string) {
-        if(this.CheckExist(name)) {
+        if (this.CheckExist(name)) {
             throw console.error("Texture name already existed! Please double check!");
         }
         const tex = this.CreateImgTex(img) as WebGLTexture;
@@ -318,7 +320,7 @@ class TexManager extends RManager<WebGLTexture> {
         const texName = this.CheckOutName(texId);
         return this.cMap[texName];
     }
-    
+
 }
 
 /**
@@ -332,33 +334,33 @@ class FrameManager extends RManager<WebGLFramebuffer> {
     private CreateFB() {
         const fb = this.glCtx.createFramebuffer();
         this.glCtx.bindFramebuffer(this.glCtx.FRAMEBUFFER, fb);
-        if(fb == null) {
+        if (fb == null) {
             throw new Error("FrameBuffer generate failed!")
         }
         return fb;
     }
 
     public AddFb(name: string) {
-        if(this.CheckExist(name)) {
+        if (this.CheckExist(name)) {
             throw console.error("FrameBuffer name already existed! Please double check!");
         }
         const fb = this.CreateFB();
         this.add(name, fb);
-    } 
+    }
 
     private CreateFbWithTex(texture: WebGLTexture | null, attachIndex: number) {
         const fb = this.glCtx.createFramebuffer();
         this.glCtx.bindFramebuffer(this.glCtx.FRAMEBUFFER, fb);
         const attachPt = this.glCtx.COLOR_ATTACHMENT0 + attachIndex;
         this.glCtx.framebufferTexture2D(this.glCtx.FRAMEBUFFER, attachPt, this.glCtx.TEXTURE_2D, texture, 0);
-        if(fb == null) {
+        if (fb == null) {
             throw new Error("FrameBuffer generate failed!")
         }
         return fb;
     }
 
     public AddFbWithTex(texture: WebGLTexture | null, attachIndex: number, name: string) {
-        if(this.CheckExist(name)) {
+        if (this.CheckExist(name)) {
             throw console.error("FrameBuffer name already existed! Please double check!");
         }
         const fb = this.CreateFbWithTex(texture, attachIndex);
@@ -376,14 +378,14 @@ class FrameManager extends RManager<WebGLFramebuffer> {
         // this.AttachDepthRb(width, height);
         this.glCtx.bindFramebuffer(this.glCtx.FRAMEBUFFER, null);
 
-        if(renderFb == null) {
+        if (renderFb == null) {
             throw new Error("FrameBuffer generate failed!")
         }
         return renderFb;
     }
 
-    public AddFbMSAA(attachId: number, sampleNum: number, internalFormat: number, size: [number, number], name: string)  {
-        if(this.CheckExist(name)) {
+    public AddFbMSAA(attachId: number, sampleNum: number, internalFormat: number, size: [number, number], name: string) {
+        if (this.CheckExist(name)) {
             throw console.error("FrameBuffer name already existed! Please double check!");
         }
         const fb = this.CreateFbMSAA(attachId, sampleNum, internalFormat, size[0], size[1]);
@@ -392,7 +394,7 @@ class FrameManager extends RManager<WebGLFramebuffer> {
 
     private BindFb(fb: WebGLFramebuffer | null, tex: WebGLTexture | null = null, attachId = 0) {
         this.glCtx.bindFramebuffer(this.glCtx.FRAMEBUFFER, fb);
-        if(tex != null) {
+        if (tex != null) {
             this.glCtx.framebufferTexture2D(this.glCtx.FRAMEBUFFER, this.glCtx.COLOR_ATTACHMENT0 + attachId, this.glCtx.TEXTURE_2D, tex, 0);
         }
     }
@@ -419,7 +421,7 @@ class FrameManager extends RManager<WebGLFramebuffer> {
 }
 
 export {
-    ProgManager, 
-    TexManager, 
+    ProgManager,
+    TexManager,
     FrameManager
 }

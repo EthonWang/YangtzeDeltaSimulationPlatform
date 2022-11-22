@@ -6,6 +6,7 @@
         class="m-2"
         placeholder="选择年份"
         @change="changeYear($event)"
+        popper-append-to-body:false
       >
         <el-option
           v-for="item in yearGroup"
@@ -19,6 +20,7 @@
         class="m-2"
         placeholder="选择台风"
         @change="changeName($event)"
+        popper-append-to-body:false
       >
         <el-option
           v-for="item in nameData"
@@ -185,8 +187,8 @@ import { ElMessage } from "element-plus";
 
 const radio1 = ref(7);
 const yearGroup = ref([]);
-const year_val = ref("");
-const name_val = ref("");
+const year_val = ref("2022");
+const name_val = ref("MUIFA");
 const changeName = (value) => {
   clickName(name_val.value);
 };
@@ -486,11 +488,11 @@ const init = () => {
   featureHover((flag, value) => {
     if (flag == false) {
       paneData.value.name = "";
-      map.getTargetElement().style.cursor = '';
+      map.getTargetElement().style.cursor = "";
       return;
     }
     if (value.type == "node") {
-      map.getTargetElement().style.cursor = 'pointer';
+      map.getTargetElement().style.cursor = "pointer";
       let event = window.event;
       document.getElementsByClassName("pane_data")[0].style.top =
         event.pageY - 60 + "px";
@@ -674,8 +676,9 @@ const clickName = (name, index = 0, validTime = "0") => {
 
   let points = nowData;
   typhoonPath = points;
-  map.getView().setCenter([points[0].Lon, points[0].Lat]);
-  map.getView().setZoom(6);
+  let mid = Math.round(points.length / 2);
+  map.getView().setCenter([points[mid].Lon, points[mid].Lat]);
+  map.getView().setZoom(4);
   // (new View({
   //     center: [points[0].Lon, points[0].Lat],
   //     zoom: 6,
@@ -902,7 +905,7 @@ const draw2448 = () => {
       }),
     })
   );
-  
+
   let source = new olsourcevector();
   source.addFeature(featureLine);
   source.addFeature(featureLine1);
@@ -1757,6 +1760,12 @@ class TYCar {
 onMounted(() => {
   init();
   loadTyphoonTrace();
+  setTimeout(() => {
+    changeYear();
+    setTimeout(() => {
+      changeName();
+    }, 500);
+  }, 500);
 });
 </script>
 

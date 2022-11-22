@@ -87,10 +87,10 @@
     </el-scrollbar>
   </el-card>
   <div class="colorbar" v-if="paneType == 'ts'">
-    <el-image :src="colorbarUrl" :fit="cover"/>
+    <el-image :src="colorbarUrl" :fit="cover" />
   </div>
   <div class="colorbar-pr" v-if="paneType == 'pr'">
-    <el-image :src="colorbarUrl" :fit="cover"/>
+    <el-image :src="colorbarUrl" :fit="cover" />
   </div>
 </template>
 
@@ -415,7 +415,7 @@ export default {
   height: 23vh;
   opacity: 0.9;
 }
-.demonstration{
+.demonstration {
   widows: 10vw;
 }
 .info-button-box {

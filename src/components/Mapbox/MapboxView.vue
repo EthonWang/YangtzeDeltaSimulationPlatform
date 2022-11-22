@@ -1,6 +1,8 @@
 <template>
   <div class="mapbox-page">
     <!-- <ModelConfig :modelId="modelId" ref="refModelConfig"> </ModelConfig> -->
+
+    <!-- 对编辑工具的描述 -->
     <div class="des_icon" style="">
       <div style="height: 29px">绘制线段</div>
       <div style="height: 29px">绘制多边形</div>
@@ -10,9 +12,11 @@
       <div style="height: 29px">数据图表分析</div>
       <div style="height: 29px">新建txt文件</div>
     </div>
+    <!-- 显示经纬度与缩放信息 -->
     <el-tag class="map-zoom-lnglat" type="info">
       Zoom:{{ zoom }} &nbsp; LngLat:{{ showCenter }}
     </el-tag>
+
     <div style="position: absolute; top: 75px; left: 110px; z-index: 99">
       <el-button
         v-if="!editBoardShow"
@@ -1035,6 +1039,7 @@ export default {
     showLayerTableList: {
       handler(newVal, oldVal) {
         this.showLayerTableList_filter = newVal;
+        // console.log(this.showLayerTableList_filter)
         let that = this;
         setTimeout(() => {
           let t = that.value;
@@ -1128,15 +1133,17 @@ export default {
       }
     },
     initMap() {
+      //令牌
       mapboxgl.accessToken =
         "pk.eyJ1Ijoid3lqcSIsImEiOiJjbDBnZDdwajUxMXRzM2htdWxubDh1MzJrIn0.2e2_rdU2nOUvtwltBIZtZg";
-
+      //底图加载
       map = new mapboxgl.Map({
         container: "map",
         style: "mapbox://styles/mapbox/dark-v10",
         center: [118, 32],
         zoom: 6,
       });
+      //汉化
       map.addControl(new MapboxLanguage({ defaultLanguage: "zh-Hans" }));
 
       var Draw = new MapboxDraw({
@@ -1307,7 +1314,6 @@ export default {
         map.addLayer(newLayer);
       }
     },
-
     handleRemoveLayer(aimDataSourceId) {
       for (let i = 0; i < this.showLayerTableList.length; i++) {
         if (this.showLayerTableList[i].id === aimDataSourceId) {
@@ -1318,13 +1324,10 @@ export default {
       map.removeLayer(aimDataSourceId);
       map.removeSource(aimDataSourceId);
     },
-
     handleLayerClick() {},
-
     handleLayerEdit(index, row) {
       console.log("current edit row:", index, row);
     },
-
     handleLayerShowSwitchChange(val, row) {
       if (val) {
         this.handleLayoutChange(row.id, "visibility", "visible");
@@ -1332,7 +1335,6 @@ export default {
         this.handleLayoutChange(row.id, "visibility", "none");
       }
     },
-
     handleEditBoardShow(val) {
       if (val) {
         this.editBoardShow = true;
@@ -1345,17 +1347,14 @@ export default {
           "scaleY(0.1)";
       }
     },
-
     handleLayoutChange(layerName, key, value) {
       console.log("layout:", layerName, key, value);
       map.setLayoutProperty(layerName, key, value);
     },
-
     handlePaintChange(layerName, key, value) {
       console.log("paint:", layerName, key, value);
       map.setPaintProperty(layerName, key, value);
     },
-
     //用dataSourceId判断，对象在数组中的位置，没有返回-1
     indexOfObject(dataList, aimDataSourceId) {
       for (let i = 0; i < dataList.length; i++) {
@@ -1485,7 +1484,9 @@ export default {
           features: [],
           type: "FeatureCollection",
         };
-      } else if (map.getSource(this.geojson.features[0].id) != undefined) {
+      }
+      //对已有的数据进行操作
+      else if (map.getSource(this.geojson.features[0].id) != undefined) {
         let tempId = this.geojson.features[0].id;
         this.updateMapSource(this.geojson.features[0].id);
         this.handleLayoutChange(tempId, "visibility", "visible");

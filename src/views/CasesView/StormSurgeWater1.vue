@@ -2,7 +2,9 @@
   <div id="map1">
     <div class="info-card">
       <el-card shadow="always" class="chart-card">
-        <div id="chart">点击图中数据点查看水位变化</div>
+        <div id="chart" style="color: #1f9a8a">
+          <h1>点击图中数据点查看水位变化</h1>
+        </div>
       </el-card>
       <el-card shadow="always" class="play-card">
         <div class="slider-demo-block">
@@ -115,6 +117,7 @@ export default {
       dateNum: 0,
       picPlayer: null,
       btnIsPlay: false,
+      features: null,
     };
   },
   methods: {
@@ -129,27 +132,29 @@ export default {
           // tileSize: 512,
         }),
       });
-      // let newlayer = new TileLayer({
-      //   source: new XYZ({
-      //     url:
-      //       "http://t3.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=" +
-      //       this.key,
-      //     //   attributions: attributions,
-      //     crossOrigin: "anonymous",
-      //     tileSize: 512,
-      //   }),
-      // });
       (this.pointstyle = {
         symbol: {
           symbolType: "circle",
-          size: ["interpolate", ["exponential", 2.5], ["zoom"], 2, 1, 14, 32],
-          color: ["match", ["get", "hover"], 1, "#ff3f3f", "#bfa"],
+          size: ["interpolate", ["exponential", 2.5], ["zoom"], 2, 2, 14, 64],
+          color: [
+            "match",
+            ["get", "FID"],
+            "0",
+            "#EF6669",
+            "1",
+            "#FAC862",
+            "2",
+            "#8FCC7A",
+            "3",
+            "#516BB8",
+            "#006688",
+          ],
           offset: [0, 0],
           opacity: 0.95,
         },
       }),
         (this.pointsource = new VectorSource({
-          url: "/case/point.json",
+          url: "/case/point_filter.json",
           format: new GeoJSON(),
           wrapX: true,
         }));
@@ -167,9 +172,42 @@ export default {
       this.pnglayer = new Image({
         source: this.imgsource,
       });
+      let labelStyle = new Style({
+        text: new Text({
+          // text: "asdasd",
+          font: "13px Calibri,sans-serif",
+          fill: new Fill({
+            color: "#D9D9D9",
+          }),
+          // stroke: new Stroke({
+          //   color: "#fff",
+          //   width: 4,
+          // }),
+          offsetX: 0,
+          offsetY: 20,
+        }),
+      });
+      const vectorLayer = new VectorLayer({
+        // background: "white",
+        source: new VectorSource({
+          url: "/case/point_filter.json",
+          format: new GeoJSON(),
+        }),
+        style: function (feature) {
+          labelStyle.getText().setText([
+            // feature.getId(),
+            "站点",
+            "bold 13px Calibri,sans-serif",
+            ` ${feature.get("id")}`,
+            "",
+          ]);
+          return labelStyle;
+        },
+      });
+
       this.openmap = new Map({
         target: "map1",
-        layers: [this.tilelayer, this.pnglayer, this.pointlayer],
+        layers: [this.tilelayer, this.pnglayer, this.pointlayer, vectorLayer],
         // layers: [this.tilelayer],
         view: new View({
           center: fromLonLat([120.583905, 31.313832]),
@@ -192,51 +230,17 @@ export default {
           });
         }
       });
-      this.singleclick();
+      this.pointlayer.getSource().on("change", function (evt) {
+        const source = evt.target;
+        if (source.getState() === "ready") {
+          var numFeatures = source.getFeatures();
+          that.features = numFeatures;
+          that.initchart();
+        }
+      });
+
+      // this.openmap.forEachFeature
     },
-    // autoChange() {
-    //   setInterval(() => {
-    //     this.changeRainDay();
-    //   }, 2000);
-    // },
-    // changeRainDay() {
-    //   // this.openmap.removeLayer("rainImgLayer");
-    //   // this.openmap.removeSource("rainImgSource");
-    //   this.allLayers = this.openmap.getLayers();
-    //   this.index = (this.index + 1) % 144;
-    //   this.imgurl = "/png/test_t_" + this.index + "_cvt.png";
-    //   this.openmap.removeLayer(this.pnglayer);
-    //   // this.imgurl = "/png/test_t_0_cvt.png";
-    //   this.imgsource = new ImageStatic({
-    //     url: this.imgurl, //地址
-    //     projection: "EPSG:4326",
-    //     imageExtent: [119.182854, 27.166469, 123.360253, 35.375766],
-    //   });
-    //   this.pnglayer = new Image({
-    //     source: this.imgsource,
-    //   });
-    //   // this.openmap.addLayer(this.pnglayer, 3);
-    //   this.allLayers.insertAt(1, this.pnglayer);
-    //   // map.addSource("rainImgSource", {
-    //   //   type: "image",
-    //   //   url: imgUrl,
-    //   //   coordinates: [
-    //   //     [114.8, 35.1],
-    //   //     [122.8, 35.1],
-    //   //     [122.8, 27.1],
-    //   //     [114.8, 27.1],
-    //   //   ],
-    //   // });
-    //   // map.addLayer(
-    //   //   {
-    //   //     id: "rainImgLayer",
-    //   //     source: "rainImgSource",
-    //   //     type: "raster",
-    //   //     paint: { "raster-opacity": 0.85 },
-    //   //   },
-    //   //   "rainStationLayer"
-    //   // );
-    // },
     initchart() {
       let chartDom = document.getElementById("chart");
       let myChart = echarts.init(chartDom);
@@ -245,9 +249,12 @@ export default {
       // let oneDay = 24 * 3600 * 1000;
       let oneHour = 3600 * 1000;
       // let valueBase = Math.random() * 300;
-      let valueBase2 = Math.random() * 50;
-      let data = [];
+      // let valueBase2 = Math.random() * 50;
+      let data1 = [];
       let data2 = [];
+      let data3 = [];
+      let data4 = [];
+      // let data2 = [];
       for (var i = 0; i < 145; i++) {
         // console.log(i);
         var now = new Date((base += oneHour));
@@ -263,15 +270,57 @@ export default {
           ":"
         );
         var time = dayStr + " " + hms;
-        let valueBase = this.feature_click.get("z" + i);
-        // valueBase = Math.round((Math.random() - 0.5) * 20 + valueBase);
-        // valueBase <= 0 && (valueBase = Math.random() * 300);
-        data.push([time, valueBase]);
+        let valueBase1 = this.features[0].get("z" + i);
+        let valueBase2 = this.features[1].get("z" + i);
+        let valueBase3 = this.features[2].get("z" + i);
+        let valueBase4 = this.features[3].get("z" + i);
+        data1.push([time, valueBase1]);
+        data2.push([time, valueBase2]);
+        data3.push([time, valueBase3]);
+        data4.push([time, valueBase4]);
       }
       option = {
-        title: {
-          left: "center",
-          text: "风暴潮水位",
+        // title: {
+        //   left: "center",
+        //   text: "风暴潮水位",
+        //   textStyle: {
+        //     color: "#EEF1FA",
+        //   },
+        // },
+        legend: {
+          right: "50",
+          top: "20",
+          show: true,
+          itemWidth: 30,
+          textStyle: {
+            fontSize: 15,
+            color: "#EEF1FA",
+          },
+          // top: "20px",
+          // right: "20px",
+          data: ["站点A", "站点B", "站点C", "站点D"],
+          // data: [
+          //   {
+          //     name: "pt1",
+          //     lineStyle: { color: "#C72212" },
+          //     itemStyle: { color: "#C72212" },
+          //   },
+          //   {
+          //     name: "pt2",
+          //     lineStyle: { color: "#08C719" },
+          //     itemStyle: { color: "#08C719" },
+          //   },
+          //   {
+          //     name: "pt3",
+          //     lineStyle: { color: "#D6C100" },
+          //     itemStyle: { color: "#D6C100" },
+          //   },
+          //   {
+          //     name: "pt4",
+          //     lineStyle: { color: "#123CC7" },
+          //     itemStyle: { color: "#123CC7" },
+          //   },
+          // ],
         },
         tooltip: {
           trigger: "axis",
@@ -280,6 +329,7 @@ export default {
             animation: false,
             label: {
               backgroundColor: "#505765",
+              color: "#EEF1FA",
             },
           },
         },
@@ -300,18 +350,57 @@ export default {
         xAxis: {
           type: "category",
           name: "时间",
+          nameTextStyle: {
+            color: "#EEF1FA",
+          },
+          axisLabel: {
+            color: "#EEF1FA",
+          },
           // axisLine: { onZero: false },
           // data: _this.FS_result.times,
         },
         yAxis: {
           type: "value",
           name: "水位（m）",
+          nameTextStyle: {
+            color: "#EEF1FA",
+          },
+          axisLabel: {
+            color: "#EEF1FA",
+          },
         },
         series: [
           {
             // data: _this.FS_result.values,
+            name: "站点A",
             type: "line",
-            data: data,
+            data: data1,
+            // seriesLayoutBy: "row",
+            // color: "#4785AA",
+          },
+          {
+            // data: _this.FS_result.values,
+            name: "站点B",
+            type: "line",
+            data: data2,
+            // seriesLayoutBy: "row",
+            // color: "#4785AA",
+          },
+          {
+            // data: _this.FS_result.values,
+            name: "站点C",
+            type: "line",
+            data: data3,
+            // seriesLayoutBy: "row",
+            // color: "#4785AA",
+          },
+          {
+            // data: _this.FS_result.values,
+            name: "站点D",
+            type: "line",
+            data: data4,
+            // seriesLayoutBy: "row",
+            // color: "#4785AA",
           },
         ],
       };
@@ -500,14 +589,7 @@ export default {
         this.dateNum = this.dateNum + 1;
         this.beforeAddTsImg();
       } else {
-        ElMessage({
-          message: "已经是最后一张",
-          type: "warning",
-        });
-        if (this.btnIsPlay) {
-          this.btnIsPlay = false;
-          clearInterval(this.picPlayer);
-        }
+        this.dateNum = 0;
       }
     },
     beforeAddTsImg() {
@@ -565,6 +647,11 @@ export default {
     rotate.style = "display:none";
     this.btngoplay();
     // this.initchart();
+    // let i = 0;
+    // let source = this.pointlayer.getSource();
+    // console.log(source);
+    // console.log(source.getFeaturesCollection());
+    // console.log(this.features);
   },
   computed: {
     converTime: function () {
@@ -604,12 +691,15 @@ export default {
   font-size: 13px;
 }
 #chart {
-  width: 500px;
+  width: 650px;
   height: 300px;
   z-index: 1000;
 
   // left: 50px;
   // padding: 5px;
+  // canvas {
+  //   width: 625px;
+  // }
 }
 .info-card {
   position: absolute;
@@ -667,13 +757,13 @@ export default {
   justify-content: space-between;
 }
 .water_depth_color {
-  width: 350px;
+  width: 300px;
   height: 40px;
   padding: 5px 15px;
   z-index: 9;
   position: absolute;
-  bottom: 20px;
-  left: 70px;
+  bottom: 10px;
+  left: 10px;
 
   display: flex;
   align-items: center;
@@ -707,7 +797,7 @@ export default {
 }
 
 .water_depth_color .color-bar .color-item {
-  width: 36px;
+  width: 30px;
   height: 12px;
 }
 .el-card {

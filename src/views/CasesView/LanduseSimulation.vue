@@ -205,7 +205,7 @@ export default {
       newShpInfo: {},
       tagList: [],
       dataServer: useStore().getters.devIpAddress,
-      colorbarUrl: "/YangtzeVGLabBack/store/data/landusesimulation.png",
+      colorbarUrl: this.dataServer+"/store/data/landusesimulation.png",
       paneType: "basic",
       dateNum: 0,
       btnIsPlay: false,

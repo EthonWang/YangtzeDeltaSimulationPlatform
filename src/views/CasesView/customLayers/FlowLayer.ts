@@ -3,7 +3,7 @@ import GUtils from "../renderer/gUtil";
 import { ProgManager, TexManager, FrameManager } from '../renderer/RenderManager';
 import mapboxgl from 'mapbox-gl';
 import Matrix4, { Vector4 } from '../math/m4';
-
+import {YangtzeVGLab} from "../../../../public/backURL/backurl";
 const quadVertices = [
     -1.0, -1.0, 0.0, 0.0, 
     1.0, -1.0, 1.0, 0.0, 
@@ -14,12 +14,12 @@ const quadVertices = [
 ];
 
 const vsURL = [
-    '/YangtzeVGLab/shaders/screen_new.vert', '/YangtzeVGLab/shaders/coastline.vert', '/YangtzeVGLab/shaders/gabriel.vert', '/YangtzeVGLab/shaders/newSimulation.vert', 
-    '/YangtzeVGLab/shaders/particlePoolUpdate.vert', '/YangtzeVGLab/shaders/ribbonParticle_instancedLineStrips.vert', '/YangtzeVGLab/shaders/debug.vert'
+    YangtzeVGLab+'/shaders/screen_new.vert', YangtzeVGLab+'/shaders/coastline.vert', YangtzeVGLab+'/shaders/gabriel.vert', YangtzeVGLab+'/shaders/newSimulation.vert', 
+    YangtzeVGLab+'/shaders/particlePoolUpdate.vert', YangtzeVGLab+'/shaders/ribbonParticle_instancedLineStrips.vert', YangtzeVGLab+'/shaders/debug.vert'
 ];
 const fsURL = [
-    '/YangtzeVGLab/shaders/screen.frag', '/YangtzeVGLab/shaders/coastline.frag', '/YangtzeVGLab/shaders/gabriel.frag', '/YangtzeVGLab/shaders/newSimulation.frag', 
-    '/YangtzeVGLab/shaders/particlePoolUpdate.frag', '/YangtzeVGLab/shaders/ribbonParticle_instancedLineStrips_new.frag', '/YangtzeVGLab/shaders/debug.frag'
+    YangtzeVGLab+'/shaders/screen.frag', YangtzeVGLab+'/shaders/coastline.frag', YangtzeVGLab+'/shaders/gabriel.frag', YangtzeVGLab+'/shaders/newSimulation.frag', 
+    YangtzeVGLab+'/shaders/particlePoolUpdate.frag', YangtzeVGLab+'/shaders/ribbonParticle_instancedLineStrips_new.frag', YangtzeVGLab+'/shaders/debug.frag'
 ];
 
 const shaderNames = ['screen', 'coastline', 'gabriel', 'simulation', 'particlePoolUpdate', 'ribbonParticleLineStrips', 'debug'];

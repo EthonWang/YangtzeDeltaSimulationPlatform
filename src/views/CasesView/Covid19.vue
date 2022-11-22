@@ -105,7 +105,7 @@ import ChartCase from "components/Cases/chartCase";
 import "echarts/extension/bmap/bmap";
 import * as echarts from 'echarts';
 import {cov19Data_C,cov19Data_D,cov19Data_H,timeList,midOptionData21,midTimeList,midOptionData22,midOptionData23} from 'components/Cases/cov19Data'
-
+import {YangtzeVGLab} from "../../../public/backURL/backurl";
 const QG_SH = require('@/assets/img/cases/QG-SH.gif');
 const QG_ZJ = require('@/assets/img/cases/QG-ZJ.gif');
 const SH_QG = require('@/assets/img/cases/SH-QG.gif');
@@ -797,10 +797,10 @@ const loadMidChart1 = () => {
   date.value.month = timeList[timeIndex].slice(8,9)
   date.value.day = timeList[timeIndex].slice(9,11)
 
-  fetch('/YangtzeVGLab/case/economicRun/cityArea.geojson').then(res=>{
+  fetch(YangtzeVGLab+'/case/economicRun/cityArea.geojson').then(res=>{
     return res.json()
   }).then(json=>{
-    fetch('/YangtzeVGLab/case/economicRun/province.geojson').then(resProv=>{
+    fetch(YangtzeVGLab+'/case/economicRun/province.geojson').then(resProv=>{
       return resProv.json()
     }).then(prov=>{
       echarts.registerMap('prov',prov)

@@ -61,7 +61,7 @@
                 <p class="blockTitle"><span id="cate2">{{cateName}}</span>相关性概览图</p>
                 <div style="display: flex;justify-content: center">
                   <el-image :src=imagePath style="height: calc(38vh - 25px);margin-left: 0px;min-height: 320px"></el-image>
-                  <img src="/YangtzeVGLab/case/industrialInnovation/legend.png" style="width:50px;height: calc(38vh - 25px)">
+                  <img :src="YangtzeVGLab+'/case/industrialInnovation/legend.png'" style="width:50px;height: calc(38vh - 25px)">
                 </div>
               </div>
             </el-col>
@@ -86,7 +86,7 @@ import mapboxgl from 'mapbox-gl';
 import city_geojson from "@/components/Cases/city_boundary_simplified"
 import city_points from "@/components/Cases/city_geocenter"
 import {useRoute} from "vue-router";
-
+import {YangtzeVGLab} from "../../../public/backURL/backurl";
 const checkAll = ref(false);
 const isIndeterminate = ref(true)
 const checkedCities = ref()
@@ -139,10 +139,10 @@ window.onresize = () =>{
 }
 
 function addCorrImage(cate) {
-  imagePath.value = "/YangtzeVGLab/case/industrialInnovation/"+cate+".png"
+  imagePath.value = YangtzeVGLab+"/case/industrialInnovation/"+cate+".png"
 }
 function addMapLegend(cate) {
-  legendImagePath.value = "/YangtzeVGLab/case/industrialInnovation/"+cate+"-legend.png"
+  legendImagePath.value = YangtzeVGLab+"/case/industrialInnovation/"+cate+"-legend.png"
 }
 let myChart;
 
@@ -151,7 +151,7 @@ const isShowEcharts = ref(true);
 function loadChart(cate){
   let parallelAxis = [];
   let data = []
-  fetch("/YangtzeVGLab/case/industrialInnovation/"+cate+".csv").then(res=>{
+  fetch(YangtzeVGLab+"/case/industrialInnovation/"+cate+".csv").then(res=>{
     return res.text()
   }).then(res=>{
     let rawData = d3.csvParse(res);
@@ -191,7 +191,7 @@ function loadChart(cate){
 
 function updateValues(cate) {
   document.getElementById('valueGroup').innerHTML = "";
-  fetch("/YangtzeVGLab/case/industrialInnovation/" + cate + "-jiangsu.csv").then(res=>{
+  fetch(YangtzeVGLab+"/case/industrialInnovation/" + cate + "-jiangsu.csv").then(res=>{
     return res.text()
   }).then(res=>{
     let csvdata = d3.csvParse(res);
@@ -239,9 +239,9 @@ function addMap(cate) {
   console.log("dd",process.env.BASE_URL)
   let spriteUrl;
   if((screenWidth == 1920 && screenHeight == 1080)||(screenWidth == 2048 && screenHeight == 1152)){
-    spriteUrl = webDomain+"/YangtzeVGLab/case/industrialInnovation/mapbox_resource/sprite/" + cate + "@2x";
+    spriteUrl = webDomain+YangtzeVGLab+"/case/industrialInnovation/mapbox_resource/sprite/" + cate + "@2x";
   }else if(screenWidth == 2560 && screenHeight == 1440) {
-    spriteUrl = webDomain+"/YangtzeVGLab/case/industrialInnovation/mapbox_resource/sprite/" + cate;
+    spriteUrl = webDomain+YangtzeVGLab+"/case/industrialInnovation/mapbox_resource/sprite/" + cate;
   }
   document.getElementById('map').innerHTML = "";
   mapboxgl.accessToken =
@@ -253,7 +253,7 @@ function addMap(cate) {
     style: {
       "version": 8,
       "sprite": spriteUrl,
-      "glyphs": webDomain+"/YangtzeVGLab/case/industrialInnovation/mapbox_resource/fonts/{fontstack}/{range}.pbf",
+      "glyphs": webDomain+YangtzeVGLab+"/case/industrialInnovation/mapbox_resource/fonts/{fontstack}/{range}.pbf",
       "sources": {
         'boundary': {
           type: 'geojson',

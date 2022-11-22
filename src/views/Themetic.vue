@@ -59,6 +59,21 @@
             >
               <template v-for="(item, key) in themeCase" :key="key">
                 <div class="caseCard">
+                  <div
+                    v-if="item.path"
+                    
+                    style="
+                      position: absolute;
+                      width: 175px;
+                      height: 150px;
+                      z-index: 100;
+                      margin-left: -10px;
+                      margin-top: -15px;
+                      background-color: transparent;
+                      border: 1px rgba(57, 118, 255, 0.65) dashed;
+                      pointer-events: none;
+                    "
+                  ></div>
                   <div class="caseImageWrap">
                     <el-image
                       class="caseImage"
@@ -98,7 +113,7 @@
                 @saveCase="saveCase"
                 @cancelCase="cancelCase"
                 theme=""
-                style="width: 800px;"
+                style="width: 800px"
               >
               </edit-case-draw>
             </div>
@@ -555,8 +570,6 @@ const getAllCases = () => {
         thumbnail: item.thumbnail,
       });
     });
-
-
   });
 };
 //添加案例到专题
@@ -689,7 +702,7 @@ const getCaseById = (idList) => {
         id: item.id,
       });
     });
-    console.log("caseResult",caseResult);
+    console.log("caseResult", caseResult);
   });
 };
 const toCase = (path) => {
@@ -1111,9 +1124,9 @@ const findParentName = (childName) => {
   }
 }
 /deep/.el-drawer.rtl {
-    height: 100%;
-    top: 0;
-    bottom: 0;
-    width: 800px !important;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  width: 800px !important;
 }
 </style>

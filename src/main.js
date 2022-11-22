@@ -19,6 +19,7 @@ app.use(ElementPlus);
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
+// app.component()
 app.use(store);
 app.use(router);
 app.use(ViewUIPlus);

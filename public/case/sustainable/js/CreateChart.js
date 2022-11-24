@@ -1,5 +1,5 @@
 import * as echarts from "echarts";
-import {getGreenData, getMultiBarData, getMultiPieData, getSingleBarData} from "../../../public/case/sustainable/getData";
+import {getGreenData, getMultiBarData, getMultiPieData, getSingleBarData} from "./getData";
 // 上方从左到右分别为左下角的绿色发展指数数据、左上角六个柱状图数据、右下角五个饼图数据，最后一个是安徽特有的横版柱状图数据
 
 export const initChart = (chartData,dom) =>{

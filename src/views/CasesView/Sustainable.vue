@@ -20,7 +20,7 @@
          <el-row> <h1 class="Title">可持续发展长三角系统</h1></el-row>
           <el-row style="height: 40%; width: 100%" :gutter="20" type="flex">
             <el-card class="CardStyle">
-              <router-link  to="Sustainable/Sustainable_in" class="ButtonTitle">
+              <router-link  to="Sustainable_in" class="ButtonTitle">
                                 可持续指标体系浏览
                                 <el-image
                                         class="ImageStyle"
@@ -57,7 +57,7 @@
               </el-dialog> -->
             </el-card>
             <el-card class="CardStyle">
-              <router-link to="Sustainable/Sustainable_vi" class="ButtonTitle">
+              <router-link to="Sustainable_cr" class="ButtonTitle">
                 可持续指标体系构建
                 <el-image
                   class="ImageStyle"
@@ -67,7 +67,7 @@
               </router-link>
             </el-card>
             <el-card class="CardStyle">
-              <router-link to="Sustainable/Sustainable_vi" class="ButtonTitle">
+              <router-link to="Sustainable_vi" class="ButtonTitle">
                 可持续指标体系分析
                 <el-image
                   class="ImageStyle"
@@ -342,10 +342,10 @@ export default {
   data() {
     return {
       //返回的一些图标数据
-      backgroundUrl: require("../../../public/case/sustainable/background.jpg"),
-      DingZhiUrl: require("../../../public/case/sustainable/DingZhi.png"),
-      JiSuanUrl: require("../../../public/case/sustainable/JiSuan.png"),
-      FenxiUrl: require("../../../public/case/sustainable/FenXi.png"), 
+      backgroundUrl: require("../../../public/case/sustainable/pic/background.jpg"),
+      DingZhiUrl: require("../../../public/case/sustainable/pic/DingZhi.png"),
+      JiSuanUrl: require("../../../public/case/sustainable/pic/JiSuan.png"),
+      FenxiUrl: require("../../../public/case/sustainable/pic/FenXi.png"), 
     };
   },
   methods: {
@@ -354,8 +354,8 @@ export default {
 </script>
 
 <style scoped>
-@import "../../css/sustainable/WebsiteStyle.css";
-@import "../../css/sustainable/MyStyle.css";
+@import "../../../public/case/sustainable/css/WebsiteStyle.css";
+@import "../../../public/case/sustainable/css/MyStyle.css";
 .CardStyle {
   margin: 0.8vw;
   height: 100%;

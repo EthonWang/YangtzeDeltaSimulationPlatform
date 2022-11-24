@@ -1,6 +1,6 @@
 import {get ,post} from "@/request/request"
 import { ElMessage } from "element-plus";
-import themeData from "../../../public/case/sustainable/themeData.json"
+import themeData from "../json/themeData.json"
 
 // async function  getData(){
 //     return get('xxx')

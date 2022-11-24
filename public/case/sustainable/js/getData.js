@@ -1,6 +1,5 @@
-// import themeData from "../../../public/case/sustainable/themeData.json"
 import axios from "axios";
-import "../../../src/mock/mockServe.js"
+import "../../../../src/mock/mockServe.js"
 
 
 // 用mock模拟了一个接口，用来读取数据

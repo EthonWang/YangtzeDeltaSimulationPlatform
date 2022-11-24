@@ -108,28 +108,39 @@ export const cases_config = [
         component: () => import("views/CasesView/FloodMultiScale.vue")
     },
     {
-        problem:"长三角可持续发展",
-        path:'Sustainable',
-        component:() => import("views/CasesView/Sustainable.vue"),
-        // children:[{
-        //     problem:'可持续发展可视化大屏',
-        //     path:'Sustainable_vi',
-        //     component:() => import("views/CasesView/Sustainable_vi.vue")
-        // },{
-        //     problem:'可持续发展指标系统',
-        //     path:'Sustainable_in',
-        //     component:() => import("views/CasesView/Sustainable_in.vue")
-        // }]
+        problem: "长三角可持续发展",
+        path: 'Sustainable',
+        component: () => import("views/CasesView/Sustainable.vue"),
     },
     {
-        problem:'可持续发展可视化大屏',
-            path:'Sustainable/Sustainable_vi',
-            component:() => import("views/CasesView/Sustainable_vi.vue")
-    },{
-        problem:'可持续发展指标系统',
-            path:'Sustainable/Sustainable_in',
-            component:() => import("views/CasesView/Sustainable_in.vue")
-    }
+        problem: '可持续发展可视化大屏',
+        path: 'Sustainable_vi',
+        component: () => import("views/CasesView/Sustainable_vi.vue")
+    }, {
+        problem: '可持续发展指标系统浏览',
+        path: 'Sustainable_in',
+        component: () => import("views/CasesView/Sustainable_in.vue")
+    }, {
+        problem: '可持续发展指标系统创建',
+        path: 'Sustainable_cr',
+        component: () => import("views/CasesView/Sustainable_cr.vue"),
+        redirect:'Sustainable_cr/Map',
+        children: [
+            {
+                problem: '可持续发展创建页面1',
+                path: 'Map',
+                component: () => import("views/CasesView/Sustainable_crmap.vue")
+            }, {
+                problem: '可持续发展创建页面2',
+                path: 'Table',
+                component: () => import("views/CasesView/Sustainable_crtable.vue")
+            }, {
+                problem: '可持续发展创建页面3',
+                path: 'Visual',
+                component: () => import("views/CasesView/Sustainable_crvisual.vue")
+            }
+        ]
+    },
 
     // {
     //     problem:"湖泊水环境监测",

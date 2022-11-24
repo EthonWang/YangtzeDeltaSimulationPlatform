@@ -118,9 +118,9 @@
 
 <script>
 // 左上角地图绘制
-import { DataShowMap } from "../../../public/case/sustainable/map";
+import { DataShowMap } from "../../../public/case/sustainable/js/map";
 // 其余的统计图表模型绘制
-import {drawChart} from "../../../public/case/sustainable/CreateChart";
+import {drawChart} from "../../../public/case/sustainable/js/CreateChart";
 import { provide } from '@vue/runtime-core';
 export default {
   name: "themeZJ",
@@ -236,7 +236,7 @@ export default {
 }
 .container{
     position:absolute;
-    background:#050d3c url("../../../public/case/sustainable/map_bg.png") 0 0/ 100% 100% no-repeat;
+    background:#050d3c url("../../../public/case/sustainable/pic/map_bg.png") 0 0/ 100% 100% no-repeat;
     width: 100%;
     height: 100%;
     min-width:750px;
@@ -268,7 +268,7 @@ export default {
 #header-panel {
     position: relative;
     height:72px;
-    background-image:url("../../../public/case/sustainable/header.png");
+    background-image:url("../../../public/case/sustainable/pic/header.png");
     background-position: center top;
     background-size: 110% 100%;
     background-repeat: no-repeat;
@@ -348,7 +348,7 @@ export default {
     height: 100%;
     border-style:solid;
     border-width:10px;
-    border-image:url("../../../public/case/sustainable/chart-wrapper.png") 20 / 1 / 0 repeat;
+    border-image:url("../../../public/case/sustainable/pic/chart-wrapper.png") 20 / 1 / 0 repeat;
 }
 
 .row11{

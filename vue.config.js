@@ -67,6 +67,17 @@ module.exports = {
         port: 3030,
         https: false,
         hotOnly: false,
+        proxy: {
+            '/api': {
+                target: "http://api.data.pmsc.cn",
+                ws: true,
+                timeout: 3600000,
+                changOrigin: true,
+                pathRewrite: {
+                    '^/api': '',
+                },
+            }
+        }
         // proxy: {
         //     // 配置跨域
         //     '/back': {

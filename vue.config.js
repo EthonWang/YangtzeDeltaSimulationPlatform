@@ -67,6 +67,17 @@ module.exports = {
         port: 3030,
         https: false,
         hotOnly: false,
+        proxy:{
+            '/SDGBack': {
+                target: "http://121.4.86.81:8080",
+                ws: true,
+                timeout: 3600000,
+                changOrigin: true,
+                pathRewrite: {
+                    '^/SDGBack': '',
+                },
+            }
+        }
         // proxy: {
         //     // 配置跨域
         //     '/back': {

@@ -9,12 +9,7 @@
                         active-text-color="#ffd04b"
                         :router="true"
                         >
-<!--                    <el-menu-item index="/SdgPlatform/EvaluateAnalyze/System/Introduce">-->
-<!--                        <i class="el-icon-menu"></i>-->
-<!--                        <span slot="title">-->
-<!--                            操作介绍-->
-<!--                        </span>-->
-<!--                    </el-menu-item>-->
+
                     <el-menu-item index="Map" >
                         <i class="el-icon-document"></i>
                         <slot name="title">
@@ -24,13 +19,19 @@
                     <el-menu-item index="Table">
                         <i class="el-icon-setting"></i>
                         <slot name="title">
-                            评估分析
+                            体系设置
+                        </slot>
+                    </el-menu-item>
+                    <el-menu-item index="Data" >
+                        <i class="el-icon-document"></i>
+                        <slot name="title">
+                            数据载入
                         </slot>
                     </el-menu-item>
                     <el-menu-item index="Visual">
                         <i class="el-icon-picture"></i>
                         <slot name="title">
-                            数据展示
+                            结果展示
                         </slot>
                     </el-menu-item>
                 </el-menu>

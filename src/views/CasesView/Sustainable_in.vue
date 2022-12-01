@@ -50,8 +50,8 @@
                   :fit="fill">
                 </el-image>
                 <div class="SystemCardCharacterStyle">{{Excel.name}}</div>
-                <div class="SystemCardCharacterStyle">研究范围：长三角生态</div>
-                <div class="SystemCardCharacterStyle">创建时间：2022年11月16日</div>
+                <div class="SystemCardCharacterStyle">研究范围：{{Excel.region}}</div>
+                <div class="SystemCardCharacterStyle">创建时间：{{Excel.time}}</div>
           <!--  弹出对话框-->
           <!-- TAT  TAT   TAT 我是个笨比，原来的:visible.sync被废弃了，只能用v-model，但是v-model又不能写表达式，导致前端点一下所有dialog都出来了TAT，我花了好长时间，包括计算属性、增添函数、增添参数、各种偏方都试过了还是不行，最后才想起来v-if，哇呜呜呜呜呜呜呜~~~ -->
           <el-dialog :title=Excel.name v-model="dialogTableVisible" width="60%" v-if="IdJudge == Excel.id">
@@ -168,6 +168,7 @@
 import axios from "axios";
 import "../../../src/mock/mockServe.js";
 import { toRaw } from '@vue/reactivity';
+import Global from "../../../public/case/sustainable/Global";
 // 这里用const引入axios，没有用import，具体区别我不知道，试一试
 // const axios = require("axios");
 let SystemSelectClickState = "";
@@ -530,7 +531,7 @@ export default {
   mounted() {
     //加载表格数据
     // this.initListData()
-    axios.get('http://121.4.86.81:8080/newsdgplatformbackground-0.0.1-SNAPSHOT/api/EcoData').then((response) => {
+    axios.get(Global.SDGUrl+'/api/EcoData').then((response) => {
       this.ExcelList = response.data;
       console.log(this.ExcelList,'111');
       console.log(this.ExcelList[1].name,'222');

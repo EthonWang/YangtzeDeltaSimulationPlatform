@@ -16,10 +16,12 @@
 import {AnalyzeMap} from "../../../public/case/sustainable/js/AnalyzeMap";
 import ChinaData from "../../../public/case/sustainable/json/ChinaData.json"
 import CountryData from "../../../public/case/sustainable/json/CountryData.json"
+import City from "../../../public/case/sustainable/json/changsanjiao_shiyu.json"
+import County from "../../../public/case/sustainable/json/changsanjiao_xianyu.json"
 import Global from "../../../public/case/sustainable/Global.vue";
 
 
-const SelectOption = ['世界', '国家', '清除'];
+const SelectOption = ['世界', '省域', '市域', '县域', '清除'];
 export default {
         name: "SystemMap",
         data(){
@@ -40,11 +42,23 @@ export default {
                     this.mapobj.RemoveJson();
                     this.mapobj.AddGeoJson(CountryData.world);
                 }
-                if(this.GeoJsonGroup=='国家'){
+                if(this.GeoJsonGroup=='省域'){
                     //切换选项重置数组
                     Global.MapClickName.length=0;
                     this.mapobj.RemoveJson();
                     this.mapobj.AddGeoJson(ChinaData.china);
+                }
+                if(this.GeoJsonGroup=='市域'){
+                    //切换选项重置数组
+                    Global.MapClickName.length=0;
+                    this.mapobj.RemoveJson();
+                    this.mapobj.AddGeoJson(City);
+                }
+                if(this.GeoJsonGroup=='县域'){
+                    //切换选项重置数组
+                    Global.MapClickName.length=0;
+                    this.mapobj.RemoveJson();
+                    this.mapobj.AddGeoJson(County);
                 }
                 if(this.GeoJsonGroup=='清除'){
                     //切换选项重置数组
@@ -79,10 +93,10 @@ export default {
         width: 97%;
         position: relative;
     }
-
     .map-select{
         position: fixed;
         padding-top: 40px;
         padding-right: 50px;
+        width:30vw;
     }
 </style>

@@ -181,7 +181,7 @@
                     <el-button type="primary"  @click="DialogAlertTableRow=false">立即修改</el-button>
                 </el-form>
             </el-dialog>
-
+            <el-button type="primary" style="margin-left: 1%" @click="DeleteData">指标删除</el-button>
             <el-button type="danger" style="margin-left: 1%" @click="ClearTableData">体系清空</el-button>
             <el-button type="primary" style="float: right" @click="saveJsonData">数据保存</el-button>
         </div>
@@ -202,7 +202,6 @@
                         width="55">
                 </el-table-column>
                 <el-table-column v-for="item in TableDataOb.ColumnName" :key="item" :prop="item" :label="item" >
-
 
                 </el-table-column>
             </el-table>
@@ -267,6 +266,8 @@
         methods:{
             //体系载入
             OpenDiaLogLoadTable(){
+                // this.multipleSelection =[]
+                // this.$refs.multipleSelection.clearSelection();
                 this.DialogLoadTableData=true;
                 //获取数据库中的数据
                 axios.get(Global.SDGUrl+'/api/EcoData').then((response) => {
@@ -363,6 +364,7 @@
                 // 给每条数据添加一个索引
                 row.row.index = row.rowIndex
             },
+            // 点击勾选框时执行
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -406,6 +408,19 @@
                 });
 
             },
+            // 删除指标
+            DeleteData(){
+                // console.log(this.multipleSelection[0].index,'111');
+                let arr = new Array()
+                for(let j=0;j<this.multipleSelection.length;j++){
+                    arr[j] = this.multipleSelection[j].index
+                };
+                arr.sort();
+                for(let i=0;i<arr.length;i++){
+                    this.TableDataOb.Data.splice(arr[i]-i,1);
+                }
+            },
+
             //体系清空
             ClearTableData(){
                 this.TableDataOb.Id='';
@@ -413,6 +428,44 @@
                 this.TableDataOb.Data=[];
                 this.TableDataOb.TableName='';
                 this.TableDataOb.TableRegion='';
+            },
+            // 合并表格的三个函数
+            arraySpanMethod({ column, rowIndex }) {
+            // 把需要循环的列名加入
+                for (let i = 0; i < this.needMergeArr1.length; i++)
+                    if (column.property === this.needMergeArr1[i])
+                    return this.mergeAction(this.needMergeArr1[i], rowIndex);
+            },
+            mergeAction(val, rowIndex) {
+                let _row = this.rowMergeArrs1[val].rowArr[rowIndex];
+                let _col = _row > 0 ? 1 : 0;
+                return [_row, _col];
+            },
+            rowMergeHandle(arr, data) {
+                if (!Array.isArray(arr) && !arr.length) return false;
+                if (!Array.isArray(data) && !data.length) return false;
+                let needMerge = {};
+                arr.forEach((i) => {
+                    needMerge[i] = {
+                    rowArr: [],
+                    rowMergeNum: 0,
+                };
+                    data.forEach((item, index) => {
+                        if (index === 0) {
+                            needMerge[i].rowArr.push(1);
+                            needMerge[i].rowMergeNum = 0;
+                        } else {
+                            if (item[i] === data[index - 1][i]) {
+                            needMerge[i].rowArr[needMerge[i].rowMergeNum] += 1;
+                            needMerge[i].rowArr.push(0);
+                            } else {
+                            needMerge[i].rowArr.push(1);
+                            needMerge[i].rowMergeNum = index;
+                            }
+                        }
+                    });
+                });
+                return needMerge;
             },
         },
         mounted(){

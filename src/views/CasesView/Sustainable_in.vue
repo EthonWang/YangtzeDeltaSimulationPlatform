@@ -10,8 +10,8 @@
       </div>
 
         <el-container class="elContainerStyle" >
-          <el-scrollbar style="height: 100%">
-          <div style="height: 100%;width: 100%;margin-left: 0%;margin-top: 0%;background-color: hsla(0, 0%, 100%, 0.2);border-radius: 20px;box-shadow: 3px 3px 15px #506a5a;display: flex;flex-wrap: wrap; overflow-y:auto; ">
+          <el-scrollbar style="min-height:50vh;width: 100%">
+          <div style="min-height: 70vh;width: 100%;margin-left: 0%;margin-top: 0%;background-color: hsla(0, 0%, 100%, 0.2);border-radius: 20px;box-shadow: 3px 3px 15px #506a5a;display: flex;flex-wrap: wrap; overflow-y:auto; ">
         <!-- 写死的表格 -->
         <!-- 写死的表格 -->
         <!-- 写死的表格 -->
@@ -396,6 +396,11 @@ export default {
 
     //控制对话框的展开
     controlDialog(id) {
+      // 控制台输出数据列表，看看里面有什么内容，需要点击一个视图来打印
+      console.log(this.ExcelList,'111');
+      // 展开前先清除现存数据，防止上一个dialogue的数据遗存（如果上一个dialogue没有点“确定”按钮退出而且点×或者别处，就会保留数据）
+      this.IdJudge = "";
+      this.ColumnName.length = 0;
       //控制对话框的展开
       this.dialogTableVisible = !this.dialogTableVisible;
       this.IdJudge = id;

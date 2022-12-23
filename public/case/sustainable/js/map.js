@@ -30,8 +30,14 @@ export class DataShowMap {
       // layers: osm,
       layers: [tianDituVec, tianDituVecAnnotion],
       minZoom: 2,
-      zoom: 4,
-      center: [35.42, 102.05],
+      // 长三角区的初始位置
+      zoom: 6.5,
+      center: [31.37, 119.14],
+
+      // 中国地图的初始位置
+      // zoom: 4,
+      // center: [35.42, 102.05],
+
       // zoom: 9,
       // center: [34.71, 119.48],
       maxBounds: $L.latLngBounds($L.latLng(-90, -160), $L.latLng(90, 200)),

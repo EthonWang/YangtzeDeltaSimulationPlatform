@@ -119,11 +119,23 @@ export const cases_config = [
     }, {
         problem: '可持续发展指标系统浏览',
         path: 'Sustainable_in',
-        component: () => import("views/CasesView/Sustainable_in.vue")
+        component: () => import("views/CasesView/Sustainable_in.vue"),
+        redirect:'Sustainable_in/table',
+        children:[
+            {
+                problem: '可持续发展展示页面',
+                path: 'table',
+                component: () => import("views/CasesView/Sustainable_intable.vue")
+            },{
+                problem: '可持续发展展示页面',
+                path: 'map',
+                component: () => import("views/CasesView/Sustainable_inmap.vue")
+            }
+        ]
     }, {
         problem: '可持续发展指标系统创建',
         path: 'Sustainable_cr',
-        component: () => import("views/CasesView/Sustainable_cr.vue"),
+        component: () => import("views/CasesView/Sustainable_cre.vue"),
         redirect:'Sustainable_cr/Map',
         children: [
             {

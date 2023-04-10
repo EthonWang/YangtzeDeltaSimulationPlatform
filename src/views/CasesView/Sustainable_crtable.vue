@@ -1,12 +1,11 @@
 <template>
-    <el-card style="margin-left:2%;margin-top:1.5%;height: 94%;width:96%;background-color: hsla(0, 0%, 100%, 0.85);">
+    <el-card style="margin-left:1%;margin-top:0.5%;height: 98%;width:98%;background-color: hsla(0, 0%, 100%, 0.85);">
         <template #header>
             <div class="card-header">
                 <span style="color: #4f4f4f;font-weight: 700;font-size: 24px;">可持续发展体系框架设置</span><br/>
                 <span style="color: #4f4f4f;font-weight: 700;font-size: 20px;">体系名称：{{this.TableDataOb.TableName}}</span>
                 <span style="color: #4f4f4f;font-weight: 700;font-size: 20px;float: right">研究区域：{{this.TableDataOb.TableRegion}}</span>
             </div>
-
         </template>
         <div style="width: 99%;height: 5%;margin-left: 0.5%">
             <el-button type="primary" @click="OpenDiaLogLoadTable()">体系载入</el-button>
@@ -28,7 +27,7 @@
                 </el-select>
                 <template #footer>
                     <span class="dialog-footer">
-                        <el-button type="primary" @click="ConfirmDiaLogLoadTable">
+                        <el-button type="primary" @click="ConfirmDiaLogTable">
                              确认
                         </el-button>
                     </span>
@@ -86,6 +85,7 @@
                     </span>
                 </template>
             </el-dialog>
+            <!-- 指标添加，传入数据库 -->
             <el-button type="primary" style="margin-left: 1%" @click="DialogIncreaseTableRow=true">指标添加</el-button>
             <el-dialog
                     v-model="DialogIncreaseTableRow"
@@ -131,6 +131,7 @@
                     <el-button type="primary" @click="AddJsonData(NewTableRow)">立即创建</el-button>
                 </el-form>
             </el-dialog>
+
             <el-button type="primary" style="margin-left: 1%" @click="upDataJson">指标修改</el-button>
             <el-dialog
                     v-model="DialogAlertTableRow"
@@ -149,9 +150,9 @@
                 </el-switch>
                 <el-form v-if="TableSelectMethod===true" label-width="80px">
                     <div style="margin-top: 10px" v-for="index in indexList" :key="index" >
-                        <div style="color: #4f4f4f;font-weight: 700;font-size: 15px">第{{indexList[index]}}条记录：</div>
+                        <div style="color: #4f4f4f;font-weight: 700;font-size: 15px">第{{index+1}}行指标：</div>
                         <el-form-item v-for="(column,index1) in TableDataOb.ColumnName" :key="index1" :label="column">
-                            <el-input class="InputClass" v-model="TableDataOb.Data[indexList[index]][column]" :placeholder="TableDataOb.Data[indexList[index]][column]"></el-input>
+                            <el-input class="InputClass" v-model="TableDataOb.Data[index][column]" :placeholder="TableDataOb.Data[index][column]"></el-input>
                         </el-form-item>
                     </div>
                     <el-button type="primary" @click="DialogAlertTableRow=false">立即修改</el-button>
@@ -185,17 +186,19 @@
             <el-button type="danger" style="margin-left: 1%" @click="ClearTableData">体系清空</el-button>
             <el-button type="primary" style="float: right" @click="saveJsonData">数据保存</el-button>
         </div>
-        <div v-if="TableDataOb.ColumnName.length===0" style="width: 99%;height: 80%;margin-left: 0.5%">
+        <div v-if="TableDataOb.ColumnName.length===0" style="width: 99%;height: 80%;margin-left: 0.5%;margin-top:1%">
             <el-empty style="height: 100%" description="暂无数据———可以通过体系载入已有可持续发展体系或者自定义体系" />
         </div>
-        <div v-else style="width: 99%;height: 80%;margin-left: 0.5%">
+        <div v-else style="width: 99%;height: 80%;margin-left: 0.5%;margin-top:1%;">
             <el-table
                     ref="multipleTable"
                     :data="TableDataOb.Data"
                     max-height="600"
                     style="height:99%;width: 99%;margin: 0.5%"
                     :row-class-name="tableRowClassName"
+                    :span-method="objectSpanMethod"
                     @selection-change="handleSelectionChange"
+                    height="330"
                     border >
                 <el-table-column
                         type="selection"
@@ -219,9 +222,6 @@
         name: "SystemTable",
         data(){
             return{
-
-
-
                 //设置自定义表格数据体
                 TableDataOb:{
                     Id:'',
@@ -229,6 +229,7 @@
                     TableRegion:Global.MapClickName,
                     ColumnName:[],
                     Data:[],
+                    RegionScale:Global.RegionScale,
                 },
                 //体系载入对话框展开
                 DialogLoadTableData:false,
@@ -259,8 +260,15 @@
                 multipleSelection:[],//多选表格存贮数组,记录勾选了哪些列
                 indexList:[],//修改界面需要的index列表，记录了哪些行
 
-                //保存数据按钮展开
+                //合并表格数据
+                needMergeArr1: [],
+                rowMergeArrs: {},
 
+                // 用来记录需要合并行的下标
+                mergeObj: {}, 
+
+                // 标识数据保存状态
+                flag:Global.crTableFlag,
             }
         },
         methods:{
@@ -280,22 +288,45 @@
                 this.DialogSetTableName = false;
                 this.TableDataOb.TableName=this.TableNameTemp;
             },
+            ConfirmDiaLogTable(){
+                this.$confirm('以该模板新建体系还是在原先体系基础上修改', '提示', {
+                    confirmButtonText: '新建',
+                    cancelButtonText: '修改',
+                    type: 'warning'
+                    }).then(() => {
+                        this.ConfirmDiaLogLoadTable();
+                        this.TableDataOb.Id = '';
+                        this.$message({
+                            type: 'success',
+                            message: '新建成功！'
+                        });
+                    }).catch(() => {
+                        this.ConfirmDiaLogLoadTable();
+                        this.$message({
+                            type: 'success',
+                            message: '进入修改模式！'
+                        });          
+                });
+
+            },
             ConfirmDiaLogLoadTable(){
                 this.DialogLoadTableData=false;
                 for(let i=0; i<this.MongoDBData.length;i++){
                     if(this.MongoDBData[i].id===this.TableDataOb.Id){
-                         this.TableDataOb.TableName=this.MongoDBData[i].name;
-                         this.TableDataOb.Data=this.MongoDBData[i].data;
-                         this.TableDataOb.ColumnName=[];
-                         for(let keyName in this.MongoDBData[i].data[0]){
-                              if(Object.prototype.hasOwnProperty.call(this.MongoDBData[i].data[0],keyName)){
-                                  if(keyName.indexOf("权重")===-1&&keyName.indexOf("index")===-1) {
-                                      this.TableDataOb.ColumnName.push(keyName);
-                                  }
-                              }
-                          }
+                        this.TableDataOb.TableName=this.MongoDBData[i].name;
+                        this.TableDataOb.Data=this.MongoDBData[i].data;
+                        this.TableDataOb.ColumnName=[];
+                        for(let keyName in this.MongoDBData[i].data[0]){
+                            if(Object.prototype.hasOwnProperty.call(this.MongoDBData[i].data[0],keyName)){
+                                if(keyName.indexOf("权重")===-1&&keyName.indexOf("index")===-1&&keyName.indexOf("得分")===-1) {
+                                    this.TableDataOb.ColumnName.push(keyName);
+                                }
+                            }
                         }
                     }
+                }
+                // 调用数据初始化数据的方法,便于行合并
+                this.getSpanArr(this.TableDataOb.Data);
             },
             //列名设置
             TableHandleClose(tag) {
@@ -357,7 +388,9 @@
                     this.DialogIncreaseTableRow=false;
                 }
                 this.NewTableRow.length=0;
-                // this.rowMergeArrs1=this.rowMergeHandle(this.EcologicalSystemColumn,this.EcologicalSystem.data);
+                // 调用数据初始化数据的方法,便于行合并,加在这里是因为如果不重新初始化数据，添加的数据就不会实时更新在表格中
+                this.getSpanArr(this.TableDataOb.Data);
+                // this.ConfirmDiaLogLoadTable();
             },
             //指标修改
             tableRowClassName(row){
@@ -367,6 +400,7 @@
             // 点击勾选框时执行
             handleSelectionChange(val) {
                 this.multipleSelection = val;
+                // console.log(this.multipleSelection,'val');
             },
             upDataJson(){
                 if(this.multipleSelection.length===0){
@@ -374,9 +408,11 @@
                         message: '你好请先选择需要修改的行',
                     });
                 }else{
+                    console.log("进入到修改流程");
                     this.DialogAlertTableRow=true;
                     this.indexList.length=0;
                     let k=this.multipleSelection;
+                    // 拿到选中行的索引数字，但是排序与点击顺序挂钩
                     k.forEach((val)=>{
                         this.TableDataOb.Data.forEach((v,i)=>{
                             if(val.index===v.index){
@@ -384,24 +420,37 @@
                             }
                         })
                     })
+                    this.indexList.sort()
+                    console.log(this.indexList,'123');
                     this.$refs.multipleSelection.clearSelection();
-
                 }
-                //this.rowMergeArrs1=this.rowMergeHandle(this.EcologicalSystemColumn,this.EcologicalSystem.data);
             },
             //保存数据
             saveJsonData(){
+                if(this.TableDataOb.Data.length <= 1){
+                    this.$message({
+                        message: '你好,请导入或新建表格',
+                        type: 'warning'
+                    });
+                    return false;
+                }
                 Global.ResultJson=this.TableDataOb;
-                let body={
-                    "id":this.TableDataOb.Id,
-                    "time":new Date().toLocaleString(),
-                    "region":JSON.stringify(this.TableDataOb.TableRegion),
-                    "name":this.TableDataOb.TableName,
-                    "data":this.TableDataOb.Data,
-                };
-                api.SaveBuildTableData(body).then((Response)=>{
-                    console.log(Response);
-                });
+                this.flag = true;
+                Global.crTableFlag = this.flag;
+                // let body={
+                //     "id":this.TableDataOb.Id,
+                //     "time":new Date().toLocaleString(),
+                //     "region":JSON.stringify(this.TableDataOb.TableRegion),
+                //     "name":this.TableDataOb.TableName,
+                //     "data":this.TableDataOb.Data,
+                //     "scale":this.TableDataOb.RegionScale,
+                // };
+                // console.log(body,'saveData1');
+                // api.SaveBuildTableData(body).then((Response)=>{
+                //     console.log(Response,'saveData');
+                //     // Global.ResultJson = Response.config.data.id;
+                //     console.log(Response.config.data.id,123);
+                // });
                 this.$message({
                     message: '保存成功',
                     type: 'success'
@@ -411,13 +460,23 @@
             // 删除指标
             DeleteData(){
                 // console.log(this.multipleSelection[0].index,'111');
-                let arr = new Array()
-                for(let j=0;j<this.multipleSelection.length;j++){
-                    arr[j] = this.multipleSelection[j].index
-                };
-                arr.sort();
-                for(let i=0;i<arr.length;i++){
-                    this.TableDataOb.Data.splice(arr[i]-i,1);
+                if(this.multipleSelection.length===0){
+                    this.$message({
+                        message: '你好请先选择需要删除的行',
+                    });
+                }else{
+                    let arr = new Array()
+                    for(let j=0;j<this.multipleSelection.length;j++){
+                        arr[j] = this.multipleSelection[j].index
+                    };
+                    arr.sort();
+                    for(let i=0;i<arr.length;i++){
+                        this.TableDataOb.Data.splice(arr[i]-i,1);
+                    }
+                    this.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
                 }
             },
 
@@ -429,44 +488,42 @@
                 this.TableDataOb.TableName='';
                 this.TableDataOb.TableRegion='';
             },
-            // 合并表格的三个函数
-            arraySpanMethod({ column, rowIndex }) {
-            // 把需要循环的列名加入
-                for (let i = 0; i < this.needMergeArr1.length; i++)
-                    if (column.property === this.needMergeArr1[i])
-                    return this.mergeAction(this.needMergeArr1[i], rowIndex);
-            },
-            mergeAction(val, rowIndex) {
-                let _row = this.rowMergeArrs1[val].rowArr[rowIndex];
-                let _col = _row > 0 ? 1 : 0;
-                return [_row, _col];
-            },
-            rowMergeHandle(arr, data) {
-                if (!Array.isArray(arr) && !arr.length) return false;
-                if (!Array.isArray(data) && !data.length) return false;
-                let needMerge = {};
-                arr.forEach((i) => {
-                    needMerge[i] = {
-                    rowArr: [],
-                    rowMergeNum: 0,
-                };
+            // 下面两个方法都是为了合并相同行，getSpanarr是数据处理用的
+            getSpanArr(data) {
+                this.TableDataOb.ColumnName.forEach((key, index1) => {
+                    let count = 0; // 用来记录需要合并行的起始位置
+                    this.mergeObj[key] = []; // 记录每一列的合并信息
                     data.forEach((item, index) => {
-                        if (index === 0) {
-                            needMerge[i].rowArr.push(1);
-                            needMerge[i].rowMergeNum = 0;
+                        // index == 0表示数据为第一行，直接 push 一个 1
+                        if(index === 0) {
+                            this.mergeObj[key].push(1); 
                         } else {
-                            if (item[i] === data[index - 1][i]) {
-                            needMerge[i].rowArr[needMerge[i].rowMergeNum] += 1;
-                            needMerge[i].rowArr.push(0);
+                            // 判断当前行是否与上一行其值相等 如果相等 在 count 记录的位置其值 +1 表示当前行需要合并 并push 一个 0 作为占位
+                            if(item[key] === data[index - 1][key]) { 
+                                this.mergeObj[key][count] += 1;
+                                this.mergeObj[key].push(0);
                             } else {
-                            needMerge[i].rowArr.push(1);
-                            needMerge[i].rowMergeNum = index;
+                                // 如果当前行和上一行其值不相等 
+                                count = index; // 记录当前位置 
+                                this.mergeObj[key].push(1); // 重新push 一个 1
                             }
                         }
-                    });
-                });
-                return needMerge;
+                    })
+                })
             },
+            // 默认接受四个值 { 当前行的值, 当前列的值, 行的下标, 列的下标 }，行合并方法
+            objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+                // 判断列的属性
+                if(this.TableDataOb.ColumnName.indexOf(column.property) !== -1) { 
+                    // 判断其值是不是为0 
+                    if(this.mergeObj[column.property][rowIndex]) { 
+                        return [this.mergeObj[column.property][rowIndex], 1]
+                    } else {
+                        // 如果为0则为需要合并的行
+                        return [0, 0]; 
+                    }
+                }
+            }
         },
         mounted(){
             //从指标库获取指标
@@ -483,7 +540,7 @@
 <style scoped>
     /deep/.el-card__body{
         padding:10px;
-        height: 100%;
+        /* height: 100%; */
     }
     .el-tag + .el-tag {
         margin-left: 10px;

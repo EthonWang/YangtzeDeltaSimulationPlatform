@@ -1,6 +1,8 @@
 import AnalyzePageTableData from "../json/AnalyzePageTableData.json"
 import ChinaData from "../json/ChinaData.json"
 import CountryData from '../json/CountryData.json'
+import CityData from '../json/changsanjiao_shiyu.json'
+import CountyData from '../json/changsanjiao_xianyu.json'
 import Global from "../Global.vue";
 import {createJsonData} from "./optionData";
 
@@ -61,7 +63,7 @@ export const SplitJson=(List1Column,List2Column,List3Column,List4Column,TargetCo
 
 //判断ChinaData和CountryData中的哪些数据集被选中了,同时添加生态文明表格的属性值
 export const JudgeSelectJson=(JsonName,AttributeJson)=>{
-
+    // 匹配国家
     let ChinaJson=ChinaData.china.features;
     for(let i=0;i<ChinaJson.length;i++)
     {
@@ -84,8 +86,8 @@ export const JudgeSelectJson=(JsonName,AttributeJson)=>{
                 }
             }
         }
-
     }
+    // 匹配省域
     let CountryJson=CountryData.world.features;
     for(let i=0;i<CountryJson.length;i++){
         if(JsonName==CountryJson[i].properties.name){
@@ -109,8 +111,55 @@ export const JudgeSelectJson=(JsonName,AttributeJson)=>{
             }
         }
     }
-    console.log(Global.VisualJson);
-
+    // 匹配市域
+    let CityJson=CityData.features;
+    for(let i=0;i<CityJson.length;i++){
+        if(JsonName==CityJson[i].properties.name){
+            //要判断一下是否在Global中存在
+            let status=true;
+            createJsonData("Table",AttributeJson,CityJson[i].properties);
+            Global.VisualJson.push(CityJson[i]);
+            if(Global.VisualJson.length==0){
+                Global.VisualJson.push(CityData[i]);
+            }
+            else{
+                for(let j=0;j<Global.VisualJson.length;j++){
+                    if(JsonName==Global.VisualJson[j].properties.name){
+                        status=false;
+                        break;
+                    }
+                }
+                if(status){
+                    Global.VisualJson.push(CityData[i]);
+                }
+            }
+        }
+    }
+    // 匹配县域
+    let CountyJson=CountyData.features;
+    for(let i=0;i<CountyJson.length;i++){
+        if(JsonName==CountyJson[i].properties.name){
+            //要判断一下是否在Global中存在
+            let status=true;
+            createJsonData("Table",AttributeJson,CountyJson[i].properties);
+            Global.VisualJson.push(CountyJson[i]);
+            if(Global.VisualJson.length==0){
+                Global.VisualJson.push(CountyData[i]);
+            }
+            else{
+                for(let j=0;j<Global.VisualJson.length;j++){
+                    if(JsonName==Global.VisualJson[j].properties.name){
+                        status=false;
+                        break;
+                    }
+                }
+                if(status){
+                    Global.VisualJson.push(CountyData[i]);
+                }
+            }
+        }
+    }
+    // console.log(Global.VisualJson);
 }
 
 

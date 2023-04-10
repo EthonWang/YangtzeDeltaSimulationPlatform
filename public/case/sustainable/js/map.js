@@ -31,7 +31,7 @@ export class DataShowMap {
       layers: [tianDituVec, tianDituVecAnnotion],
       minZoom: 2,
       // 长三角区的初始位置
-      zoom: 6.5,
+      zoom: 5.5,
       center: [31.37, 119.14],
 
       // 中国地图的初始位置

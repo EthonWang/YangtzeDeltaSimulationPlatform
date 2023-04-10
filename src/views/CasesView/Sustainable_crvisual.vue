@@ -1,5 +1,5 @@
 <template>
-    <el-container style="width: 100%;height: 100%;background-color: #ffffff">
+    <el-container style="margin-left:1%;margin-top:0.5%;height: 98%;width:98%;background-color: #ffffff">
         <el-col class="data-show-map-wrapper">
             <div id="data-show-map">
                 <div class="leaflet-control map-select">
@@ -35,7 +35,7 @@
                 VisualOption: "",
                 //指标选择页面
                 MapIndex: "",
-                IndexList: "",
+                IndexList: Global.ResultJson,
             }
         },
         methods:{
@@ -43,22 +43,23 @@
                 this.mapobj = new AnalyzeMap("data-show-map");
             },
             RadioClickMap(){
-                console.log("进入");
                 this.mapobj.RemoveJson();
                 this.mapobj.VisualGeoJson(Global.VisualJson,this.MapIndex);
-                console.log("完成");
             },
             MoranClickMap(){
-                console.log(Global.VisualJson);
                 this.mapobj.RemoveJson();
                 this.mapobj.MoranGeoJson(Global.VisualJson,this.MapIndex);
-
             },
         },
         mounted() {
             this.mapInit();
-            this.IndexList=GetResultJson();
+            // 反正目的是直接得到指标+数据的json数据，干脆在上一个页面完成赋值，直接调取就好了
+            // this.IndexList=GetResultJson();
+            this.IndexList=Global.ResultJson;
+            Global.VisualJson=[];
             for(let i=0;i<Global.MapClickName.length;i++){
+                // console.log(Global.MapClickName[i],i);
+                // console.log(this.IndexList,'this.IndexList');
                 JudgeSelectJson(Global.MapClickName[i],this.IndexList);
             }
         },
@@ -78,15 +79,19 @@
         background-size: 100% 100%;
     }
     #data-show-map {
-        height: 95%;
-        width: 97%;
+        height: 100%;
+        width: 100%;
+        border-radius: 10px;
         position: relative;
     }
 
     .map-select{
         position: fixed;
         padding-top: 10px;
-        padding-right: 50px;
-        max-width: 300px;
+        padding-right: 70px;
+        max-width: 330px;
+    }
+    .leaflet-popup-close-button {
+        display: none; 
     }
 </style>

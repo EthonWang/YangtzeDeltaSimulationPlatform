@@ -1,10 +1,21 @@
 <template>
-    <el-container style="width: 100%;height: 100%;background-color: #ffffff">
+    <el-container style="margin-left:1%;margin-top:0.5%;height: 98%;width:98%;background-color: #ffffff">
         <el-col class="data-show-map-wrapper">
             <div id="data-show-map">
                 <div class="leaflet-control">
                     <el-radio-group v-model="GeoJsonGroup"  class="leaflet-right map-select">
-                        <el-radio-button  @change="CheckBoxclickMap" v-for="Select in SelectOp" :label="Select" :key="Select"></el-radio-button>
+                        <!-- <el-radio-button  @change="CheckBoxclickMap" v-for="Select in SelectOp" :label="Select" :key="Select">
+                        </el-radio-button> -->
+                        <el-select v-model="GeoJsonGroup" placeholder="请选择" style="width:100px">
+                            <el-option
+                                    v-for="item in SelectOptions"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    @click="CheckBoxclickMap"
+                                    >
+                            </el-option>
+                        </el-select>
                     </el-radio-group>
                 </div>
             </div>
@@ -28,6 +39,23 @@ export default {
             return{
                 GeoJsonGroup:['清除'],
                 SelectOp:SelectOption,
+                SelectOptions: [{
+                    value: '世界',
+                    label: '世界'
+                    }, {
+                    value: '省域',
+                    label: '省域'
+                    }, {
+                    value: '市域',
+                    label: '市域'
+                    }, {
+                    value: '县域',
+                    label: '县域'
+                    },{
+                    value: '清除',
+                    label: '清除'
+                    }
+                ]
             }
         },
         methods:{
@@ -35,7 +63,8 @@ export default {
                 this.mapobj=new AnalyzeMap("data-show-map");
             },
             CheckBoxclickMap(){
-                console.log(this.GeoJsonGroup)
+                console.log(this.GeoJsonGroup);
+                Global.RegionScale = this.GeoJsonGroup;
                 if(this.GeoJsonGroup=='世界'){
                     //切换选项重置数组
                     Global.MapClickName.length=0;
@@ -89,14 +118,16 @@ export default {
         background-size: 100% 100%;
     }
     #data-show-map {
-        height: 95%;
-        width: 97%;
+        height: 100%;
+        width: 100%;
+        border-radius: 10px;
         position: relative;
     }
     .map-select{
         position: fixed;
-        padding-top: 40px;
-        padding-right: 50px;
-        width:30vw;
+        padding-top: 30px;
+        margin-right: 20px;
+        width:20vw;
     }
+
 </style>

@@ -2,8 +2,9 @@ import * as echarts from "echarts";
 import {getGreenData, getMultiBarData, getMultiPieData, getSingleBarData} from "./getData";
 // 上方从左到右分别为左下角的绿色发展指数数据、左上角六个柱状图数据、右下角五个饼图数据，最后一个是安徽特有的横版柱状图数据
 
-export const initChart = (chartData,dom) =>{
+export const initChart = async (chartData,dom) =>{
     let myChart = echarts.init(document.getElementById(dom),'hxy_theme');
+    myChart.setOption({});
     myChart.setOption(chartData);
     window.addEventListener('resize',()=>{
         myChart.resize();
@@ -12,59 +13,28 @@ export const initChart = (chartData,dom) =>{
 
 };
 
-export const drawChart = (province) => {
-    // console.log(province)
+export const drawChart = async (province) => {
+    // await Promise.all([]);
     // 绘制左下角的图表
-    getGreenData(province).then(res=>{ 
+    await getGreenData(province).then(res=>{ 
         initChart(res,"greenDevelop");
     })
-    // 绘制右上角的六个柱状图
-    getMultiBarData(province,1).then(res=>{
-        initChart(res,"bar-item1");
-    })
-    getMultiBarData(province,2).then(res=>{
-        initChart(res,"bar-item2");
-    })
-    getMultiBarData(province,3).then(res=>{
-        initChart(res,"bar-item3");
-    })
-    getMultiBarData(province,4).then(res=>{
-        initChart(res,"bar-item4");
-    })
-    getMultiBarData(province,5).then(res=>{
-        initChart(res,"bar-item5");
-    })
-    getMultiBarData(province,6).then(res=>{
-        initChart(res,"bar-item6");
-    })
-
-    // 这些是原方法，能获取写死的数据，但是没办法通过异步请求获取后端数据，故注释掉了
-    // initChart(getMultiBarData(province,1),"bar-item1");
-    // initChart(getMultiBarData(province,2),"bar-item2");
-    // initChart(getMultiBarData(province,3),"bar-item3");
-    // initChart(getMultiBarData(province,4),"bar-item4");
-    // initChart(getMultiBarData(province,5),"bar-item5");
-    // initChart(getMultiBarData(province,6),"bar-item6");
-
+    // 绘制右上角的九个柱状图
+    for (let i = 1; i <= 9; i++) {
+        getMultiBarData(province, i).then(res => {
+          initChart(res, `bar-item${i}`);
+        });
+    }
     // 绘制右下角的五个饼图和图例
-    getMultiPieData(province,1).then(res=>{
-        initChart(res,"pie-item1");
-    })
-    getMultiPieData(province,2).then(res=>{
-        initChart(res,"pie-item2");
-    })
-    getMultiPieData(province,3).then(res=>{
-        initChart(res,"pie-item3");
-    })
-    getMultiPieData(province,4).then(res=>{
-        initChart(res,"pie-item4");
-    })
-    getMultiPieData(province,5).then(res=>{
-        initChart(res,"pie-item5");
-    })
+    for (let i = 1; i <= 5; i++) {
+        getMultiPieData(province, i).then(res => {
+          initChart(res, `pie-item${i}`);
+        });
+    }
     getMultiPieData(province,"legend").then(res=>{
         initChart(res,"pie-item-legend");
     })
+    
 
     // initChart(getMultiPieData(province,1),"pie-item1");
     // initChart(getMultiPieData(province,2),"pie-item2");
@@ -74,8 +44,8 @@ export const drawChart = (province) => {
     // initChart(getMultiPieData(province,"legend"),"pie-item-legend");
 
     //如果是安徽省就额外绘制一个中间上方的柱状图
-    if(province == "AnHui")
-        initChart(getSingleBarData(province),"single-bar")
+    // if(province == "AnHui")
+    //     initChart(getSingleBarData(province),"single-bar")
 }
 
 

@@ -48,8 +48,8 @@
       <!-- .row12是右上角的六个柱状图模型容器 -->
       <div class="card-panel row12">
         <div class="multi-bar card ">
-          <div v-for="i in 7" class="chart-panel" :key="i">
-            <div class="chart-header"><h4 class="chart-title multiChart-title">{{ barName[i-1] }}</h4></div>
+          <div v-for="i in 9" class="chart-panel" :key="i">
+            <div class="chart-header"><h4 class="chart-title multiChart-title">{{ barName3[i-1] }}</h4></div>
             <div :id="'bar-item'+i" :class="'bar-item bar-item'+i"></div>
           </div>
         </div>
@@ -69,9 +69,15 @@
       <div class="card-panel row22">
         <div class="multi-pie card">
             <div id="pie-item-title" class="pie-item-title text-center"><h4 class="chart-title" style="text-align: center">各城市主要指标得分</h4></div>
-            <div v-for="i in 6" :key="i" :id="'pie-item'+i" :class="'pie-item'+i+' pie-item'"></div>
+            <div v-for="i in 5" :key="i" :id="'pie-item'+i" :class="'pie-item'+i+' pie-item'"></div>
             <div id="pie-item-legend" class="pie-item-legend pie-item"></div>
+            <!-- <el-pagination
+              small
+              layout="prev, pager, next"
+              :total="20">
+            </el-pagination> -->
         </div>
+
       </div>
 
     </div>
@@ -86,7 +92,7 @@
 // import { DataShowMap } from "../../../public/case/sustainable/js/map";
 import {AnalyzeMap} from "../../../public/case/sustainable/js/AnalyzeMap";
 // 其余的统计图表模型绘制
-import {drawChart} from "../../../public/case/sustainable/js/CreateChart";
+import {drawChart,drawPie,drawBar} from "../../../public/case/sustainable/js/CreateChart";
 // import { provide } from '@vue/runtime-core';
 import inMap from "./Sustainable_inmap";
 import Global from "../../../public/case/sustainable/Global";
@@ -115,25 +121,132 @@ export default {
       selectedData:[],
       tableName:[],
       barName:[],
+      barName2:[],
+      barName3:[],
+      timer:null,
+      timer2:null,
     }
   },
   mounted() {
+    this.timer = null;
+    this.timer2 = null;
     // 重新获取数据时必须清空_echarts_instance_ 属性，否则不匹配就不会显示图表
     this.chartsRemove();
     // document.title = this.province+'生态文明建设年度评价专题展示系统'
-    this.createData(),
+    this.createData();
     // 左上角地图绘图方法
-    this.mapInit();
+    // this.mapInit();
     // 上色方法
-    this.radioClickMap();
+    // this.radioClickMap();
   },
   beforeUnmount() {
     this.mapObj && this.mapObj.destroy();
     this.myChart && this.myChart.destroy();
+    clearInterval(this.timer);
+    clearInterval(this.timer2);
   },
   methods: {
     mapInit() {
       this.mapObj = new AnalyzeMap("map-show");
+    },
+    // 拿到BarName2的值，它是为了计算柱状图的数量
+    getBarName2(){
+      var columnName = '';
+      this.barName2 = [];
+      for(let i =0 ; i < this.MongoDBDataOb.length ; i++){
+        if(this.MongoDBDataOb[i].name == this.require){
+          for (let keyName in this.MongoDBDataOb[i].data[0]){
+            if (keyName.indexOf("得分") === -1 && keyName.indexOf("权重") === -1) {
+              columnName = keyName;
+              break;
+            }         
+          }
+        }
+      }
+      for(let i =0 ; i < this.MongoDBDataOb.length ; i++){
+        if(this.MongoDBDataOb[i].name == this.require){
+          for(let j = 0 ; j < this.MongoDBDataOb[i].data.length ; j++){
+            if(this.barName2.indexOf(this.MongoDBDataOb[i].data[j][columnName])=== -1 ){
+              this.barName2.push(this.MongoDBDataOb[i].data[j][columnName]);
+            }
+          }
+          break;
+        }
+      }
+    },
+    changeByTime(){
+      // 清除先前可能产生的计时器
+      if (this.timer) {
+        clearInterval(this.timer);
+      }
+      if (this.timer2) {
+        clearInterval(this.timer2);
+      }
+      let num = 1 ;
+      let barNum = 3;
+      let max = 0;
+      for(let i = 0 ; i<this.MongoDBDataOb.length ; i++){
+        if(this.require == this.MongoDBDataOb[i].name){
+          let region = this.MongoDBDataOb[i].region;
+          region=region.replace(/\[|]/g,'');
+          region=region.split(',');
+          max += region.length;
+        }
+      }
+      this.getBarName2();
+      if(this.barName2.length>6){
+        this.timer2 = setInterval(() => {
+          // 柱状图清空
+          document.getElementById("bar-item1").removeAttribute('_echarts_instance_');
+          document.getElementById("bar-item2").removeAttribute('_echarts_instance_');
+          document.getElementById("bar-item3").removeAttribute('_echarts_instance_');
+          document.getElementById("bar-item4").removeAttribute('_echarts_instance_');
+          document.getElementById("bar-item5").removeAttribute('_echarts_instance_');
+          document.getElementById("bar-item6").removeAttribute('_echarts_instance_');
+          for(let i=0; i<=6 ; i++){
+            let name = "bar-item" + i;
+            if(document.getElementById(name)){
+              let barContainer =document.getElementById(name);
+              barContainer.innerHTML = '';
+            }
+          }
+          // 重新绘制柱状图
+          for(let i=0; i<=6 ; i++){
+            this.barName3[i]=this.barName2[i+barNum];
+          }
+          drawBar(this.require,barNum)
+          if(barNum+6 < this.barName2.length){
+            barNum += 3;
+          }else{
+            barNum = 0;
+          }
+        }, 5000);
+      }
+      if(max > 5){
+        // 生成计时器
+        this.timer = setInterval(() => {
+          // 饼图清空
+          document.getElementById("pie-item1").removeAttribute('_echarts_instance_');
+          document.getElementById("pie-item2").removeAttribute('_echarts_instance_');
+          document.getElementById("pie-item3").removeAttribute('_echarts_instance_');
+          document.getElementById("pie-item4").removeAttribute('_echarts_instance_');
+          document.getElementById("pie-item5").removeAttribute('_echarts_instance_');
+          for(let i=0; i<=5 ; i++){
+            let name = "pie-item" + i;
+            if(document.getElementById(name)){
+              let pieContainer =document.getElementById(name);
+              pieContainer.innerHTML = '';
+            }
+          }
+          // 重新绘制饼图
+          drawPie(this.require,num);
+          if(num+5 < max){
+            num++;
+          }else{
+            num = 0;
+          }
+        }, 5000);
+      }
     },
     // 给tableName赋值
     createData(){
@@ -141,8 +254,9 @@ export default {
         // this.MongoDBData = response.data;
         this.MongoDBDataOb = response.data;
         this.tableNameOb = [];
+        // 初始化tableName，决定有可视化大屏有哪些数据组
         for(let i =0; i<this.MongoDBDataOb.length;i++){
-          if(this.tableNameOb.indexOf(this.MongoDBDataOb[i].name) ==-1){
+          if(this.tableNameOb.indexOf(this.MongoDBDataOb[i].name) === -1){
             this.tableNameOb.push(this.MongoDBDataOb[i].name);
           }
         }
@@ -156,10 +270,12 @@ export default {
               count += region.length;
             }
           }
+          // 必须超过3个城市，才会被纳入可视化页面
           if(count>3){
             this.tableName.push(this.tableNameOb[i])
           }
         }
+        // 如果列表里面有值，把第一个当成默认值，这样打开页面就能加载
         if(this.tableName.length > 0) {
           this.require = this.tableName[0];
           this.placeChange()
@@ -168,6 +284,7 @@ export default {
     },
     // 点击省份切换下拉框，自动更新可视化图表
     placeChange(){
+      this.changeByTime()
       this.chartsRemove();
       // 通过require中的省份数据，绘制echarts图表
       // drawChart(this.require);
@@ -186,6 +303,7 @@ export default {
       this.selectedData = Global.viSelectedJson;
       // this.tableName = Global.viTableName;
       this.barName = Global.viBarName;
+      this.barName3 = this.barName.slice(0,6);
       // console.log(this.selectedData,Global.viTableName,Global.viBarName,'111');
       this.placeList = [];
       for(var i = 0 ; i<this.selectedData.length ; i++){
@@ -257,7 +375,7 @@ export default {
       document.getElementById("bar-item5").removeAttribute('_echarts_instance_');
       document.getElementById("bar-item6").removeAttribute('_echarts_instance_');
       // 饼图清空
-      for(let i=0; i<=6 ; i++){
+      for(let i=1; i<=5 ; i++){
         let name = "pie-item" + i;
         if(document.getElementById(name)){
           let pieContainer =document.getElementById(name);
@@ -265,7 +383,7 @@ export default {
         }
       }
       // 条形图图清空
-      for(let i=0; i<=8 ; i++){
+      for(let i=1; i<=6 ; i++){
         let name = "bar-item" + i;
         if(document.getElementById(name)){
           let barContainer =document.getElementById(name);
@@ -285,7 +403,7 @@ export default {
 /*global*/
 
 * {margin:0;padding:0;box-sizing:border-box;}
-.selection{
+/deep/ .selection{
     z-index:999;
     position: absolute;
     top: 2.8%;
@@ -295,7 +413,11 @@ export default {
     font-size: 300%;
     width: 100px;
     height: 50px;
-    background-color: transparent;
+    /* background-color: ; */
+    /* color:red !important; */
+}
+/deep/ .el-input__inner{
+    background-image:linear-gradient(135deg,#FFFACD,#aac6ee);
 }
 .container{
     position:absolute;
@@ -420,11 +542,11 @@ export default {
 
 .row12{
     grid-area: 1 / 10 / 12 / 26 ;
-    overflow: auto;
+    /* overflow: auto; */
 }
 .row21{
     grid-area: 12 / 1 / 20 / 10;
-    overflow: auto;
+    /* overflow: auto; */
     margin-bottom: 15px;
 }
 .row22{
@@ -468,11 +590,11 @@ export default {
 /*}*/
 .multi-bar{
     display: grid;
-    overflow: auto;
+    /* overflow: auto; */
     grid-template-columns:  repeat(3,32%);
-    grid-template-rows: repeat(3,48%);
+    grid-template-rows: repeat(2,48%);
     grid-area: 1 / 10 / 12 / 26;
-    grid-template-areas:"a b c" "d e f" "g h i";
+    grid-template-areas:"a b c" "d e f";
     grid-gap: 2% 2%;
     /*grid-template-columns:  1% 32% 1% 32% 1% 32% 1%;*/
     /*grid-template-rows: 2% 47% 2% 47% 2%;*/
@@ -572,13 +694,5 @@ export default {
     /*left:0;*/
     /*right:0;*/
 }
-
-/* 待添加模块，如果需要就把下方css样式加上 */
-/* .row12{
-  grid-area: 1 / 14 / 12 / 26 ;
-}
-.row13{
-  grid-area: 1 / 10 / 12 / 14;
-} */
 
 </style>

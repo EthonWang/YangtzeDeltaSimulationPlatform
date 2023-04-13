@@ -17,6 +17,7 @@
                         <!-- <el-button @click="getExcel" style="margin-right: 10px" type="primary" >测试按钮</el-button> -->
                         <!-- <el-button @click="MoranClickMap" style="margin-top: 10px" type="primary" >空间自相关</el-button> -->
                     <!-- </el-row> -->
+                    <h2 class="leaflet-right map-select" style="margin-top:-7px;margin-right: 100px;font-size:1.5em;font-weight: bold">尺度选择：</h2>
                     <el-radio-group v-model="GeoJsonGroup"  class="leaflet-right map-select">
                         <!-- <el-radio-button  @change="CheckBoxclickMap" v-for="Select in SelectOp" :label="Select" :key="Select">
                         </el-radio-button> -->
@@ -335,7 +336,7 @@ export default {
 
 .map-select{
     position: fixed;
-    padding-top: 20px;
+    padding-top: 15px;
     padding-right: 200px;
     max-width: 330px;
 }

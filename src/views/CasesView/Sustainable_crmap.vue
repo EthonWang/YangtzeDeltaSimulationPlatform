@@ -3,6 +3,7 @@
         <el-col class="data-show-map-wrapper">
             <div id="data-show-map">
                 <div class="leaflet-control">
+                    <h2 class="leaflet-right map-select" style="margin-top:-7px;margin-right: 130px;font-size:1.5em;font-weight: bold">尺度选择：</h2>
                     <el-radio-group v-model="GeoJsonGroup"  class="leaflet-right map-select">
                         <!-- <el-radio-button  @change="CheckBoxclickMap" v-for="Select in SelectOp" :label="Select" :key="Select">
                         </el-radio-button> -->
@@ -125,9 +126,9 @@ export default {
     }
     .map-select{
         position: fixed;
-        padding-top: 30px;
+        padding-top: 20px;
         margin-right: 20px;
-        width:20vw;
+        width:12vw;
     }
 
 </style>

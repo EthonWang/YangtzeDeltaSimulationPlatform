@@ -150,7 +150,6 @@ function handleData(data){
         jsonData[tableName[i]]["MultiBarData"] = barArr;
         jsonData[tableName[i]]["MultiBarData"][0]["barName"] = barName;
     }
-
     // 3、填充MultiPieData数据
     for(let a = 0; a<tableName.length ; a++){
         let name = '';
@@ -164,6 +163,7 @@ function handleData(data){
             let regionList = region.split(',');
             for(let place in regionList){
                 name = regionList[place];
+                count = 0;
                 for(let j = 0; j<data[i].data.length ; j++){
                     if(barName[count] == data[i].data[j][columnName]){
                         console.log();
@@ -174,6 +174,7 @@ function handleData(data){
                 let pieJson = {};
                 pieJson.name = name;
                 pieJson.value = value;
+                value = [];
                 pirArr.push(pieJson);
             }
         }
@@ -320,7 +321,6 @@ export const getMultiBarData =async (province , num ) =>{
     var multiBarData1 = await getProvince(province)
     let multiBarData = multiBarData1.MultiBarData;
     let barData ;
-    console.log(multiBarData.length,'110');
     for(let i = 1; i <= multiBarData.length ; i++){
         if(num == i){
             barData = multiBarData[i-1];
@@ -429,7 +429,6 @@ export const getMultiPieData =async (province , num) =>{
     let radius = ["35%","100%"];
     var multiPieData1 =await getProvince(province);
     var multiPieData = multiPieData1.MultiPieData;
-    // let name = ["资源利用指数", "环境治理指数", "环境质量指数", "生态保护指数", "增长质量指数", "绿色生活指数"];
     let name = multiPieData[0].barName;
     let legendData = name.map((n) => {
         return { name: n };

@@ -12,15 +12,30 @@ export const initChart = async (chartData,dom) =>{
     // return myChart;
 
 };
-
+export const drawPie = async (province,num) => {
+        // 绘制右下角的五个饼图
+        for (let i = num+1; i <= num+5; i++) {
+            getMultiPieData(province, i).then(res => {
+                initChart(res, `pie-item${i-num}`);
+            });
+        }
+}
+export const drawBar = async (province,num) => {
+    // 绘制右上角的六个柱状图
+    for (let i = num+1; i <= num+6; i++) {
+        getMultiBarData(province, i).then(res => {
+          initChart(res, `bar-item${i-num}`);
+        });
+    }
+}
 export const drawChart = async (province) => {
     // await Promise.all([]);
     // 绘制左下角的图表
     await getGreenData(province).then(res=>{ 
         initChart(res,"greenDevelop");
     })
-    // 绘制右上角的九个柱状图
-    for (let i = 1; i <= 9; i++) {
+    // 绘制右上角的六个柱状图
+    for (let i = 1; i <= 6; i++) {
         getMultiBarData(province, i).then(res => {
           initChart(res, `bar-item${i}`);
         });

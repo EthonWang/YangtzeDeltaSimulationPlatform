@@ -24,6 +24,7 @@
         <h3 class="header-title">可持续发展目标评价专题展示系统
        </h3>
     </header>
+    <h4 style="position:absolute;top:3%;left:0.5%;color:white;z-index: 99;">体系选择:</h4>
     <el-select v-model="require" placeholder="require" class="selection" style="width:250px;color:skyblue">
       <el-option
         v-for="(item,index) in tableName"
@@ -407,7 +408,7 @@ export default {
     z-index:999;
     position: absolute;
     top: 2.8%;
-    left: 1.4%;
+    left: 6.4%;
     border-radius: 25px;
     /* opacity: 0.8; */
     font-size: 300%;

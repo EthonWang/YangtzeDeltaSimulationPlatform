@@ -49,7 +49,7 @@
       <!-- .row12是右上角的六个柱状图模型容器 -->
       <div class="card-panel row12">
         <div class="multi-bar card ">
-          <div v-for="i in 9" class="chart-panel" :key="i">
+          <div v-for="i in 6" class="chart-panel" :key="i">
             <div class="chart-header"><h4 class="chart-title multiChart-title">{{ barName3[i-1] }}</h4></div>
             <div :id="'bar-item'+i" :class="'bar-item bar-item'+i"></div>
           </div>

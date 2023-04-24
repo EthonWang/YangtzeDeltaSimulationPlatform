@@ -69,8 +69,8 @@ module.exports = {
         hotOnly: false,
         proxy:{
             '/SDGBack': {
-                // target: "http://121.4.86.81:8080",
-                target: "http://127.0.0.1:8080",
+                target: "http://121.4.86.81:8080",
+                // target: "http://127.0.0.1:8080",
                 ws: true,
                 timeout: 3600000,
                 changOrigin: true,

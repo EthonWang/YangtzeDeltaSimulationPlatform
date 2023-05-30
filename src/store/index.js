@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
-import { backUrl,backUrl_backup } from "../../public/backURL/backurl";
+import { backUrl, backUrl_backup } from "../../public/backURL/backurl";
+import weather from "./weather";
 
 export default createStore({
   state: {
@@ -12,21 +13,21 @@ export default createStore({
     // devIpAddress:"/YangtzeDeltaBack",
     // devIpAddress_backup:"/YangtzeDeltaBack",
     // devBackIp:"/YangtzeDeltaBack",//wyj
-    devIpAddress:backUrl,
-    devIpAddress_backup:backUrl_backup,
-    devBackIp:backUrl_backup,//wyj
+    devIpAddress: backUrl,
+    devIpAddress_backup: backUrl_backup,
+    devBackIp: backUrl_backup,//wyj
   },
   mutations: {},
   actions: {},
-  modules: {},
+  modules: { weather: weather },
   getters: {
-    devIpAddress(state){
+    devIpAddress(state) {
       return state.devIpAddress
     },
-    devIpAddress_backup(state){
+    devIpAddress_backup(state) {
       return state.devIpAddress_backup
     },
-    devBackIp(state){
+    devBackIp(state) {
       return state.devBackIp
     }
   }

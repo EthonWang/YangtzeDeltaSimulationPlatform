@@ -18,6 +18,13 @@ export const cases_config = [
         component: () => import("views/CasesView/RainForecast.vue")
     },
     {
+        problem: "洪涝水环境灾害",
+        name: "长三角降雨预报专题",
+        path: "rainForecast_uptd",
+        description: " 长三角降雨预报专题",
+        component: () => import("views/CasesView/rainforecast_uptd.vue")
+    },
+    {
         problem: "长三角区域创新专题",
         path: "RegionInnovation",
         component: () => import("views/CasesView/RegionInnovation.vue")

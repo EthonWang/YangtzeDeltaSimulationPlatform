@@ -13,6 +13,6 @@ module.exports = {
     "prettier/prettier": "off",
     "no-unused-vars": "off",
     "vue/multi-word-component-names": "off",
-    "vue/no-useless-template-attributes": "off",
+    "vue/no-useless-template-attributes": "off"
   },
 };

@@ -144,7 +144,7 @@
   <el-dialog v-model="myDataVisible" width="80%" draggable>
     <div style="display: flex">
       <ScienceProblemData style="width: 20vw"></ScienceProblemData>
-      <DataCenter style="width: 40vw;height: ;60vh"></DataCenter>
+      <DataCenter style="width: 40vw;height:60vh"></DataCenter>
     </div>
 
     <template #footer>

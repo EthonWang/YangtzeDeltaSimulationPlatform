@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { CustomLayer } from './cusLayer';
 import GUtils from "../renderer/gUtil";
 import { ProgManager, TexManager, FrameManager } from '../renderer/RenderManager';
@@ -31,7 +32,7 @@ const frames = {msaa: 0, frame: 1};
 
 
 class FlowLayer extends CustomLayer {
-
+    // eslint-disable-next-line
     public pixelRate: number;
     public speedFactor = 1.15;
     public dropRate = 0.003;

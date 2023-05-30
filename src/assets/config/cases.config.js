@@ -138,7 +138,63 @@ export const cases_config = [
         problem: "长三角台风专题",
         path: "Typhoon",
         component: () => import("views/CasesView/Typhoon.vue")
+    }, {
+        problem: "长三角可持续发展",
+        path: 'Sustainable',
+        component: () => import("views/CasesView/Sustainable.vue"),
     },
+    {
+        problem: '可持续发展可视化大屏',
+        path: 'Sustainable_vi',
+        component: () => import("views/CasesView/Sustainable_vi.vue")
+    }, {
+        problem: '可持续发展指标系统浏览',
+        path: 'Sustainable_in',
+        component: () => import("views/CasesView/Sustainable_in.vue"),
+        redirect: 'Sustainable_in/table',
+        children: [
+            {
+                problem: '可持续发展展示页面',
+                path: 'table',
+                component: () => import("views/CasesView/Sustainable_intable.vue")
+            }, {
+                problem: '可持续发展展示页面',
+                path: 'map',
+                component: () => import("views/CasesView/Sustainable_inmap.vue")
+            }
+        ]
+    }, {
+        problem: '可持续发展指标系统创建',
+        path: 'Sustainable_cr',
+        component: () => import("views/CasesView/Sustainable_cre.vue"),
+        redirect: 'Sustainable_cr/Map',
+        children: [
+            {
+                problem: '可持续发展创建页面1',
+                path: 'Map',
+                component: () => import("views/CasesView/Sustainable_crmap.vue")
+            }, {
+                problem: '可持续发展创建页面2',
+                path: 'Table',
+                component: () => import("views/CasesView/Sustainable_crtable.vue")
+            }, {
+                problem: '可持续发展创建页面3',
+                path: 'Data',
+                component: () => import("views/CasesView/Sustainable_crdata.vue")
+
+            }, {
+                problem: '可持续发展创建页面4',
+                path: 'Visual',
+                component: () => import("views/CasesView/Sustainable_crvisual.vue")
+            }
+        ]
+    },
+    {
+        problem: "福建省年鉴GIS整合",
+        path: "Annural_fujin",
+        component: () => import("views/CasesView/Fujian_case.vue")
+    },
+
     // {
     //     problem:"湖泊水环境监测",
     //     name:"滇池模型-富营养化水质参数",

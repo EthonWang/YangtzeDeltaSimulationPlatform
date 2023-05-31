@@ -1,7 +1,7 @@
 <template>
   <div class="mapbox-page">
     <!-- <ModelConfig :modelId="modelId" ref="refModelConfig"> </ModelConfig> -->
-
+    <div class="boxdraw"></div>
     <!-- 对编辑工具的描述 -->
     <div class="des_icon" style="">
       <div style="height: 29px">绘制线段</div>
@@ -11,12 +11,20 @@
       <div style="height: 29px">图像裁剪</div>
       <div style="height: 29px">数据图表分析</div>
       <div style="height: 29px">新建txt文件</div>
+      <div style="height: 29px">按矩形选择</div>
+      <div style="height: 29px">更多工具</div>
     </div>
-    <!-- 显示经纬度与缩放信息 -->
+
+    <!-- 显示鼠标所在经纬度以及缩放层级 -->
     <el-tag class="map-zoom-lnglat" type="info">
       Zoom:{{ zoom }} &nbsp; LngLat:{{ showCenter }}
     </el-tag>
+    <!-- 显示所选要素个数 -->
+    <el-tag class="selectfeature_num" type="info">
+      所选要素个数:{{ features_selected.length }}
+    </el-tag>
 
+    <!-- 控制编辑框开关的按钮 -->
     <div style="position: absolute; top: 75px; left: 110px; z-index: 99">
       <el-button
         v-if="!editBoardShow"
@@ -32,6 +40,7 @@
       </el-button>
     </div>
 
+    <!-- 数据与模型视图 -->
     <transition-group name="lyric">
       <div class="edit-board" v-if="editBoardShow">
         <el-collapse
@@ -39,7 +48,9 @@
           @change="handleChange"
           style="position: relative; z-index: 1005"
         >
-          <el-collapse-item title="数据列表" name="data">
+          <!-- 数据列表 -->
+          <el-collapse-item title="数据列表" name="data" class="draggable">
+            <!-- 数据筛选框：全部数据、可视化数据、输入数据、结果数据 -->
             <el-select
               v-model="value"
               class="m-2"
@@ -53,14 +64,16 @@
                 :value="item.value"
               />
             </el-select>
+            <!-- 数据表格 -->
             <el-table
               :data="showLayerTableList_filter"
               ref="shpLayerTable"
-              row-key="nameId"
+              row-key="id"
               size="small"
-              @cell-click="handleLayerClick"
               style="width: 100%"
             >
+              <!-- 表格中的每一列 -->
+              <!-- 控制图层显示与否的按钮，如果canShow则按钮可以进行操作，否则按钮被禁止 -->
               <el-table-column width="50">
                 <template #default="scope">
                   <el-switch
@@ -84,6 +97,7 @@
                   </el-switch>
                 </template>
               </el-table-column>
+              <!-- 数据的类型csv、txt、geojson等-->
               <el-table-column
                 label="类型"
                 prop="visualType"
@@ -91,6 +105,7 @@
                 show-overflow-tooltip
               >
               </el-table-column>
+              <!-- 数据的名称 -->
               <el-table-column
                 label="名称"
                 prop="name"
@@ -98,6 +113,7 @@
                 show-overflow-tooltip
               >
               </el-table-column>
+              <!-- 控制对数据的操作，如果是txt文件则可以打开文本编辑框编辑文本信息，如果是geojson数据可以修改其颜色透明度等 -->
               <el-table-column label="操作" min-width="90">
                 <template #default="scope">
                   <el-popover
@@ -106,7 +122,7 @@
                     width="250"
                     trigger="click"
                   >
-                    <!--              点图层编辑-->
+                    <!--点图层编辑-->
                     <div
                       v-if="
                         scope.row.type == 'circle' &&
@@ -232,7 +248,7 @@
                       </div>
                     </div>
 
-                    <!--              线图层编辑-->
+                    <!--线图层编辑-->
                     <div
                       v-else-if="
                         scope.row.type === 'line' &&
@@ -402,7 +418,7 @@
                       </div>
                     </div>
 
-                    <!--              面图层编辑-->
+                    <!--面图层编辑-->
                     <div
                       v-else-if="
                         scope.row.type === 'fill' &&
@@ -545,9 +561,9 @@
                         >
                       </div>
                     </div>
-                    <!--              栅格层编辑-->
+                    <!--栅格层编辑-->
                     <div v-else-if="scope.row.data.visualType == 'tif'"></div>
-                    <!--              栅格层编辑-->
+                    <!--栅格层编辑-->
                     <div v-else-if="scope.row.data.visualType == 'dataSet'">
                       <el-scrollbar max-height="40vh">
                         <el-table
@@ -567,7 +583,7 @@
                         </el-table>
                       </el-scrollbar>
                     </div>
-                    <!--              文本编辑-->
+                    <!--文本编辑-->
                     <div v-else-if="scope.row.data.visualType == 'txt'">
                       <div class="flex-row-start">
                         <el-button :width="30" @click="openTxtEditor(scope.row)"
@@ -597,6 +613,7 @@
               </el-table-column>
             </el-table>
           </el-collapse-item>
+          <!-- 模型列表 -->
           <el-collapse-item
             title="模型列表"
             name="model"
@@ -708,6 +725,8 @@
       </FormItem>
     </Form>
   </Modal>
+
+  <!-- 选择裁剪输入数据的弹窗 -->
   <Modal
     v-model="clipSelectFeaturesModal"
     draggable
@@ -757,6 +776,9 @@
       </div>
     </RadioGroup>
   </Modal>
+
+  <!-- 数据分析的弹窗-->
+
   <Modal v-model="analysisModal" draggable sticky scrollable :mask="false">
     <template #header>
       <Icon type="logo-buffer" size="18" />
@@ -879,6 +901,86 @@
       >
     </template>
   </Modal>
+  <!-- 输入新创建要素的名称弹窗 -->
+  <Modal v-model="FeatureNameCollect">
+    <template #header>
+      <Icon type="md-square" size="18" />
+      <span style="margin-left: 5px; font-size: 18px">输入要素名称</span>
+    </template>
+    <span>名称：</span>
+    <Input v-model="newFeatureName" style="width: 90%"></Input>
+    <template #footer>
+      <Button @click="FeatureNameCollect = false">取消</Button>
+      <Button type="primary" @click="saveNewGeojson()">保存要素</Button>
+    </template>
+  </Modal>
+  <!-- 选择要选择的要素类弹窗 -->
+  <Modal
+    v-model="selectedfeaturesshow"
+    draggable
+    sticky
+    scrollable
+    :mask="false"
+    @on-ok="setselectfeature()"
+    @on-cancel="cancel"
+  >
+    <template #header>
+      <Icon type="md-cut" size="18" />
+      <span style="margin-left: 5px; font-size: 18px">选择被选要素</span>
+    </template>
+    <RadioGroup v-model="featureclass_to_select" vertical>
+      <div v-for="(item, index) in showLayerTableList" :key="index">
+        <Radio
+          :label="item.name"
+          v-if="item.visualType == 'geojson' || item.visualType == 'shp'"
+        >
+          <span v-if="item.visualType == 'geojson'">{{ item.name }}</span>
+          <span v-if="item.visualType == 'shp'">{{ item.name }}</span>
+        </Radio>
+      </div>
+    </RadioGroup>
+  </Modal>
+  <!-- 更多工具弹窗 -->
+  <Drawer
+    :closable="true"
+    v-model="showmore"
+    width="50"
+    style="position: relative; z-index: 1100"
+  >
+    <Layout>
+      <Header>
+        <Menu
+          mode="horizontal"
+          theme="dark"
+          active-name="1"
+          @on-select="changeview"
+        >
+          <div class="layout-logo"></div>
+          <div class="layout-nav">
+            <MenuItem name="1">
+              <Icon type="ios-navigate"></Icon>
+              数据处理服务
+            </MenuItem>
+            <MenuItem name="2">
+              <Icon type="ios-keypad"></Icon>
+              第三方插件
+            </MenuItem>
+            <MenuItem name="3">
+              <Icon type="ios-analytics"></Icon>
+              在线编码
+            </MenuItem>
+          </div>
+        </Menu>
+      </Header>
+      <Content :style="{ padding: '0 10px' }">
+        <Card style="margin-top: 20px">
+          <dataprocess v-if="dataproshow == 1"></dataprocess>
+          <thirdparty v-if="dataproshow == 2"></thirdparty>
+          <programol v-if="dataproshow == 3"></programol>
+        </Card>
+      </Content>
+    </Layout>
+  </Drawer>
 </template>
 
 <script>
@@ -898,6 +1000,10 @@ import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import ModelConfig from "../App/ModelConfig.vue";
 import ModelTree from "../App/ModelTree.vue";
+import dataprocess from "@/components/dataprocess/dataprocess.vue";
+import programol from "@/components/dataprocess/programol";
+import thirdparty from "@/components/dataprocess/thirdparty.vue";
+import Sortable from "sortablejs";
 import { Encrypt, Decrypt } from "@/util/codeUtil";
 
 var map = null;
@@ -907,6 +1013,9 @@ export default {
   props: ["shpShowList"], //shpShowList为前端勾选的要展示在地图上的shp，格式为[{name:"",type:"",nameId:""}]
   components: {
     ModelTree,
+    dataprocess,
+    programol,
+    thirdparty,
   },
   data() {
     return {
@@ -1032,6 +1141,28 @@ export default {
       taskInfo: JSON.parse(Decrypt(localStorage.getItem("task"))),
       userInfo: JSON.parse(Decrypt(localStorage.getItem("userInfo"))),
       dataServer: useStore().getters.devIpAddress,
+      FeatureNameCollect: false,
+      newFeatureName: "",
+      canvas: null,
+      start: null,
+      current: null,
+      box: null,
+      //控制是否在选择中的按钮
+      selecton: false,
+      //要选择的要素类的名称
+      featureclass_to_select: null,
+      //控制选择要素类弹窗是否显示的变量
+      selectedfeaturesshow: false,
+      //要选择的要素类的数据源
+      source_to_select: null,
+      //要选择的要素类的数据id
+      id_to_select: null,
+      //选择到的要素
+      features_selected: [],
+      //更多
+      showmore: false,
+      //展示的数据处理
+      dataproshow: true,
     };
   },
 
@@ -1065,6 +1196,11 @@ export default {
             (item) => item.name.includes("result")
           );
         }
+      },
+    },
+    showLayerTableList_filter: {
+      handler(newVal, oldVal) {
+        this.rowDrop();
       },
     },
     shpShowListCopy: {
@@ -1110,22 +1246,22 @@ export default {
         that.initShpShowList();
         setTimeout(() => {
           that.value = "all";
-        }, 200);
-      }, 200);
-    }, 200);
+          setTimeout(() => {
+            that.rowDrop();
+          }, 500);
+        }, 500);
+      }, 500);
+    }, 500);
   },
 
   methods: {
     //数据部分后台未完成，暂时删掉了部分代码，不然报错
     canShow(type) {
       if (
-        type != "zip" &&
-        type != "csv" &&
-        type != "xlsx" &&
-        type != "rar" &&
-        type != "asc" &&
-        type != "inp" &&
-        type != "pptx"
+        type == "shp" ||
+        type == "tif" ||
+        type == "geojson" ||
+        type == "txt"
       ) {
         return true;
       } else {
@@ -1205,7 +1341,148 @@ export default {
           "," +
           String(e.lngLat.lat.toFixed(5));
       });
+      map.on("load", () => {
+        this.canvas = map.getCanvasContainer();
+        // console.log(this.canvas);
+        this.canvas.addEventListener("mousedown", this.mouseDown, true);
+      });
+
+      map.on("contextmenu", (e) => {
+        console.log(e.lngLat);
+      });
     },
+    mouseDown(e) {
+      // Continue the rest of the function if the shiftkey is pressed.
+      if (!this.selecton) return;
+
+      // Disable default drag zooming when the shift key is held down.
+      map.dragPan.disable();
+
+      // Call functions for the following events
+      document.addEventListener("mousemove", this.onMouseMove);
+      document.addEventListener("mouseup", this.onMouseUp);
+      document.addEventListener("keydown", this.onKeyDown);
+      const b = document.querySelector(".boxdraw");
+      b.style.border = "2px solid #3887be";
+      // Capture the first xy coordinates
+      this.start = this.mousePos(e);
+    },
+
+    mousePos(e) {
+      const rect = this.canvas.getBoundingClientRect();
+      return new mapboxgl.Point(
+        e.clientX - rect.left - this.canvas.clientLeft,
+        e.clientY - rect.top - this.canvas.clientTop
+      );
+    },
+    onMouseMove(e) {
+      // Capture the ongoing xy coordinates
+      this.current = this.mousePos(e);
+
+      // Append the box element if it doesnt exist
+      if (!this.box) {
+        // this.box = document.createElement("div");
+        // const mapboxpage = document.querySelector(".mapbox-page");
+        this.box = document.querySelector(".boxdraw");
+        // mapboxpage.appendChild(this.box);
+        // mapboxpage.insertBefore(this.box, mapboxpage.nextElementSibling);
+        // this.box.classList.add("boxdraw");
+        // console.log(this.box);
+        // console.log(this.canvas);
+        // const canvass = document.querySelector(".mapboxgl-canvas");
+        this.canvas.appendChild(this.box);
+      }
+
+      const minX = Math.min(this.start.x, this.current.x),
+        maxX = Math.max(this.start.x, this.current.x),
+        minY = Math.min(this.start.y, this.current.y),
+        maxY = Math.max(this.start.y, this.current.y);
+
+      // Adjust width and xy position of the box element ongoing
+      const pos = `translate(${minX}px, ${minY}px)`;
+      this.box.style.transform = pos;
+      this.box.style.width = maxX - minX + "px";
+      this.box.style.height = maxY - minY + "px";
+      // this.box.style.backgroundColor = "rgba(56, 135, 190, 0.1)";
+      // this.box.style.position = "absolute";
+      // this.box.left = 0;
+    },
+
+    onMouseUp(e) {
+      // Capture xy coordinates
+      this.finish([this.start, this.mousePos(e)]);
+    },
+
+    onKeyDown(e) {
+      // If the ESC key is pressed
+      if (e.keyCode === 27) this.finish();
+    },
+    finish(bbox) {
+      let that = this;
+      // Remove these events now that finish has been called.
+      document.removeEventListener("mousemove", this.onMouseMove);
+      document.removeEventListener("keydown", this.onKeyDown);
+      document.removeEventListener("mouseup", this.onMouseUp);
+
+      if (this.box) {
+        this.box.style.width = "0px";
+        this.box.style.height = "0px";
+        this.box.style.border = "0px";
+        // this.box.parentNode.removeChild(this.box);
+        // this.box = null;
+      }
+
+      // If bbox exists. use this value as the argument for `queryRenderedFeatures`
+      if (bbox) {
+        const features = map.queryRenderedFeatures(bbox, {
+          layers: [this.id_to_select],
+        });
+        this.features_selected = Array.from(new Set(features));
+        for (let i = 0; i < this.features_selected.length; i++) {
+          for (let j = i + 1; j < this.features_selected.length; j++) {
+            if (
+              this.features_selected[i].properties.id ==
+              this.features_selected[j].properties.id
+            ) {
+              this.features_selected.splice(j, 1);
+              j--;
+            }
+          }
+        }
+        // for (let i = 0; i < features.length; i++) {
+        //   let layerproperties = {
+        //     id: i,
+        //   };
+        //   features[i].properties = layerproperties;
+        // }
+
+        // if (features.length >= 1000) {
+        //   return window.alert("Select a smaller number of features");
+        // }
+
+        // Run through the selected features and set a filter
+        // to match features with unique FIPS codes to activate
+        // the `counties-highlighted` layer.
+        const fips = features.map((item) => item.properties.id);
+        // console.log(fips);
+        map.setFilter("highlighted", ["in", "id", ...fips]);
+        let temp;
+        for (var i = 0; i < this.showLayerTableList_filter.length; i++) {
+          if (
+            this.showLayerTableList[i].visualType == "tif" ||
+            this.showLayerTableList[i].visualType == "shp" ||
+            this.showLayerTableList[i].visualType == "geojson"
+          ) {
+            break;
+          }
+        }
+        map.moveLayer("highlighted", this.showLayerTableList[temp]);
+      }
+
+      map.dragPan.enable();
+      this.selecton = false;
+    },
+
     filterResList() {
       for (let i = 0; i < this.taskInfo.dataList.length; i++) {
         if (this.taskInfo.dataList[i].simularTrait == "task") {
@@ -1220,9 +1497,9 @@ export default {
       // this.resList = this.data_list;
     },
     initShpShowList() {
-      // console.log(this.resList);
+      console.log(this.resList);
       for (let i = 0; i < this.resList.dataList.length; i++) {
-        console.log("simular :", this.resList.dataList[i]);
+        // console.log("simular :", this.resList.dataList[i]);
         if (this.resList.dataList[i].mdl != undefined) {
           continue;
         }
@@ -1248,12 +1525,13 @@ export default {
             data: this.resList.dataList[i],
             // "source-layer": "default"
           };
-          this.showLayerTableList.push(newLayer);
+          this.showLayerTableList.unshift(newLayer);
         }
       }
     },
     //更新数据用这个
     addLayerToMap(newShpInfo) {
+      // console.log(newShpInfo.visualWebAddress);
       //添加数据源
       if (newShpInfo.visualType == "shp") {
         map.addSource(newShpInfo.name + "_" + newShpInfo.id, {
@@ -1270,7 +1548,7 @@ export default {
           visualType: newShpInfo.visualType,
           data: newShpInfo,
         };
-        this.showLayerTableList.push(newLayer);
+        this.showLayerTableList.unshift(newLayer);
         map.addLayer(newLayer);
       } else if (
         newShpInfo.visualType == "tif" ||
@@ -1291,14 +1569,16 @@ export default {
           visualType: newShpInfo.visualType,
           data: newShpInfo,
         };
-        this.showLayerTableList.push(newLayer);
+        this.showLayerTableList.unshift(newLayer);
         map.addLayer(newLayer);
       } else if (newShpInfo.visualType == "geojson") {
+        console.log(newShpInfo);
         map.addSource(newShpInfo.id, {
           type: "geojson",
           // data: "http://172.21.212.63:8999/model/getShpJsonData?shpJsonPath="+newShpInfo.path,
           data: this.dataServer + newShpInfo.fileWebAddress,
         });
+        console.log(newShpInfo.type);
         //添加layer
         let newLayer = {
           show: true,
@@ -1309,8 +1589,9 @@ export default {
           paint: this.layerStyle[newShpInfo.type].paint,
           visualType: newShpInfo.visualType,
           data: newShpInfo,
+          startEditor: false,
         };
-        this.showLayerTableList.push(newLayer);
+        this.showLayerTableList.unshift(newLayer);
         map.addLayer(newLayer);
       }
     },
@@ -1367,6 +1648,7 @@ export default {
     setDrawControlStyle() {
       // 添加自定义按钮
       let that = this;
+      //保存按钮
       const drawBox = document.querySelector(".mapboxgl-ctrl-group");
       let saveButtonObj = document.createElement("button");
       // console.log(saveButtonObj);
@@ -1383,6 +1665,7 @@ export default {
         },
         true
       );
+      //裁剪按钮
       let clipButtonObj = document.createElement("button");
       clipButtonObj.classList =
         "mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_clip ivu-icon ivu-icon-md-cut";
@@ -1397,6 +1680,7 @@ export default {
         },
         true
       );
+      //数据分析按钮
       let analysisButtonObj = document.createElement("button");
       analysisButtonObj.classList =
         "mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_analysis ivu-icon ivu-icon-logo-buffer";
@@ -1411,6 +1695,7 @@ export default {
         },
         true
       );
+      //新建文本文件
       let unionButtonObj = document.createElement("button");
       unionButtonObj.classList =
         "mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_union ivu-icon ivu-icon-md-square";
@@ -1425,6 +1710,40 @@ export default {
         },
         true
       );
+      // 按空间位置选择要素按钮
+      let selectButtonObj = document.createElement("button");
+      selectButtonObj.classList =
+        "mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_select ivu-icon ivu-icon-ios-crop";
+      selectButtonObj.id = "mapbox-gl-draw_select";
+      selectButtonObj.title = "按矩形选择";
+      selectButtonObj.style.fontSize = "16px";
+      drawBox.appendChild(selectButtonObj);
+      selectButtonObj.addEventListener(
+        "click",
+        (e) => {
+          that.selectedfeaturesshow = true;
+          if (map.getLayer("highlighted")) {
+            map.removeLayer("highlighted");
+          }
+        },
+        true
+      );
+      //更多
+      let moreButtonObj = document.createElement("button");
+      moreButtonObj.classList =
+        "mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_more ivu-icon ivu-icon-md-more";
+      moreButtonObj.id = "mapbox-gl-draw_more";
+      moreButtonObj.title = "更多";
+      moreButtonObj.style.fontSize = "16px";
+      drawBox.appendChild(moreButtonObj);
+      moreButtonObj.addEventListener(
+        "click",
+        (e) => {
+          that.showmore = true;
+          that.handleEditBoardShow(0);
+        },
+        true
+      );
       // 修改title
       const lineButton = document.querySelector(".mapbox-gl-draw_line");
       lineButton.setAttribute("title", "绘制线段");
@@ -1434,6 +1753,10 @@ export default {
       trashButton.setAttribute("title", "删除图形");
       const combineButton = document.querySelector(".mapbox-gl-draw_union");
       combineButton.setAttribute("title", "新建文本文件");
+      const selectButton = document.querySelector(".mapbox-gl-draw_select");
+      selectButton.setAttribute("title", "按矩形选择");
+      const more = document.querySelector(".mapbox-gl-draw_more");
+      more.setAttribute("title", "更多");
       // const uncombineButton = document.querySelector(
       //   ".mapbox-gl-draw_uncombine"
       // );
@@ -1444,56 +1767,79 @@ export default {
       console.log(this.geojson);
     },
     saveTempGeojson() {
+      //对新创建的进行保存
       if (
         this.geojson.features.length > 0 &&
         map.getSource(this.geojson.features[0].id) == undefined
       ) {
-        map.addSource(this.geojson.features[0].id, {
-          type: "geojson",
-          data: this.geojson,
-        });
-
-        //添加layer
-        let newLayer = {
-          show: true,
-          name: this.geojson.features[0].id,
-          id: this.geojson.features[0].id,
-          type: "fill",
-          visualType: "geojson",
-          filter: ["all"],
-          layout: this.layerStyle["fill"].layout,
-          maxzoom: 22,
-          metadata: "",
-          minzoom: 0,
-          paint: this.layerStyle["fill"].paint,
-          source: this.geojson.features[0].id,
-          startEditor: false,
-          data: {
-            visualType: "geojson",
-            sourceData: this.geojson,
-          },
-          // "source-layer": "default"
+        this.getTempFeatureNameShow();
+      }
+      //对已有的数据进行保存操作
+      else if (map.getSource(this.geojson.features[0].id) != undefined) {
+        this.saveoldGeojson();
+      }
+    },
+    getTempFeatureNameShow() {
+      this.FeatureNameCollect = true;
+    },
+    saveNewGeojson() {
+      for (var i = 0; i < this.geojson.features.length; i++) {
+        let properties = {
+          id: i,
         };
+        this.geojson.features[i].properties = properties;
+      }
 
+      map.addSource(this.geojson.features[0].id, {
+        type: "geojson",
+        data: this.geojson,
+      });
+      let newLayer = {
+        show: true,
+        name: this.newFeatureName,
+        id: this.geojson.features[0].id,
+        type: "line",
+        visualType: "geojson",
+        layout: this.layerStyle["line"].layout,
+        maxzoom: 22,
+        metadata: "",
+        minzoom: 0,
+        paint: this.layerStyle["line"].paint,
+        source: this.geojson.features[0].id,
+        // startEditor: false,
+        data: {
+          visualType: "geojson",
+          sourceData: this.geojson,
+        },
+        // "source-layer": "default"
+      };
+      // console.log(newLayer);
+      if (this.geojson.features[0].geometry.type == "Polygon") {
+        newLayer.type = "fill";
+        newLayer.layout = this.layerStyle["fill"].layout;
+        newLayer.paint = this.layerStyle["fill"].paint;
         newLayer.paint["fill-color"] =
           "#" + Math.random().toString(16).substr(2, 6);
-        this.showLayerTableList.push(newLayer);
-        map.addLayer(newLayer);
-        this.draw.deleteAll();
-        this.geojson = {
-          features: [],
-          type: "FeatureCollection",
-        };
       }
-      //对已有的数据进行操作
-      else if (map.getSource(this.geojson.features[0].id) != undefined) {
-        let tempId = this.geojson.features[0].id;
-        this.updateMapSource(this.geojson.features[0].id);
-        this.handleLayoutChange(tempId, "visibility", "visible");
-        for (let i = 0; i < this.showLayerTableList.length; i++) {
-          if (this.showLayerTableList[i].id == tempId) {
-            this.showLayerTableList[i].startEditor = false;
-          }
+      // this.showLayerTableList_filter.unshift(newLayer);
+      this.showLayerTableList.unshift(newLayer);
+      this.showLayerTableList_filter = this.showLayerTableList;
+      map.addLayer(newLayer);
+      this.draw.deleteAll();
+      this.geojson = {
+        features: [],
+        type: "FeatureCollection",
+      };
+      this.FeatureNameCollect = false;
+    },
+
+    saveoldGeojson() {
+      let tempId = this.geojson.features[0].id;
+      this.updateMapSource(this.geojson.features[0].id);
+      this.handleLayoutChange(tempId, "visibility", "visible");
+      for (let i = 0; i < this.showLayerTableList.length; i++) {
+        if (this.showLayerTableList[i].id == tempId) {
+          this.showLayerTableList[i].startEditor = false;
         }
       }
     },
@@ -1504,6 +1850,7 @@ export default {
         this.closeAllEditorStatus(row.id);
         this.handleLayoutChange(row.id, "visibility", "none");
         let data = map.getSource(row.id);
+        console.log(data);
         this.draw.add(data._data);
         this.geojson = data._data;
       } else {
@@ -1879,6 +2226,118 @@ export default {
         }
       );
     },
+    rowDrop() {
+      this.$nextTick(() => {
+        // 此时找到的元素是要拖拽元素的父容器
+        let tbody = document.querySelector(
+          ".draggable .el-table__body-wrapper tbody"
+        );
+        // console.log(tbody);
+        let _this = this;
+        Sortable.create(tbody, {
+          //  指定父元素下可被拖拽的子元素
+          draggable: ".draggable .el-table__row",
+          onEnd(evt) {
+            // console.log(typeof _this.showLayerTableList_filter);
+            // console.log(_this.showLayerTableList_filter);
+            _this.showLayerTableList_filter.splice(
+              evt.newIndex,
+              0,
+              _this.showLayerTableList_filter.splice(evt.oldIndex, 1)[0]
+            );
+            var newArray1 = [];
+            newArray1 = _this.showLayerTableList_filter.slice(0);
+            // console.log(newArray1);
+            _this.showLayerTableList_filter = [];
+            _this.showLayerTableList_filter = newArray1;
+            // console.log(_this.showLayerTableList_filter);
+            console.log(evt.oldIndex, evt.newIndex);
+            // 如果是从下往上移动，则oldIndex>newIndex且应该是将此图层移到index>=newIndex的所有图层上方
+            if (evt.oldIndex > evt.newIndex) {
+              console.log(map);
+              // temp记录的是距离newIndex图层最近的可以显示的图层
+              let temp = _this.showLayerTableList_filter.length;
+              for (let i = evt.oldIndex; i >= evt.newIndex + 1; i--) {
+                if (
+                  _this.showLayerTableList_filter[i].visualType == "tif" ||
+                  _this.showLayerTableList_filter[i].visualType == "shp" ||
+                  _this.showLayerTableList_filter[i].visualType == "geojson"
+                ) {
+                  temp = i;
+                  map.moveLayer(
+                    _this.showLayerTableList_filter[temp].id,
+                    _this.showLayerTableList_filter[evt.newIndex].id
+                  );
+                }
+              }
+              if (temp < _this.showLayerTableList_filter.length) {
+                // console.log(temp);
+                // console.log(
+                //   _this.showLayerTableList_filter[evt.newIndex],
+                //   _this.showLayerTableList_filter[temp]
+                // );
+              }
+            }
+            //否则就是从上往下移
+            else {
+              // console.log(map);
+              let temp = -1;
+              for (let i = evt.oldIndex; i <= evt.newIndex - 1; i++) {
+                if (
+                  _this.showLayerTableList_filter[i].visualType == "tif" ||
+                  _this.showLayerTableList_filter[i].visualType == "shp" ||
+                  _this.showLayerTableList_filter[i].visualType == "geojson"
+                ) {
+                  temp = i;
+                  map.moveLayer(
+                    _this.showLayerTableList_filter[evt.newIndex].id,
+                    _this.showLayerTableList_filter[temp].id
+                  );
+                }
+              }
+              // if (temp > -1) {
+              // }
+            }
+
+            // map.moveLayer(
+            //   _this.showLayerTableList_filter[evt.oldIndex].id,
+            //   _this.showLayerTableList_filter[evt.newIndex].id
+            // );
+            // console.log(evt.oldIndex, evt.newIndex);
+            // console.log(_this.showLayerTableList_filter[evt.oldIndex].id);
+            // console.log(_this.showLayerTableList_filter[evt.newIndex].id);
+          },
+        });
+      });
+    },
+    setselectfeature() {
+      for (var i = 0; i < this.showLayerTableList.length; i++) {
+        if (this.showLayerTableList[i].name == this.featureclass_to_select) {
+          break;
+        }
+      }
+      this.source_to_select = this.showLayerTableList[i].source;
+      this.id_to_select = this.showLayerTableList[i].id;
+      map.addLayer(
+        {
+          id: "highlighted",
+          type: "line",
+          source: this.source_to_select,
+          // "source-layer": "original",
+          paint: {
+            // "fill-outline-color": "#00FFFF",
+            "line-color": "#00FFFF",
+            "line-width": 2,
+          },
+          filter: ["in", "id", ""],
+        },
+        "settlement-label"
+      );
+      this.selecton = true;
+    },
+    changeview(name) {
+      this.dataproshow = name;
+    },
   },
 };
 </script>
@@ -1890,7 +2349,7 @@ export default {
   right: 9px;
   background-color: #fafafa;
   width: 100px;
-  height: 203px;
+  height: 260px;
   z-index: 50;
   border-radius: 5px;
 
@@ -1916,6 +2375,14 @@ export default {
   position: absolute;
   bottom: 30px;
   right: 50px;
+  z-index: 99;
+  /*background-color: #fafafa !important;*/
+  font-size: 13px;
+}
+.selectfeature_num {
+  position: absolute;
+  bottom: 30px;
+  left: 50px;
   z-index: 99;
   /*background-color: #fafafa !important;*/
   font-size: 13px;
@@ -1979,5 +2446,29 @@ export default {
 .lyric-enter-active,
 .lyric-leave-active {
   transition: all 0.5s;
+}
+.btn {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.boxdraw {
+  background: rgba(56, 135, 190, 0.1);
+  border: 2px solid #3887be;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  // z-index: 100000;
+}
+.layout-header {
+  height: 10%;
+}
+.layout-content {
+  height: 80%;
+}
+.layout-footer {
+  height: 10%;
 }
 </style>

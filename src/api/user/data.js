@@ -1,6 +1,6 @@
 import { get, post } from "@/request/request_backup"
 import { useStore } from "vuex"
-import { backUrl,backUrl_backup } from "../../../public/backURL/backurl";
+import { backUrl, backUrl_backup } from "../../../public/backURL/backurl";
 const dataServer = backUrl_backup;
 // 上传文件
 export default class {
@@ -43,13 +43,13 @@ export default class {
             return post('/resource/deleteFolder?folderId=' + file.id,)
         }
     }
-    createFolder(parent_id, name,problemTags="") {
+    createFolder(parent_id, name, problemTags = "") {
         let folder = {
             name: name,
             parentId: parent_id,
             description: '新建文件夹',
             problemTags: problemTags,
-            publicBoolean:false,
+            publicBoolean: false,
             type: "folder",
         }
         return post('/resource/createFolder', folder)
@@ -57,8 +57,8 @@ export default class {
 
     moveFile() { }
     editFile(data) {
-        if(typeof(data.problemTags)!='string'){
-            data.problemTags=data.problemTags.toString()
+        if (typeof (data.problemTags) != 'string') {
+            data.problemTags = data.problemTags.toString()
         }
         if (data.type == 'file') {
             return post('/resource/updateUserDataItem', data)
@@ -76,7 +76,7 @@ export default class {
     sendXMLToContainer(configFile) {
         return post('/model/upXMLToDataContainer', configFile)
     }
-    getAllPublicFile(){
+    getAllPublicFile() {
         return get('/resource/getAllPublicUserData')
     }
 }

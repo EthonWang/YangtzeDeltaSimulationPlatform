@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory,createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory, createWebHashHistory } from "vue-router";
 import Home from "../views/Home.vue";
 // import Data from "@/views/Data.vue";
 import Model from "@/views/Model.vue";
@@ -36,7 +36,13 @@ const routes = [
     path: "/model",
     name: "模型",
     component: Model,
-    children: []
+    children: [
+      {
+        path: "/dataprocess",
+        name: "数据处理服务",
+        component: () => import("../components/dataprocess/dataprocess.vue")
+      }
+    ]
   },
   {
     isBar: false,
@@ -135,7 +141,7 @@ const routes = [
   {
     isBar: false,
     path: '/caseInfo',
-    name:'caseInfo',
+    name: 'caseInfo',
     component: CaseInfo
   }
 ];
@@ -150,7 +156,7 @@ routes[4].children = routes[4].children.concat(cases_config)
 
 const router = createRouter({
   // history: createWebHistory(process.env.BASE_URL),
-  history:createWebHashHistory(),
+  history: createWebHashHistory(),
   // base: '/YangtzeDelta/', //打包项目的根目录
   routes,
 });

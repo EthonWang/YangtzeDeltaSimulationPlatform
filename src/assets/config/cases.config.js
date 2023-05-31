@@ -19,10 +19,17 @@ export const cases_config = [
     },
     {
         problem: "洪涝水环境灾害",
-        name: "长三角降雨预报专题",
+        name: "长三角天气预报",
         path: "rainForecast_uptd",
         description: " 长三角降雨预报专题",
         component: () => import("views/CasesView/rainforecast_uptd.vue")
+    },
+    {
+        problem: "洪涝水环境灾害",
+        name: "长三角天气预报2",
+        path: "rainForecast_2023",
+        description: " 长三角降雨预报专题",
+        component: () => import("views/CasesView/rainforecast_2023.vue")
     },
     {
         problem: "长三角区域创新专题",
@@ -139,6 +146,11 @@ export const cases_config = [
         path: "Typhoon",
         component: () => import("views/CasesView/Typhoon.vue")
     },
+    {
+        problem: "testthree",
+        path: "three",
+        component: () => import("views/CasesView/three.vue")
+    }
     // {
     //     problem:"湖泊水环境监测",
     //     name:"滇池模型-富营养化水质参数",

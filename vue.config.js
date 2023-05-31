@@ -71,10 +71,19 @@ module.exports = {
             '/api': {
                 target: "http://api.data.pmsc.cn",
                 ws: true,
-                timeout: 3600000,
+                timeout: 36000000,
                 changOrigin: true,
                 pathRewrite: {
                     '^/api': '',
+                },
+            },
+            '/portalapi': {
+                target: "https://geomodeling.njnu.edu.cn",
+                ws: true,
+                timeout: 36000000,
+                changOrigin: true,
+                pathRewrite: {
+                    '^/portalapi': '',
                 },
             }
         }

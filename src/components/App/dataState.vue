@@ -284,6 +284,7 @@ export default {
   methods: {
     chooseConfig(modelInEvent) {
       this.dialogDataChoose = true;
+      console.log(modelInEvent);
       this.nowChooseConfig = modelInEvent;
     },
     chooseOneData(data) {
@@ -323,7 +324,8 @@ export default {
           data.parentId != null &&
           data.parentId != undefined &&
           data.parentId != ""
-        ) { //发送数据（非集）获取url
+        ) {
+          //发送数据（非集）获取url
           this.dataApi
             .sendDataToContainer(data.fileRelativePath, data.id)
             .then((res) => {
@@ -350,7 +352,8 @@ export default {
               ElMessage.error("使用数据失败1");
               loading_data.close();
             });
-        } else { //发送数据集 获取url
+        } else {
+          //发送数据集 获取url
           this.dataApi
             .sendResDataToContainer(
               data.fileRelativePath,
@@ -464,14 +467,14 @@ export default {
       }
     },
     loadToLab(event) {
-      if(event.url==undefined){
+      if (event.url == undefined) {
         this.$message.error("请先进行实验");
-        return
+        return;
       }
-      let outList=this.outEventList(this.state)
-      let outUrlList=[]
-      for(let i in outList){
-        outUrlList.push(outList[i].url)
+      let outList = this.outEventList(this.state);
+      let outUrlList = [];
+      for (let i in outList) {
+        outUrlList.push(outList[i].url);
       }
       if (outList[0].url != undefined) {
         this.task_api
@@ -487,18 +490,22 @@ export default {
               let newTask = res.data;
               console.log(res);
               localStorage.setItem("task", Encrypt(JSON.stringify(newTask)));
-              ElMessage({ type: "success", message: "成功加入"+outUrlList.length+"条数据" });
+              ElMessage({
+                type: "success",
+                message: "成功加入" + outUrlList.length + "条数据",
+              });
               let loading = ElLoading.service({
                 lock: true,
                 text: "装载数据中...",
                 background: "rgba(0, 0, 0, 0.7)",
               });
-              setTimeout(()=>{
-                location.reload()
-              },750)
+              setTimeout(() => {
+                location.reload();
+              }, 750);
             }
-          }).catch((err)=>{
-            ElMessage.error("出错，未返回数据")
+          })
+          .catch((err) => {
+            ElMessage.error("出错，未返回数据");
           });
       } else {
         this.$message.error("请先进行实验");

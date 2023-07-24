@@ -85,7 +85,7 @@
   <el-button
     size="small"
     @click="showRecommend"
-    style="position: absolute; right: 40px; top: 330px"
+    style="position: absolute; right: 40px; top: 360px"
     ><span v-if="recommendList"
       ><el-icon><ArrowUpBold /></el-icon>&nbsp;收起</span
     >
@@ -749,7 +749,7 @@ const store = useStore(); //vuex直接用store.commit
 }
 .levels {
   position: absolute;
-  top: 400px;
+  top: 430px;
   right: 40px;
   margin-left: -140px;
   margin-top: 0px;

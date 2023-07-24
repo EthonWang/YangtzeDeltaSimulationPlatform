@@ -131,6 +131,40 @@
               inactive-text="私有"
             />
           </el-form-item>
+          <el-form-item label="是否可视化" :label-width="data_des_width">
+            <el-switch
+              v-model="upload_file.visualBoolean"
+              class="mb-2"
+              active-text="是"
+              inactive-text="否"
+            />
+          </el-form-item>
+          <el-form-item
+            prop="visualType"
+            label="数据类别"
+            :label-width="150"
+            v-if="upload_file.visualBoolean == true"
+          >
+            <RadioGroup v-model="upload_file.visualType" style="width: 80%">
+              <Radio label="shp" style="font-size: 14px">矢量</Radio>
+              <Radio label="tif" style="font-size: 14px">栅格</Radio>
+              <Radio label="txt" style="font-size: 14px">文本</Radio>
+              <Radio label="img" style="font-size: 14px">图片</Radio>
+              <Radio label="video" style="font-size: 14px">视频</Radio>
+            </RadioGroup>
+          </el-form-item>
+          <el-form-item
+            prop="geoType"
+            label="矢量数据类别"
+            :label-width="150"
+            v-if="upload_file.visualType == 'shp'"
+          >
+            <RadioGroup v-model="upload_file.geoType" style="width: 80%">
+              <Radio label="circle" style="font-size: 14px">点</Radio>
+              <Radio label="line" style="font-size: 14px">线</Radio>
+              <Radio label="fill" style="font-size: 14px">面</Radio>
+            </RadioGroup>
+          </el-form-item>
         </el-form>
         <el-dialog
           v-model="innerVisible"
@@ -141,13 +175,16 @@
           <el-upload
             v-model:file-list="fileList"
             class="upload-demo"
-            :action="backUrl_backup1+'/resource/saveDataItem'"
+            :action="backUrl_backup1 + '/resource/saveDataItem'"
             :headers="upload_header"
             :data="{
               name: upload_file.name,
               description: upload_file.description,
               problemTags: upload_file.problemTagsString,
               publicBoolean: upload_file.publicBoolean,
+              visualBoolean: upload_file.visualBoolean,
+              visualType: upload_file.visualType,
+              geoType: upload_file.geoType,
               parentId: now_id,
             }"
             :on-success="successUpload"
@@ -264,9 +301,9 @@ import FileItem from "./FileItem.vue";
 import { scienceChoose } from "@/assets/user/scienceChoose";
 import { ElLoading } from "element-plus";
 import { Encrypt, Decrypt } from "@/util/codeUtil";
-import { backUrl,backUrl_backup } from "../../../../public/backURL/backurl";
+import { backUrl, backUrl_backup } from "../../../../public/backURL/backurl";
 
-const backUrl_backup1=ref(backUrl_backup)
+const backUrl_backup1 = ref(backUrl_backup);
 const userInfo = JSON.parse(Decrypt(localStorage.getItem("userInfo")));
 const task_api = new taskApi();
 const show_task = ref(false);
@@ -347,6 +384,9 @@ var upload_file = ref({
   description: "",
   problemTags: [],
   publicBoolean: false,
+  visualBoolean: false,
+  visualType: "",
+  geoType: "",
   problemTagsString: computed(() => {
     return upload_file.value.problemTags.toString();
   }),
@@ -444,6 +484,9 @@ const successUpload = () => {
     description: "",
     problemTags: [],
     publicBoolean: false,
+    visualBoolean: false,
+    visualType: "",
+    geoType: "",
     problemTagsString: computed(() => {
       return upload_file.value.problemTags.toString();
     }),
@@ -458,22 +501,21 @@ const now_id = ref(userInfo.id);
 var last_id = [];
 const createFolder = (index = -1) => {
   if (index != -1) {
-    if(file_data_choose.value[index].name==""){
-      ElMessage('请输入文件夹名')
-    }else{
+    if (file_data_choose.value[index].name == "") {
+      ElMessage("请输入文件夹名");
+    } else {
       api
-      .createFolder(
-        now_id.value,
-        file_data_choose.value[index].name,
-        file_data_choose.value[index].problemTags.toString()
-      )
-      .then((res) => {
-        file_data_choose.value[index].rename = false;
-        refresh();
-        return;
-      });
+        .createFolder(
+          now_id.value,
+          file_data_choose.value[index].name,
+          file_data_choose.value[index].problemTags.toString()
+        )
+        .then((res) => {
+          file_data_choose.value[index].rename = false;
+          refresh();
+          return;
+        });
     }
-    
   }
   if (index == -1) {
     file_data_choose.value.unshift({

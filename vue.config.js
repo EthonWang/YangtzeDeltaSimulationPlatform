@@ -72,10 +72,19 @@ module.exports = {
                 target: "http://121.4.86.81:8080",
                 // target: "http://127.0.0.1:8080",
                 ws: true,
-                timeout: 3600000,
+                timeout: 36000000,
                 changOrigin: true,
                 pathRewrite: {
                     '^/SDGBack': '',
+                },
+            },
+            '/portalapi': {
+                target: "https://geomodeling.njnu.edu.cn",
+                ws: true,
+                timeout: 36000000,
+                changOrigin: true,
+                pathRewrite: {
+                    '^/portalapi': '',
                 },
             }
         }

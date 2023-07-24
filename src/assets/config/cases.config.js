@@ -19,10 +19,17 @@ export const cases_config = [
     },
     {
         problem: "洪涝水环境灾害",
-        name: "长三角降雨预报专题",
+        name: "长三角天气预报",
         path: "rainForecast_uptd",
         description: " 长三角降雨预报专题",
         component: () => import("views/CasesView/rainforecast_uptd.vue")
+    },
+    {
+        problem: "洪涝水环境灾害",
+        name: "长三角天气预报2",
+        path: "rainForecast_2023",
+        description: " 长三角降雨预报专题",
+        component: () => import("views/CasesView/rainforecast_2023.vue")
     },
     {
         problem: "长三角区域创新专题",

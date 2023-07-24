@@ -68,13 +68,13 @@
           </div>
         </div>
         <!-- <div class="chart_card_box">
-          <div class="chart_card">
-            <div class="day_title"><h2>24小时气温</h2></div>
-            <div class="chart_box">
-              <div id="linechart"></div>
+            <div class="chart_card">
+              <div class="day_title"><h2>24小时气温</h2></div>
+              <div class="chart_box">
+                <div id="linechart"></div>
+              </div>
             </div>
-          </div>
-        </div> -->
+          </div> -->
         <div class="days_weather_box">
           <div class="days_weather">
             <div class="week_title"><h2>未来五天天气</h2></div>
@@ -115,12 +115,50 @@
         <div class="title_box">
           <dv-decoration-3 style="width: 180px; height: 30px" />
           <div class="title">
-            <h1>长三角天气预报</h1>
+            <h1>长三角水文综合模拟预报</h1>
           </div>
           <dv-decoration-3 style="width: 180px; height: 30px" />
         </div>
         <div class="map_box">
-          <div id="map"></div>
+          <div id="map">
+            <div @click="rainevent" class="rainbutton">历史降雨</div>
+            <div v-show="ifrain" class="timebar">{{ this.raintime }}</div>
+            <div v-show="ifrain" class="titlebar">流域淹没过程模拟</div>
+            <div class="water_depth_color" style="z-index: 5" v-show="ifrain">
+              <div class="color-bar">
+                <div class="color">
+                  <div
+                    class="color-item"
+                    style="background-color: #ffffff"
+                  ></div>
+                  <div
+                    class="color-item"
+                    style="background-color: #87cefa"
+                  ></div>
+                  <div
+                    class="color-item"
+                    style="background-color: #00bfff"
+                  ></div>
+                  <div
+                    class="color-item"
+                    style="background-color: #1e90ff"
+                  ></div>
+                  <div
+                    class="color-item"
+                    style="background-color: #0000ff"
+                  ></div>
+                </div>
+                <div class="label">
+                  <div class="color-item" style="text-align: left">0.0</div>
+                  <div class="color-item" style="text-align: left">0.01</div>
+                  <div class="color-item" style="text-align: left">1.0</div>
+                  <div class="color-item" style="text-align: left">1.5</div>
+                  <div class="color-item" style="text-align: left">2.0</div>
+                  <div class="color-item" style="text-align: left">5.0</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="rank_bar_box">
@@ -142,27 +180,27 @@
         </div>
       </div>
       <!-- <div class="icons_box">
-        <div class="icons">
-          <div class="icon_title"><h2>天气仪表盘</h2></div>
-          <div class="icon_contant">
-            <div class="icon_rain">
-              <div class="rain_title des">当前降雨</div>
-              <dv-water-level-pond
-                :config="config1"
-                style="width: 80%; height: 80%"
-              />
-            </div>
-            <div class="icon_temp">
-              <div class="temp_title des">当前温度</div>
-              <div id="gauge_chart"></div>
-            </div>
-            <div class="icon_wind">
-              <div class="wind_title des">本月风向</div>
-              <div id="rose_chart"></div>
+          <div class="icons">
+            <div class="icon_title"><h2>天气仪表盘</h2></div>
+            <div class="icon_contant">
+              <div class="icon_rain">
+                <div class="rain_title des">当前降雨</div>
+                <dv-water-level-pond
+                  :config="config1"
+                  style="width: 80%; height: 80%"
+                />
+              </div>
+              <div class="icon_temp">
+                <div class="temp_title des">当前温度</div>
+                <div id="gauge_chart"></div>
+              </div>
+              <div class="icon_wind">
+                <div class="wind_title des">本月风向</div>
+                <div id="rose_chart"></div>
+              </div>
             </div>
           </div>
-        </div>
-      </div> -->
+        </div> -->
       <div class="rain_icon_box">
         <div class="icon_rain">
           <div class="rain_title des">当前降雨</div>
@@ -179,75 +217,75 @@
         </div>
       </div>
       <!-- <div class="days_weather">
-        <div class="week_title"><h2>本周天气</h2></div>
-        <div class="content_box">
-          <div class="dayitem">
-            <div class="time">周一</div>
-            <div class="icon">
-              <img
-                class="iconTempPartIcon-E1_2"
-                src="https://assets.msn.cn/weathermapdata/1/static/svg/72/v6/card/ModerateRainV2.svg"
-                title="雨"
-              />
+          <div class="week_title"><h2>本周天气</h2></div>
+          <div class="content_box">
+            <div class="dayitem">
+              <div class="time">周一</div>
+              <div class="icon">
+                <img
+                  class="iconTempPartIcon-E1_2"
+                  src="https://assets.msn.cn/weathermapdata/1/static/svg/72/v6/card/ModerateRainV2.svg"
+                  title="雨"
+                />
+              </div>
+              <div class="max_min">8°C至16°C</div>
+              <div class="weather">大雨</div>
+              <div class="wind">东北风 2级</div>
             </div>
-            <div class="max_min">8°C至16°C</div>
-            <div class="weather">大雨</div>
-            <div class="wind">东北风 2级</div>
-          </div>
-          <div class="dayitem">
-            <div class="time">周二</div>
-            <div class="icon">
-              <img
-                class="iconTempPartIcon-E1_2"
-                src="https://assets.msn.cn/weathermapdata/1/static/svg/72/v6/card/SunnyDayV3.svg"
-                title="晴朗"
-              />
+            <div class="dayitem">
+              <div class="time">周二</div>
+              <div class="icon">
+                <img
+                  class="iconTempPartIcon-E1_2"
+                  src="https://assets.msn.cn/weathermapdata/1/static/svg/72/v6/card/SunnyDayV3.svg"
+                  title="晴朗"
+                />
+              </div>
+              <div class="max_min">6°C至15°C</div>
+              <div class="weather">晴</div>
+              <div class="wind">东风 6级</div>
             </div>
-            <div class="max_min">6°C至15°C</div>
-            <div class="weather">晴</div>
-            <div class="wind">东风 6级</div>
-          </div>
-          <div class="dayitem">
-            <div class="time">周三</div>
-            <div class="icon">
-              <img
-                class="iconTempPartIcon-E1_1"
-                src="https://assets.msn.cn/weathermapdata/1/static/svg/72/v6/card/LightSnowV2.svg"
-                title="小雪"
-              />
+            <div class="dayitem">
+              <div class="time">周三</div>
+              <div class="icon">
+                <img
+                  class="iconTempPartIcon-E1_1"
+                  src="https://assets.msn.cn/weathermapdata/1/static/svg/72/v6/card/LightSnowV2.svg"
+                  title="小雪"
+                />
+              </div>
+              <div class="max_min">-1°C至-20°C</div>
+              <div class="weather">雪</div>
+              <div class="wind">东北风 2级</div>
             </div>
-            <div class="max_min">-1°C至-20°C</div>
-            <div class="weather">雪</div>
-            <div class="wind">东北风 2级</div>
-          </div>
-          <div class="dayitem">
-            <div class="time">周四</div>
-            <div class="icon">
-              <img
-                class="iconTempPartIcon-E1_2"
-                src="https://assets.msn.cn/weathermapdata/1/static/svg/72/v6/card/SunnyDayV3.svg"
-                title="晴朗"
-              />
+            <div class="dayitem">
+              <div class="time">周四</div>
+              <div class="icon">
+                <img
+                  class="iconTempPartIcon-E1_2"
+                  src="https://assets.msn.cn/weathermapdata/1/static/svg/72/v6/card/SunnyDayV3.svg"
+                  title="晴朗"
+                />
+              </div>
+              <div class="max_min">2°C至8°C</div>
+              <div class="weather">晴</div>
+              <div class="wind">北风 3级</div>
             </div>
-            <div class="max_min">2°C至8°C</div>
-            <div class="weather">晴</div>
-            <div class="wind">北风 3级</div>
-          </div>
-          <div class="dayitem">
-            <div class="time">周五</div>
-            <div class="icon">
-              <img
-                class="iconTempPartIcon-E1_2"
-                src="https://assets.msn.cn/weathermapdata/1/static/svg/72/v6/card/CloudyV3.svg"
-                title="阴"
-              />
+            <div class="dayitem">
+              <div class="time">周五</div>
+              <div class="icon">
+                <img
+                  class="iconTempPartIcon-E1_2"
+                  src="https://assets.msn.cn/weathermapdata/1/static/svg/72/v6/card/CloudyV3.svg"
+                  title="阴"
+                />
+              </div>
+              <div class="max_min">7°C至12°C</div>
+              <div class="weather">阴</div>
+              <div class="wind">北风 5级</div>
             </div>
-            <div class="max_min">7°C至12°C</div>
-            <div class="weather">阴</div>
-            <div class="wind">北风 5级</div>
           </div>
-        </div>
-      </div> -->
+        </div> -->
       <div class="hours_temp_box">
         <div class="chart_card">
           <div class="day_title"><h2>24小时气温</h2></div>
@@ -259,8 +297,8 @@
     </div>
   </div>
 </template>
-
-<script>
+  
+  <script>
 import { get, post } from "@/request/request";
 import axios from "axios";
 import { mapState, mapGetters } from "vuex";
@@ -317,6 +355,9 @@ export default {
       map: {},
       layerid: ["05", "10", "11", "12", "13", "14", "15"],
       index: 0,
+      ifrain: false,
+      interval: {},
+      raintime: "2022-07-29-05",
     };
   },
   watch: {
@@ -334,6 +375,7 @@ export default {
           waveOpacity: 0.6,
         };
         this.initMap();
+        this.clearSomething();
         this.loadingInstance1.close(); //将loading关闭
       },
     },
@@ -1138,6 +1180,155 @@ export default {
       };
       render();
     },
+    rainevent() {
+      let button1 = document.querySelector(".rainbutton");
+      if (!this.ifrain) {
+        button1.style.background = `linear-gradient(123.92deg, rgb(79, 43, 143) 3.41%, rgb(40, 78, 162) 100%) border-box border-box`;
+        this.map.setZoom(9);
+        this.map.panTo([119.016, 31.845]);
+        this.map.addSource("sur", {
+          type: "raster",
+          tiles: [
+            "http://localhost:8080/geoserver/semis/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=semis:SUR_WRT_DEPTH_TS_2016_06_17_0" +
+              this.layerid[this.index] +
+              "000&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG:3857&bbox={bbox-epsg-3857}&WIDTH=732&HEIGHT=768",
+          ],
+          tileSize: 512, // 切片的最小展示尺寸（可选，单位：像素，默认值为 512，即 1024/2）
+        });
+        let sur = {
+          show: true,
+          name: "sur",
+          id: "sur",
+          source: "sur",
+          type: "raster",
+        };
+        this.map.addLayer(sur);
+        this.map.addSource("river", {
+          type: "raster",
+          tiles: [
+            "http://localhost:8080/geoserver/semis/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=semis:CH_WRT_DEPTH_TS_2016_06_17_0" +
+              this.layerid[this.index] +
+              "000&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG:3857&bbox={bbox-epsg-3857}&WIDTH=732&HEIGHT=768",
+          ],
+          tileSize: 512, // 切片的最小展示尺寸（可选，单位：像素，默认值为 512，即 1024/2）
+        });
+        let river = {
+          show: true,
+          name: "river",
+          id: "river",
+          source: "river",
+          type: "raster",
+        };
+        this.map.addLayer(river);
+        // this.map.moveLayer("river", "Pointscircle");
+        // this.map.moveLayer("sur", "Pointscircle");
+        // this.map.moveLayer("river", "Points");
+        // this.map.moveLayer("sur", "Points");
+        this.map.removeLayer("Pointscircle");
+        this.map.removeLayer("Points");
+        this.interval = setInterval(() => {
+          this.changelayer();
+        }, 2000);
+      } else {
+        button1.style.background = `linear-gradient(128.16deg, rgba(97, 129, 255, 0.5) -0.31%, rgba(112, 0, 255, 0.5) 103%) border-box`;
+        clearInterval(this.interval);
+        this.map.removeLayer("sur");
+        this.map.removeSource("sur");
+        this.map.removeLayer("river");
+        this.map.removeSource("river");
+        this.map.addLayer({
+          id: "Points",
+          type: "symbol",
+          source: "Points",
+          paint: {
+            "text-color": "#F0F8FF",
+          },
+          layout: {
+            "icon-image": ["get", "url"],
+            "icon-size": 0.3,
+            "icon-offset": [0, -45],
+            "text-field": ["get", "title"],
+            "text-font": ["Brush Script MT", "Arial Unicode MS Normal"],
+            "text-offset": [1.7, -1.5],
+            "text-anchor": "top",
+          },
+        });
+        this.map.addLayer({
+          id: "Pointscircle",
+          type: "circle",
+          source: "Points",
+          filter: [">", "rain", 4],
+          paint: {
+            // Make circles larger as the user zooms from z12 to z22.
+            "circle-radius": ["step", ["get", "rain"], 7, 4, 7, 18, 7],
+            // Color circles by ethnicity, using a `match` expression.
+            "circle-color": [
+              "step",
+              ["get", "rain"],
+              "#51bbd6",
+              4,
+              "#FF7E00",
+              18,
+              "#DD001B",
+            ],
+          },
+        });
+      }
+      this.ifrain = !this.ifrain;
+    },
+    changelayer() {
+      this.index += 1;
+      this.raintime = "2022-07-29-" + this.layerid[this.index];
+      this.map.removeLayer("sur");
+      this.map.removeSource("sur");
+      this.map.removeLayer("river");
+      this.map.removeSource("river");
+      this.map.addSource("sur", {
+        type: "raster",
+        tiles: [
+          "http://localhost:8080/geoserver/semis/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=semis:SUR_WRT_DEPTH_TS_2016_06_17_0" +
+            this.layerid[this.index] +
+            "000&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG:3857&bbox={bbox-epsg-3857}&WIDTH=732&HEIGHT=768",
+        ],
+        tileSize: 512, // 切片的最小展示尺寸（可选，单位：像素，默认值为 512，即 1024/2）
+      });
+      let sur = {
+        show: true,
+        name: "sur",
+        id: "sur",
+        source: "sur",
+        type: "raster",
+      };
+      this.map.addSource("river", {
+        type: "raster",
+        tiles: [
+          "http://localhost:8080/geoserver/semis/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2FPNG&TRANSPARENT=true&STYLES&LAYERS=semis:CH_WRT_DEPTH_TS_2016_06_17_0" +
+            this.layerid[this.index] +
+            "000&exceptions=application%2Fvnd.ogc.se_inimage&SRS=EPSG:3857&bbox={bbox-epsg-3857}&WIDTH=732&HEIGHT=768",
+        ],
+        tileSize: 512, // 切片的最小展示尺寸（可选，单位：像素，默认值为 512，即 1024/2）
+      });
+      let river = {
+        show: true,
+        name: "river",
+        id: "river",
+        source: "river",
+        type: "raster",
+      };
+      this.map.addLayer(sur);
+      this.map.addLayer(river);
+      //   this.map.moveLayer("river", "Pointscircle");
+      //   this.map.moveLayer("sur", "Pointscircle");
+      //   this.map.moveLayer("river", "Points");
+      //   this.map.moveLayer("sur", "Points");
+      if (this.index == 6) {
+        this.index = 0;
+      }
+    },
+    clearSomething() {
+      document.getElementsByClassName("mapboxgl-ctrl-bottom-left")[0].remove();
+      document.getElementsByClassName("mapboxgl-ctrl-bottom-right")[0].remove();
+    },
   },
   computed: {
     ...mapState("weather", [
@@ -1195,8 +1386,8 @@ export default {
   },
 };
 </script>
-
-<style lang="less" scoped>
+  
+  <style lang="less" scoped>
 .content {
   background: linear-gradient(180deg, #244d72 0%, #07213b 100%);
   // background-repeat: no-repeat;
@@ -1479,20 +1670,105 @@ export default {
           justify-content: center;
           color: aliceblue;
           width: 55%;
-          font-size: 30px;
+          font-size: 20px;
         }
       }
       .map_box {
         width: 95%;
         height: 75%;
         border-radius: 8px;
+        position: relative;
         // .mapboxgl-ctrl {
         //   display: none !important;
         // }
+        .rainbutton {
+          color: #fff;
+          position: absolute;
+          right: 10px;
+          bottom: 20px;
+          z-index: 4;
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 80px;
+          height: 36px;
+          background: linear-gradient(
+              128.16deg,
+              rgba(97, 129, 255, 0.5) -0.31%,
+              rgba(112, 0, 255, 0.5) 103%
+            )
+            border-box;
+          cursor: pointer;
+
+          border-radius: 4px;
+        }
         #map {
           width: 100%;
           height: 100%;
           border-radius: 10px;
+          .timebar {
+            position: absolute;
+            z-index: 1;
+            left: 15px;
+            top: 20px;
+            font-size: 50px;
+            color: #fff;
+            font-weight: 600;
+          }
+          .titlebar {
+            position: absolute;
+            z-index: 1;
+            left: 50px;
+            top: 65px;
+            font-size: 30px;
+            color: #fff;
+            font-weight: 400;
+          }
+          .water_depth_color {
+            width: 230px;
+            height: 40px;
+            padding: 5px 15px;
+            z-index: 9;
+            position: absolute;
+            bottom: 15px;
+            left: 20px;
+
+            display: flex;
+            align-items: center;
+            background-color: rgba(124, 120, 120, 0.2);
+            border-radius: 5px;
+            /* box-shadow: 2px 2px 2px #aaa; */
+            opacity: 0.9;
+            color: #b9b8ce;
+          }
+
+          .water_depth_color .color-bar {
+            display: flex;
+            height: fit-content;
+            flex-direction: column;
+            /* background-color: red; */
+          }
+
+          .water_depth_color .color-bar .color {
+            width: fit-content;
+            height: fit-content;
+            display: flex;
+            padding-left: 10px;
+          }
+
+          .water_depth_color .color-bar .label {
+            display: flex;
+            height: fit-content;
+            width: fit-content;
+            font-size: 12px;
+            // padding-right: 2px;
+          }
+
+          .water_depth_color .color-bar .color-item {
+            width: 36px;
+            height: 12px;
+          }
         }
         // background-color: chartreuse;
       }

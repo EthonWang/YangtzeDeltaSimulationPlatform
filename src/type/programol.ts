@@ -1,6 +1,5 @@
 import { python } from "@codemirror/lang-python";
 import { oneDark } from "@codemirror/theme-one-dark";
-import LabelCollection from "cesium/Source/Scene/LabelCollection";
 
 export interface Tree {
     id: string;
@@ -126,7 +125,7 @@ export class ProjectCreateData {
     projectName: string
     pythonOptions: optionItemInt[] = [
         {
-            value: "python:3.9",
+            value: "python:3.9.16",
             label: "python39",
         },
         {

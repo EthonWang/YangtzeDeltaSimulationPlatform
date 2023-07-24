@@ -81,6 +81,7 @@ import VectorSource from "ol/source/Vector";
 import { Image } from "ol/layer";
 import { Map, View, Overlay, Feature } from "ol";
 import { ImageStatic } from "ol/source";
+import { useStore } from "vuex";
 import * as proj from "ol/proj";
 // import * as ol from "ol";
 // import "@/assets/olext.js";
@@ -115,6 +116,7 @@ export default {
       dateNum: 0,
       picPlayer: null,
       btnIsPlay: false,
+      dataServer: useStore().state.devIpAddress,
     };
   },
   methods: {
@@ -158,7 +160,7 @@ export default {
         source: this.pointsource,
         style: this.pointstyle,
       });
-      this.imgurl = "/case/png/test_t_0_cvt.png";
+      this.imgurl = this.dataServer + "/waterdepth/png/test_t_0_cvt.png";
       this.imgsource = new ImageStatic({
         url: this.imgurl, //地址
         projection: "EPSG:4326",
@@ -519,7 +521,8 @@ export default {
       // console.log(this.dataServer + "/ts_output/ts_4_0 copy.png");
       this.allLayers = this.openmap.getLayers();
       // this.dateNum = (this.dateNum + 1) % 144;
-      this.imgurl = "/case/png/test_t_" + this.dateNum + "_cvt.png";
+      this.imgurl =
+        this.dataServer + "/waterdepth/png/test_t_" + this.dateNum + "_cvt.png";
       this.openmap.removeLayer(this.pnglayer);
       // this.imgurl = "/png/test_t_0_cvt.png";
       this.imgsource = new ImageStatic({

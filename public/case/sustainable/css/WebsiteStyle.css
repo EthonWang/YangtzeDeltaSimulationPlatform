@@ -17,10 +17,10 @@ section {
     display: block
 } */
 
-h1 {
+/* h1 {
     font-size: 2em;
     margin: 0.67em 0
-}
+} */
 
 figcaption,
 figure,
@@ -219,33 +219,33 @@ summary {
     display: list-item
 }
 
-canvas {
+/* canvas {
     display: inline-block
-}
+} */
 
-template {
+/* template {
     display: none
-}
+} */
 
-[hidden] {
+/* [hidden] {
     display: none
-}
+} */
 
-html {
+/* html {
     box-sizing: border-box
-}
+} */
 
-*,
+/* *,
 *:before,
 *:after {
     box-sizing: inherit
-}
+} */
 
-body {
+/* body {
     background: #fff;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased
-}
+} */
 
 hr {
     border: 0;
@@ -341,10 +341,10 @@ td:last-child {
     padding-right: 0
 }
 
-html {
+/* html {
     font-size: 18px;
     line-height: 27px
-}
+} */
 
 @media (min-width: 641px) {
     html {
@@ -354,18 +354,19 @@ html {
     }
 }
 
+/* 
 body {
     color: #5B6F82;
     font-size: 1rem
-}
+} */
 
-body,
+/* body,
 button,
 input,
 select,
 textarea {
     font-family: "Lato", sans-serif
-}
+} */
 
 a {
     color: inherit;

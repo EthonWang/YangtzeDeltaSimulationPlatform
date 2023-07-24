@@ -63,18 +63,19 @@ module.exports = {
     devServer: {
         // assetsPublicPath : './',
         open: true,
-        host: "http://172.21.213.244/",
-        port: 3030,
+        host: "http://172.21.213.222/",
+        port: 3030, 
         https: false,
         hotOnly: false,
-        proxy: {
-            '/api': {
-                target: "http://api.data.pmsc.cn",
+        proxy:{
+            '/SDGBack': {
+                target: "http://121.4.86.81:8080",
+                // target: "http://127.0.0.1:8080",
                 ws: true,
                 timeout: 36000000,
                 changOrigin: true,
                 pathRewrite: {
-                    '^/api': '',
+                    '^/SDGBack': '',
                 },
             },
             '/portalapi': {

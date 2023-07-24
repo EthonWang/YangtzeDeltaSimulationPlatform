@@ -1,0 +1,26 @@
+ .background{
+        width:100%;
+        height:100%;  /**宽高100%是为了图片铺满屏幕 */
+        position: absolute;
+ }
+
+  .Title{
+        color: #ffffff;
+        font-size: 2rem;
+        font-weight: 500;
+        line-height: 1.2;
+        font-family: "Oswald-Bold";
+        padding-left: 10px;
+        z-index:2;
+    }
+
+  .Title2{
+          color: #ffffff;
+          font-size: 1.2rem;
+          font-weight: 500;
+          line-height: 1.2;
+          font-family: "Oswald-Bold";
+          padding-top: 15px;
+          margin-left: 7%;
+      }
+

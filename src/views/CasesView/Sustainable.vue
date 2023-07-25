@@ -17,22 +17,22 @@
             padding-top: 40px;
           "
         >
-         <el-row> <h1 class="Title">可持续发展长三角系统</h1></el-row>
+          <el-row> <h1 class="Title">可持续发展长三角系统</h1></el-row>
           <el-row style="height: 40%; width: 100%" :gutter="20" type="flex">
             <el-card class="CardStyle">
-              <router-link  to="Sustainable_in" class="ButtonTitle">
-                                可持续指标体系浏览
-                                <el-image
-                                        class="ImageStyle"
-                                        :src="DingZhiUrl"
-                                        :fit="full"
-                                ></el-image>
-                            </router-link>
+              <router-link to="Sustainable_in" class="ButtonTitle">
+                可持续指标体系浏览
+                <el-image
+                  class="ImageStyle"
+                  :src="DingZhiUrl"
+                  :fit="full"
+                ></el-image>
+              </router-link>
 
-                            <!-- 镶嵌到页面中的弹出表格写法 -->
-                            <!-- 镶嵌到页面中的弹出表格写法 -->
-                            <!-- 镶嵌到页面中的弹出表格写法 -->
-            <!-- <div @click="dialogVisible = true"   class="ButtonTitle">
+              <!-- 镶嵌到页面中的弹出表格写法 -->
+              <!-- 镶嵌到页面中的弹出表格写法 -->
+              <!-- 镶嵌到页面中的弹出表格写法 -->
+              <!-- <div @click="dialogVisible = true"   class="ButtonTitle">
                 可持续指标体系浏览
                 <el-image
                   class="ImageStyle"
@@ -41,11 +41,11 @@
                 ></el-image>
             </div> -->
               <!-- <el-dialog title="长三角可持续发展评价指标体系" v-model="dialogVisible" width="60%" > -->
-                <!-- 内容存储位置 -->
-                <!-- :span-method是传递的一个合并行的方法，max-height是限定表格的长度（超出就滚动条），border边框，stripe斑马纹 -->
-                <!-- <el-table :data="gridData" :span-method="arraySpanMethod" max-height="400" border stripe> -->
-                    <!-- 这里写了宽度的就是确定的，不写就独揽剩下的空间 -->
-                    <!-- <el-table-column property="dimension" label="维度" width="200"></el-table-column>
+              <!-- 内容存储位置 -->
+              <!-- :span-method是传递的一个合并行的方法，max-height是限定表格的长度（超出就滚动条），border边框，stripe斑马纹 -->
+              <!-- <el-table :data="gridData" :span-method="arraySpanMethod" max-height="400" border stripe> -->
+              <!-- 这里写了宽度的就是确定的，不写就独揽剩下的空间 -->
+              <!-- <el-table-column property="dimension" label="维度" width="200"></el-table-column>
                     <el-table-column property="index" label="指标" ></el-table-column>
                     <el-table-column property="value" label="值" width="150"></el-table-column>
                 </el-table>
@@ -345,16 +345,16 @@ export default {
       backgroundUrl: require("../../../public/case/sustainable/pic/background.jpg"),
       DingZhiUrl: require("../../../public/case/sustainable/pic/DingZhi.png"),
       JiSuanUrl: require("../../../public/case/sustainable/pic/JiSuan.png"),
-      FenxiUrl: require("../../../public/case/sustainable/pic/FenXi.png"), 
+      FenxiUrl: require("../../../public/case/sustainable/pic/FenXi.png"),
     };
   },
-  methods: {
-    }
+  methods: {},
 };
 </script>
 
 <style scoped>
-@import "../../../public/case/sustainable/css/WebsiteStyle.css";
+/* @import "../../../public/case/sustainable/css/WebsiteStyle.css"; */
+/* 样式有问题需要修改,所有样式统一用.class包裹，不要用html、body、h2等 */
 @import "../../../public/case/sustainable/css/MyStyle.css";
 .CardStyle {
   margin: 0.8vw;
@@ -378,5 +378,4 @@ export default {
   height: 50%;
   width: 50%;
 }
-
 </style>

@@ -5,15 +5,16 @@ import { Decrypt } from "@/util/codeUtil";
 const config = {
     baseUrl: {
         // dev: "http://172.21.213.92:8999",
-        dev: "/portalapi",
+        // dev: "/portalapi",
         // dev: "http://172.21.213.248:8999", // 开发环境
         // fat: 'http://xxx.xx.xx.xx:8080' 
         //uat : "http://production.com" 
+        uat: "https://geomodeling.njnu.edu.cn"
     },
 }
 
 const request = axios.create({
-    baseURL: config.baseUrl.dev,
+    baseURL: config.baseUrl.uat,
     timeout: 12000000,
     headers: {
         "Content-Type": "application/json",

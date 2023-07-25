@@ -140,12 +140,12 @@ select {
     text-transform: none
 }
 
-button,
+/* button,
 html [type="button"],
 [type="reset"],
 [type="submit"] {
     -webkit-appearance: button
-}
+} */
 
 button::-moz-focus-inner,
 [type="button"]::-moz-focus-inner,
@@ -346,13 +346,13 @@ td:last-child {
     line-height: 27px
 } */
 
-@media (min-width: 641px) {
+/* @media (min-width: 641px) {
     html {
         font-size: 20px;
         line-height: 30px;
         letter-spacing: -0.1px
     }
-}
+} */
 
 /* 
 body {
@@ -1656,13 +1656,13 @@ label {
     background: #F6F8FA
 }
 
-.body-wrap {
+/* .body-wrap {
     background: #fff;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     min-height: 100vh
-}
+} */
 
 .boxed-container {
     max-width: 1440px;

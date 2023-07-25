@@ -107,12 +107,15 @@ export default {
             for (var i = 0; i < 237; i++) {
                 todayTemp_all[i] = new Array;
                 for (var j = 0; j < 25; j++) {
-                    var temp = Math.round(result[i][j].temp)
-                    var h = result[i][j].h;
-                    var arr = [];
-                    arr[0] = h + ":00";
-                    arr[1] = temp;
-                    todayTemp_all[i][j] = arr;
+                    if (result[i][j]) {
+                        var temp = Math.round(result[i][j].temp)
+                        var h = result[i][j].h;
+                        var arr = [];
+                        arr[0] = h + ":00";
+                        arr[1] = temp;
+                        todayTemp_all[i][j] = arr;
+                    }
+
                 }
             }
             state.todayTemp = todayTemp_all;
@@ -123,7 +126,10 @@ export default {
             for (var i = 0; i < 237; i++) {
                 var arr = [];
                 for (var j = 0; j < 25; j++) {
-                    arr[j] = Math.round(result[i][j].temp)
+                    if (result[i][j]) {
+                        arr[j] = Math.round(result[i][j].temp)
+                    }
+
                 }
                 max_all[i] = Math.max.apply(Math, arr);
                 min_all[i] = Math.min.apply(Math, arr);
